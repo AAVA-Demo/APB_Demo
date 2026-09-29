@@ -1,0 +1,5 @@
+{
+  "environment": "qa",
+  "browser": "chrome",
+  "timeout": 30
+}
