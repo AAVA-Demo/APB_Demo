@@ -1,0 +1,8 @@
+Controllers tested: ContextRecommendationsController, DiagnosticInsightsController, DiagnosticPanelController, NextBestActionController, RemediationGuidanceController, ResolutionMetricsController.
+Test file paths: Backend.Tests/Controllers/ContextRecommendationsControllerTests.cs, Backend.Tests/Controllers/DiagnosticInsightsControllerTests.cs, Backend.Tests/Controllers/DiagnosticPanelControllerTests.cs, Backend.Tests/Controllers/NextBestActionControllerTests.cs, Backend.Tests/Controllers/RemediationGuidanceControllerTests.cs, Backend.Tests/Controllers/ResolutionMetricsControllerTests.cs.
+Required packages: xunit, Moq, Microsoft.NET.Test.Sdk, xunit.runner.visualstudio, plus a project reference to the Backend project so controllers, DTOs, services, and exception types are available.
+Ensure the test project targets .NET 8 and uses the Backend.Tests.Controllers namespace; add `using` statements for Backend.Controllers, Backend.Services, Backend.Dtos, and Microsoft.AspNetCore.Mvc.
+Run tests with: `dotnet test` from the solution directory after adding the Backend.Tests project and referencing Backend.
+Scenarios skipped: any explicit 500-error handling or custom logging paths (controllers either return specific status codes or let exceptions propagate); no authorization attribute behavior or HTTP routing is tested.
+All tests are unit tests only and do not perform real I/O (no databases, network calls, or timers); dependencies are mocked via Moq.
+Configuration notes: ensure the test project has access to the same exception types used by services (e.g., MemberIssueNotFoundException, PanelUnavailableException, MetricsNotAvailableException) from the Backend assembly.
