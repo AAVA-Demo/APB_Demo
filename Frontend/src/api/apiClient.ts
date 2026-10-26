@@ -1,0 +1,45 @@
+export interface ApiError {
+    status: number;
+    message: string;
+}
+
+const getAuthToken = (): string | null => {
+    return null;
+};
+
+export async function apiGet<T>(url: string): Promise<T> {
+    const token = getAuthToken();
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+
+    if (!response.ok) {
+        const message = await response.text();
+        throw { status: response.status, message } as ApiError;
+    }
+
+    return (await response.json()) as T;
+}
+
+export async function apiPost<TRequest, TResponse>(url: string, body: TRequest): Promise<TResponse> {
+    const token = getAuthToken();
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+        const message = await response.text();
+        throw { status: response.status, message } as ApiError;
+    }
+
+    return (await response.json()) as TResponse;
+}
