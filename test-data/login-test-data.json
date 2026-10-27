@@ -1,0 +1,5 @@
+{
+  "username": "test_user",
+  "password": "dummy_password",
+  "expectedStatus": "success"
+}
