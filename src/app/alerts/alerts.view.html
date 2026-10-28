@@ -1,0 +1,38 @@
+<div>
+  <h2>Fraud Alerts</h2>
+  <p ng-if="vm.message">{{ vm.message }}</p>
+  <div ng-if="vm.isLoading">Loading alerts...</div>
+  <ul class="alert-list" ng-if="!vm.isLoading">
+    <li ng-repeat="alert in vm.alerts" class="alert-item {{alert.status}}">
+      <div>
+        <strong>{{ alert.merchant }}</strong><br>
+        <span>{{ alert.amount | currency }} on {{ alert.timestamp | date:'medium' }}</span>
+      </div>
+      <div>
+        <span class="status status-{{alert.status}}">{{ alert.status }}</span>
+        <button class="btn-primary" ng-if="alert.status === 'Pending'" ng-click="vm.viewDetails(alert)">Review Transaction</button>
+      </div>
+    </li>
+  </ul>
+
+  <div ng-if="vm.selectedAlert" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Unusual Activity Detected</h3>
+        <p>Please review this transaction and let us know if it was you.</p>
+      </div>
+      <div>
+        <p><strong>Merchant:</strong> {{ vm.selectedAlert.merchant }}</p>
+        <p><strong>Amount:</strong> {{ vm.selectedAlert.amount | currency }}</p>
+        <p><strong>Time:</strong> {{ vm.selectedAlert.timestamp | date:'medium' }}</p>
+        <p><strong>Card:</strong> {{ vm.selectedAlert.card_context }}</p>
+        <p><strong>Reason:</strong> {{ vm.selectedAlert.risk_message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-success" ng-click="vm.confirm(vm.selectedAlert)">Yes, this was me</button>
+        <button class="btn-danger" ng-click="vm.report(vm.selectedAlert)">No, I don't recognize this</button>
+        <button class="btn-secondary" ng-click="vm.closeDetails()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

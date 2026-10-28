@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraud Alert System</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    .alert-list { list-style-type: none; padding: 0; }
+    .alert-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .alert-item.Pending { border-left: 5px solid #ffc107; }
+    .alert-item.Confirmed { border-left: 5px solid #28a745; }
+    .alert-item.Reported { border-left: 5px solid #dc3545; }
+    .status { font-weight: bold; }
+    .status-Pending { color: #ffc107; }
+    .status-Confirmed { color: #28a745; }
+    .status-Reported { color: #dc3545; }
+    button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-primary { background-color: #007bff; color: white; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: white; padding: 20px; border-radius: 5px; width: 500px; }
+    .modal-header { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; }
+    .modal-footer { border-top: 1px solid #ccc; padding-top: 10px; margin-top: 10px; text-align: right; }
+    .btn-success { background-color: #28a745; color: white; margin-right: 10px; }
+    .btn-danger { background-color: #dc3545; color: white; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+  </style>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/services/fraudAlert.service.js"></script>
+  <script src="src/app/alerts/alerts.controller.js"></script>
+</head>
+<body ng-app="fraudAlertApp">
+  <div ng-controller="FraudAlertsController as vm">
+    <div ng-include="'src/app/alerts/alerts.view.html'"></div>
+  </div>
+</body>
+</html>
