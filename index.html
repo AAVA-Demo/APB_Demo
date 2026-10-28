@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="fraudAlertApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Fraud Alert System</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+  <style>
+    body { padding: 20px; background: #f5f5f5; }
+    .alert-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .severity-critical { border-left: 4px solid #d9534f; }
+    .severity-high { border-left: 4px solid #f0ad4e; }
+    .severity-medium { border-left: 4px solid #5bc0de; }
+    .severity-low { border-left: 4px solid #5cb85c; }
+    .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .status-created { background: #d9edf7; color: #31708f; }
+    .status-queued { background: #fcf8e3; color: #8a6d3b; }
+    .status-delivered { background: #dff0d8; color: #3c763d; }
+    .status-viewed { background: #e7e7e7; color: #333; }
+    .masked-card { font-family: monospace; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fraud Alert System</h1>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/config.service.js"></script>
+  <script src="src/app/services/audit.service.js"></script>
+  <script src="src/app/services/analytics.service.js"></script>
+  <script src="src/app/services/idempotency.service.js"></script>
+  <script src="src/app/services/alert-state.service.js"></script>
+  <script src="src/app/services/alert.service.js"></script>
+  <script src="src/app/services/customer-profile.service.js"></script>
+  <script src="src/app/services/notification-status.service.js"></script>
+  <script src="src/app/services/alert-formatter.service.js"></script>
+  <script src="src/app/services/in-app-notification.service.js"></script>
+  <script src="src/app/modules/fraud-detection/services/policy-decision.service.js"></script>
+  <script src="src/app/modules/fraud-detection/services/fraud-detection.service.js"></script>
+  <script src="src/app/modules/fraud-detection/factories/risk-engine.factory.js"></script>
+  <script src="src/app/modules/fraud-detection/controllers/alert-dashboard.controller.js"></script>
+  <script src="src/app/modules/fraud-detection/directives/alert-list.directive.js"></script>
+  <script src="src/app/modules/notifications/services/notification-orchestrator.service.js"></script>
+  <script src="src/app/modules/notifications/factories/push-notification.factory.js"></script>
+  <script src="src/app/modules/notifications/factories/sms-provider.factory.js"></script>
+  <script src="src/app/modules/notifications/factories/email-provider.factory.js"></script>
+  <script src="src/app/modules/notifications/controllers/alert-viewer.controller.js"></script>
+  <script src="src/app/modules/notifications/controllers/notification-preference.controller.js"></script>
+  <script src="src/app/modules/notifications/directives/alert-detail.directive.js"></script>
+</body>
+</html>

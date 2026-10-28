@@ -1,0 +1,38 @@
+<div class="alert-card" ng-class="getSeverityClass(alert.severity)">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Alert #{{alert.alert_id}}</h3>
+      <span class="status-badge" ng-class="'status-' + alert.status">{{alert.status | uppercase}}</span>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Transaction Details</h4>
+      <p><strong>Card:</strong> <span class="masked-card">{{maskCardNumber(alert.transaction_details.card_id)}}</span></p>
+      <p><strong>Amount:</strong> {{alert.transaction_details.amount | currency:alert.transaction_details.currency}}</p>
+      <p><strong>Merchant:</strong> {{alert.transaction_details.merchant}}</p>
+      <p><strong>Time:</strong> {{alert.transaction_details.timestamp | date:'medium'}}</p>
+      <p><strong>Channel:</strong> {{alert.transaction_details.channel}}</p>
+    </div>
+    <div class="col-md-6">
+      <h4>Risk Assessment</h4>
+      <p><strong>Risk Score:</strong> {{alert.risk_score}}</p>
+      <p><strong>Risk Band:</strong> <span class="label" ng-class="{'label-danger': alert.risk_band === 'critical' || alert.risk_band === 'high', 'label-warning': alert.risk_band === 'medium', 'label-success': alert.risk_band === 'low'}">{{alert.risk_band | uppercase}}</span></p>
+      <p><strong>Severity:</strong> {{alert.severity}}</p>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Was this transaction made by you?</h4>
+      <p class="text-muted">Please confirm if you recognize this transaction or report it as fraud.</p>
+      <button class="btn btn-success btn-lg" ng-click="onConfirm()" style="margin-right: 10px;">
+        <span class="glyphicon glyphicon-ok"></span> Yes, this was me
+      </button>
+      <button class="btn btn-danger btn-lg" ng-click="onReport()">
+        <span class="glyphicon glyphicon-remove"></span> No, I don't recognize this
+      </button>
+    </div>
+  </div>
+</div>

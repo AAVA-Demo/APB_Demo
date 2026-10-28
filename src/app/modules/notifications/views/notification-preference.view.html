@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <h2>Notification Preferences</h2>
+    <div ng-if="vm.loading" class="text-center">
+      <p>Loading preferences...</p>
+    </div>
+    <div ng-if="!vm.loading && vm.preferences" class="panel panel-default">
+      <div class="panel-body">
+        <form name="preferencesForm">
+          <div class="form-group">
+            <label>Primary Notification Channel</label>
+            <select class="form-control" ng-model="vm.preferences.primary_channel">
+              <option value="push">Push Notification</option>
+              <option value="sms">SMS</option>
+              <option value="email">Email</option>
+              <option value="in-app">In-App</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" ng-model="vm.preferences.push_enabled"> Enable Push Notifications
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" ng-model="vm.preferences.sms_enabled"> Enable SMS Notifications
+            </label>
+          </div>
+          <div class="form-group" ng-if="vm.preferences.sms_enabled">
+            <label>Phone Number</label>
+            <input type="tel" class="form-control" ng-model="vm.preferences.phone_number" placeholder="+1234567890">
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" ng-model="vm.preferences.email_enabled"> Enable Email Notifications
+            </label>
+          </div>
+          <div class="form-group" ng-if="vm.preferences.email_enabled">
+            <label>Email Address</label>
+            <input type="email" class="form-control" ng-model="vm.preferences.email_address" placeholder="user@example.com">
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" ng-model="vm.preferences.in_app_enabled"> Enable In-App Notifications
+            </label>
+          </div>
+          <button type="button" class="btn btn-primary" ng-click="vm.savePreferences()">Save Preferences</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

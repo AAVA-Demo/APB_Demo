@@ -1,0 +1,17 @@
+<div class="alert-list">
+  <div ng-repeat="alert in alerts" class="alert-card" ng-class="getSeverityClass(alert.severity)">
+    <div class="row">
+      <div class="col-md-8">
+        <h4>Alert #{{alert.alert_id}}</h4>
+        <p><strong>Transaction:</strong> {{alert.transaction_details.merchant}} - {{alert.transaction_details.amount | currency:alert.transaction_details.currency}}</p>
+        <p><strong>Risk Score:</strong> {{alert.risk_score}} ({{alert.risk_band}})</p>
+        <p><strong>Time:</strong> {{alert.transaction_details.timestamp | date:'medium'}}</p>
+      </div>
+      <div class="col-md-4 text-right">
+        <span class="status-badge" ng-class="getStatusClass(alert.status)">{{alert.status | uppercase}}</span>
+        <br><br>
+        <button class="btn btn-sm btn-info" ng-click="viewAlert(alert.alert_id)">View Details</button>
+      </div>
+    </div>
+  </div>
+</div>

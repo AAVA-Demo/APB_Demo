@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <h2>Fraud Alert Details</h2>
+    <div ng-if="vm.loading" class="text-center">
+      <p>Loading alert...</p>
+    </div>
+    <div ng-if="!vm.loading && vm.alert">
+      <alert-detail alert="vm.alert" on-confirm="vm.confirmTransaction()" on-report="vm.reportTransaction()"></alert-detail>
+    </div>
+    <div ng-if="!vm.loading && !vm.alert" class="text-center text-muted">
+      <p>Alert not found</p>
+    </div>
+  </div>
+</div>
