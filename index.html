@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraud Alert System</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/services/alert.service.js"></script>
+  <script src="src/app/alerts/alert-list.controller.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    .alert { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    .alert.resolved { background-color: #e8f5e9; }
+    .alert-header { font-weight: bold; }
+    .alert-actions button { margin-right: 10px; }
+  </style>
+</head>
+<body ng-app="fraudAlertApp">
+  <div ng-controller="AlertListController as vm">
+    <h1>Suspicious Activity</h1>
+    <div ng-include="'src/app/alerts/alert-list.view.html'"></div>
+  </div>
+</body>
+</html>

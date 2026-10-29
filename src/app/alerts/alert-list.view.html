@@ -1,0 +1,12 @@
+<div ng-repeat="alert in vm.alerts" class="alert" ng-class="{ 'resolved': alert.status === 'Confirmed' || alert.status === 'Reported' }">
+  <div class="alert-header">{{ alert.merchant }} - {{ alert.amount | currency }}</div>
+  <p>{{ alert.risk_message }}</p>
+  <p><small>Date: {{ alert.timestamp | date:'medium' }}</small></p>
+  <div class="alert-actions" ng-if="alert.status === 'Queued'">
+    <button ng-click="vm.confirm(alert.alert_id)">Yes, this was me</button>
+    <button ng-click="vm.report(alert.alert_id)">No, I don't recognize this</button>
+  </div>
+  <div ng-if="alert.status !== 'Queued'">
+    <strong>Status: {{ alert.status }}</strong>
+  </div>
+</div>
