@@ -1,0 +1,9 @@
+.card-management-container{padding:20px;}
+.table-responsive{margin-top:15px;}
+.table thead th{background-color:#337ab7;color:#fff;font-weight:600;}
+.table tbody tr.active{background-color:#d9edf7;}
+.table tbody tr:hover{background-color:#f0f0f0;cursor:pointer;}
+@media(max-width:767px){
+.table{font-size:0.9em;}
+.btn-sm{font-size:0.8em;padding:4px 8px;}
+}
