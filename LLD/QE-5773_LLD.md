@@ -1,117 +1,85 @@
-# Low-Level Design: AI Portfolio Management Dashboard
-
-## Epic ID: QE-5773
+# Low-Level Design: AI Usage and Spend Dashboard
+**Epic ID:** QE-5773
 
 ---
 
 ## a. Architecture Mapping
 
-- **API Integration Layer** → AngularJS Service (`cloudIntegrationService`) for AWS/Azure/GCP API calls
-- **Data Aggregation Service** → AngularJS Factory (`dataAggregationFactory`) for normalizing and consolidating provider data
-- **Analytics Engine** → AngularJS Service (`analyticsService`) for computing benchmarks, trends, and anomalies
-- **Dashboard UI** → AngularJS Module (`dashboardModule`) with Controllers (`dashboardController`, `companyDetailController`) and Views (HTML5 templates)
-- **Report Generator** → AngularJS Service (`reportService`) for PDF/Excel export
-- **Authentication** → AngularJS Service (`authService`) integrating with SSO provider
-- **Role-Based Access Control** → AngularJS Service (`rbacService`) for permission checks
+- **Data Ingestion Service** → AngularJS Factory (`cloudDataIngestionFactory`) - handles API polling from AWS/Azure/GCP
+- **Data Aggregation Engine** → AngularJS Service (`dataAggregationService`) - consolidates multi-cloud data
+- **Analytics & Benchmarking Service** → AngularJS Service (`analyticsService`) - processes trends, anomalies, benchmarks
+- **Dashboard Web Application** → AngularJS Module (`aiDashboardModule`) with Controllers (`portfolioController`, `companyController`, `drillDownController`)
+- **Report Generation Service** → AngularJS Factory (`reportFactory`) - generates PDF/Excel exports
+- **SSO Provider** → AngularJS Service (`authService`) - handles authentication/authorization
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-/app
-  /modules
-    /dashboard
-      dashboard.module.js
-      dashboard.controller.js
-      dashboard.view.html
-      company-detail.controller.js
-      company-detail.view.html
-  /services
-    cloudIntegration.service.js
-    dataAggregation.factory.js
-    analytics.service.js
-    report.service.js
-    auth.service.js
-    rbac.service.js
-  /directives
-    data-freshness-indicator.directive.js
-    alert-widget.directive.js
-  /models
-    portfolio.model.js
-    company.model.js
-  /assets
-    /css
-    /images
+app/
+├── modules/
+│   └── ai-dashboard/
+│       ├── controllers/
+│       ├── services/
+│       ├── factories/
+│       ├── directives/
+│       └── views/
+├── shared/
+│   ├── auth/
+│   └── components/
+└── assets/
 ```
 
 ---
 
 ## b. Component Specifications
 
-| Component Name | Artifact Type | Responsibility | Key Dependencies |
-|---|---|---|---|
-| `dashboardModule` | Module | Root module for dashboard feature, declares all controllers, services, directives | `ngRoute`, `ui.bootstrap`, `authService`, `rbacService` |
-| `dashboardController` | Controller | Manages main dashboard view, loads portfolio-wide AI usage data, handles filtering and sorting | `dataAggregationFactory`, `analyticsService`, `rbacService`, `$scope` |
-| `companyDetailController` | Controller | Manages company drill-down view, displays department/project-level AI usage | `dataAggregationFactory`, `$routeParams`, `$scope` |
-| `cloudIntegrationService` | Service | Fetches AI usage/spend data from AWS, Azure, GCP APIs via REST calls | `$http`, `authService` |
-| `dataAggregationFactory` | Factory | Normalizes and consolidates data from multiple cloud providers into unified format | `cloudIntegrationService`, `portfolioModel` |
-| `analyticsService` | Service | Computes benchmarks, trends, anomalies, and cost-saving recommendations | `dataAggregationFactory`, `companyModel` |
-| `reportService` | Service | Generates and exports PDF/Excel reports from dashboard data | `$http`, `dataAggregationFactory` |
-| `authService` | Service | Handles SSO authentication, token management, and session validation | `$http`, `$window` |
-| `rbacService` | Service | Enforces role-based access control, checks user permissions for companies and features | `authService`, `$http` |
-| `dataFreshnessIndicatorDirective` | Directive | Displays warning icon and tooltip when company data is older than 24 hours | `$scope`, `$filter` |
-| `alertWidgetDirective` | Directive | Displays budget threshold alerts and data freshness notifications | `$scope`, `analyticsService` |
-| `portfolioModel` | Model | Represents portfolio-wide AI usage and spend data structure | None |
-| `companyModel` | Model | Represents individual company AI usage, spend, and metadata | None |
+| Name | Artifact Type | Responsibility | Key Dependencies |
+|------|---------------|----------------|------------------|
+| aiDashboardModule | Module | Root module for AI dashboard application | ngRoute, ngResource, chart.js |
+| portfolioController | Controller | Manages portfolio-wide view and aggregated metrics | dataAggregationService, analyticsService |
+| companyController | Controller | Manages company-level drill-down views | dataAggregationService, $routeParams |
+| drillDownController | Controller | Handles department/project level analytics | analyticsService, $scope |
+| dataAggregationService | Service | Consolidates data from multiple cloud providers | cloudDataIngestionFactory, $http |
+| analyticsService | Service | Performs trend analysis, anomaly detection, benchmarking | dataAggregationService, $q |
+| cloudDataIngestionFactory | Factory | Fetches usage/spend data from AWS/Azure/GCP APIs | $http, $interval |
+| reportFactory | Factory | Generates PDF/Excel reports from dashboard data | dataAggregationService, $window |
+| authService | Service | Handles SSO authentication and role-based access | $http, $location, $cookies |
+| dashboardChartDirective | Directive | Renders interactive charts for spend/usage visualization | chart.js, $timeout |
+| freshnessIndicatorDirective | Directive | Displays data freshness timestamp and status | $interval |
+| anomalyAlertDirective | Directive | Shows anomaly notifications with drill-down links | analyticsService |
 
 ---
 
 ## c. Data Model
 
-**portfolioModel (JavaScript Object):**
-```javascript
-{
-  portfolioId: String,
-  companies: Array<companyModel>,
-  totalSpend: Number,
-  lastUpdated: Date,
-  currency: String // default: 'USD'
-}
-```
+**CloudUsageData**
+- `companyId`: String
+- `companyName`: String
+- `provider`: String (AWS/Azure/GCP)
+- `service`: String
+- `usageMetrics`: Object { calls: Number, tokens: Number, computeHours: Number }
+- `spendData`: Object { amount: Number, currency: String, billingPeriod: String }
+- `timestamp`: Date
 
-**companyModel (JavaScript Object):**
-```javascript
-{
-  companyId: String,
-  companyName: String,
-  aiProviders: Array<String>, // ['AWS', 'Azure', 'GCP']
-  totalSpend: Number,
-  budgetThreshold: Number,
-  lastDataSync: Date,
-  departments: Array<{
-    departmentName: String,
-    spend: Number,
-    services: Array<String>
-  }>,
-  isDataFresh: Boolean, // true if lastDataSync within 24 hours
-  alertStatus: String // 'none', 'budget_exceeded', 'data_stale'
-}
-```
+**PortfolioMetrics**
+- `totalSpend`: Number
+- `totalUsage`: Number
+- `companyCount`: Number
+- `topSpenders`: Array[Object]
+- `anomalies`: Array[Object]
+- `benchmarkComparison`: Object { industryAvg: Number, portfolioAvg: Number }
 
-**userModel (JavaScript Object):**
-```javascript
-{
-  userId: String,
-  userName: String,
-  role: String, // 'Enterprise Admin', 'Operating Partner', 'Deal Partner', 'General Partner'
-  assignedCompanies: Array<String>, // companyIds
-  permissions: Array<String> // ['view_dashboard', 'export_reports', 'manage_users']
-}
-```
+**Report**
+- `reportId`: String
+- `reportType`: String (PDF/Excel)
+- `generatedDate`: Date
+- `dataRange`: Object { startDate: Date, endDate: Date }
+- `content`: Blob
 
 ---
 
 ## d. Data Flow
 
-User authenticates via SSO (`authService`) → Dashboard view loads → `dashboardController` calls `dataAggregationFactory.getPortfolioData()` → Factory invokes `cloudIntegrationService` to fetch data from AWS/Azure/GCP REST APIs → Service returns raw data → Factory normalizes and consolidates into `portfolioModel` → `analyticsService` computes benchmarks and checks budget thresholds → Controller binds aggregated data to `$scope` → View renders real-time dashboard with company cards, spend charts, and alerts → User clicks company card → `companyDetailController` loads department-level data via `dataAggregationFactory.getCompanyDetail(companyId)` → Drill-down view displays detailed usage → User exports report → `reportService` calls backend API to generate PDF/Excel → File downloads to user's browser.
+User authenticates via SSO and accesses dashboard → portfolioController initializes and requests aggregated data → dataAggregationService calls cloudDataIngestionFactory to fetch latest usage/spend from AWS/Azure/GCP APIs → aggregated data processed by analyticsService for trends, anomalies, and benchmarks → portfolioController receives processed data and binds to view → dashboardChartDirective renders interactive visualizations → user drills down to company level → companyController fetches company-specific data and updates view → user requests report → reportFactory generates PDF/Excel and triggers download → freshnessIndicatorDirective continuously displays last update timestamp.
 
 ---
 
@@ -120,52 +88,46 @@ User authenticates via SSO (`authService`) → Dashboard view loads → `dashboa
 ```mermaid
 sequenceDiagram
     participant User
-    participant DashboardView
-    participant DashboardController
-    participant DataAggregationFactory
-    participant CloudIntegrationService
-    participant CloudAPIs
-    participant AnalyticsService
-    
-    User->>DashboardView: Navigate to dashboard
-    DashboardView->>DashboardController: Load portfolio data
-    DashboardController->>DataAggregationFactory: getPortfolioData()
-    DataAggregationFactory->>CloudIntegrationService: fetchAWSData()
-    CloudIntegrationService->>CloudAPIs: GET /aws/ai-usage
-    CloudAPIs-->>CloudIntegrationService: AWS usage data
-    DataAggregationFactory->>CloudIntegrationService: fetchAzureData()
-    CloudIntegrationService->>CloudAPIs: GET /azure/ai-usage
-    CloudAPIs-->>CloudIntegrationService: Azure usage data
-    DataAggregationFactory->>CloudIntegrationService: fetchGCPData()
-    CloudIntegrationService->>CloudAPIs: GET /gcp/ai-usage
-    CloudAPIs-->>CloudIntegrationService: GCP usage data
-    CloudIntegrationService-->>DataAggregationFactory: Raw provider data
-    DataAggregationFactory->>DataAggregationFactory: Normalize and consolidate
-    DataAggregationFactory-->>DashboardController: portfolioModel
-    DashboardController->>AnalyticsService: computeBenchmarks(portfolioModel)
-    AnalyticsService-->>DashboardController: Benchmarks and alerts
-    DashboardController->>DashboardView: Bind data to $scope
-    DashboardView-->>User: Display consolidated dashboard
+    participant portfolioController
+    participant dataAggregationService
+    participant cloudDataIngestionFactory
+    participant analyticsService
+    participant View
+
+    User->>portfolioController: Access Dashboard
+    portfolioController->>dataAggregationService: getPortfolioMetrics()
+    dataAggregationService->>cloudDataIngestionFactory: fetchCloudData(AWS/Azure/GCP)
+    cloudDataIngestionFactory->>dataAggregationService: Return usage/spend data
+    dataAggregationService->>analyticsService: analyzeData(aggregatedData)
+    analyticsService->>dataAggregationService: Return trends/anomalies/benchmarks
+    dataAggregationService->>portfolioController: Return portfolioMetrics
+    portfolioController->>View: Bind metrics to $scope
+    View->>User: Display dashboard with charts
+    User->>portfolioController: Drill down to company
+    portfolioController->>dataAggregationService: getCompanyMetrics(companyId)
+    dataAggregationService->>portfolioController: Return company data
+    portfolioController->>View: Update view
+    View->>User: Display company-level analytics
 ```
 
 ---
 
 ## f. Implementation Notes
 
-- Use AngularJS Dependency Injection to inject services into controllers and factories for testability and modularity
-- Implement ES6 classes for models (`portfolioModel`, `companyModel`) with getter/setter methods for data validation
-- Use `$http` interceptor to attach SSO tokens to all outbound API requests and handle 401/403 responses globally
-- Leverage Bootstrap grid system and responsive utilities for mobile-friendly dashboard layout
-- Cache aggregated data in `dataAggregationFactory` using `$cacheFactory` to reduce redundant API calls and improve load time
+- Use AngularJS dependency injection for all services, factories, and controllers to enable testability and modularity
+- Leverage ES6 arrow functions and promises ($q) for asynchronous API calls and data processing
+- Implement HTTP interceptor for centralized error handling and authentication token injection
+- Use chart.js with Angular directives for responsive, interactive data visualizations
+- Apply MVC pattern: Controllers manage business logic, Services handle data operations, Views bind via two-way data binding
 
 ---
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with try/catch in services; user-facing notifications via Bootstrap alerts for API failures, stale data, and budget threshold breaches.
+HTTP interceptor-based approach with global error handler; failed API calls trigger user-friendly notifications via toastr and retry logic for transient failures.
 
 ---
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; all API calls include bearer token; RBAC enforced client-side via `rbacService` and server-side via API gateway.
+Requires token-based authentication via existing SSO provider; all API calls secured with bearer tokens and TLS 1.2+; role-based access control enforced at service layer.
