@@ -1,29 +1,76 @@
 <!DOCTYPE html>
-<html ng-app="dashboardModule">
+<html ng-app="creditCardDashboardModule">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Portfolio Management Dashboard</title>
+  <title>Credit Card Dashboard</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="src/app/assets/css/dashboard.css">
+  <style>
+    body { padding: 20px; background-color: #f5f5f5; }
+    .dashboard-header { margin-bottom: 30px; }
+    .kpi-panel { margin-bottom: 20px; }
+    .card-summary { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card-number { font-size: 18px; font-weight: bold; }
+    .kpi-value { font-size: 24px; font-weight: bold; color: #337ab7; }
+    .kpi-label { color: #666; font-size: 14px; }
+  </style>
 </head>
 <body>
-  <div ng-view></div>
+  <div ng-controller="dashboardController as vm">
+    <div class="container-fluid">
+      <div class="dashboard-header">
+        <h1>Credit Card Dashboard</h1>
+      </div>
+      <div class="row kpi-panel">
+        <div class="col-md-3 col-sm-6">
+          <div class="card-summary">
+            <div class="kpi-label">Monthly Spend</div>
+            <div class="kpi-value">{{vm.kpis.totalMonthlySpend | currency}}</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card-summary">
+            <div class="kpi-label">Total Credit Limit</div>
+            <div class="kpi-value">{{vm.kpis.totalCreditLimit | currency}}</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card-summary">
+            <div class="kpi-label">Available Credit</div>
+            <div class="kpi-value">{{vm.kpis.totalAvailableCredit | currency}}</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card-summary">
+            <div class="kpi-label">Outstanding Amount</div>
+            <div class="kpi-value">{{vm.kpis.totalOutstandingAmount | currency}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Your Credit Cards ({{vm.kpis.cardCount}})</h3>
+        </div>
+      </div>
+      <div class="row" responsive-layout>
+        <div ng-repeat="card in vm.kpis.cards" class="col-md-4 col-sm-6 col-xs-12">
+          <card-summary card="card"></card-summary>
+        </div>
+      </div>
+      <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+      <div ng-if="vm.loading" class="text-center"><h4>Loading dashboard...</h4></div>
+    </div>
+  </div>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
-  <script src="src/app/models/portfolio.model.js"></script>
-  <script src="src/app/models/company.model.js"></script>
-  <script src="src/app/services/auth.service.js"></script>
-  <script src="src/app/services/rbac.service.js"></script>
-  <script src="src/app/services/cloudIntegration.service.js"></script>
-  <script src="src/app/services/dataAggregation.factory.js"></script>
-  <script src="src/app/services/analytics.service.js"></script>
-  <script src="src/app/services/report.service.js"></script>
-  <script src="src/app/directives/data-freshness-indicator.directive.js"></script>
-  <script src="src/app/directives/alert-widget.directive.js"></script>
-  <script src="src/app/modules/dashboard/dashboard.module.js"></script>
-  <script src="src/app/modules/dashboard/dashboard.controller.js"></script>
-  <script src="src/app/modules/dashboard/company-detail.controller.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-resource.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/services/kpi-calculation.service.js"></script>
+  <script src="src/app/services/dashboard.service.js"></script>
+  <script src="src/app/services/card-data.factory.js"></script>
+  <script src="src/app/services/transaction-data.factory.js"></script>
+  <script src="src/app/credit-card-dashboard/controllers/dashboard.controller.js"></script>
+  <script src="src/app/credit-card-dashboard/directives/card-summary.directive.js"></script>
+  <script src="src/app/credit-card-dashboard/directives/responsive-layout.directive.js"></script>
 </body>
 </html>
