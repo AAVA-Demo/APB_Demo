@@ -1,0 +1,87 @@
+{
+  "users": {
+    "testuser": {
+      "username": "testuser",
+      "password": "SecurePass@123"
+    },
+    "testuser_5cards": {
+      "username": "testuser_5cards",
+      "password": "SecurePass@123"
+    },
+    "testuser_nocards": {
+      "username": "testuser_nocards",
+      "password": "SecurePass@123"
+    },
+    "testuser_multicard": {
+      "username": "testuser_multicard",
+      "password": "SecurePass@123"
+    },
+    "testuser_transactions": {
+      "username": "testuser_transactions",
+      "password": "SecurePass@123"
+    },
+    "testuser_notransactions": {
+      "username": "testuser_notransactions",
+      "password": "SecurePass@123"
+    },
+    "testuser_12months": {
+      "username": "testuser_12months",
+      "password": "SecurePass@123"
+    },
+    "testuser_1month": {
+      "username": "testuser_1month",
+      "password": "SecurePass@123"
+    },
+    "testuser_allcategories": {
+      "username": "testuser_allcategories",
+      "password": "SecurePass@123"
+    },
+    "testuser_somecategories": {
+      "username": "testuser_somecategories",
+      "password": "SecurePass@123"
+    },
+    "testuser_nodata": {
+      "username": "testuser_nodata",
+      "password": "SecurePass@123"
+    },
+    "userA": {
+      "username": "userA",
+      "password": "SecurePass@123"
+    },
+    "userB": {
+      "username": "userB",
+      "password": "SecurePass@123"
+    }
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "testCards": [
+    {
+      "cardId": "card-001",
+      "cardName": "Visa Platinum",
+      "cardNumber": "****1234",
+      "creditLimit": 5000,
+      "balance": 1200.50,
+      "availableCredit": 3799.50,
+      "status": "Active"
+    },
+    {
+      "cardId": "card-002",
+      "cardName": "Mastercard Gold",
+      "cardNumber": "****5678",
+      "creditLimit": 3000,
+      "balance": 850.00,
+      "availableCredit": 2150.00,
+      "status": "Active"
+    }
+  ]
+}
