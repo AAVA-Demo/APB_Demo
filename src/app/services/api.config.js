@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').constant('API_BASE_URL','/api');})();

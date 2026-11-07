@@ -1,0 +1,23 @@
+<div ng-controller="AnalyticsController as vm">
+<h2>Spending Analytics & Insights</h2>
+<div ng-if="vm.loading" class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-6">
+<h3>Category-Wise Spending</h3>
+<spend-chart chart-type="pie" chart-data="vm.categoryData.data" chart-labels="vm.categoryData.labels" chart-options="vm.categoryData.options"></spend-chart>
+</div>
+<div class="col-md-6">
+<h3>Monthly Spend Trend</h3>
+<spend-chart chart-type="line" chart-data="vm.monthlyData.data" chart-labels="vm.monthlyData.labels" chart-series="vm.monthlyData.series" chart-options="vm.monthlyData.options"></spend-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Card-Wise Spend Analysis</h3>
+<spend-chart chart-type="bar" chart-data="vm.cardData.data" chart-labels="vm.cardData.labels" chart-series="vm.cardData.series" chart-options="vm.cardData.options"></spend-chart>
+</div>
+</div>
+</div>
+</div>

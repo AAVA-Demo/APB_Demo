@@ -1,0 +1,15 @@
+<div ng-controller="DashboardController as vm">
+<h2>Dashboard Overview</h2>
+<div ng-if="vm.loading" class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i><p>Loading dashboard...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-3 col-sm-6 col-xs-12"><kpi-widget icon="fa-shopping-cart" value="vm.kpis.monthlySpend" label="Monthly Spend"></kpi-widget></div>
+<div class="col-md-3 col-sm-6 col-xs-12"><kpi-widget icon="fa-credit-card" value="vm.kpis.totalCreditLimit" label="Total Credit Limit"></kpi-widget></div>
+<div class="col-md-3 col-sm-6 col-xs-12"><kpi-widget icon="fa-money" value="vm.kpis.availableCredit" label="Available Credit"></kpi-widget></div>
+<div class="col-md-3 col-sm-6 col-xs-12"><kpi-widget icon="fa-exclamation-triangle" value="vm.kpis.outstandingAmount" label="Outstanding Amount"></kpi-widget></div>
+</div>
+<h3>My Credit Cards ({{vm.kpis.cardCount}})</h3>
+<card-overview cards="vm.cards"></card-overview>
+</div>
+</div>

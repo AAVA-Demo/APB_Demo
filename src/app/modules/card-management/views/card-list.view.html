@@ -1,0 +1,11 @@
+<div ng-controller="CardListController as vm">
+<h2>My Credit Cards</h2>
+<div ng-if="vm.loading" class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i><p>Loading cards...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+<div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="card in vm.cards">
+<card-tile card="card" on-click="vm.selectCard(cardId)"></card-tile>
+</div>
+<div ng-if="vm.cards.length===0" class="col-xs-12"><p class="text-center">No credit cards found. Add a card to get started.</p></div>
+</div>
+</div>
