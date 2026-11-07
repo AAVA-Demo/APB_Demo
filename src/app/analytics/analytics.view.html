@@ -1,0 +1,54 @@
+<div class="analytics-container">
+<div class="page-header">
+<h2>Spending Analytics</h2>
+<p class="subtitle">Visualize your spending patterns and trends</p>
+</div>
+<div ng-if="vm.loading" class="loading">Loading analytics...</div>
+<div ng-if="!vm.loading" class="analytics-content">
+<div class="chart-section">
+<div class="chart-card">
+<h3>Category-Wise Spending</h3>
+<div class="chart-wrapper">
+<canvas id="categoryChart" width="400" height="300"></canvas>
+</div>
+<div class="category-legend">
+<div class="legend-item" ng-repeat="(category, amount) in vm.categoryData">
+<span class="legend-label">{{category}}</span>
+<span class="legend-value">${{amount | number:2}}</span>
+<span class="legend-percent">{{(amount / vm.categoryData | number:1)}}%</span>
+</div>
+</div>
+</div>
+<div class="chart-card">
+<h3>Monthly Spend Trends</h3>
+<div class="chart-wrapper">
+<canvas id="trendsChart" width="400" height="300"></canvas>
+</div>
+<div class="trends-summary">
+<p>Track your spending patterns over time to identify trends and optimize your budget.</p>
+<div class="trend-stats">
+<div class="stat-item" ng-if="vm.monthlyTrends.length > 0">
+<label>Latest Month</label>
+<value>${{vm.monthlyTrends[vm.monthlyTrends.length-1].amount | number:2}}</value>
+</div>
+<div class="stat-item" ng-if="vm.monthlyTrends.length > 1">
+<label>Previous Month</label>
+<value>${{vm.monthlyTrends[vm.monthlyTrends.length-2].amount | number:2}}</value>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="insights-section">
+<h3>Spending Insights</h3>
+<div class="insight-card">
+<h4>Top Spending Category</h4>
+<p ng-if="vm.categoryData">Your highest spending is in <strong>{{getTopCategory()}}</strong></p>
+</div>
+<div class="insight-card">
+<h4>Budget Recommendations</h4>
+<p>Consider setting category-specific budgets to better manage your spending.</p>
+</div>
+</div>
+</div>
+</div>

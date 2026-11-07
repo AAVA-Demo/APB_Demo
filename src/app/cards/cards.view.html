@@ -1,0 +1,74 @@
+<div class="cards-container">
+<div class="page-header">
+<h2>Credit Card Management</h2>
+<p class="subtitle">View and analyze your credit card portfolio</p>
+</div>
+<div ng-if="vm.loading" class="loading">Loading cards...</div>
+<div ng-if="!vm.loading" class="cards-layout">
+<div class="cards-sidebar">
+<h3>Your Cards</h3>
+<div class="card-list">
+<div class="card-list-item" ng-repeat="card in vm.cards" ng-click="vm.selectCard(card)" ng-class="{'active': vm.selectedCard.id === card.id}">
+<div class="card-list-header">
+<span class="card-list-name">{{card.name}}</span>
+<span class="card-list-bank">{{card.bank}}</span>
+</div>
+<div class="card-list-number">•••• {{card.last4}}</div>
+<div class="card-list-balance">${{card.outstandingAmount | number:2}}</div>
+</div>
+</div>
+</div>
+<div class="card-details-panel" ng-if="vm.selectedCard">
+<div class="card-detail-header">
+<h3>{{vm.selectedCard.name}}</h3>
+<span class="card-status">{{vm.selectedCard.status}}</span>
+</div>
+<div class="card-info-grid">
+<div class="info-item">
+<label>Bank</label>
+<value>{{vm.selectedCard.bank}}</value>
+</div>
+<div class="info-item">
+<label>Card Number</label>
+<value>•••• •••• •••• {{vm.selectedCard.last4}}</value>
+</div>
+<div class="info-item">
+<label>Credit Limit</label>
+<value>${{vm.selectedCard.creditLimit | number:2}}</value>
+</div>
+<div class="info-item">
+<label>Available Credit</label>
+<value>${{vm.selectedCard.availableCredit | number:2}}</value>
+</div>
+<div class="info-item">
+<label>Outstanding Amount</label>
+<value class="outstanding">${{vm.selectedCard.outstandingAmount | number:2}}</value>
+</div>
+<div class="info-item">
+<label>Utilization</label>
+<value>{{(vm.selectedCard.outstandingAmount / vm.selectedCard.creditLimit * 100) | number:1}}%</value>
+</div>
+</div>
+<div class="card-analytics" ng-if="vm.cardAnalytics">
+<h4>Spending Analysis</h4>
+<div class="analytics-summary">
+<div class="summary-item">
+<label>Total Spent</label>
+<value>${{vm.cardAnalytics.total | number:2}}</value>
+</div>
+<div class="summary-item">
+<label>Transactions</label>
+<value>{{vm.cardAnalytics.transactionCount}}</value>
+</div>
+</div>
+<div class="category-breakdown">
+<h5>Category Breakdown</h5>
+<div class="category-item" ng-repeat="(category, amount) in vm.cardAnalytics.categories">
+<span class="category-name">{{category}}</span>
+<span class="category-amount">${{amount | number:2}}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
