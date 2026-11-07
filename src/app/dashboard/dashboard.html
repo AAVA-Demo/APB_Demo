@@ -1,0 +1,36 @@
+<div ng-controller="DashboardController as vm">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading dashboard...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Monthly Spend" value="₹{{vm.kpis.monthlySpend | number:0}}"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Total Credit Limit" value="₹{{vm.kpis.totalCreditLimit | number:0}}"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Available Credit" value="₹{{vm.kpis.totalAvailableCredit | number:0}}"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Outstanding Amount" value="₹{{vm.kpis.totalOutstanding | number:0}}"></kpi-card>
+      </div>
+    </div>
+    <h3>Your Credit Cards ({{vm.kpis.numberOfCards}})</h3>
+    <div class="row">
+      <div class="col-md-4" ng-repeat="card in vm.cards">
+        <div class="credit-card">
+          <div class="card-type">{{card.cardType}}</div>
+          <div class="card-number">{{card.cardNumber}}</div>
+          <div class="card-detail"><strong>Holder:</strong> {{card.cardHolderName}}</div>
+          <div class="card-detail"><strong>Expiry:</strong> {{card.expiryDate}}</div>
+          <hr style="border-color: rgba(255,255,255,0.3);">
+          <div class="card-detail"><strong>Credit Limit:</strong> ₹{{card.creditLimit | number:0}}</div>
+          <div class="card-detail"><strong>Available:</strong> ₹{{card.availableCredit | number:0}}</div>
+          <div class="card-detail"><strong>Outstanding:</strong> ₹{{card.outstandingAmount | number:0}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

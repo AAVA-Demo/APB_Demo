@@ -1,0 +1,31 @@
+<div ng-controller="TransactionListController as vm">
+  <h2>Transaction History</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading transactions...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="transaction-table">
+    <p class="text-muted">Showing {{vm.transactions.length}} of {{vm.pagination.totalRecords}} transactions</p>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Merchant</th>
+          <th>Category</th>
+          <th>Card</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="transaction-row" ng-repeat="txn in vm.transactions" ng-click="vm.viewDetail(txn.transactionId)">
+          <td>{{txn.transactionDate | date:'dd MMM yyyy'}}</td>
+          <td>{{txn.merchantName}}</td>
+          <td>{{txn.merchantCategory}}</td>
+          <td>{{txn.cardName}}</td>
+          <td>₹{{txn.amount | number:2}}</td>
+          <td><span class="label label-success">{{txn.status}}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <transaction-pagination pagination="vm.pagination" on-page-change="vm.onPageChange(page)"></transaction-pagination>
+  </div>
+</div>

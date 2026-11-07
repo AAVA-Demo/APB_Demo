@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Card Analysis Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    body { padding-top: 60px; background: #f5f5f5; }
+    .navbar-brand { font-weight: bold; }
+    .kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+    .kpi-card .value { font-size: 32px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+    .kpi-card .label { font-size: 14px; color: #7f8c8d; text-transform: uppercase; }
+    .credit-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .credit-card .card-number { font-size: 18px; letter-spacing: 2px; margin: 10px 0; }
+    .credit-card .card-detail { margin: 5px 0; }
+    .transaction-table { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .transaction-row { cursor: pointer; }
+    .transaction-row:hover { background: #f8f9fa; }
+    .chart-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .pagination { margin: 20px 0; }
+    .detail-panel { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .detail-row { padding: 10px 0; border-bottom: 1px solid #ecf0f1; }
+    .detail-label { font-weight: bold; color: #7f8c8d; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/dashboard">Credit Card Dashboard</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#/dashboard">Dashboard</a></li>
+          <li><a href="#/transactions">Transactions</a></li>
+          <li><a href="#/analytics">Analytics</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ui-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/credit-card-data.factory.js"></script>
+  <script src="src/app/services/transaction-data.factory.js"></script>
+  <script src="src/app/dashboard/dashboard.module.js"></script>
+  <script src="src/app/dashboard/services/kpi-calculation.service.js"></script>
+  <script src="src/app/dashboard/directives/kpi-card.directive.js"></script>
+  <script src="src/app/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/transactions/transactions.module.js"></script>
+  <script src="src/app/transactions/services/transaction.service.js"></script>
+  <script src="src/app/transactions/directives/transaction-pagination.directive.js"></script>
+  <script src="src/app/transactions/transaction-list.controller.js"></script>
+  <script src="src/app/transactions/transaction-detail.controller.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/services/transaction-categorization.service.js"></script>
+  <script src="src/app/analytics/services/data-aggregation.service.js"></script>
+  <script src="src/app/analytics/services/analytics.service.js"></script>
+  <script src="src/app/analytics/directives/spending-chart.directive.js"></script>
+  <script src="src/app/analytics/analytics.controller.js"></script>
+</body>
+</html>

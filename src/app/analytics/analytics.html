@@ -1,0 +1,54 @@
+<div ng-controller="AnalyticsController as vm">
+  <h2>Spending Analytics & Insights</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Category-wise Spending</h4>
+          <canvas class="chart chart-pie" chart-data="vm.categoryChartData.data" chart-labels="vm.categoryChartData.labels" chart-options="vm.categoryChartData.options"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Card-wise Spending</h4>
+          <canvas class="chart chart-bar" chart-data="vm.cardChartData.data" chart-labels="vm.cardChartData.labels" chart-series="vm.cardChartData.series" chart-options="vm.cardChartData.options"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Monthly Spend Trends</h4>
+          <canvas class="chart chart-line" chart-data="vm.monthlyChartData.data" chart-labels="vm.monthlyChartData.labels" chart-series="vm.monthlyChartData.series" chart-options="vm.monthlyChartData.options"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analyticsData.categories">
+                <td>{{cat.categoryName}}</td>
+                <td>₹{{cat.totalAmount | number:2}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
