@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="ccApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Analysis Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="src/app/styles/app.css">
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/dashboard">Credit Card Dashboard</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+          <li><a href="#/analytics"><i class="fa fa-bar-chart"></i> Analytics</a></li>
+          <li><a href="#/transactions"><i class="fa fa-list"></i> Transactions</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid main-content">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-resource.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/models/creditCard.model.js"></script>
+  <script src="src/app/models/dashboardKpi.model.js"></script>
+  <script src="src/app/models/transaction.model.js"></script>
+  <script src="src/app/models/spendingAnalytics.model.js"></script>
+  <script src="src/app/services/authService.js"></script>
+  <script src="src/app/services/apiService.js"></script>
+  <script src="src/app/dashboard/dashboardModule.js"></script>
+  <script src="src/app/dashboard/services/dashboardService.js"></script>
+  <script src="src/app/dashboard/services/creditCardService.js"></script>
+  <script src="src/app/dashboard/services/kpiAggregationUtil.js"></script>
+  <script src="src/app/dashboard/controllers/dashboardController.js"></script>
+  <script src="src/app/dashboard/directives/kpiWidget.js"></script>
+  <script src="src/app/dashboard/directives/creditCardSummary.js"></script>
+  <script src="src/app/analytics/analyticsModule.js"></script>
+  <script src="src/app/analytics/services/analyticsService.js"></script>
+  <script src="src/app/analytics/services/categoryService.js"></script>
+  <script src="src/app/analytics/services/dataAggregationUtil.js"></script>
+  <script src="src/app/analytics/controllers/analyticsController.js"></script>
+  <script src="src/app/analytics/directives/spendingChart.js"></script>
+  <script src="src/app/analytics/directives/trendChart.js"></script>
+  <script src="src/app/transactions/transactionModule.js"></script>
+  <script src="src/app/transactions/services/transactionService.js"></script>
+  <script src="src/app/transactions/services/transactionSyncService.js"></script>
+  <script src="src/app/transactions/controllers/transactionListController.js"></script>
+  <script src="src/app/transactions/directives/transactionCard.js"></script>
+</body>
+</html>
