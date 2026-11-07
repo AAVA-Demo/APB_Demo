@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="ccAnalysisApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Credit Card Analysis Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="src/app/styles/app.css">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNav">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#/dashboard">Credit Card Analysis</a>
+</div>
+<div class="collapse navbar-collapse" id="mainNav">
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/trends">Trends</a></li>
+<li><a href="#/categories">Categories</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container-fluid">
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/credit-card.service.js"></script>
+<script src="src/app/services/kpi.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/services/time-series.service.js"></script>
+<script src="src/app/services/category.service.js"></script>
+<script src="src/app/directives/kpi-card.directive.js"></script>
+<script src="src/app/directives/spend-trend-chart.directive.js"></script>
+<script src="src/app/directives/category-pie-chart.directive.js"></script>
+<script src="src/app/directives/category-bar-chart.directive.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/dashboard.controller.js"></script>
+<script src="src/app/trends/trends.module.js"></script>
+<script src="src/app/trends/trends.controller.js"></script>
+<script src="src/app/categories/categories.module.js"></script>
+<script src="src/app/categories/categories.controller.js"></script>
+</body>
+</html>

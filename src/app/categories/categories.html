@@ -1,0 +1,50 @@
+<div class="categories-container">
+<h2>Category-wise Spending Analysis</h2>
+<div class="filter-panel">
+<div class="row">
+<div class="col-md-4">
+<label>Period</label>
+<select class="form-control" ng-model="vm.period" ng-change="vm.init()">
+<option value="30days">Last 30 Days</option>
+<option value="60days">Last 60 Days</option>
+<option value="90days">Last 90 Days</option>
+</select>
+</div>
+<div class="col-md-8 text-right">
+<button class="btn btn-default btn-chart-toggle" ng-class="{'btn-primary':vm.chartType==='pie'}" ng-click="vm.toggleChart('pie')">Pie Chart</button>
+<button class="btn btn-default btn-chart-toggle" ng-class="{'btn-primary':vm.chartType==='bar'}" ng-click="vm.toggleChart('bar')">Bar Chart</button>
+</div>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading category data...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+<strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="chart-container">
+<div style="height:400px">
+<category-pie-chart ng-if="vm.chartType==='pie'" category-data="vm.categoryData" on-category-click="vm.onCategoryClick(category)"></category-pie-chart>
+<category-bar-chart ng-if="vm.chartType==='bar'" category-data="vm.categoryData" on-category-click="vm.onCategoryClick(category)"></category-bar-chart>
+</div>
+</div>
+<div ng-if="vm.selectedCategory" class="chart-container">
+<h3>{{vm.selectedCategory}} Transactions <button class="btn btn-sm btn-default pull-right" ng-click="vm.closeDetails()">Close</button></h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.transactions">
+<td>{{txn.date|date:'short'}}</td>
+<td>{{txn.description}}</td>
+<td>{{txn.amount|currency}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>

@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('ccAnalysisApp',['ngRoute','ccAnalysis.dashboard','ccAnalysis.trends','ccAnalysis.categories']);})();

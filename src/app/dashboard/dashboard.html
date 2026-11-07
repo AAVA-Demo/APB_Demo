@@ -1,0 +1,57 @@
+<div class="dashboard-container">
+<h2>Credit Card Dashboard</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading dashboard data...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+<strong>Error:</strong> {{vm.error}}
+<button class="btn btn-sm btn-primary pull-right" ng-click="vm.refresh()">Retry</button>
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card label="Monthly Spend" value="vm.kpis.monthlySpend" icon="glyphicon-credit-card"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="glyphicon-stats"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card label="Available Credit" value="vm.kpis.totalAvailableCredit" icon="glyphicon-ok-circle"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card label="Outstanding Amount" value="vm.kpis.totalOutstanding" icon="glyphicon-exclamation-sign"></kpi-card>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Your Credit Cards ({{vm.kpis.cardCount}})</h3>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6 col-sm-12" ng-repeat="card in vm.creditCards">
+<div class="card-item">
+<div class="card-name">{{card.cardName}}</div>
+<div class="card-number">{{card.cardNumber}}</div>
+<div class="card-details">
+<div>
+<div class="label">Credit Limit</div>
+<div class="value">{{card.creditLimit|currency:"$":0}}</div>
+</div>
+<div>
+<div class="label">Available</div>
+<div class="value">{{card.availableCredit|currency:"$":0}}</div>
+</div>
+<div>
+<div class="label">Outstanding</div>
+<div class="value">{{card.outstandingAmount|currency:"$":0}}</div>
+</div>
+<div>
+<div class="label">Monthly Spend</div>
+<div class="value">{{card.monthlySpend|currency:"$":0}}</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

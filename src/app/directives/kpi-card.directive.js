@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('ccAnalysisApp').directive('kpiCard',[function(){return{restrict:'E',scope:{label:'@',value:'=',icon:'@'},template:'<div class="kpi-card"><div class="kpi-icon" ng-if="icon"><span class="glyphicon" ng-class="icon"></span></div><div class="kpi-label">{{label}}</div><div class="kpi-value">{{value|currency:"$":0}}</div></div>'};}]);})();
