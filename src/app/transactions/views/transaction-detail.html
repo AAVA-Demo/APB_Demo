@@ -1,0 +1,46 @@
+<div ng-controller="TransactionDetailController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Transaction Details
+        <button class="btn btn-default pull-right" ng-click="vm.goBack()">
+          <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+        </button>
+      </h2>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.transaction">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Transaction ID: {{vm.transaction.transactionId}}</h4>
+        </div>
+        <div class="panel-body">
+          <dl class="dl-horizontal">
+            <dt>Merchant Name:</dt>
+            <dd>{{vm.transaction.merchantName}}</dd>
+            <dt>Transaction Date:</dt>
+            <dd>{{vm.transaction.date | date:'fullDate'}}</dd>
+            <dt>Amount:</dt>
+            <dd>${{vm.transaction.amount | number:2}} {{vm.transaction.currency}}</dd>
+            <dt>Category:</dt>
+            <dd><span class="label label-info">{{vm.transaction.merchantCategory}}</span></dd>
+            <dt>Card Used:</dt>
+            <dd>{{vm.transaction.cardName}} {{vm.transaction.cardLastFour}}</dd>
+            <dt>Transaction Type:</dt>
+            <dd>{{vm.transaction.transactionType}}</dd>
+            <dt>Status:</dt>
+            <dd><span class="label label-success">{{vm.transaction.status}}</span></dd>
+            <dt>Description:</dt>
+            <dd>{{vm.transaction.description || 'N/A'}}</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px; color: #3498db;"></i>
+      <p>Loading transaction details...</p>
+    </div>
+  </div>
+</div>

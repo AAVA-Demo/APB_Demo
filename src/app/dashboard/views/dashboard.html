@@ -1,0 +1,64 @@
+<div ng-controller="DashboardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Credit Card Dashboard
+        <button class="btn btn-sm btn-primary pull-right" ng-click="vm.refresh()" ng-disabled="vm.loading">
+          <i class="glyphicon glyphicon-refresh" ng-class="{'glyphicon-refresh-animate': vm.loading}"></i> Refresh
+        </button>
+      </h2>
+      <p class="text-muted" ng-if="vm.lastUpdated">Last updated: {{vm.lastUpdated | date:'short'}}</p>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Monthly Spend" value="vm.kpis.monthlySpend.value" currency="$" icon="credit-card"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Total Credit Limit" value="vm.kpis.totalCreditLimit.value" currency="$" icon="list-alt"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Available Credit" value="vm.kpis.availableCredit.value" currency="$" icon="ok-circle" percentage="vm.kpis.availableCredit.percentage"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Outstanding Amount" value="vm.kpis.outstandingAmount.value" currency="$" icon="exclamation-sign"></kpi-card>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px; color: #3498db;"></i>
+      <p>Loading dashboard...</p>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-12">
+      <h3>Your Credit Cards</h3>
+    </div>
+    <div class="col-md-6" ng-repeat="card in vm.cards">
+      <div class="card-item">
+        <h4>{{card.cardName}} <small>{{card.cardNumber}}</small></h4>
+        <div class="row">
+          <div class="col-xs-6">
+            <strong>Credit Limit:</strong> ${{card.creditLimit | number:0}}
+          </div>
+          <div class="col-xs-6">
+            <strong>Available:</strong> ${{card.availableCredit | number:0}}
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-xs-6">
+            <strong>Outstanding:</strong> ${{card.outstandingBalance | number:0}}
+          </div>
+          <div class="col-xs-6">
+            <strong>This Month:</strong> ${{card.currentMonthSpend | number:0}}
+          </div>
+        </div>
+        <div class="progress" style="margin-top: 10px;">
+          <div class="progress-bar" role="progressbar" 
+               ng-style="{width: ((card.creditLimit - card.availableCredit) / card.creditLimit * 100) + '%'}">
+            {{((card.creditLimit - card.availableCredit) / card.creditLimit * 100).toFixed(0)}}% Used
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

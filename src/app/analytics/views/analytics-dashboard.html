@@ -1,0 +1,90 @@
+<div ng-controller="AnalyticsDashboardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics & Insights</h2>
+      <div class="form-inline" style="margin-bottom: 20px;">
+        <label>Date Range:</label>
+        <select class="form-control" ng-model="vm.selectedDateRange" ng-change="vm.changeDateRange()">
+          <option value="3months">Last 3 Months</option>
+          <option value="6months">Last 6 Months</option>
+          <option value="12months">Last 12 Months</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.analytics">
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Spend</div>
+        <div class="kpi-value">${{vm.analytics.totalSpend | number:2}}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <div class="kpi-label">Average Monthly Spend</div>
+        <div class="kpi-value">${{vm.analytics.averageMonthlySpend | number:2}}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <div class="kpi-label">Categories Tracked</div>
+        <div class="kpi-value">{{vm.analytics.categoryBreakdown.length}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.analytics">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Category-wise Spending</h4>
+        <canvas id="categoryChart" width="400" height="300"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Monthly Spend Trend</h4>
+        <canvas id="monthlyTrendChart" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.analytics">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Card-wise Spend Analysis</h4>
+        <canvas id="cardWiseChart" width="400" height="300"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Category Breakdown</h4>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analytics.categoryBreakdown | orderBy:'-amount'">
+                <td>{{cat.category}}</td>
+                <td>${{cat.amount | number:2}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px; color: #3498db;"></i>
+      <p>Loading analytics...</p>
+    </div>
+  </div>
+</div>
