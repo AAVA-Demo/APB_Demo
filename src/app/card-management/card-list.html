@@ -1,0 +1,31 @@
+<div class="card-management-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>My Credit Cards</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="filter-bar">
+        <input type="text" class="form-control" placeholder="Search by card name, type, or last 4 digits..." ng-model="vm.searchText">
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="loading">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="!vm.loading" class="row">
+    <div class="col-xs-12 col-md-6" ng-repeat="card in vm.cards | cardFilter:vm.searchText">
+      <div class="card-item" ng-click="vm.selectCard(card.cardId)">
+        <div class="card-header">{{ card.cardName }} ({{ card.cardType }})</div>
+        <div><strong>Card Number:</strong> **** **** **** {{ card.lastFourDigits }}</div>
+        <div><strong>Credit Limit:</strong> ₹{{ card.creditLimit | number:0 }}</div>
+        <div><strong>Available Credit:</strong> ₹{{ card.availableCredit | number:0 }}</div>
+        <div><strong>Outstanding:</strong> ₹{{ card.outstandingAmount | number:0 }}</div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.cards.length === 0" class="alert alert-info">
+    No credit cards found.
+  </div>
+</div>

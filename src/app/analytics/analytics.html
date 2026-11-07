@@ -1,0 +1,57 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Spending Analytics</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="filter-bar">
+        <label>Filter by Category:</label>
+        <select class="form-control" ng-model="vm.selectedCategory" ng-change="vm.filterByCategory()">
+          <option ng-repeat="cat in vm.categories" value="{{ cat }}">{{ cat }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="loading">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="!vm.loading && vm.insights" class="row">
+    <div class="col-xs-12 col-md-6">
+      <div class="chart-container">
+        <h4>Category-Wise Spending</h4>
+        <canvas id="category-chart" class="chart chart-pie" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels" chart-options="vm.chartOptions" style="height: 300px;"></canvas>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+      <div class="chart-container">
+        <h4>Monthly Spending Trends (12 Months)</h4>
+        <canvas id="trend-chart" class="chart chart-line" chart-data="vm.trendChartData" chart-labels="vm.trendChartLabels" chart-options="vm.chartOptions" chart-series="['Monthly Spend']" style="height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.insights" class="row" style="margin-top: 20px;">
+    <div class="col-xs-12">
+      <div class="kpi-card">
+        <h4>Spending Breakdown</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total Spend</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in vm.insights.categoryBreakdown">
+              <td>{{ item.category }}</td>
+              <td>₹{{ item.total | number:0 }}</td>
+              <td>{{ item.percentage }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

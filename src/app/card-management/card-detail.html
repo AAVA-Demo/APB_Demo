@@ -1,0 +1,32 @@
+<div class="card-detail-container" ng-if="vm.selectedCard">
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-default" ng-click="vm.backToList()">← Back to Cards</button>
+      <h2>{{ vm.selectedCard.cardName }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <div class="kpi-card">
+        <h4>Card Details</h4>
+        <p><strong>Card Type:</strong> {{ vm.selectedCard.cardType }}</p>
+        <p><strong>Card Number:</strong> **** **** **** {{ vm.selectedCard.lastFourDigits }}</p>
+        <p><strong>Expiry Date:</strong> {{ vm.selectedCard.expiryDate | date:'MM/yyyy' }}</p>
+        <p><strong>Credit Limit:</strong> ₹{{ vm.selectedCard.creditLimit | number:0 }}</p>
+        <p><strong>Available Credit:</strong> ₹{{ vm.selectedCard.availableCredit | number:0 }}</p>
+        <p><strong>Outstanding Amount:</strong> ₹{{ vm.selectedCard.outstandingAmount | number:0 }}</p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6" ng-if="vm.spendSummary">
+      <div class="kpi-card">
+        <h4>Spending Analysis</h4>
+        <p><strong>Monthly Spend:</strong> ₹{{ vm.spendSummary.monthlySpend | number:0 }}</p>
+        <p><strong>Weekly Spend:</strong> ₹{{ vm.spendSummary.weeklySpend | number:0 }}</p>
+        <h5>Top Categories:</h5>
+        <ul>
+          <li ng-repeat="cat in vm.spendSummary.topCategories">{{ cat.category }}: ₹{{ cat.amount | number:0 }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
