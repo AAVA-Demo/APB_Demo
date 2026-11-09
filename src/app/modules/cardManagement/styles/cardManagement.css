@@ -1,0 +1,13 @@
+.card-management-container, .card-detail-container { padding: 20px; }
+.card-list { margin-top: 20px; }
+.card-list-item { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.card-list-item:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.card-list-item .card-header h4 { margin: 0 0 10px 0; font-size: 18px; font-weight: bold; color: #333; }
+.card-list-item .card-body { margin-bottom: 10px; }
+.card-list-item .label-text { margin: 0; font-size: 12px; color: #777; text-transform: uppercase; }
+.card-list-item .value-text { margin: 5px 0 0 0; font-size: 16px; font-weight: bold; }
+.card-list-item .card-footer { border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; }
+.card-detail-content { margin-top: 20px; }
+.panel { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.dl-horizontal dt { text-align: left; width: 150px; }
+.dl-horizontal dd { margin-left: 170px; }
