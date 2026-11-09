@@ -1,44 +1,42 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic provides interactive spending analytics with category-wise breakdown and trend visualization capabilities. The core requirement is to enable users to analyze their credit card spending across nine predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) and view monthly spending trends. The scope includes card-wise analysis, interactive charts, and pattern identification to support informed financial decision-making.
+- **Summary**: This epic delivers interactive analytics and visualization capabilities for understanding spending patterns through category-wise analysis (nine categories: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) and monthly spend trends, with card-wise spend analysis.
 
-- **Component Flow:**
+- **Component Flow**:
 
 ```mermaid
 flowchart TD
-    A["User Browser"]
-    B["Analytics UI Layer"]
-    C["API Gateway"]
-    D["Analytics Engine"]
-    E["Transaction Data Service"]
+    A["User Interface Analytics Dashboard"]
+    B["API Gateway"]
+    C["Spending Analytics Service"]
+    D["Transaction Data Service"]
+    E["Analytics Engine"]
     F["Category Classification Service"]
     G["Visualization Library"]
     H["Database"]
     A --> B
-    B --> G
     B --> C
     C --> D
-    D --> E
-    D --> F
+    C --> E
+    C --> F
+    D --> H
     E --> H
     F --> H
-    D --> C
-    C --> B
-    B --> A
+    C --> G
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Transaction Data Service for raw spending data; Category Classification Service for transaction categorization
-  - **Downstream:** Analytics Engine for data aggregation and calculations; Visualization Library for rendering interactive charts
+- **Integration Points**: 
+  - **Upstream**: Transaction data service (for spending data), Analytics engine (for data aggregation and calculations), Visualization library (for interactive charts), Category classification service (for transaction categorization)
+  - **Downstream**: Interactive analytics UI with charts, graphs, and drill-down capabilities
 
-- **Key Assumptions:** 
-  - Transactions are pre-classified into the nine spending categories or can be classified in real-time by the Category Classification Service
-  - Historical transaction data is available for at least 12 months to enable meaningful monthly trend analysis
+- **Key Assumptions**: 
+  - Transactions are automatically categorized by the category classification service using predefined rules or ML models.
+  - Analytics engine supports aggregation queries for category totals, monthly trends, and card-wise breakdowns.
 
-- **NFR Highlights:** Analytics visualizations must render within 3 seconds; system must support interactive charts with smooth user interactions; data aggregation must accurately calculate category totals and trends
+- **NFR Highlights**: Analytics visualizations must render within 3 seconds, System must support interactive charts with smooth user interactions, Data aggregation must accurately calculate category totals and trends.
 
-- **Data Flow:** User requests spending analytics view. API Gateway routes request to Analytics Engine, which queries Transaction Data Service for all user transactions. Category Classification Service categorizes transactions into nine predefined categories. Analytics Engine aggregates data by category, card, and time period, calculating totals and trends. Processed data is returned to Analytics UI Layer, which uses Visualization Library to render interactive charts and graphs showing category-wise spending, monthly trends, and card-wise analysis. User can interact with visualizations to drill down into specific categories or time periods.
+- **Data Flow**: User accesses the analytics dashboard and selects filters (date range, card, category). The Spending Analytics Service retrieves transaction data from the Transaction Data Service, processes it through the Analytics Engine to aggregate spending by category and time period, and uses the Category Classification Service to ensure proper categorization. Aggregated data is passed to the Visualization Library to generate interactive charts and graphs, which are displayed in the UI.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design comprehensively covers the epic's stated scope including category-wise spending analysis, monthly spend trends visualization, card-wise spend analysis, interactive charts and graphs, nine spending categories tracking, spending pattern identification, and comparative spend analysis. All NFRs (3-second render time, interactive charts with smooth interactions, accurate data aggregation) are addressed through the architecture with dedicated Analytics Engine and Visualization Library components. All stated dependencies (Transaction Data Service, Analytics Engine, Visualization Library, Category Classification Service) are integrated. Out-of-scope items (real bank integration, predictive forecasts, budget alerts, financial recommendations, third-party tools) are explicitly excluded from this design.
+- **Requirements Coverage**: The design covers all requirements including Category-wise spending analysis, Monthly spend trends visualization, Card-wise spend analysis, Interactive charts and graphs, Nine spending categories tracking, Spending pattern identification, and Comparative spend analysis. Integration with transaction data service, analytics engine, visualization library, and category classification service is addressed. NFRs for 3-second rendering, interactive charts with smooth interactions, and accurate data aggregation are supported through optimized data processing and visualization frameworks.

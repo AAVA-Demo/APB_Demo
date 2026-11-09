@@ -1,40 +1,37 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a consolidated credit card dashboard that aggregates and displays key performance indicators across all user credit cards. The core requirement is to provide users with a single-view interface showing monthly spend, total credit limit, available credit, and outstanding amounts. The scope includes multi-card aggregation, real-time data refresh, and responsive UI design for desktop and mobile access.
+- **Summary**: This epic provides a consolidated overview dashboard displaying key performance indicators (monthly spend, total credit limit, available credit, outstanding amounts) aggregated across all credit cards, with a modern responsive interface for portfolio health monitoring.
 
-- **Component Flow:**
+- **Component Flow**:
 
 ```mermaid
 flowchart TD
-    A["User Browser"]
-    B["Dashboard UI Layer"]
-    C["API Gateway"]
+    A["User Interface Dashboard"]
+    B["API Gateway"]
+    C["KPI Dashboard Service"]
     D["Credit Card Data Service"]
     E["User Authentication Service"]
     F["Database"]
     A --> B
     B --> C
-    C --> E
-    E --> C
     C --> D
+    C --> E
     D --> F
-    D --> C
-    C --> B
-    B --> A
+    E --> F
 ```
 
-- **Integration Points:** 
-  - **Upstream:** User Authentication Service for secure access validation
-  - **Downstream:** Credit Card Data Service for retrieving card information, balances, and financial metrics
+- **Integration Points**: 
+  - **Upstream**: Credit card data service (for retrieving card information and balances), User authentication service (for secure access to personal financial data)
+  - **Downstream**: Dashboard UI (responsive web/mobile interface)
 
-- **Key Assumptions:** 
-  - Credit card data is pre-aggregated or can be calculated on-demand within the 2-second load time requirement
-  - All credit card accounts are linked to a single user profile accessible through the authentication service
+- **Key Assumptions**: 
+  - KPIs are calculated in near real-time based on the latest available data.
+  - Data refresh occurs automatically at regular intervals or on user request.
 
-- **NFR Highlights:** Dashboard must load within 2 seconds; must support responsive design across desktop and mobile devices; data refresh rate must be near real-time for accurate financial information
+- **NFR Highlights**: Dashboard must load within 2 seconds, System must support responsive design across desktop and mobile devices, Data refresh rate must be near real-time for accurate financial information.
 
-- **Data Flow:** User authenticates and requests dashboard view. API Gateway validates user session with Authentication Service, then queries Credit Card Data Service for all cards associated with the user. The service retrieves card details, balances, and transaction summaries from the database, calculates KPIs (monthly spend, available credit, outstanding amounts), and returns aggregated data. Dashboard UI renders KPIs in a responsive layout with near real-time refresh capability.
+- **Data Flow**: Authenticated user accesses the dashboard, triggering the KPI Dashboard Service to query the Credit Card Data Service for all linked cards. The service aggregates balances, limits, and outstanding amounts, calculates KPIs (total credit limit, available credit, monthly spend, outstanding amount), and returns the data to the UI for display. The UI refreshes data periodically to maintain near real-time accuracy.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully covers the epic's stated scope including dashboard KPIs display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount tracking, multiple credit card view, and responsive layout design. All NFRs (2-second load time, responsive design, near real-time refresh) are addressed through the architecture. The integration points align with stated dependencies (Credit Card Data Service and User Authentication Service). Out-of-scope items (real bank integration, payments, fund transfers, loans, payment gateway) are explicitly excluded from this design.
+- **Requirements Coverage**: The design addresses all requirements including Dashboard KPIs display, Monthly Spend tracking, Total Credit Limit aggregation, Available Credit calculation, Outstanding Amount tracking, Multiple credit card view, and Responsive layout design. Integration with credit card data service and user authentication service is included. NFRs for 2-second load time, responsive design, and near real-time data refresh are supported through efficient service architecture and caching strategies.

@@ -1,43 +1,39 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers comprehensive transaction tracking and management capabilities across multiple credit cards. The core requirement is to provide users with complete visibility into all credit card transactions through detailed history, search, and filtering capabilities. The scope includes transaction listing, card-wise segregation, transaction details view, and efficient query performance to support financial awareness and accountability.
+- **Summary**: This epic provides comprehensive transaction tracking capabilities allowing users to view, filter, and search all credit card transactions across multiple cards, with detailed transaction history and card-wise transaction segregation.
 
-- **Component Flow:**
+- **Component Flow**:
 
 ```mermaid
 flowchart TD
-    A["User Browser"]
-    B["Transaction UI Layer"]
-    C["API Gateway"]
+    A["User Interface Transaction View"]
+    B["API Gateway"]
+    C["Transaction Management Service"]
     D["Transaction Data Service"]
     E["Credit Card Service"]
-    F["Search and Filter Engine"]
+    F["Date Time Service"]
     G["Database"]
     A --> B
     B --> C
     C --> D
     C --> E
-    D --> F
-    E --> F
-    F --> G
-    F --> D
-    D --> C
-    C --> B
-    B --> A
+    C --> F
+    D --> G
+    E --> G
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Transaction Data Service for retrieving transaction records; Credit Card Service for mapping transactions to specific cards; Date/Time Service for transaction timestamps
-  - **Downstream:** Search and Filter Engine for efficient query processing
+- **Integration Points**: 
+  - **Upstream**: Transaction data service (for retrieving transaction records), Credit card service (for mapping transactions to specific cards), Date/time service (for transaction timestamps)
+  - **Downstream**: Transaction listing UI with search, filter, and detail view capabilities
 
-- **Key Assumptions:** 
-  - Transaction records include sufficient metadata (merchant name, category, amount, timestamp, card identifier) to support search and filtering operations
-  - Database indexing is optimized to support sub-1-second query performance for high-volume transaction records
+- **Key Assumptions**: 
+  - Transaction records include merchant name, amount, date/time, category, and associated card ID.
+  - Search and filter functionality supports queries by date range, card, merchant, amount range, and category.
 
-- **NFR Highlights:** System must handle high volume of transaction records efficiently; transaction queries must return results within 1 second; data integrity must be maintained for all financial transactions
+- **NFR Highlights**: System must handle high volume of transaction records efficiently, Transaction queries must return results within 1 second, Data integrity must be maintained for all financial transactions.
 
-- **Data Flow:** User requests transaction view with optional filters (date range, card, amount range, merchant). API Gateway routes request to Transaction Data Service, which coordinates with Credit Card Service to validate card ownership and Search and Filter Engine to apply query parameters. Search and Filter Engine queries Database with optimized indexes to retrieve matching transactions within 1-second SLA. Transaction records are enriched with card details and returned to Transaction UI Layer for display. User can view transaction details, apply additional filters, or search for specific transactions. All operations maintain data integrity through transactional database operations.
+- **Data Flow**: User accesses the transaction view and applies filters (date range, card, merchant, category). The Transaction Management Service queries the Transaction Data Service to retrieve matching transaction records, maps transactions to specific cards using the Credit Card Service, and formats timestamps using the Date/Time Service. Filtered and sorted transaction data is returned to the UI for display. User can select individual transactions to view detailed information.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully addresses the epic's stated scope including transaction listing and display, transaction history across multiple cards, transaction search and filtering, transaction details view, and card-wise transaction segregation. All NFRs (efficient handling of high-volume records, sub-1-second query response time, data integrity maintenance) are addressed through the architecture with dedicated Search and Filter Engine and optimized database design. All stated dependencies (Transaction Data Service, Credit Card Service, Date/Time Service) are integrated into the component flow. Out-of-scope items (real bank integration, card payments, fund transfers, payment gateway integration, transaction disputes or chargebacks) are explicitly excluded from this design.
+- **Requirements Coverage**: The design addresses all requirements including Transaction listing and display, Transaction history across multiple cards, Transaction search and filtering, Transaction details view, and Card-wise transaction segregation. Integration with transaction data service, credit card service, and date/time service is included. NFRs for handling high volume of transaction records efficiently, 1-second query response time, and data integrity are supported through indexed database queries, efficient data retrieval patterns, and transactional data management.
