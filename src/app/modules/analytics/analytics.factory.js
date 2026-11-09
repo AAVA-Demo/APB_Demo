@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('analyticsModule').factory('transactionFactory',['$resource',function($resource){return $resource('/api/transactions',{},{fetchTransactions:{method:'GET',params:{userId:'@userId',dateRange:'@dateRange'},cache:true,isArray:true}});}]);})();

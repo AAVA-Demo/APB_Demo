@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('dashboardModule').factory('dashboardFactory',['$resource',function($resource){return $resource('/api/dashboard/kpis',{},{fetchKPIs:{method:'GET',params:{userId:'@userId'},cache:true,isArray:false}});}]);})();

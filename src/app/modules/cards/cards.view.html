@@ -1,0 +1,52 @@
+<div class="cards-container">
+<h2>My Credit Cards</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading credit cards...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}<button ng-click="vm.loadCards()" class="btn btn-sm btn-default">Retry</button></div>
+<div ng-if="!vm.loading && vm.portfolio">
+<div class="row" style="margin-bottom:20px;">
+<div class="col-md-12">
+<div class="panel panel-info">
+<div class="panel-body">
+<p><strong>Total Cards:</strong> {{vm.portfolio.totalCards}}</p>
+<p><strong>Total Credit Limit:</strong> ${{vm.portfolio.totalCreditLimit | number:2}}</p>
+<p><strong>Total Outstanding:</strong> ${{vm.portfolio.totalOutstanding | number:2}}</p>
+<button class="btn btn-primary" ng-click="vm.toggleComparisonMode()">{{vm.comparisonMode?'Exit Comparison':'Compare Cards'}}</button>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-6 col-md-4" ng-repeat="card in vm.portfolio.cards track by card.cardId">
+<card-detail card="card" on-select="vm.toggleCardSelection(card)" is-selected="vm.isCardSelected(card)"></card-detail>
+</div>
+</div>
+<div ng-if="vm.comparisonMode && vm.selectedCards.length>0" class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<div class="panel panel-success">
+<div class="panel-heading"><h4>Card Comparison ({{vm.selectedCards.length}} selected)</h4></div>
+<div class="panel-body">
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Card</th>
+<th>Credit Limit</th>
+<th>Available Credit</th>
+<th>Outstanding</th>
+<th>Monthly Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.selectedCards">
+<td>{{card.cardType}} {{card.cardNumber}}</td>
+<td>${{card.creditLimit | number:2}}</td>
+<td>${{card.availableCredit | number:2}}</td>
+<td>${{card.outstandingBalance | number:2}}</td>
+<td>${{card.monthlySpend | number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,60 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}<button ng-click="vm.loadAnalytics()" class="btn btn-sm btn-default">Retry</button></div>
+<div ng-if="!vm.loading && vm.analytics">
+<div class="row" style="margin-bottom:20px;">
+<div class="col-md-12">
+<div class="btn-group">
+<button class="btn btn-default" ng-class="{active:vm.dateRange==='3months'}" ng-click="vm.changeDateRange('3months')">3 Months</button>
+<button class="btn btn-default" ng-class="{active:vm.dateRange==='6months'}" ng-click="vm.changeDateRange('6months')">6 Months</button>
+<button class="btn btn-default" ng-class="{active:vm.dateRange==='12months'}" ng-click="vm.changeDateRange('12months')">12 Months</button>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Category-Wise Spending</h4></div>
+<div class="panel-body">
+<spending-chart chart-data="vm.analytics.categoryBreakdown" chart-type="category"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Monthly Spending Trends</h4></div>
+<div class="panel-body">
+<spending-chart chart-data="vm.analytics.monthlyTrends" chart-type="trend"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<div class="panel panel-info">
+<div class="panel-heading"><h4>Spending Summary</h4></div>
+<div class="panel-body">
+<p><strong>Total Transactions:</strong> {{vm.analytics.totalTransactions}}</p>
+<p><strong>Period:</strong> {{vm.analytics.period}}</p>
+<h5>Category Breakdown:</h5>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analytics.categoryBreakdown">
+<td>{{cat.category}}</td>
+<td>${{cat.amount | number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

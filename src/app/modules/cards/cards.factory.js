@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('cardsModule').factory('cardsFactory',['$resource',function($resource){return $resource('/api/cards',{},{fetchCards:{method:'GET',params:{userId:'@userId'},cache:true,isArray:true}});}]);})();
