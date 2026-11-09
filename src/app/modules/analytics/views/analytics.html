@@ -1,0 +1,59 @@
+<div class="analytics-container">
+<div class="row">
+<div class="col-md-12">
+<h2>Spending Analytics</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && vm.analyticsData" class="row">
+<div class="col-md-12">
+<h3>Total Spend: {{vm.analyticsData.totalSpend | currency}}</h3>
+</div>
+</div>
+<div ng-if="!vm.loading && vm.analyticsData" class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Category-Wise Spending</div>
+<div class="panel-body">
+<canvas id="categoryChart" class="chart chart-pie" chart-data="vm.categoryData" chart-labels="vm.categoryLabels" chart-options="vm.chartOptions"></canvas>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Monthly Spend Trends</div>
+<div class="panel-body">
+<canvas id="trendChart" class="chart chart-line" chart-data="[vm.monthData]" chart-labels="vm.monthLabels" chart-options="vm.chartOptions" chart-series="['Monthly Spend']"></canvas>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="!vm.loading && vm.analyticsData" class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Category Breakdown</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.categoryBreakdown">
+<td>{{cat.category}}</td>
+<td>{{cat.amount | currency}}</td>
+<td>{{cat.percentage | number:2}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

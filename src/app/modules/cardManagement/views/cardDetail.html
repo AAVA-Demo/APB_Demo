@@ -1,0 +1,47 @@
+<div class="card-detail-container">
+<div class="row">
+<div class="col-md-12">
+<a href="#!/cards" class="btn btn-default">Back to Cards</a>
+<h2>Card Details</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && vm.card" class="row">
+<div class="col-md-6">
+<div class="panel panel-primary">
+<div class="panel-heading">Card Information</div>
+<div class="panel-body">
+<p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+<p><strong>Card Number:</strong> {{vm.card.cardNumber}}</p>
+<p><strong>Cardholder:</strong> {{vm.card.cardHolderName}}</p>
+<p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency}}</p>
+<p><strong>Current Balance:</strong> {{vm.card.currentBalance | currency}}</p>
+<p><strong>Available Credit:</strong> {{vm.card.availableCredit | currency}}</p>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-info">
+<div class="panel-heading">Spending Analysis</div>
+<div class="panel-body" ng-if="vm.spending">
+<p><strong>Monthly Spend:</strong> {{vm.spending.monthlySpend | currency}}</p>
+<p><strong>Total Transactions:</strong> {{vm.spending.totalTransactions}}</p>
+<p><strong>Last Transaction:</strong> {{vm.spending.lastTransactionDate | date:'medium'}}</p>
+<h4>Category Breakdown</h4>
+<ul class="list-group">
+<li class="list-group-item" ng-repeat="cat in vm.spending.categoryBreakdown">
+<span class="badge">{{cat.amount | currency}}</span>
+{{cat.category}}
+</li>
+</ul>
+</div>
+<div class="panel-body" ng-if="!vm.spending">
+<p>No spending data available.</p>
+</div>
+</div>
+</div>
+</div>
+</div>

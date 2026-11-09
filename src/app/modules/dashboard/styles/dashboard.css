@@ -1,0 +1,7 @@
+.dashboard-container{padding:20px;}
+.kpi-row{margin-top:20px;}
+.kpi-widget{margin-bottom:15px;transition:all 0.3s;}
+.kpi-widget:hover{box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+.kpi-icon{font-size:48px;color:#337ab7;}
+.kpi-value{font-size:28px;font-weight:bold;color:#333;}
+.kpi-label{font-size:14px;color:#777;}

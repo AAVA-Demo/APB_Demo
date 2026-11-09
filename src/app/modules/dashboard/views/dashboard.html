@@ -1,0 +1,31 @@
+<div class="dashboard-container">
+<div class="row">
+<div class="col-md-12">
+<h2>Financial Dashboard</h2>
+<button class="btn btn-primary pull-right" ng-click="vm.refreshDashboard()" ng-disabled="vm.loading">Refresh</button>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.kpis && !vm.loading" class="row kpi-row">
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-widget label="Monthly Spend" value="vm.kpis.monthlySpend" icon="glyphicon-credit-card"></kpi-widget>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="glyphicon-stats"></kpi-widget>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-widget label="Available Credit" value="vm.kpis.availableCredit" icon="glyphicon-ok-circle"></kpi-widget>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-widget label="Outstanding Amount" value="vm.kpis.outstandingAmount" icon="glyphicon-warning-sign"></kpi-widget>
+</div>
+</div>
+<div ng-if="vm.kpis" class="row">
+<div class="col-md-12">
+<p class="text-muted">Last updated: {{vm.kpis.lastUpdated | date:'medium'}}</p>
+</div>
+</div>
+</div>
