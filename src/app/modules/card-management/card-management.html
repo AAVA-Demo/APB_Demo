@@ -1,0 +1,23 @@
+<div class="card-management-container">
+<h2>My Credit Cards</h2>
+<div ng-if="vm.loading" class="loading">
+<p>Loading cards...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger error-alert">
+<strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards track by card.cardId">
+<div class="card-item" ng-click="vm.viewCardDetail(card.cardId)">
+<h4>{{card.cardType}}</h4>
+<div class="card-number">****{{card.cardNumber.slice(-4)}}</div>
+<div class="card-balance">Balance: {{card.outstandingAmount|currency}}</div>
+<div>Limit: {{card.creditLimit|currency}}</div>
+<div>Available: {{card.availableCredit|currency}}</div>
+<div><span class="label" ng-class="{'label-success':card.status==='Active','label-default':card.status!=='Active'}">{{card.status}}</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
