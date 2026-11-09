@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <p class="text-muted">View all your credit cards and transactions</p>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+  <p>Loading cards...</p>
+</div>
+<div ng-if="!vm.loading">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Credit Cards</h4>
+      <div ng-repeat="card in vm.cards" class="card-item" ng-click="vm.selectCard(card)" style="cursor:pointer;">
+        <div class="row">
+          <div class="col-xs-8">
+            <strong>{{card.cardType}}</strong><br>
+            <span class="text-muted">{{card.cardNumber}}</span>
+          </div>
+          <div class="col-xs-4 text-right">
+            <small>Limit</small><br>
+            <strong>₹{{card.creditLimit | number:0}}</strong>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div class="col-xs-6">
+            <small>Outstanding</small><br>
+            <span>₹{{card.outstandingAmount | number:0}}</span>
+          </div>
+          <div class="col-xs-6">
+            <small>Available</small><br>
+            <span>₹{{card.availableCredit | number:0}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Recent Transactions <span ng-if="vm.selectedCard">({{vm.selectedCard.cardType}})</span></h4>
+      <div ng-if="vm.transactions.length === 0" class="alert alert-info">No transactions found</div>
+      <div ng-repeat="txn in vm.transactions" class="card-item">
+        <div class="row">
+          <div class="col-xs-8">
+            <strong>{{txn.merchantName}}</strong><br>
+            <small class="text-muted">{{txn.category}} - {{txn.timestamp | date:'MMM dd, yyyy'}}</small>
+          </div>
+          <div class="col-xs-4 text-right">
+            <strong>₹{{txn.amount | number:0}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Financial Overview Dashboard</h2>
+    <p class="text-muted">Consolidated view of all your credit cards</p>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refresh()" ng-disabled="vm.loading">Refresh</button>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && vm.kpis">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalMonthlySpend | number:0}}</div>
+        <div class="kpi-label">Monthly Spend</div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalCreditLimit | number:0}}</div>
+        <div class="kpi-label">Total Credit Limit</div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalAvailableCredit | number:0}}</div>
+        <div class="kpi-label">Available Credit</div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalOutstanding | number:0}}</div>
+        <div class="kpi-label">Outstanding Amount</div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px;">
+    <div class="col-md-12">
+      <h4>Your Credit Cards</h4>
+      <div ng-repeat="card in vm.kpis.cards" class="card-item">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <strong>{{card.cardType}}</strong><br>
+            <span class="text-muted">{{card.cardNumber}}</span>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <small>Credit Limit</small><br>
+            <strong>₹{{card.creditLimit | number:0}}</strong>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <small>Available</small><br>
+            <strong>₹{{card.availableCredit | number:0}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

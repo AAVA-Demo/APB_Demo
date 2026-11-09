@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics</h2>
+    <p class="text-muted">Interactive visualizations of your spending patterns</p>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+  <p>Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading && vm.analytics">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Category-wise Spending</h4>
+        <spending-chart data="vm.analytics.categoryWiseSpend"></spending-chart>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Monthly Spend Trend</h4>
+        <trend-chart data="vm.analytics.monthlyTrend"></trend-chart>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="chart-container">
+        <h4>Summary</h4>
+        <p><strong>Total Spend:</strong> ₹{{vm.analytics.totalSpend | number:0}}</p>
+        <h5>Category Breakdown:</h5>
+        <ul>
+          <li ng-repeat="(category, amount) in vm.analytics.categoryWiseSpend">
+            {{category}}: ₹{{amount | number:0}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
