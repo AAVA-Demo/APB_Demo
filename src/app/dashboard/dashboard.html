@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading dashboard data...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.kpiData" class="row">
+    <div class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Monthly Spend</div>
+        <div class="panel-body">
+          <h3>${{vm.kpiData.monthlySpend | number:2}}</h3>
+          <small>Current month</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">Total Credit Limit</div>
+        <div class="panel-body">
+          <h3>${{vm.kpiData.totalCreditLimit | number:2}}</h3>
+          <small>Across all cards</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">Available Credit</div>
+        <div class="panel-body">
+          <h3>${{vm.kpiData.availableCredit | number:2}}</h3>
+          <small>Ready to use</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="panel panel-warning">
+        <div class="panel-heading">Outstanding Amount</div>
+        <div class="panel-body">
+          <h3>${{vm.kpiData.outstandingAmount | number:2}}</h3>
+          <small>Total balance</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.kpiData" class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Credit Card Summary</div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Card Number</th>
+                <th>Balance</th>
+                <th>Credit Limit</th>
+                <th>Available Credit</th>
+                <th>Utilization</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="card in vm.kpiData.cards">
+                <td>{{card.cardNumber}}</td>
+                <td>${{card.balance | number:2}}</td>
+                <td>${{card.creditLimit | number:2}}</td>
+                <td>${{card.availableCredit | number:2}}</td>
+                <td>{{(card.balance / card.creditLimit * 100) | number:1}}%</td>
+              </tr>
+            </tbody>
+          </table>
+          <small class="text-muted">Last updated: {{vm.kpiData.lastUpdated | date:'short'}}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

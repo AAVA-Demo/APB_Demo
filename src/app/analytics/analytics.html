@@ -1,0 +1,66 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading analytics data...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.analyticsData">
+    <filter-panel filters="vm.filters" categories="vm.categories" on-apply="vm.applyFilters()" on-reset="vm.resetFilters()"></filter-panel>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">Summary</div>
+          <div class="panel-body">
+            <p><strong>Total Spend:</strong> ${{vm.analyticsData.totalSpend | number:2}}</p>
+            <p><strong>Total Transactions:</strong> {{vm.analyticsData.transactionCount}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Category-Wise Spending</div>
+          <div class="panel-body">
+            <category-chart data="vm.analyticsData.categoryBreakdown"></category-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Monthly Spend Trends</div>
+          <div class="panel-body">
+            <trend-chart data="vm.analyticsData.monthlyTrends"></trend-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Category Breakdown Table</div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in vm.analyticsData.categoryBreakdown | orderBy:'-amount'">
+                  <td>{{item.category}}</td>
+                  <td>${{item.amount | number:2}}</td>
+                  <td>{{item.percentage}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

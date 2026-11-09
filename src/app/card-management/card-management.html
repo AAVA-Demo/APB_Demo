@@ -1,0 +1,44 @@
+<div class="card-management-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading card data...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cardPortfolio">
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-primary" ng-click="vm.toggleComparison()">
+          <span class="glyphicon glyphicon-stats"></span> {{vm.showComparison ? 'Hide' : 'Show'}} Card Comparison
+        </button>
+        <p class="text-muted">Total Cards: {{vm.cardPortfolio.totalCards}} | Last Sync: {{vm.cardPortfolio.lastSyncTime | date:'short'}}</p>
+      </div>
+    </div>
+    <div class="row" ng-if="!vm.showComparison">
+      <div class="col-md-4" ng-repeat="card in vm.cardPortfolio.cards">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <strong>{{card.cardType}}</strong> - {{card.issuer}}
+          </div>
+          <div class="panel-body">
+            <p><strong>Card Number:</strong> {{card.cardNumber}}</p>
+            <p><strong>Balance:</strong> ${{card.balance | number:2}}</p>
+            <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p>
+            <p><strong>Available Credit:</strong> ${{card.availableCredit | number:2}}</p>
+            <p><strong>Monthly Spend:</strong> ${{card.monthlySpend | number:2}}</p>
+            <p><strong>Utilization:</strong> {{card.utilizationPercent}}%</p>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" ng-style="{'width': card.utilizationPercent + '%'}" ng-class="{'progress-bar-success': card.utilizationPercent < 30, 'progress-bar-warning': card.utilizationPercent >= 30 && card.utilizationPercent < 70, 'progress-bar-danger': card.utilizationPercent >= 70}">
+                {{card.utilizationPercent}}%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.showComparison">
+      <card-comparison cards="vm.comparisonData"></card-comparison>
+    </div>
+  </div>
+</div>
