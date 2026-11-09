@@ -1,6 +1,6 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic enables users to manage and view multiple credit cards within a unified interface. Users can view all registered cards, access card-specific details, perform card-wise spend analysis, and switch between cards to monitor individual performance, spending patterns, and balances. The feature consolidates multi-card management, eliminating the need for multiple banking portals.
+- **Summary:** This epic delivers a unified interface for users to manage and view multiple credit cards simultaneously. Users can access card-specific details, perform card-wise spend analysis, switch between cards, and view individual card performance metrics including spending patterns and balances. The system consolidates multi-card information to eliminate the need for accessing multiple banking portals.
 
 - **Component Flow:**
 
@@ -8,29 +8,29 @@
 flowchart TD
     A["User Interface"]
     B["Card Management Service"]
-    C["Credit Card Data Repository"]
-    D["User Profile Service"]
+    C["User Profile Service"]
+    D["Credit Card Data Repository"]
     E["Spend Analysis Engine"]
     A --> B
     B --> C
     B --> D
     B --> E
-    C --> B
-    D --> B
+    C --> D
 ```
 
 - **Integration Points:**
-  - **Upstream:** User Profile Service (to associate cards with users)
-  - **Downstream:** Credit Card Data Repository/Service (for retrieving card information, balances, and details)
+  - **Upstream:** User Profile Service (to associate cards with specific users)
+  - **Downstream:** Credit Card Data Repository/Service (for retrieving card information, balances, and transaction data)
+  - **Internal:** Spend Analysis Engine (for card-wise spending calculations)
 
 - **Key Assumptions:**
-  - Card data is retrieved via API calls with JSON format; card switching uses client-side state management for instant response.
-  - User-card associations are pre-established and maintained by the User Profile Service.
+  - Card data is pre-registered and available in the credit card data repository; card registration/onboarding is handled outside this epic.
+  - Card switching functionality assumes all card data is cached or retrieved efficiently to meet the <300ms latency requirement.
 
-- **NFR Highlights:** System must support at least 10 credit cards per user; card switching latency under 300ms; secure per-user data isolation required.
+- **NFR Highlights:** System must support at least 10 credit cards per user without performance degradation; card switching latency must be under 300ms; data must be securely isolated per user.
 
-- **Data Flow:** User selects a card from the UI → Card Management Service retrieves card details from Credit Card Data Repository → User Profile Service validates user-card association → Spend Analysis Engine calculates card-specific spending → Results displayed in UI with card-specific balances and spending patterns.
+- **Data Flow:** User authenticates and accesses the multi-card interface. The Card Management Service retrieves user-associated card IDs from the User Profile Service, then fetches detailed card information (balances, limits, recent transactions) from the Credit Card Data Repository. The Spend Analysis Engine processes transaction data to generate card-wise spending summaries. All data is aggregated and presented in the UI, allowing users to switch between cards with near-instantaneous response times.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design covers all stated scope elements including multiple credit card display, card-wise spend analysis, individual card details view, card selection/switching functionality, and card-specific balance tracking. The architecture supports the NFRs for performance (10+ cards, <300ms switching) and security (data isolation). Integration dependencies with credit card data repository and user profile service are addressed.
+- **Requirements Coverage:** The design covers all stated requirements including multiple credit card display, card-wise spend analysis, individual card details view, card selection/switching functionality, and card-specific balance tracking. The architecture supports the NFRs for performance (10+ cards, <300ms switching) and security (per-user data isolation). The design explicitly excludes out-of-scope items (real bank integration, payments, fund transfers, card application/registration) as specified in the epic.

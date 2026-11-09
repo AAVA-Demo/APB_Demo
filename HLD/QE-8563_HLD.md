@@ -1,6 +1,6 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers comprehensive spending analytics through interactive visualizations, enabling users to analyze transactions across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). Users can view monthly spend trends, drill down into categories, and identify spending optimization opportunities over time.
+- **Summary:** This epic provides comprehensive spending analytics through interactive visualizations that categorize transactions across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). Users can analyze monthly spend trends, drill down into specific categories and time periods, and identify spending patterns to optimize expenses. The system supports historical data analysis for at least 12 months.
 
 - **Component Flow:**
 
@@ -9,29 +9,28 @@ flowchart LR
     A["User Interface"]
     B["Analytics Service"]
     C["Transaction Data Service"]
-    D["Categorization Engine"]
-    E["Data Visualization Component"]
+    D["Data Analytics Engine"]
+    E["Visualization Component"]
     A --> B
     B --> C
     B --> D
-    B --> E
-    C --> D
-    D --> B
+    D --> E
+    E --> A
 ```
 
 - **Integration Points:**
-  - **Upstream:** Transaction Data Service (for retrieving transaction history)
-  - **Downstream:** Data Analytics Engine (for trend calculation and pattern recognition)
-  - **Internal:** Categorization Engine (for mapping transactions to spending categories)
+  - **Upstream:** Transaction Data Service (for retrieving and categorizing transaction history)
+  - **Internal:** Data Analytics Engine (for trend calculation, pattern recognition, and aggregations)
+  - **Frontend:** Visualization Component (interactive charts library for rendering responsive visualizations)
 
 - **Key Assumptions:**
-  - Transactions are pre-categorized or categorized on-the-fly using rule-based or ML categorization engine.
-  - Historical data retained for at least 12 months; monthly aggregations pre-computed for performance.
+  - Transactions are pre-categorized by the Transaction Data Service into the 9 predefined categories; no manual categorization is required.
+  - Historical transaction data for at least 12 months is available and accessible for trend analysis.
 
-- **NFR Highlights:** Visualizations must load within 2 seconds; support high-volume users; handle 12+ months of historical data; responsive and interactive charts across all devices.
+- **NFR Highlights:** Visualizations must load within 2 seconds; system must handle transaction categorization for high-volume users; analytics must support 12+ months of historical data; charts must be responsive and interactive across all device types.
 
-- **Data Flow:** User requests analytics → Analytics Service retrieves transaction data from Transaction Data Service → Categorization Engine maps transactions to predefined categories → Analytics Service calculates monthly trends and aggregations → Data Visualization Component renders interactive charts → User interacts with charts for drill-down analysis.
+- **Data Flow:** User requests spending analytics from the UI. The Analytics Service queries the Transaction Data Service to retrieve categorized transaction history. The Data Analytics Engine processes this data to calculate category-wise spending totals, monthly trends, and time-based comparisons. Results are passed to the Visualization Component, which renders interactive charts and graphs in the UI. Users can interact with visualizations to drill down into specific categories or time periods, triggering additional queries and re-rendering.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully addresses the epic scope including category-wise visualization, monthly trends, interactive charts, transaction categorization across 9 categories, and time-based comparison. NFRs for 2-second load time, high-volume support, 12-month history, and responsive design are incorporated. Dependencies on transaction data service and analytics engine are identified and integrated.
+- **Requirements Coverage:** The design addresses all core requirements including category-wise spending visualization, monthly spend trends, interactive charts, transaction categorization across 9 categories, spending pattern analysis, and time-based comparison. The architecture supports the NFRs for performance (2-second load time, high-volume transaction handling, 12-month historical data) and responsiveness (interactive charts across all devices). Out-of-scope items (real bank integration, payments, custom category creation, budget setting) are explicitly excluded as per the epic specification.
