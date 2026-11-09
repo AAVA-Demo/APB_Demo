@@ -1,9 +1,1 @@
-(function() {
-  'use strict';
-  angular.module('creditCardApp', [
-    'ui.router',
-    'app.dashboard',
-    'app.cardManagement',
-    'app.analytics'
-  ]);
-})();
+(function(){'use strict';angular.module('creditCardApp',['ngRoute']);})();

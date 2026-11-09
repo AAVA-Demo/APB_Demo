@@ -1,0 +1,40 @@
+<div class="multi-card-container">
+<h2>Multi-Card Management</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading cards...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.cards.length>0">
+<div class="row">
+<div class="col-md-12">
+<card-switcher cards="vm.cards" on-select="vm.onCardSelect(cardId)"></card-switcher>
+</div>
+</div>
+<div class="row" style="margin-top:20px;" ng-if="vm.selectedCard">
+<div class="col-md-4">
+<div class="panel panel-primary">
+<div class="panel-heading">Card Details</div>
+<div class="panel-body">
+<p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+<p><strong>Type:</strong> {{vm.selectedCard.cardType}}</p>
+<p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit | currency}}</p>
+<p><strong>Available Credit:</strong> {{vm.selectedCard.availableCredit | currency}}</p>
+<p><strong>Outstanding:</strong> {{vm.selectedCard.outstandingAmount | currency}}</p>
+<p><strong>Card Spend:</strong> {{vm.selectedCard.cardWiseSpend | currency}}</p>
+</div>
+</div>
+</div>
+<div class="col-md-8">
+<div class="panel panel-default">
+<div class="panel-heading">Transactions</div>
+<div class="panel-body">
+<div class="form-inline" style="margin-bottom:15px;">
+<input type="text" class="form-control" placeholder="Search..." ng-model="vm.filterCriteria.searchTerm" ng-change="vm.applyFilter()">
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateRange.start" ng-change="vm.applyFilter()">
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateRange.end" ng-change="vm.applyFilter()">
+</div>
+<transaction-list transactions="vm.transactions"></transaction-list>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

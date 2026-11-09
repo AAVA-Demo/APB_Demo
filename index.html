@@ -1,71 +1,73 @@
 <!DOCTYPE html>
 <html ng-app="creditCardApp">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Credit Card Analysis Dashboard</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <style>
-    body { padding-top: 20px; background-color: #f5f5f5; }
-    .kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .kpi-value { font-size: 2em; font-weight: bold; color: #2c3e50; }
-    .kpi-label { color: #7f8c8d; font-size: 0.9em; margin-top: 5px; }
-    .card-item { background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; cursor: pointer; transition: all 0.2s; border-left: 4px solid #3498db; }
-    .card-item:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); transform: translateY(-2px); }
-    .card-item.selected { border-left-color: #27ae60; background-color: #ecf9f2; }
-    .chart-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .category-filter { margin-bottom: 20px; }
-    .category-badge { display: inline-block; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer; background: #ecf0f1; transition: all 0.2s; }
-    .category-badge.active { background: #3498db; color: white; }
-    .transaction-list { max-height: 400px; overflow-y: auto; }
-    .transaction-item { padding: 10px; border-bottom: 1px solid #ecf0f1; }
-    .loading-spinner { text-align: center; padding: 40px; }
-    .error-alert { margin: 20px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Management</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="src/app/assets/css/dashboard-kpi.css">
+<link rel="stylesheet" href="src/app/assets/css/analytics.css">
+<link rel="stylesheet" href="src/app/assets/css/cards.css">
+<link rel="stylesheet" href="src/app/assets/css/multi-card.css">
 </head>
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#/dashboard">Credit Card Dashboard</a>
-      </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="#/dashboard">Dashboard</a></li>
-          <li><a href="#/cards">My Cards</a></li>
-          <li><a href="#/analytics">Analytics</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div class="container-fluid" style="margin-top: 70px;">
-    <div ui-view></div>
-  </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="src/app/app.module.js"></script>
-  <script src="src/app/app.config.js"></script>
-  <script src="src/app/services/data-refresh.service.js"></script>
-  <script src="src/app/services/kpi-calculator.factory.js"></script>
-  <script src="src/app/services/transaction-categorizer.factory.js"></script>
-  <script src="src/app/dashboard/dashboard.module.js"></script>
-  <script src="src/app/dashboard/dashboard.service.js"></script>
-  <script src="src/app/dashboard/dashboard.controller.js"></script>
-  <script src="src/app/card-management/card-management.module.js"></script>
-  <script src="src/app/card-management/card-management.service.js"></script>
-  <script src="src/app/card-management/card-management.controller.js"></script>
-  <script src="src/app/card-management/card-selector.component.js"></script>
-  <script src="src/app/analytics/analytics.module.js"></script>
-  <script src="src/app/analytics/analytics.service.js"></script>
-  <script src="src/app/analytics/analytics.controller.js"></script>
-  <script src="src/app/analytics/chart-visualizer.directive.js"></script>
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/cards">My Cards</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.routes.js"></script>
+<script src="src/app/services/authService.js"></script>
+<script src="src/app/services/userProfileService.js"></script>
+<script src="src/app/modules/dashboard/controllers/dashboardKpiController.js"></script>
+<script src="src/app/modules/dashboard/services/kpiAggregationService.js"></script>
+<script src="src/app/modules/dashboard/services/dataAggregationEngine.js"></script>
+<script src="src/app/modules/dashboard/services/creditCardService.js"></script>
+<script src="src/app/modules/dashboard/services/realtimeRefreshService.js"></script>
+<script src="src/app/modules/dashboard/services/kpiManagementService.js"></script>
+<script src="src/app/modules/dashboard/services/kpiCalculationService.js"></script>
+<script src="src/app/modules/dashboard/services/dataRefreshService.js"></script>
+<script src="src/app/modules/cards/controllers/cardManagementController.js"></script>
+<script src="src/app/modules/cards/services/cardManagementService.js"></script>
+<script src="src/app/modules/cards/services/cardAggregationService.js"></script>
+<script src="src/app/modules/cards/services/cardStatusService.js"></script>
+<script src="src/app/modules/cards/services/cardDataService.js"></script>
+<script src="src/app/modules/multi-card/controllers/multiCardController.js"></script>
+<script src="src/app/modules/multi-card/services/multiCardService.js"></script>
+<script src="src/app/modules/multi-card/services/transactionService.js"></script>
+<script src="src/app/modules/multi-card/services/cardRepositoryService.js"></script>
+<script src="src/app/modules/multi-card/services/dataSyncService.js"></script>
+<script src="src/app/modules/analytics/controllers/spendingAnalyticsController.js"></script>
+<script src="src/app/modules/analytics/services/analyticsService.js"></script>
+<script src="src/app/modules/analytics/services/dataAnalyticsService.js"></script>
+<script src="src/app/modules/analytics/services/transactionWarehouseService.js"></script>
+<script src="src/app/modules/analytics/factories/categorizationFactory.js"></script>
+<script src="src/app/modules/analytics/controllers/analyticsController.js"></script>
+<script src="src/app/modules/analytics/services/transactionDataService.js"></script>
+<script src="src/app/modules/analytics/factories/transactionCategorizationFactory.js"></script>
+<script src="src/app/shared/constants/spendingCategories.js"></script>
+<script src="src/app/shared/constants/categoryConstants.js"></script>
+<script src="src/app/shared/directives/kpiWidgetDirective.js"></script>
+<script src="src/app/shared/directives/kpiCardDirective.js"></script>
+<script src="src/app/modules/cards/directives/cardListDirective.js"></script>
+<script src="src/app/modules/cards/directives/cardDetailDirective.js"></script>
+<script src="src/app/modules/multi-card/directives/cardSwitcherDirective.js"></script>
+<script src="src/app/modules/multi-card/directives/transactionListDirective.js"></script>
+<script src="src/app/modules/analytics/directives/chartVisualizationDirective.js"></script>
+<script src="src/app/modules/analytics/directives/spendingChartDirective.js"></script>
 </body>
 </html>

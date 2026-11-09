@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('transactionCategorizationFactory',['categoryConstants',function(categoryConstants){return{categorize:function(transactions){return transactions.map(t=>{if(!t.category||!categoryConstants.includes(t.category)){t.category='Miscellaneous';}return t;});},getCategories:function(){return categoryConstants;}};}]);})();

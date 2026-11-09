@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').service('transactionService',['cardRepositoryService','$q',function(cardRepositoryService,$q){const self=this;self.fetchTransactions=function(cardId){return cardRepositoryService.getTransactions(cardId);};}]);})();

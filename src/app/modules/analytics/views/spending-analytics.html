@@ -1,0 +1,42 @@
+<div class="analytics-container">
+<h2>Spending Analytics & Insights</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.analyticsData">
+<div class="row">
+<div class="col-md-12">
+<h3>Category-Wise Spending</h3>
+<chart-visualization data="vm.analyticsData" type="'pie'"></chart-visualization>
+</div>
+</div>
+<div class="row" style="margin-top:30px;">
+<div class="col-md-12">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Spend</th>
+<th>Transactions</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData">
+<td>{{cat.categoryName}}</td>
+<td>{{cat.totalSpend | currency}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentageOfTotal}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<h4>Filter by Category</h4>
+<button class="btn btn-sm btn-default" ng-repeat="cat in vm.analyticsData" ng-click="vm.applyFilter(cat.categoryName)" ng-class="{'btn-primary':vm.selectedCategories.includes(cat.categoryName)}">{{cat.categoryName}}</button>
+</div>
+</div>
+</div>
+</div>

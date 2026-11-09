@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').constant('spendingCategories',['Food & Dining','Fuel','Shopping','Travel','Entertainment','Utilities','Healthcare','Education','Miscellaneous']);})();

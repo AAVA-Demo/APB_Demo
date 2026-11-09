@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').directive('cardSwitcher',[function(){return{restrict:'E',scope:{cards:'=',onSelect:'&'},template:'<div class="btn-group" role="group"><button type="button" class="btn btn-default" ng-repeat="card in cards" ng-click="onSelect({cardId:card.cardId})">{{card.cardType}} {{card.cardNumber}}</button></div>'};}]);})();

@@ -1,0 +1,25 @@
+<div class="dashboard-kpi-container">
+<h2>Credit Card Dashboard</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading KPI data...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.kpiData" class="row">
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget title="'Monthly Spend'" value="vm.kpiData.monthlySpend" format="'currency'"></kpi-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget title="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" format="'currency'"></kpi-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget title="'Available Credit'" value="vm.kpiData.totalAvailableCredit" format="'currency'"></kpi-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget title="'Outstanding Amount'" value="vm.kpiData.totalOutstanding" format="'currency'"></kpi-widget>
+</div>
+</div>
+<div ng-if="vm.kpiData" class="row" style="margin-top:20px;">
+<div class="col-xs-12">
+<p class="text-muted">Last updated: {{vm.kpiData.lastRefreshed | date:'short'}}</p>
+<p>Total Cards: {{vm.kpiData.cardCount}}</p>
+</div>
+</div>
+</div>
