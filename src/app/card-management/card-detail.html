@@ -1,0 +1,47 @@
+<div class="card-detail-container">
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-default" ng-click="vm.goBack()">&larr; Back to Cards</button>
+      <h2>Card Details</h2>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="!vm.loading && vm.card" class="row">
+    <div class="col-md-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{ vm.card.cardName }}</h3>
+        </div>
+        <div class="panel-body">
+          <p><strong>Card Type:</strong> {{ vm.card.cardType }}</p>
+          <p><strong>Last 4 Digits:</strong> **** {{ vm.card.last4Digits }}</p>
+          <p><strong>Expiry Date:</strong> {{ vm.card.expiryDate }}</p>
+          <p><strong>Credit Limit:</strong> {{ vm.card.creditLimit | currency }}</p>
+          <p><strong>Current Balance:</strong> {{ vm.card.currentBalance | currency }}</p>
+          <p><strong>Outstanding Amount:</strong> {{ vm.card.outstandingAmount | currency }}</p>
+          <p><strong>Available Credit:</strong> {{ vm.card.availableCredit | currency }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Spending Analysis</h3>
+        </div>
+        <div class="panel-body">
+          <p><strong>Total Spend:</strong> {{ vm.spendSummary.totalSpend | currency }}</p>
+          <p><strong>Transaction Count:</strong> {{ vm.spendSummary.transactionCount }}</p>
+          <h4>Category Breakdown</h4>
+          <ul class="list-unstyled">
+            <li ng-repeat="category in vm.spendSummary.categoryBreakdown">
+              <strong>{{ category.categoryName }}:</strong> {{ category.amount | currency }} ({{ category.percentage }}%)
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

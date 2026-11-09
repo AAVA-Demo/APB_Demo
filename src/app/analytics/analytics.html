@@ -1,0 +1,39 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Analytics & Spending Insights</h2>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="!vm.loading && vm.insights" class="row">
+    <div class="col-md-12">
+      <h3>{{ vm.insights.period }}</h3>
+      <p><strong>Total Spend:</strong> {{ vm.insights.totalSpend | currency }}</p>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.insights" class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Category-Wise Spending</h3>
+        </div>
+        <div class="panel-body">
+          <category-chart data="vm.insights.categorySpending"></category-chart>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Monthly Spend Trends</h3>
+        </div>
+        <div class="panel-body">
+          <trend-chart data="vm.insights.monthlyTrends"></trend-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
