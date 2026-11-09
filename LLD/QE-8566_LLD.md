@@ -1,169 +1,125 @@
-# Low-Level Design: Multiple Credit Card Management
-**Epic ID:** QE-8566  
-**Feature:** Unified interface for managing and viewing multiple credit cards with card-wise spend analysis
-
----
+# Low-Level Design: QE-8566 - Multiple Credit Card Management
 
 ## a. Architecture Mapping
 
-**AngularJS Artifacts:**
-- **Module:** `multiCardManagementModule` - Main module for multi-card management functionality
-- **Controller:** `CardManagementController` - Manages card list display, selection, and switching
-- **Controller:** `CardDetailController` - Displays detailed view of selected card
-- **Service:** `CardManagementService` - Orchestrates card data retrieval and user-card association validation
-- **Service:** `CreditCardDataRepository` - Fetches card information, balances, and details via REST API
-- **Service:** `UserProfileService` - Validates user-card associations and retrieves user profile
-- **Service:** `SpendAnalysisEngine` - Calculates card-specific spending patterns and trends
-- **Directive:** `cardSelectorDirective` - Renders card selection dropdown/list with card switching
-- **Directive:** `cardDetailCardDirective` - Displays individual card details in card layout
-- **Factory:** `CardStateFactory` - Manages client-side state for selected card (instant switching)
+- **App Module**: `creditCardApp` - Root AngularJS module with card management routing
+- **Card Management Controller**: `CardManagementController` - Manages multi-card view, card switching, spend analysis display
+- **Card Management Service**: `CardManagementService` (Factory) - Orchestrates card data retrieval and card-wise analytics
+- **Credit Card Service**: `CreditCardService` (Factory) - REST API wrapper for card details, balances, limits
+- **User Profile Service**: `UserProfileService` (Factory) - Fetches user-card associations
+- **Spend Analysis Service**: `SpendAnalysisService` (Factory) - Calculates card-wise spending summaries
+- **Card Selector Directive**: `cardSelector` - Dropdown/carousel for card selection with <300ms switching
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
 app/
 ├── modules/
-│   └── multi-card-management/
+│   └── card-management/
 │       ├── controllers/
-│       │   ├── CardManagementController.js
-│       │   └── CardDetailController.js
+│       │   └── card-management.controller.js
 │       ├── services/
-│       │   ├── CardManagementService.js
-│       │   ├── CreditCardDataRepository.js
-│       │   ├── UserProfileService.js
-│       │   └── SpendAnalysisEngine.js
+│       │   ├── card-management.service.js
+│       │   ├── creditCard.service.js
+│       │   ├── userProfile.service.js
+│       │   └── spend-analysis.service.js
 │       ├── directives/
-│       │   ├── cardSelectorDirective.js
-│       │   └── cardDetailCardDirective.js
-│       ├── factories/
-│       │   └── CardStateFactory.js
-│       ├── views/
-│       │   ├── card-management.html
-│       │   └── card-detail.html
-│       └── multi-card-management.module.js
+│       │   └── card-selector.directive.js
+│       └── views/
+│           ├── card-list.html
+│           └── card-detail.html
+├── shared/
+└── app.module.js
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| CardManagementController | Controller | Manages card list display, handles card selection and switching | CardManagementService, CardStateFactory, $scope |
-| CardDetailController | Controller | Displays detailed view of selected card with spending analysis | CardManagementService, SpendAnalysisEngine, CardStateFactory, $scope |
-| CardManagementService | Service | Orchestrates card data retrieval, validates user-card associations | CreditCardDataRepository, UserProfileService, $q |
-| CreditCardDataRepository | Service | Fetches card information, balances, and details via REST API | $http, $q |
-| UserProfileService | Service | Validates user-card associations and retrieves user profile data | $http, $q |
-| SpendAnalysisEngine | Service | Calculates card-specific spending patterns, trends, and balances | $http, $q |
-| cardSelectorDirective | Directive | Renders card selection UI (dropdown or card grid) with instant switching | CardStateFactory |
-| cardDetailCardDirective | Directive | Displays individual card details in responsive card layout | None |
-| CardStateFactory | Factory | Manages client-side state for currently selected card (instant response <300ms) | $rootScope |
-
----
+| CardManagementController | Controller | Bind card list, handle card selection, display card-specific data | CardManagementService, $scope |
+| CardManagementService | Factory | Fetch user's cards, orchestrate card-wise spend analysis | CreditCardService, UserProfileService, SpendAnalysisService, $q |
+| CreditCardService | Factory | Fetch card details, balances, limits via REST | $http, $cacheFactory, API_ENDPOINTS |
+| UserProfileService | Factory | Fetch user-card associations from user profile | $http, API_ENDPOINTS |
+| SpendAnalysisService | Factory | Calculate card-wise spending summaries from transaction data | $http, API_ENDPOINTS |
+| cardSelector | Directive | Render card selection UI with instant switching (<300ms) | None |
 
 ## c. Data Model
 
-**CardManagementModel (JavaScript Object):**
-```javascript
-{
-  userId: String,
-  cards: Array<CreditCard>,
-  selectedCardId: String,
-  lastUpdated: Date
-}
-```
-
-**CreditCard (JavaScript Object):**
+**CreditCard Model:**
 ```javascript
 {
   cardId: String,
   cardNumber: String (masked),
   cardType: String,
-  cardholderName: String,
-  expiryDate: String,
+  bankName: String,
   creditLimit: Number,
   availableCredit: Number,
-  outstandingBalance: Number,
-  monthlySpend: Number,
+  outstandingAmount: Number,
   status: String
 }
 ```
 
-**CardSpendAnalysis (JavaScript Object):**
+**CardSpendSummary Model:**
 ```javascript
 {
   cardId: String,
-  totalSpend: Number,
-  categoryBreakdown: Array<{ category: String, amount: Number }>,
-  monthlyTrend: Array<{ month: String, spend: Number }>
+  monthlySpend: Number,
+  yearlySpend: Number,
+  topCategories: Array<{category: String, amount: Number}>,
+  transactionCount: Number
 }
 ```
 
----
-
 ## d. Data Flow
 
-User accesses card management interface → CardManagementController initializes and calls CardManagementService.getUserCards(userId) → Service calls UserProfileService.validateUser(userId) to verify user → Service calls CreditCardDataRepository.getCards(userId) to fetch all associated cards → API returns card array with details → CardManagementService returns CardManagementModel → Controller binds to $scope and displays card list via cardSelectorDirective → User selects a card from dropdown/grid → CardStateFactory updates selectedCardId in client-side state (instant <300ms) → CardDetailController detects state change and calls SpendAnalysisEngine.getCardSpendAnalysis(cardId) → Service retrieves card-specific spending data → CardDetailController displays card details and spending patterns via cardDetailCardDirective.
-
----
+User navigates to card management → CardManagementController initializes → calls CardManagementService.getUserCards() → service fetches user-card associations via UserProfileService.getUserProfile() to get list of cardIds → uses $q.all() to concurrently fetch detailed card info for each cardId via CreditCardService.getCardDetails() → caches card data using $cacheFactory for fast switching → fetches card-wise spend summaries via SpendAnalysisService.getCardSpendSummary() for each card → returns array of cards with spend data → controller binds to $scope.cards → view renders card list using cardSelector directive → user selects card from dropdown → controller retrieves cached card data (ensuring <300ms latency) → updates $scope.selectedCard → view displays card-specific details and spend analysis.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardManagementView
+    participant CardView
     participant CardManagementController
     participant CardManagementService
     participant UserProfileService
-    participant CreditCardDataRepository
-    participant CardStateFactory
-    participant SpendAnalysisEngine
+    participant CreditCardService
+    participant SpendAnalysisService
     participant API
 
-    User->>CardManagementView: Access Card Management
-    CardManagementView->>CardManagementController: Initialize
-    CardManagementController->>CardManagementService: getUserCards(userId)
-    CardManagementService->>UserProfileService: validateUser(userId)
-    UserProfileService->>API: GET /api/users/{userId}
-    API-->>UserProfileService: User profile JSON
-    CardManagementService->>CreditCardDataRepository: getCards(userId)
-    CreditCardDataRepository->>API: GET /api/cards?userId={userId}
-    API-->>CreditCardDataRepository: Card array JSON
-    CreditCardDataRepository-->>CardManagementService: Card list
-    CardManagementService-->>CardManagementController: CardManagementModel
-    CardManagementController->>CardManagementView: Bind data to $scope
-    CardManagementView-->>User: Display card list (dropdown/grid)
-    User->>CardManagementView: Select card
-    CardManagementView->>CardStateFactory: setSelectedCard(cardId)
-    CardStateFactory->>CardStateFactory: Update client-side state
-    CardStateFactory-->>CardManagementView: State updated (<300ms)
-    CardManagementView->>CardDetailController: Detect state change
-    CardDetailController->>SpendAnalysisEngine: getCardSpendAnalysis(cardId)
-    SpendAnalysisEngine->>API: GET /api/cards/{cardId}/spending
-    API-->>SpendAnalysisEngine: Spending analysis JSON
-    SpendAnalysisEngine-->>CardDetailController: CardSpendAnalysis
-    CardDetailController->>CardManagementView: Display card details and spending
-    CardManagementView-->>User: Show selected card details with spending patterns
+    User->>CardView: Navigate to Card Management
+    CardView->>CardManagementController: Initialize
+    CardManagementController->>CardManagementService: getUserCards()
+    CardManagementService->>UserProfileService: getUserProfile()
+    UserProfileService->>API: GET /api/user/profile
+    API-->>UserProfileService: User profile with cardIds
+    CardManagementService->>CreditCardService: getCardDetails(cardIds)
+    CreditCardService->>API: GET /api/cards/{cardId} (parallel)
+    API-->>CreditCardService: Card details array
+    CardManagementService->>SpendAnalysisService: getCardSpendSummary(cardIds)
+    SpendAnalysisService->>API: GET /api/cards/{cardId}/spend
+    API-->>SpendAnalysisService: Spend summary array
+    CardManagementService-->>CardManagementController: Cards with spend data
+    CardManagementController->>CardView: Bind $scope.cards
+    CardView-->>User: Display card list
+    User->>CardView: Select card from dropdown
+    CardView->>CardManagementController: Card selection event
+    CardManagementController->>CardManagementController: Retrieve cached card data
+    CardManagementController->>CardView: Update $scope.selectedCard
+    CardView-->>User: Display card details and spend analysis (<300ms)
 ```
-
----
 
 ## f. Implementation Notes
 
-- Use CardStateFactory with `$rootScope` to broadcast card selection changes; ensures instant switching (<300ms) via client-side state management
-- Implement cardSelectorDirective with ng-repeat for card list; use ng-click for card selection triggering CardStateFactory.setSelectedCard()
-- Use AngularJS `$watch` in CardDetailController to listen for selectedCardId changes and trigger SpendAnalysisEngine data fetch
-- Support at least 10 cards per user; optimize card list rendering with track by cardId for performance
-- Apply Bootstrap responsive grid for card display; use card layout (Bootstrap cards) for visual consistency across devices
-
----
+- Use $cacheFactory to cache card details for instant switching, ensuring <300ms latency requirement
+- Leverage $q.all() for parallel fetching of multiple card details to optimize initial load time
+- Implement cardSelector directive with ng-options and track by cardId for efficient rendering
+- Use AngularJS $watch on selectedCard to trigger card-specific data updates without re-fetching
+- Apply ES6 Promises and async/await patterns in services for cleaner asynchronous code
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling; display user-friendly notifications if card data fails to load; validate user-card associations server-side and handle unauthorized access gracefully.
-
----
+HTTP interceptor captures API errors; CardManagementService returns rejected promises; controller displays error notification and renders fallback UI for failed card loads.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; validate user-card associations server-side; ensure secure per-user data isolation; mask sensitive card numbers in API responses and UI.
+Standard input validation and secure API calls assumed; per-user data isolation enforced at API level; JWT token authentication via HTTP interceptor.

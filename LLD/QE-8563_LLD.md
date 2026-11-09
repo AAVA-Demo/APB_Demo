@@ -1,108 +1,78 @@
-# Low-Level Design: Spending Analytics and Insights
-**Epic ID:** QE-8563  
-**Feature:** Comprehensive spending analytics with interactive visualizations across 9 predefined categories
-
----
+# Low-Level Design: QE-8563 - Spending Analytics and Insights
 
 ## a. Architecture Mapping
 
-**AngularJS Artifacts:**
-- **Module:** `analyticsInsightsModule` - Main module for spending analytics functionality
-- **Controller:** `SpendingAnalyticsController` - Manages analytics view, user interactions, and filter application
-- **Service:** `AnalyticsService` - Orchestrates analytics calculations and data retrieval
-- **Service:** `TransactionDataService` - Fetches transaction history from REST API
-- **Service:** `CategorizationEngineService` - Maps transactions to 9 predefined spending categories
-- **Directive:** `categoryPieChartDirective` - Renders category-wise spending pie chart using Chart.js
-- **Directive:** `monthlyTrendChartDirective` - Renders monthly spend trend line chart
-- **Directive:** `cardWiseBarChartDirective` - Renders card-wise spend breakdown bar chart
-- **Component:** `dataVisualizationComponent` - Wrapper component for chart rendering and interaction handling
+- **App Module**: `creditCardApp` - Root module with analytics feature routing
+- **Analytics Controller**: `SpendingAnalyticsController` - Manages analytics view, user interactions, chart updates
+- **Analytics Service**: `SpendingAnalyticsService` (Factory) - Processes transaction data, calculates category and trend analytics
+- **Transaction Service**: `TransactionService` (Factory) - Fetches categorized transaction history via REST
+- **Visualization Directive**: `categoryChart` - Renders category-wise spending charts using Chart.js
+- **Trend Directive**: `trendChart` - Renders monthly spend trend line charts
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
 app/
 ├── modules/
-│   └── analytics-insights/
+│   └── analytics/
 │       ├── controllers/
-│       │   └── SpendingAnalyticsController.js
+│       │   └── spending-analytics.controller.js
 │       ├── services/
-│       │   ├── AnalyticsService.js
-│       │   ├── TransactionDataService.js
-│       │   └── CategorizationEngineService.js
+│       │   ├── spending-analytics.service.js
+│       │   └── transaction.service.js
 │       ├── directives/
-│       │   ├── categoryPieChartDirective.js
-│       │   ├── monthlyTrendChartDirective.js
-│       │   └── cardWiseBarChartDirective.js
-│       ├── components/
-│       │   └── dataVisualizationComponent.js
-│       ├── views/
-│       │   └── spending-analytics.html
-│       └── analytics-insights.module.js
+│       │   ├── category-chart.directive.js
+│       │   └── trend-chart.directive.js
+│       └── views/
+│           └── spending-analytics.html
+├── shared/
+└── app.module.js
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| SpendingAnalyticsController | Controller | Manages analytics view, handles drill-down, applies date/card filters | AnalyticsService, $scope, $filter |
-| AnalyticsService | Service | Calculates category-wise spending, monthly trends, card-wise breakdowns | TransactionDataService, CategorizationEngineService, $q |
-| TransactionDataService | Service | Fetches transaction history with date range filtering via REST API | $http, $q |
-| CategorizationEngineService | Service | Maps transactions to 9 categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) using rule-based logic | None |
-| categoryPieChartDirective | Directive | Renders interactive pie chart for category-wise spending using Chart.js | Chart.js |
-| monthlyTrendChartDirective | Directive | Renders line chart showing monthly spend trends over 12 months | Chart.js |
-| cardWiseBarChartDirective | Directive | Renders bar chart for card-wise spend comparison | Chart.js |
-| dataVisualizationComponent | Component | Wraps chart directives, handles chart interactions and data updates | Chart.js |
-
----
+| SpendingAnalyticsController | Controller | Bind analytics data, handle drill-down and filter events | SpendingAnalyticsService, $scope |
+| SpendingAnalyticsService | Factory | Calculate category totals, monthly trends, time-based comparisons | TransactionService, $q |
+| TransactionService | Factory | Fetch categorized transaction history (12+ months) via REST | $http, API_ENDPOINTS |
+| categoryChart | Directive | Render interactive bar/pie chart for 9 spending categories | Chart.js |
+| trendChart | Directive | Render line chart for monthly spend trends over time | Chart.js |
 
 ## c. Data Model
 
-**AnalyticsData (JavaScript Object):**
+**CategorySpending Model:**
 ```javascript
 {
-  userId: String,
-  dateRange: { startDate: Date, endDate: Date },
-  categorySpending: Array<CategorySpending>,
-  monthlyTrends: Array<MonthlyTrend>,
-  cardWiseSpending: Array<CardSpending>
-}
-```
-
-**CategorySpending (JavaScript Object):**
-```javascript
-{
-  category: String, // One of 9 predefined categories
-  amount: Number,
+  category: String,
+  totalAmount: Number,
   transactionCount: Number,
   percentage: Number
 }
 ```
 
-**MonthlyTrend (JavaScript Object):**
+**MonthlyTrend Model:**
 ```javascript
 {
-  month: String, // Format: YYYY-MM
-  totalSpend: Number
+  month: String,
+  year: Number,
+  totalSpend: Number,
+  categoryBreakdown: Array<{category: String, amount: Number}>
 }
 ```
 
-**CardSpending (JavaScript Object):**
+**AnalyticsResult Model:**
 ```javascript
 {
-  cardId: String,
-  cardNumber: String (masked),
-  totalSpend: Number
+  categorySpending: Array<CategorySpending>,
+  monthlyTrends: Array<MonthlyTrend>,
+  totalSpend: Number,
+  averageMonthlySpend: Number
 }
 ```
-
----
 
 ## d. Data Flow
 
-User accesses analytics dashboard → SpendingAnalyticsController initializes and calls AnalyticsService.getAnalytics(userId, dateRange) → AnalyticsService calls TransactionDataService.getTransactions(userId, dateRange) → API returns transaction array → CategorizationEngineService.categorize(transactions) maps each transaction to one of 9 categories → AnalyticsService aggregates spending by category, calculates monthly trends (last 12 months), and computes card-wise totals → Service returns AnalyticsData object → Controller binds to $scope → categoryPieChartDirective, monthlyTrendChartDirective, and cardWiseBarChartDirective render interactive Chart.js visualizations → User clicks chart segment for drill-down → Controller filters data and updates charts with filtered subset.
-
----
+User navigates to spending analytics → SpendingAnalyticsController initializes → calls SpendingAnalyticsService.getAnalytics() → service fetches 12 months of categorized transactions via TransactionService.getCategorizedTransactions(startDate, endDate) → processes data to calculate category-wise totals (group by 9 predefined categories, sum amounts, calculate percentages), monthly trends (group by month, aggregate totals), and time-based comparisons (compare current vs. previous periods) → returns AnalyticsResult object → controller binds to $scope → categoryChart directive renders bar chart for category spending, trendChart directive renders line chart for monthly trends → user clicks category in chart to drill down → controller filters data by selected category → service recalculates filtered analytics → charts update with filtered data.
 
 ## e. Primary Sequence Diagram
 
@@ -111,48 +81,41 @@ sequenceDiagram
     participant User
     participant AnalyticsView
     participant SpendingAnalyticsController
-    participant AnalyticsService
-    participant TransactionDataService
-    participant CategorizationEngineService
+    participant SpendingAnalyticsService
+    participant TransactionService
     participant API
 
-    User->>AnalyticsView: Access Analytics Dashboard
+    User->>AnalyticsView: Navigate to Spending Analytics
     AnalyticsView->>SpendingAnalyticsController: Initialize
-    SpendingAnalyticsController->>AnalyticsService: getAnalytics(userId, dateRange)
-    AnalyticsService->>TransactionDataService: getTransactions(userId, dateRange)
-    TransactionDataService->>API: GET /api/transactions?userId={userId}&startDate={start}&endDate={end}
-    API-->>TransactionDataService: Transaction array JSON
-    AnalyticsService->>CategorizationEngineService: categorize(transactions)
-    CategorizationEngineService-->>AnalyticsService: Categorized transactions
-    AnalyticsService->>AnalyticsService: Aggregate by category, calculate monthly trends, card-wise totals
-    AnalyticsService-->>SpendingAnalyticsController: AnalyticsData object
-    SpendingAnalyticsController->>AnalyticsView: Bind data to $scope
-    AnalyticsView->>AnalyticsView: Render charts (category pie, monthly trend line, card-wise bar)
-    AnalyticsView-->>User: Display interactive analytics visualizations
-    User->>AnalyticsView: Click category in pie chart (drill-down)
-    AnalyticsView->>SpendingAnalyticsController: filterByCategory(category)
-    SpendingAnalyticsController->>AnalyticsView: Update charts with filtered data
-    AnalyticsView-->>User: Display filtered insights
+    SpendingAnalyticsController->>SpendingAnalyticsService: getAnalytics()
+    SpendingAnalyticsService->>TransactionService: getCategorizedTransactions(12 months)
+    TransactionService->>API: GET /api/transactions/categorized?period=12months
+    API-->>TransactionService: Categorized transaction array
+    SpendingAnalyticsService->>SpendingAnalyticsService: Calculate category totals, trends
+    SpendingAnalyticsService-->>SpendingAnalyticsController: AnalyticsResult object
+    SpendingAnalyticsController->>AnalyticsView: Bind $scope.analytics
+    AnalyticsView->>AnalyticsView: Render categoryChart and trendChart
+    AnalyticsView-->>User: Display interactive visualizations
+    User->>AnalyticsView: Click category (drill-down)
+    AnalyticsView->>SpendingAnalyticsController: Category click event
+    SpendingAnalyticsController->>SpendingAnalyticsService: filterByCategory(category)
+    SpendingAnalyticsService-->>SpendingAnalyticsController: Filtered AnalyticsResult
+    SpendingAnalyticsController->>AnalyticsView: Update $scope.analytics
+    AnalyticsView-->>User: Re-render charts with filtered data
 ```
-
----
 
 ## f. Implementation Notes
 
-- Use Chart.js library wrapped in AngularJS directives for interactive visualizations; configure responsive options for mobile/tablet/desktop
-- Implement CategorizationEngineService with rule-based mapping using merchant name patterns or MCC codes to assign 9 categories
-- Pre-aggregate monthly trends server-side if possible; fetch via dedicated analytics endpoint (e.g., /api/analytics/trends) for performance
-- Use AngularJS `$filter` for client-side date range filtering during drill-down; apply Bootstrap responsive grid for chart containers
-- Handle chart click events using Chart.js event handlers; update $scope and trigger digest with `$scope.$apply()` for data binding
-
----
+- Use Chart.js wrapped in AngularJS directives for declarative, data-bound chart rendering
+- Leverage ES6 Array.reduce() and Map for efficient transaction aggregation by category and month
+- Implement chart interactivity by binding click events in directives to controller callback functions
+- Use $q.defer() in TransactionService for promise-based async handling of large transaction datasets
+- Apply lazy loading for historical data beyond 12 months to optimize initial load performance
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling; display user-friendly messages if analytics data fails to load; gracefully degrade to empty charts with informative text.
-
----
+HTTP interceptor handles API failures; SpendingAnalyticsService returns rejected promises; controller displays error notification and renders empty state with retry option.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; validate user access to transaction data server-side; ensure category mappings do not expose sensitive information.
+Standard input validation and secure API calls assumed; JWT authentication enforced via HTTP interceptor for all transaction data requests.

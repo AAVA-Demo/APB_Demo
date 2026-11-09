@@ -1,71 +1,49 @@
-# Low-Level Design: Dashboard KPIs and Credit Card Overview
-**Epic ID:** QE-8555  
-**Feature:** Consolidated dashboard displaying key performance indicators for credit card portfolio
-
----
+# Low-Level Design: QE-8555 - Dashboard KPIs and Credit Card Overview
 
 ## a. Architecture Mapping
 
-**AngularJS Artifacts:**
-- **Module:** `creditCardDashboardModule` - Main module encapsulating dashboard functionality
-- **Controller:** `DashboardKPIController` - Manages KPI data binding and user interactions
-- **Service:** `KPIService` - Handles KPI data aggregation and API calls
-- **Service:** `CreditCardDataService` - Retrieves card details and balances via REST API
-- **Service:** `TransactionProcessingService` - Calculates monthly spend and outstanding amounts
-- **Directive:** `kpiCardDirective` - Reusable component for displaying individual KPI metrics
-- **Factory:** `RealTimeRefreshFactory` - Manages periodic polling for real-time data updates
+- **App Module**: `creditCardApp` - Root AngularJS module with routing and dependency injection configuration
+- **Dashboard Controller**: `DashboardController` - Orchestrates KPI display, handles user interactions, binds data to view
+- **Dashboard Service**: `DashboardService` (Factory) - Aggregates data from multiple services, calculates portfolio-level KPIs
+- **Credit Card Service**: `CreditCardService` (Factory) - REST API wrapper for fetching card details, balances, and limits
+- **Transaction Service**: `TransactionService` (Factory) - REST API wrapper for fetching transaction data and calculating monthly spend
+- **KPI Directive**: `kpiCard` - Reusable directive for rendering individual KPI cards with real-time updates
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
 app/
 ├── modules/
 │   └── dashboard/
 │       ├── controllers/
-│       │   └── DashboardKPIController.js
+│       │   └── dashboard.controller.js
 │       ├── services/
-│       │   ├── KPIService.js
-│       │   ├── CreditCardDataService.js
-│       │   └── TransactionProcessingService.js
+│       │   ├── dashboard.service.js
+│       │   ├── creditCard.service.js
+│       │   └── transaction.service.js
 │       ├── directives/
-│       │   └── kpiCardDirective.js
-│       ├── factories/
-│       │   └── RealTimeRefreshFactory.js
-│       ├── views/
-│       │   └── dashboard.html
-│       └── dashboard.module.js
+│       │   └── kpi-card.directive.js
+│       └── views/
+│           └── dashboard.html
+├── shared/
+│   ├── interceptors/
+│   └── constants/
+└── app.module.js
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| DashboardKPIController | Controller | Binds KPI data to view, handles user interactions, triggers data refresh | KPIService, $scope, $interval |
-| KPIService | Service | Aggregates multi-card KPI data, orchestrates calls to data services | CreditCardDataService, TransactionProcessingService, $http, $q |
-| CreditCardDataService | Service | Fetches card details, balances, and credit limits from REST API | $http, $q |
-| TransactionProcessingService | Service | Retrieves and calculates monthly spend and outstanding amounts | $http, $q |
-| kpiCardDirective | Directive | Renders individual KPI metric with responsive layout | None |
-| RealTimeRefreshFactory | Factory | Implements polling mechanism for real-time data updates (30s interval) | $interval, $rootScope |
-
----
+| creditCardApp | Module | Root module, routing, DI setup | ngRoute, ngResource |
+| DashboardController | Controller | Bind KPI data to view, handle refresh | DashboardService, $scope |
+| DashboardService | Factory | Aggregate multi-card data, calculate portfolio KPIs | CreditCardService, TransactionService, $q |
+| CreditCardService | Factory | Fetch card details, balances, limits via REST | $http, API_ENDPOINTS |
+| TransactionService | Factory | Fetch transactions, calculate monthly spend | $http, API_ENDPOINTS |
+| kpiCard | Directive | Render individual KPI with icon, value, label | None |
 
 ## c. Data Model
 
-**KPIDashboardModel (JavaScript Object):**
-```javascript
-{
-  userId: String,
-  monthlySpend: Number,
-  totalCreditLimit: Number,
-  availableCredit: Number,
-  outstandingAmount: Number,
-  cards: Array<CreditCard>,
-  lastUpdated: Date
-}
-```
-
-**CreditCard (JavaScript Object):**
+**CreditCard Model:**
 ```javascript
 {
   cardId: String,
@@ -73,18 +51,25 @@ app/
   cardType: String,
   creditLimit: Number,
   availableCredit: Number,
-  outstandingBalance: Number,
-  monthlySpend: Number
+  outstandingAmount: Number,
+  lastUpdated: Date
 }
 ```
 
----
+**PortfolioKPI Model:**
+```javascript
+{
+  totalCreditLimit: Number,
+  totalAvailableCredit: Number,
+  totalOutstanding: Number,
+  monthlySpend: Number,
+  cardCount: Number
+}
+```
 
 ## d. Data Flow
 
-User accesses dashboard → DashboardKPIController initializes and calls KPIService.getKPIData() → KPIService makes parallel API calls via CreditCardDataService (for card details/balances) and TransactionProcessingService (for monthly spend/outstanding) → Services return promises resolved with JSON data → KPIService aggregates data across all cards into KPIDashboardModel → Controller binds aggregated data to $scope → View renders KPI cards using kpiCardDirective with responsive Bootstrap grid → RealTimeRefreshFactory polls every 30 seconds, triggering data refresh and UI update.
-
----
+User navigates to dashboard route → DashboardController initializes → calls DashboardService.getPortfolioKPIs() → DashboardService concurrently fetches all user cards via CreditCardService.getAllCards() and current month transactions via TransactionService.getMonthlyTransactions() using $q.all() → aggregates results to calculate total credit limit (sum of all card limits), total available credit (sum of available per card), total outstanding (sum of balances), and monthly spend (sum of current month transaction amounts) → returns PortfolioKPI object to controller → controller binds to $scope → view renders KPI cards using kpiCard directive → real-time refresh triggered via $interval or manual refresh button re-invokes the flow.
 
 ## e. Primary Sequence Diagram
 
@@ -92,45 +77,39 @@ User accesses dashboard → DashboardKPIController initializes and calls KPIServ
 sequenceDiagram
     participant User
     participant DashboardView
-    participant DashboardKPIController
-    participant KPIService
-    participant CreditCardDataService
-    participant TransactionProcessingService
+    participant DashboardController
+    participant DashboardService
+    participant CreditCardService
+    participant TransactionService
     participant API
 
-    User->>DashboardView: Access Dashboard
-    DashboardView->>DashboardKPIController: Initialize
-    DashboardKPIController->>KPIService: getKPIData(userId)
-    KPIService->>CreditCardDataService: getCardDetails(userId)
-    CreditCardDataService->>API: GET /api/cards/{userId}
-    API-->>CreditCardDataService: Card details JSON
-    KPIService->>TransactionProcessingService: getMonthlySpend(userId)
-    TransactionProcessingService->>API: GET /api/transactions/monthly/{userId}
-    API-->>TransactionProcessingService: Monthly spend JSON
-    KPIService->>KPIService: Aggregate KPI data
-    KPIService-->>DashboardKPIController: KPIDashboardModel
-    DashboardKPIController->>DashboardView: Bind data to $scope
-    DashboardView-->>User: Display KPIs (monthly spend, credit limit, available credit, outstanding)
+    User->>DashboardView: Navigate to Dashboard
+    DashboardView->>DashboardController: Initialize
+    DashboardController->>DashboardService: getPortfolioKPIs()
+    DashboardService->>CreditCardService: getAllCards()
+    CreditCardService->>API: GET /api/cards
+    API-->>CreditCardService: Card data array
+    DashboardService->>TransactionService: getMonthlyTransactions()
+    TransactionService->>API: GET /api/transactions?month=current
+    API-->>TransactionService: Transaction data array
+    DashboardService->>DashboardService: Calculate KPIs (aggregate)
+    DashboardService-->>DashboardController: PortfolioKPI object
+    DashboardController->>DashboardView: Bind $scope.kpis
+    DashboardView-->>User: Display KPI cards
 ```
-
----
 
 ## f. Implementation Notes
 
-- Use AngularJS dependency injection for all services and controllers; register via `angular.module('creditCardDashboardModule', []).controller/service/directive`
-- Implement KPIService using `$q.all()` for parallel API calls to improve performance; cache results for 30 seconds
-- Use `$interval` in RealTimeRefreshFactory for polling; cancel interval on scope destruction to prevent memory leaks
-- Apply Bootstrap responsive grid classes (col-xs-12, col-sm-6, col-md-3) in kpiCardDirective template for cross-device layout
-- Use ES6 arrow functions and const/let in service implementations; transpile with Babel if needed
-
----
+- Use AngularJS Factory pattern for services to enable singleton behavior and testability via DI
+- Leverage $q.all() for concurrent API calls to minimize latency when fetching cards and transactions
+- Implement $http interceptor for token injection and error handling across all REST calls
+- Use Bootstrap grid system (col-md-3, col-sm-6, col-xs-12) for responsive KPI card layout
+- Apply $interval service for auto-refresh every 30 seconds with cleanup on $scope.$on('$destroy')
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user-friendly notifications via toastr or similar; retry failed API calls once before displaying error.
-
----
+HTTP interceptor captures all API errors, displays user-friendly toast notifications via a shared NotificationService, and logs errors to console; service methods return rejected promises with error context.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; include JWT token in Authorization header for all API calls.
+Requires token-based auth via existing SSO; all API calls include Authorization header with JWT token injected by HTTP interceptor.
