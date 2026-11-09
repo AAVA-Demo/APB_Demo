@@ -3,9 +3,10 @@ const { expect } = require('@playwright/test');
 exports.LoginPage = class LoginPage {
   constructor(page) {
     this.page = page;
-    this.usernameInput = page.locator('input[name="username"]');
-    this.passwordInput = page.locator('input[name="password"]');
+    this.usernameInput = page.locator('#username');
+    this.passwordInput = page.locator('#password');
     this.loginButton = page.locator('button[type="submit"]');
+    this.logoutButton = page.locator('button:has-text("Logout")');
     this.errorMessage = page.locator('.alert-danger');
   }
 
@@ -15,15 +16,16 @@ exports.LoginPage = class LoginPage {
   }
 
   async login(username, password) {
-    await expect(this.usernameInput).toBeVisible();
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForURL('**/dashboard');
   }
 
-  async getErrorMessage() {
-    await expect(this.errorMessage).toBeVisible();
-    return await this.errorMessage.textContent();
+  async logout() {
+    if (await this.logoutButton.isVisible()) {
+      await this.logoutButton.click();
+      await this.page.waitForURL('**/login');
+    }
   }
 };

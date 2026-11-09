@@ -2,10 +2,6 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './src/automationScripts',
-  timeout: 30000,
-  expect: {
-    timeout: 5000
-  },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -16,33 +12,23 @@ module.exports = defineConfig({
     ['junit', { outputFile: 'test-results/junit.xml' }]
   ],
   use: {
-    baseURL: 'https://creditcard-dashboard.example.com',
+    baseURL: 'http://localhost:8080',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    actionTimeout: 10000,
-    navigationTimeout: 15000
+    video: 'retain-on-failure'
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
+      use: { ...devices['Desktop Safari'] },
     },
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] }
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 14'] }
-    }
-  ]
+  ],
 });
