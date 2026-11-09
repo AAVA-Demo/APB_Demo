@@ -1,0 +1,14 @@
+{
+  "qa": {
+    "baseUrl": "https://creditcard-dashboard.example.com",
+    "apiUrl": "https://api.creditcard-dashboard.example.com"
+  },
+  "staging": {
+    "baseUrl": "https://staging.creditcard-dashboard.example.com",
+    "apiUrl": "https://api-staging.creditcard-dashboard.example.com"
+  },
+  "production": {
+    "baseUrl": "https://prod.creditcard-dashboard.example.com",
+    "apiUrl": "https://api.creditcard-dashboard.example.com"
+  }
+}
