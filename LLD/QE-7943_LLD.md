@@ -3,138 +3,117 @@
 
 ## a. Architecture Mapping
 
-- **User Interface** → AngularJS Module (`cardManagementModule`) + Controller (`CardManagementController`)
-- **Card Management Module** → AngularJS Service (`CardManagementService`)
-- **User Profile Service Integration** → AngularJS Factory (`UserProfileFactory`) for REST API calls
-- **Credit Card Data Service Integration** → AngularJS Factory (`CardDataFactory`) for REST API calls
-- **Card Analytics Engine** → AngularJS Service (`CardAnalyticsService`)
+- **User Interface** → AngularJS Module (`cardManagementModule`) + Controller (`CardManagementController`) + View Template (`card-management.html`)
+- **Card Management Service** → AngularJS Service (`cardManagementService`) for orchestrating card operations
+- **User Profile Service Integration** → AngularJS Service (`userProfileService`) for card ownership mapping
+- **Credit Card Data Service Integration** → AngularJS Service (`creditCardDataService`) for card details retrieval
+- **Spend Analysis Module** → AngularJS Service (`spendAnalysisService`) for card-wise metrics calculation
 
 **Recommended Folder Structure:**
 ```
 app/
 ├── modules/card-management/
-│   ├── card-management.module.js
-│   ├── card-management.controller.js
-│   ├── card-list.view.html
-│   ├── card-detail.view.html
-│   └── card-management.css
-├── services/
-│   ├── card-management.service.js
-│   └── card-analytics.service.js
-├── factories/
-│   ├── user-profile.factory.js
-│   └── card-data.factory.js
-└── directives/
-    └── card-item.directive.js
+│   ├── controllers/cardManagementController.js
+│   ├── services/cardManagementService.js
+│   ├── services/spendAnalysisService.js
+│   ├── views/card-management.html
+│   ├── directives/cardTile.directive.js
+├── shared/
+│   ├── services/userProfileService.js
+│   ├── services/creditCardDataService.js
+└── assets/css/card-management.css
 ```
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|--------------|----------------|------------------|
-| cardManagementModule | Module | Registers card management feature and routing for list/detail views | angular, ui.router |
-| CardManagementController | Controller | Manages card list view state, handles card selection and navigation to detail view | CardManagementService, $scope, $state |
-| CardManagementService | Service | Orchestrates card data retrieval and coordinates between profile and card data services | UserProfileFactory, CardDataFactory, $q |
-| UserProfileFactory | Factory | Handles REST API calls to User Profile Service for user-card ownership mapping | $http, API_CONFIG |
-| CardDataFactory | Factory | Handles REST API calls to Credit Card Data Service for card details and metrics | $http, API_CONFIG |
-| CardAnalyticsService | Service | Processes card-wise spending analysis and calculates card-specific metrics | CardDataFactory, $filter |
-| cardItemDirective | Directive | Reusable component to display individual card summary in list view | None |
-| card-list.view.html | View | Displays all user cards in responsive grid layout with summary metrics | Bootstrap, cardItemDirective |
-| card-detail.view.html | View | Displays detailed view of selected card with spend analysis and metrics | Bootstrap, AngularJS filters |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| cardManagementModule | AngularJS Module | Root module for card management feature, configures routing | ngRoute |
+| CardManagementController | Controller | Manages card list view state, handles card selection, coordinates data retrieval | cardManagementService, $scope |
+| cardManagementService | Service | Orchestrates card data retrieval from multiple services, manages card list state | userProfileService, creditCardDataService, spendAnalysisService, $q |
+| userProfileService | Service | Fetches user-card associations via REST API | $http |
+| creditCardDataService | Service | Retrieves individual card details (limits, balances) via REST API | $http |
+| spendAnalysisService | Service | Calculates card-wise spend metrics from transaction data | $http |
+| cardTile.directive | Directive | Reusable card display component showing card details and metrics | None |
+| card-management.html | View Template | Displays multiple cards in responsive grid layout | Bootstrap, cardTile directive |
 
 ## c. Data Model
 
-**UserCardMapping (JavaScript Object):**
 ```javascript
-{
-  userId: String,
-  cardIds: Array<String>  // Array of card IDs owned by user
-}
-```
-
-**CreditCardDetail (JavaScript Object):**
-```javascript
-{
+// Credit Card Model
+class CreditCard {
   cardId: String,
   cardNumber: String,
-  cardType: String,           // e.g., Visa, Mastercard
+  cardType: String,
   creditLimit: Number,
   outstandingBalance: Number,
   availableCredit: Number,
-  expiryDate: Date,
-  cardholderName: String
+  expiryDate: String
 }
-```
 
-**CardSpendAnalysis (JavaScript Object):**
-```javascript
-{
+// Card Spend Metrics Model
+class CardSpendMetrics {
   cardId: String,
   monthlySpend: Number,
-  categoryBreakdown: Object,  // Key-value pairs: category -> amount
-  utilizationRate: Number     // (outstandingBalance / creditLimit) * 100
+  yearlySpend: Number,
+  transactionCount: Number
+}
+
+// User Card Association Model
+class UserCardAssociation {
+  userId: String,
+  cardIds: Array<String>
 }
 ```
 
 ## d. Data Flow
 
-User accesses card management interface → `CardManagementController` calls `CardManagementService.getUserCards()` → Service invokes `UserProfileFactory.getCardMapping()` to retrieve user's card IDs → Service then calls `CardDataFactory.getCardDetails()` for each card ID (batched if API supports) → Card details returned and enriched with analytics via `CardAnalyticsService.analyzeCard()` → Enriched card list bound to `$scope` → View renders card grid using `cardItemDirective` → User clicks card → Controller navigates to detail view using `$state.go('cardDetail', {cardId})` → Detail view displays comprehensive card metrics and spend analysis.
+User accesses card management interface → CardManagementController calls cardManagementService.getAllCards() → cardManagementService first calls userProfileService.getUserCardAssociations() to get card IDs → For each card ID, service makes parallel calls to creditCardDataService.getCardDetails(cardId) and spendAnalysisService.getCardMetrics(cardId) using $q.all() → Services return card details and spend metrics → cardManagementService merges data into CreditCard objects with embedded metrics → Controller updates $scope.cards array → View renders cards using cardTile directive in Bootstrap responsive grid → User views all cards with individual details and performance metrics within 2 seconds.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardListView
+    participant CardView
     participant CardManagementController
-    participant CardManagementService
-    participant UserProfileFactory
-    participant CardDataFactory
-    participant CardAnalyticsService
-    participant UserProfileAPI
-    participant CardDataAPI
+    participant cardManagementService
+    participant userProfileService
+    participant creditCardDataService
+    participant spendAnalysisService
+    participant REST_API
 
-    User->>CardListView: Access Card Management
-    CardListView->>CardManagementController: Initialize
-    CardManagementController->>CardManagementService: getUserCards(userId)
-    
-    CardManagementService->>UserProfileFactory: getCardMapping(userId)
-    UserProfileFactory->>UserProfileAPI: GET /api/users/{userId}/cards
-    UserProfileAPI-->>UserProfileFactory: Card IDs array
-    UserProfileFactory-->>CardManagementService: cardIds
-    
-    CardManagementService->>CardDataFactory: getCardDetails(cardIds)
-    CardDataFactory->>CardDataAPI: GET /api/cards?ids=cardIds
-    CardDataAPI-->>CardDataFactory: Card details array
-    CardDataFactory-->>CardManagementService: creditCardDetails
-    
-    loop For each card
-        CardManagementService->>CardAnalyticsService: analyzeCard(cardDetail)
-        CardAnalyticsService-->>CardManagementService: enriched card with analytics
+    User->>CardView: Access Card Management
+    CardView->>CardManagementController: Initialize
+    CardManagementController->>cardManagementService: getAllCards()
+    cardManagementService->>userProfileService: getUserCardAssociations()
+    userProfileService->>REST_API: GET /api/users/cards
+    REST_API-->>userProfileService: {cardIds: [...]}
+    loop For each cardId
+        cardManagementService->>creditCardDataService: getCardDetails(cardId)
+        creditCardDataService->>REST_API: GET /api/cards/{cardId}
+        REST_API-->>creditCardDataService: {cardDetails}
+        cardManagementService->>spendAnalysisService: getCardMetrics(cardId)
+        spendAnalysisService->>REST_API: GET /api/analytics/card/{cardId}
+        REST_API-->>spendAnalysisService: {spendMetrics}
     end
-    
-    CardManagementService-->>CardManagementController: Enriched card list
-    CardManagementController->>CardListView: Bind to $scope
-    CardListView-->>User: Display all cards with metrics
-    
-    User->>CardListView: Click card for details
-    CardListView->>CardManagementController: selectCard(cardId)
-    CardManagementController->>CardListView: Navigate to detail view
-    CardListView-->>User: Show detailed card analysis
+    cardManagementService-->>CardManagementController: Array<CreditCard>
+    CardManagementController-->>CardView: Update $scope.cards
+    CardView-->>User: Display cards in grid (< 2 sec)
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS `ui.router` for state management between list and detail views with URL parameter passing for card selection
-- Implement card item as reusable directive to ensure consistent rendering and reduce code duplication
-- Batch API calls when fetching multiple card details to meet 2-second retrieval NFR; use `$q.all()` for parallel requests
-- Apply lazy loading pattern for card analytics to improve initial page load performance
-- Use AngularJS filters for formatting currency, dates, and percentages in views
+- Use AngularJS custom directive (cardTile) with isolated scope for reusable card display component; pass card object via scope binding
+- Implement $q.all() in cardManagementService to parallelize multiple card detail API calls for performance optimization
+- Apply ng-repeat with track by cardId in view for efficient DOM rendering when card list updates
+- Use Bootstrap grid system (col-md-4, col-sm-6, col-xs-12) for responsive card layout supporting 10+ cards
+- Cache card data in service using $cacheFactory to reduce redundant API calls on view re-entry
 
 ## g. Error Handling
 
-Centralized error handling via HTTP interceptor with try/catch blocks in service layer; user notifications via Bootstrap modals for critical errors.
+Try/catch blocks in service methods with $q.reject() for promise chain error propagation; display Bootstrap alert modals for API failures.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; card data transmission over HTTPS with token-based authentication.
+Standard input validation and secure API calls assumed; card numbers displayed with masking (last 4 digits only).

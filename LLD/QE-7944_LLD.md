@@ -3,144 +3,115 @@
 
 ## a. Architecture Mapping
 
-- **User Dashboard** → AngularJS Module (`analyticsModule`) + Controller (`AnalyticsController`)
-- **Analytics UI Component** → AngularJS Directive (`spendingChartDirective`) for interactive visualizations
-- **Analytics Engine** → AngularJS Service (`AnalyticsEngineService`)
-- **Transaction Service Integration** → AngularJS Factory (`TransactionFactory`) for REST API calls
-- **Category Classification Service Integration** → AngularJS Factory (`CategoryFactory`) for REST API calls
+- **User Interface** → AngularJS Module (`insightsModule`) + Controller (`InsightsController`) + View Template (`insights.html`)
+- **Insights Service** → AngularJS Service (`insightsService`) for orchestrating analytics data
+- **Transaction Service Integration** → AngularJS Service (`transactionService`) for transaction data retrieval
+- **Category Classification Service Integration** → AngularJS Service (`categoryService`) for expense categorization
+- **Analytics Engine Integration** → AngularJS Service (`analyticsEngineService`) for data aggregation and trend calculations
+- **Chart Visualization** → AngularJS Directive (`chartDirective`) wrapping Chart.js library
 
 **Recommended Folder Structure:**
 ```
 app/
-├── modules/analytics/
-│   ├── analytics.module.js
-│   ├── analytics.controller.js
-│   ├── analytics.view.html
-│   └── analytics.css
-├── services/
-│   └── analytics-engine.service.js
-├── factories/
-│   ├── transaction.factory.js
-│   └── category.factory.js
-├── directives/
-│   ├── spending-chart.directive.js
-│   └── trend-chart.directive.js
-└── vendor/
-    └── chart.js (or D3.js for visualizations)
+├── modules/insights/
+│   ├── controllers/insightsController.js
+│   ├── services/insightsService.js
+│   ├── services/analyticsEngineService.js
+│   ├── views/insights.html
+│   ├── directives/chartDirective.js
+├── shared/
+│   ├── services/transactionService.js
+│   ├── services/categoryService.js
+└── assets/css/insights.css
 ```
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|--------------|----------------|------------------|
-| analyticsModule | Module | Registers analytics feature components and routing | angular, ui.router, chart.js |
-| AnalyticsController | Controller | Manages analytics view state, handles time range selection, triggers data fetch | AnalyticsEngineService, $scope, $filter |
-| AnalyticsEngineService | Service | Aggregates transaction data by category and time, calculates trends and insights | TransactionFactory, CategoryFactory, $q |
-| TransactionFactory | Factory | Handles REST API calls to Transaction Service for transaction history | $http, API_CONFIG |
-| CategoryFactory | Factory | Handles REST API calls to Category Classification Service for category mappings | $http, API_CONFIG |
-| spendingChartDirective | Directive | Renders interactive category-wise spending pie/bar chart using Chart.js | chart.js, $timeout |
-| trendChartDirective | Directive | Renders monthly spend trend line chart with interactive tooltips | chart.js, $timeout |
-| analytics.view.html | View | Displays analytics dashboard with filters, category breakdown, and trend visualizations | Bootstrap, AngularJS directives |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| insightsModule | AngularJS Module | Root module for insights feature, configures routes and chart library | ngRoute, Chart.js |
+| InsightsController | Controller | Manages insights view state, handles time period selection, coordinates chart rendering | insightsService, $scope, $filter |
+| insightsService | Service | Orchestrates analytics data retrieval, aggregates spending by category and time | transactionService, categoryService, analyticsEngineService, $q |
+| transactionService | Service | Fetches transaction data for specified time periods via REST API | $http |
+| categoryService | Service | Provides category mappings for 9 predefined categories | $http |
+| analyticsEngineService | Service | Performs data aggregation, calculates monthly trends for up to 12 months | $http |
+| chartDirective | Directive | Wraps Chart.js for rendering interactive pie/bar/line charts | Chart.js library |
+| insights.html | View Template | Displays category-wise and monthly trend charts with responsive layout | Bootstrap, chartDirective |
 
 ## c. Data Model
 
-**Transaction (JavaScript Object):**
 ```javascript
-{
-  transactionId: String,
-  cardId: String,
+// Category Spending Model
+class CategorySpending {
+  category: String, // One of 9: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
   amount: Number,
-  date: Date,
-  categoryId: String,
-  merchantName: String
+  percentage: Number,
+  transactionCount: Number
 }
-```
 
-**CategorySpending (JavaScript Object):**
-```javascript
-{
-  categoryName: String,  // One of: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
-  totalAmount: Number,
-  transactionCount: Number,
-  percentage: Number     // Percentage of total spending
-}
-```
-
-**MonthlyTrend (JavaScript Object):**
-```javascript
-{
-  month: String,         // Format: YYYY-MM
+// Monthly Trend Model
+class MonthlyTrend {
+  month: String, // Format: YYYY-MM
   totalSpend: Number,
   categoryBreakdown: Array<CategorySpending>
 }
-```
 
-**AnalyticsData (JavaScript Object):**
-```javascript
-{
-  timeRange: String,     // e.g., "Last 12 months"
+// Analytics Data Model
+class AnalyticsData {
   categorySpending: Array<CategorySpending>,
   monthlyTrends: Array<MonthlyTrend>,
-  totalSpending: Number
+  timeRange: { startDate: Date, endDate: Date }
 }
 ```
 
 ## d. Data Flow
 
-User navigates to analytics dashboard → `AnalyticsController` initializes with default 12-month time range → Controller calls `AnalyticsEngineService.getAnalytics(timeRange)` → Service invokes `TransactionFactory.getTransactions(startDate, endDate)` to fetch transaction history → Transactions returned with pre-classified category IDs → Service aggregates data by category using array reduce operations → Service calculates monthly trends by grouping transactions by month → `AnalyticsData` object with category spending and monthly trends returned to controller → Controller binds data to `$scope` → View renders `spendingChartDirective` for category breakdown and `trendChartDirective` for monthly trends → User interacts with charts (hover, click) to explore detailed insights.
+User accesses insights interface → InsightsController calls insightsService.getAnalytics(timeRange) with default 12-month range → insightsService calls transactionService.getTransactions(timeRange) to fetch raw transaction data → categoryService.getCategoryMappings() provides category classifications → analyticsEngineService.aggregateByCategory(transactions, categories) groups transactions into 9 categories and calculates totals → analyticsEngineService.calculateMonthlyTrends(transactions) aggregates spending by month → insightsService returns AnalyticsData object → Controller updates $scope.analyticsData → chartDirective renders interactive pie chart for category breakdown and line chart for monthly trends using Chart.js → Charts render within 3 seconds → User interacts with time period filters to refresh visualizations.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AnalyticsView
-    participant AnalyticsController
-    participant AnalyticsEngineService
-    participant TransactionFactory
-    participant CategoryFactory
-    participant TransactionAPI
-    participant CategoryAPI
+    participant InsightsView
+    participant InsightsController
+    participant insightsService
+    participant transactionService
+    participant categoryService
+    participant analyticsEngineService
+    participant REST_API
 
-    User->>AnalyticsView: Navigate to Analytics Dashboard
-    AnalyticsView->>AnalyticsController: Initialize (default 12 months)
-    AnalyticsController->>AnalyticsEngineService: getAnalytics(timeRange)
-    
-    AnalyticsEngineService->>TransactionFactory: getTransactions(startDate, endDate)
-    TransactionFactory->>TransactionAPI: GET /api/transactions?start=startDate&end=endDate
-    TransactionAPI-->>TransactionFactory: Transaction array (with categoryIds)
-    TransactionFactory-->>AnalyticsEngineService: transactions
-    
-    AnalyticsEngineService->>CategoryFactory: getCategoryMappings()
-    CategoryFactory->>CategoryAPI: GET /api/categories
-    CategoryAPI-->>CategoryFactory: Category mappings
-    CategoryFactory-->>AnalyticsEngineService: categoryMap
-    
-    AnalyticsEngineService->>AnalyticsEngineService: Aggregate by category
-    AnalyticsEngineService->>AnalyticsEngineService: Calculate monthly trends
-    AnalyticsEngineService-->>AnalyticsController: AnalyticsData object
-    
-    AnalyticsController->>AnalyticsView: Bind data to $scope
-    AnalyticsView->>AnalyticsView: Render spendingChartDirective
-    AnalyticsView->>AnalyticsView: Render trendChartDirective
-    AnalyticsView-->>User: Display interactive charts
-    
-    User->>AnalyticsView: Interact with chart (hover/click)
-    AnalyticsView-->>User: Show detailed tooltip/drill-down
+    User->>InsightsView: Access Insights Dashboard
+    InsightsView->>InsightsController: Initialize (12-month default)
+    InsightsController->>insightsService: getAnalytics(timeRange)
+    insightsService->>transactionService: getTransactions(timeRange)
+    transactionService->>REST_API: GET /api/transactions?from=...&to=...
+    REST_API-->>transactionService: {transactions: [...]}
+    insightsService->>categoryService: getCategoryMappings()
+    categoryService->>REST_API: GET /api/categories
+    REST_API-->>categoryService: {categories: [...]}
+    insightsService->>analyticsEngineService: aggregateByCategory(transactions, categories)
+    analyticsEngineService-->>insightsService: {categorySpending: [...]}
+    insightsService->>analyticsEngineService: calculateMonthlyTrends(transactions)
+    analyticsEngineService-->>insightsService: {monthlyTrends: [...]}
+    insightsService-->>InsightsController: AnalyticsData
+    InsightsController-->>InsightsView: Update $scope.analyticsData
+    InsightsView->>InsightsView: Render charts via chartDirective (< 3 sec)
+    InsightsView-->>User: Display interactive charts
 ```
 
 ## f. Implementation Notes
 
-- Use Chart.js library for rendering interactive, responsive charts; integrate via AngularJS directives with two-way data binding
-- Implement data aggregation logic in service layer using ES6 array methods (map, filter, reduce) for clean, functional code
-- Cache category mappings in `CategoryFactory` to avoid redundant API calls; use AngularJS `$cacheFactory` for in-memory caching
-- Apply AngularJS `$filter` service for date range filtering and currency formatting in views
-- Ensure chart directives use `$timeout` for DOM manipulation to work within AngularJS digest cycle and avoid rendering issues
+- Use Chart.js library wrapped in AngularJS directive with isolated scope; pass chart data and options via directive attributes
+- Implement client-side aggregation in analyticsEngineService using ES6 Array.reduce() for category grouping and monthly totals
+- Apply ng-if in view to conditionally render charts only after data is loaded to avoid empty chart flicker
+- Use Bootstrap responsive utilities (hidden-xs, visible-md) to optimize chart layout for different screen sizes
+- Implement date range picker using AngularJS date filter and ng-model for time period selection
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with try/catch in aggregation logic; user notifications via Bootstrap alerts for API failures.
+Interceptor-based error handling with user notification via Bootstrap toast/alert on API failures or chart rendering errors.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; transaction data access controlled via token-based authentication.
+Standard input validation and secure API calls assumed; transaction data filtered server-side by authenticated user context.

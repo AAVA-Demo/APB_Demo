@@ -3,80 +3,68 @@
 
 ## a. Architecture Mapping
 
-- **Dashboard UI Component** → AngularJS Module (`dashboardModule`) + Controller (`DashboardController`)
-- **KPI Aggregation Service** → AngularJS Service (`KpiAggregationService`)
-- **Credit Card Service Integration** → AngularJS Factory (`CreditCardFactory`) for REST API calls
-- **Transaction Service Integration** → AngularJS Factory (`TransactionFactory`) for REST API calls
-- **User Authentication** → AngularJS Service (`AuthService`) with HTTP interceptor
+- **Dashboard Interface** → AngularJS Module (`dashboardModule`) + Controller (`DashboardController`) + View Template (`dashboard.html`)
+- **KPI Management Service** → AngularJS Service (`kpiManagementService`) using $http for REST API calls
+- **User Authentication Service** → AngularJS Factory (`authFactory`) with token management
+- **Credit Card Service Integration** → AngularJS Service (`creditCardService`) for aggregated card data
+- **Transaction Service Integration** → AngularJS Service (`transactionService`) for spending calculations
 
 **Recommended Folder Structure:**
 ```
 app/
 ├── modules/dashboard/
-│   ├── dashboard.module.js
-│   ├── dashboard.controller.js
-│   ├── dashboard.view.html
-│   └── dashboard.css
-├── services/
-│   ├── kpi-aggregation.service.js
-│   └── auth.service.js
-├── factories/
-│   ├── credit-card.factory.js
-│   └── transaction.factory.js
-└── shared/
-    └── interceptors/auth.interceptor.js
+│   ├── controllers/dashboardController.js
+│   ├── services/kpiManagementService.js
+│   ├── views/dashboard.html
+├── shared/
+│   ├── services/authFactory.js
+│   ├── services/creditCardService.js
+│   ├── services/transactionService.js
+├── assets/css/dashboard.css
+└── app.module.js
 ```
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|--------------|----------------|------------------|
-| dashboardModule | Module | Registers dashboard feature components and routing | angular, ui.router |
-| DashboardController | Controller | Manages dashboard view state, triggers KPI data fetch, handles real-time refresh | KpiAggregationService, $scope, $interval |
-| KpiAggregationService | Service | Aggregates KPI data from multiple sources, calculates metrics | CreditCardFactory, TransactionFactory, $q |
-| CreditCardFactory | Factory | Handles REST API calls to Credit Card Service for card data | $http, API_CONFIG |
-| TransactionFactory | Factory | Handles REST API calls to Transaction Service for spending data | $http, API_CONFIG |
-| AuthService | Service | Manages user authentication state and token handling | $http, $window, AuthInterceptor |
-| AuthInterceptor | Factory | Intercepts HTTP requests to inject auth tokens | $q, $window |
-| dashboard.view.html | View | Displays KPI cards (monthly spend, credit limit, available credit, outstanding) with responsive layout | Bootstrap grid, AngularJS directives |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| dashboardModule | AngularJS Module | Root module for dashboard feature, configures routes and DI | ngRoute, ngResource |
+| DashboardController | Controller | Manages dashboard view state, orchestrates KPI data retrieval, handles user interactions | kpiManagementService, $scope, $interval |
+| kpiManagementService | Service | Aggregates KPI data from multiple sources, calculates consolidated metrics | creditCardService, transactionService, $http, $q |
+| authFactory | Factory | Manages authentication tokens, validates user session | $http, $window |
+| creditCardService | Service | Fetches aggregated credit card data via REST API | $http, authFactory |
+| transactionService | Service | Retrieves spending data and calculates monthly totals via REST API | $http, authFactory |
+| dashboard.html | View Template | Responsive UI displaying KPIs with Bootstrap grid, real-time data binding | Bootstrap 3.x, AngularJS directives |
 
 ## c. Data Model
 
-**KpiData (JavaScript Object):**
 ```javascript
-{
-  monthlySpend: Number,        // Total spending for current month
-  totalCreditLimit: Number,    // Sum of all card credit limits
-  availableCredit: Number,     // Total available credit across cards
-  outstandingAmount: Number,   // Total outstanding balance
-  lastUpdated: Date            // Timestamp of last data refresh
+// KPI Model
+class KPIModel {
+  monthlySpend: Number,
+  totalCreditLimit: Number,
+  availableCredit: Number,
+  outstandingAmount: Number,
+  lastUpdated: Date
 }
-```
 
-**CreditCard (JavaScript Object):**
-```javascript
-{
-  cardId: String,
-  cardNumber: String,
-  creditLimit: Number,
-  outstandingBalance: Number
+// Credit Card Summary Model
+class CreditCardSummary {
+  totalCards: Number,
+  aggregatedLimit: Number,
+  aggregatedBalance: Number
 }
-```
 
-**Transaction (JavaScript Object):**
-```javascript
-{
-  transactionId: String,
-  cardId: String,
-  amount: Number,
-  date: Date,
-  category: String
+// Transaction Summary Model
+class TransactionSummary {
+  currentMonthSpend: Number,
+  transactionCount: Number
 }
 ```
 
 ## d. Data Flow
 
-User navigates to dashboard → `DashboardController` initializes and calls `KpiAggregationService.getKpiData()` → Service invokes `CreditCardFactory.getAllCards()` and `TransactionFactory.getMonthlyTransactions()` in parallel using `$q.all()` → REST API responses return card details and transaction data → Service calculates KPIs (sums credit limits, aggregates spending, computes available credit) → Aggregated `KpiData` object returned to controller → Controller binds data to `$scope` → View renders KPI cards using Bootstrap responsive grid → `$interval` service triggers refresh every 60 seconds to maintain real-time updates.
+User authenticates via authFactory → DashboardController initializes and calls kpiManagementService.getKPIs() → kpiManagementService makes parallel REST API calls to creditCardService.getAggregatedData() and transactionService.getMonthlySpend() → Services return promises resolved with card summary and transaction summary → kpiManagementService calculates consolidated KPIs (availableCredit = totalCreditLimit - outstandingAmount) → Controller updates $scope.kpiData → View renders KPIs in responsive Bootstrap grid with two-way data binding → $interval refreshes data every 5 minutes for real-time updates.
 
 ## e. Primary Sequence Diagram
 
@@ -85,46 +73,37 @@ sequenceDiagram
     participant User
     participant DashboardView
     participant DashboardController
-    participant KpiAggregationService
-    participant CreditCardFactory
-    participant TransactionFactory
-    participant CreditCardAPI
-    participant TransactionAPI
+    participant kpiManagementService
+    participant creditCardService
+    participant transactionService
+    participant REST_API
 
-    User->>DashboardView: Navigate to Dashboard
+    User->>DashboardView: Access Dashboard
     DashboardView->>DashboardController: Initialize
-    DashboardController->>KpiAggregationService: getKpiData()
-    
-    par Parallel API Calls
-        KpiAggregationService->>CreditCardFactory: getAllCards()
-        CreditCardFactory->>CreditCardAPI: GET /api/cards
-        CreditCardAPI-->>CreditCardFactory: Card data
-        CreditCardFactory-->>KpiAggregationService: Cards array
-    and
-        KpiAggregationService->>TransactionFactory: getMonthlyTransactions()
-        TransactionFactory->>TransactionAPI: GET /api/transactions?month=current
-        TransactionAPI-->>TransactionFactory: Transaction data
-        TransactionFactory-->>KpiAggregationService: Transactions array
-    end
-    
-    KpiAggregationService->>KpiAggregationService: Calculate KPIs
-    KpiAggregationService-->>DashboardController: KpiData object
-    DashboardController->>DashboardView: Bind to $scope
-    DashboardView-->>User: Display KPI cards
+    DashboardController->>kpiManagementService: getKPIs()
+    kpiManagementService->>creditCardService: getAggregatedData()
+    creditCardService->>REST_API: GET /api/creditcards/aggregate
+    REST_API-->>creditCardService: {totalLimit, totalBalance}
+    kpiManagementService->>transactionService: getMonthlySpend()
+    transactionService->>REST_API: GET /api/transactions/monthly
+    REST_API-->>transactionService: {monthlySpend}
+    kpiManagementService-->>DashboardController: KPIModel
+    DashboardController-->>DashboardView: Update $scope.kpiData
+    DashboardView-->>User: Display KPIs (responsive layout)
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS Dependency Injection for all services, factories, and controllers to ensure testability and modularity
-- Implement ES6 classes for services where appropriate, transpile using Babel if needed
-- Use `$q.all()` for parallel REST API calls to minimize latency and meet real-time refresh requirements
-- Apply Bootstrap responsive grid classes (col-xs-*, col-sm-*, col-md-*, col-lg-*) to ensure dashboard responsiveness across devices
-- Leverage `$interval` service for periodic KPI refresh (60-second interval) with cleanup on scope destroy to prevent memory leaks
+- Use AngularJS 1.x dependency injection for all services and controllers; register via module.controller() and module.service()
+- Implement $http interceptors in authFactory for automatic token injection in request headers
+- Use $q.all() in kpiManagementService to parallelize creditCardService and transactionService API calls for performance
+- Apply Bootstrap responsive grid (col-xs-*, col-sm-*, col-md-*) in dashboard.html for mobile/tablet/desktop support
+- Use $interval service for 5-minute auto-refresh; cancel interval on $scope.$destroy to prevent memory leaks
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user-friendly notifications via Bootstrap alerts and retry logic for failed API calls.
+HTTP interceptor-based error handling with $http response interceptors; display user-friendly error messages via Bootstrap alerts on API failures.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; AuthInterceptor injects JWT tokens in all API requests.
+Requires token-based authentication via existing SSO; authFactory manages JWT tokens in session storage with automatic injection in API calls.
