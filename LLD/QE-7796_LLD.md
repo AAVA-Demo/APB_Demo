@@ -1,67 +1,61 @@
 # Low-Level Design: Credit Card Management and Tracking
 **Epic ID:** QE-7796  
-**Technology Stack:** AngularJS 1.x, JavaScript ES6, HTML5, CSS3, Bootstrap, REST APIs, MVC Architecture
+**Epic Title:** PERFTEST20261109161809-Credit Card Management and Tracking
 
 ---
 
 ## a. Architecture Mapping
 
-- **User Interface - Card Management** → AngularJS Module (`cardManagementModule`) + Controller (`CardManagementController`) + View Template (`card-management.html`)
-- **Card Management Service** → AngularJS Service (`CardManagementService`) for managing card operations
-- **Credit Card Data Repository** → REST API integration via AngularJS Factory (`CardRepositoryFactory`)
-- **Transaction Processing Service** → REST API integration via AngularJS Factory (`TransactionProcessingFactory`)
-- **Card-wise Analytics Module** → AngularJS Service (`CardAnalyticsService`) for computing card-level metrics
+- **Card Tracking UI** → AngularJS Module (`cardManagementModule`) with Controller (`CardListController`) and View template
+- **Card Management Service** → AngularJS Service (`CardManagementService`) for card operations and state management
+- **Credit Card Data Repository** → AngularJS Factory (`CardRepositoryFactory`) for CRUD operations via REST API
+- **Transaction Processing Service** → AngularJS Service (`TransactionProcessingService`) for card-wise spend calculations
 
 **Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /card-management
-      card-management.module.js
-      card-management.controller.js
-      card-management.html
-      card-detail.html
-  /services
-    cardManagement.service.js
-    cardAnalytics.service.js
-  /factories
-    cardRepository.factory.js
-    transactionProcessing.factory.js
-  /models
-    card.model.js
+app/
+├── modules/card-management/
+│   ├── card-management.module.js
+│   ├── card-list.controller.js
+│   ├── card-list.view.html
+├── services/
+│   ├── card-management.service.js
+│   ├── transaction-processing.service.js
+├── factories/
+│   ├── card-repository.factory.js
+├── models/
+│   ├── credit-card.model.js
 ```
 
 ---
 
 ## b. Component Specifications
 
-| **Component Name** | **Artifact Type** | **Responsibility** | **Key Dependencies** |
-|--------------------|-------------------|--------------------|----------------------|
-| `cardManagementModule` | Module | Defines the card management feature module | `ngRoute`, `ui.bootstrap` |
-| `CardManagementController` | Controller | Manages card listing view, handles card selection, navigates to card details | `CardManagementService`, `$scope`, `$location` |
-| `CardManagementService` | Service | Orchestrates card data retrieval, manages card state | `CardRepositoryFactory`, `CardAnalyticsService` |
-| `CardRepositoryFactory` | Factory | Fetches and persists credit card data from REST API | `$http`, `API_ENDPOINTS` |
-| `TransactionProcessingFactory` | Factory | Fetches card-wise transaction and spend data from REST API | `$http`, `API_ENDPOINTS` |
-| `CardAnalyticsService` | Service | Computes card-wise analytics (spend, utilization, balance) | `TransactionProcessingFactory` |
-| `cardModel` | Model | Defines credit card data structure | None |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|---|---|---|---|
+| CardListController | Controller | Manages card list display, handles card selection and filtering | CardManagementService, $scope |
+| CardManagementService | Service | Orchestrates card retrieval, manages card state, coordinates with repository and transaction services | CardRepositoryFactory, TransactionProcessingService, $http |
+| CardRepositoryFactory | Factory | Performs CRUD operations on credit card data via REST API | $http, $q |
+| TransactionProcessingService | Service | Calculates card-wise spending and balance aggregations | $http, $q |
+| CardListView | View/Template | Displays list of credit cards with individual details, balances, and utilization metrics | Bootstrap, ng-repeat directive |
 
 ---
 
 ## c. Data Model
 
-**Card Model (`cardModel`):**
+**Credit Card Model (`credit-card.model.js`):**
 ```javascript
 {
-  cardId: String,
-  cardNumber: String,           // Masked format (e.g., **** **** **** 1234)
-  cardType: String,             // Visa, MasterCard, Amex, etc.
+  cardId: String,                 // Unique card identifier
+  cardNumber: String,             // Masked card number (last 4 digits)
   cardHolderName: String,
-  expiryDate: String,           // MM/YY format
+  cardType: String,               // Visa, MasterCard, Amex, etc.
+  bankName: String,
   creditLimit: Number,
-  availableCredit: Number,
+  availableBalance: Number,
   outstandingBalance: Number,
-  utilizationPercent: Number,   // (outstandingBalance / creditLimit) * 100
-  monthlySpend: Number,
+  utilizationPercent: Number,     // (outstandingBalance / creditLimit) * 100
+  lastTransactionDate: Date,
   isActive: Boolean
 }
 ```
@@ -70,7 +64,7 @@
 
 ## d. Data Flow
 
-User navigates to the card management view, triggering `CardManagementController` initialization. The controller calls `CardManagementService.getAllCards()`, which invokes `CardRepositoryFactory.fetchAllCards()` to retrieve card data from the REST API. For each card, `CardAnalyticsService.calculateCardMetrics(cardId)` is called, which uses `TransactionProcessingFactory.fetchCardTransactions(cardId)` to compute card-wise spend and utilization. The aggregated card data with analytics is returned to the controller, bound to `$scope.cards`, and rendered in the view as a Bootstrap card grid. User can click on a card to view detailed information, triggering navigation to the card detail view.
+User navigates to card management page → CardListController initializes and calls CardManagementService.getAllCards() → CardManagementService invokes CardRepositoryFactory.fetchCards() to retrieve card list from API → For each card, TransactionProcessingService.getCardSpend(cardId) is called to fetch card-specific spending data → Results are merged and enriched (utilization % calculated) → CardManagementService returns array of enriched card objects → CardListController binds to $scope.cards → CardListView renders card list using ng-repeat with Bootstrap card components, displaying card details, balances, and utilization.
 
 ---
 
@@ -79,52 +73,49 @@ User navigates to the card management view, triggering `CardManagementController
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardManagementView
-    participant CardManagementController
+    participant CardListView
+    participant CardListController
     participant CardManagementService
     participant CardRepositoryFactory
-    participant CardAnalyticsService
-    participant TransactionProcessingFactory
-    participant REST_API
+    participant TransactionProcessingService
+    participant API
 
-    User->>CardManagementView: Navigate to Card Management
-    CardManagementView->>CardManagementController: Initialize
-    CardManagementController->>CardManagementService: getAllCards()
-    CardManagementService->>CardRepositoryFactory: fetchAllCards()
-    CardRepositoryFactory->>REST_API: GET /api/cards
-    REST_API-->>CardRepositoryFactory: Card list
-    CardRepositoryFactory-->>CardManagementService: Card data
-    CardManagementService->>CardAnalyticsService: calculateCardMetrics(cardId)
-    CardAnalyticsService->>TransactionProcessingFactory: fetchCardTransactions(cardId)
-    TransactionProcessingFactory->>REST_API: GET /api/cards/{cardId}/transactions
-    REST_API-->>TransactionProcessingFactory: Transaction data
-    TransactionProcessingFactory-->>CardAnalyticsService: Transactions
-    CardAnalyticsService-->>CardManagementService: Card metrics
-    CardManagementService-->>CardManagementController: Cards with analytics
-    CardManagementController-->>CardManagementView: Update $scope.cards
-    CardManagementView-->>User: Display card list
+    User->>CardListView: Navigate to Card Management
+    CardListView->>CardListController: Initialize
+    CardListController->>CardManagementService: getAllCards()
+    CardManagementService->>CardRepositoryFactory: fetchCards()
+    CardRepositoryFactory->>API: GET /api/cards
+    API-->>CardRepositoryFactory: Card list
+    loop For each card
+        CardManagementService->>TransactionProcessingService: getCardSpend(cardId)
+        TransactionProcessingService->>API: GET /api/transactions/card/{cardId}
+        API-->>TransactionProcessingService: Card spend data
+    end
+    CardManagementService-->>CardListController: Enriched card array
+    CardListController-->>CardListView: Update $scope.cards
+    CardListView-->>User: Display card list
 ```
 
 ---
 
 ## f. Implementation Notes
 
-- Use AngularJS `ng-repeat` directive to iterate over `$scope.cards` array and render each card as a Bootstrap card component.
-- Implement card detail view as a separate route with `$routeParams` to pass `cardId`; use `CardManagementService.getCardById(cardId)` to fetch details.
-- Use ES6 template literals for dynamic card number masking and formatting in the view layer.
-- Implement lazy loading for card-wise analytics; compute metrics on-demand when user expands card details to optimize initial load time.
-- Use AngularJS filters for formatting currency values and percentages in the view (e.g., `{{ card.creditLimit | currency }}`).
+- Use AngularJS Service pattern for CardManagementService to maintain singleton state across controllers and enable card data sharing.
+- Implement lazy loading for card-specific transaction data using $q promises to avoid blocking UI rendering during initial load.
+- Apply ng-repeat with track by cardId in CardListView to optimize DOM rendering and prevent unnecessary re-renders.
+- Use Bootstrap card components with responsive grid (col-md-4, col-sm-6) to display multiple cards in a grid layout.
+- Implement client-side filtering and sorting using AngularJS filters (orderBy, filter) for enhanced user experience.
 
 ---
 
 ## g. Error Handling
 
-HTTP interceptor with retry logic for transient failures; user notified via toast notifications on persistent errors; graceful degradation with partial data display.
+HTTP interceptor-based error handling with user notifications via toastr; graceful degradation if card-specific spend data fails (display card with "N/A" for spend metrics).
 
 ---
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; card numbers masked in UI and API responses.
+Standard input validation and secure API calls assumed; card numbers masked on client-side; token-based auth via existing SSO.
 
 ---
