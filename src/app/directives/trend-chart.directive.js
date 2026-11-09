@@ -1,0 +1,5 @@
+(function(){
+'use strict';
+angular.module('creditCardApp').directive('trendChart',[function(){return{restrict:'E',scope:{data:'='},template:'<canvas id="trendChart" width="800" height="300"></canvas>',link:function(scope,element,attrs){var chart=null;scope.$watch('data',function(newData){if(newData&&newData.length>0){renderChart(newData);}},true);function renderChart(data){var canvas=element.find('canvas')[0];if(!canvas)return;var ctx=canvas.getContext('2d');if(chart){chart.destroy();}var labels=data.map(function(d){return d.month;});var values=data.map(function(d){return d.totalSpend;});chart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'Monthly Spend',data:values,borderColor:'#36A2EB',backgroundColor:'rgba(54,162,235,0.2)',fill:true}]},options:{responsive:true,maintainAspectRatio:true,scales:{yAxes:[{ticks:{beginAtZero:true,callback:function(value){return'$'+value;}}}]}}});}scope.$on('$destroy',function(){if(chart){chart.destroy();}});}};}
+]);
+})();

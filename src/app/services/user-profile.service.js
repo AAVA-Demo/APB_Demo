@@ -1,12 +1,4 @@
 (function(){
 'use strict';
-angular.module('creditCardApp').service('UserProfileService',['ApiFactory','$q',function(ApiFactory,$q){
-this.validateOwnership=function(cardId){
-return ApiFactory.get('/user/cards/'+cardId+'/validate').then(function(response){
-return response.isValid===true;
-}).catch(function(){
-return false;
-});
-};
-}]);
+angular.module('creditCardApp').service('UserProfileService',['$http','API_ENDPOINTS',function($http,API_ENDPOINTS){var self=this;self.getUserProfile=function(){return $http.get(API_ENDPOINTS.userProfile).then(function(response){return response.data;}).catch(function(error){console.error('Error fetching user profile:',error);throw error;});};}]);
 })();

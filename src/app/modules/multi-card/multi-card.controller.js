@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('app.multiCard').controller('MultiCardController',['$scope','CardManagementService','$location',function($scope,CardManagementService,$location){var vm=this;vm.portfolio=null;vm.loading=true;vm.error=null;vm.selectedCards=[];function loadPortfolio(){vm.loading=true;CardManagementService.getCardPortfolio().then(function(portfolio){vm.portfolio=portfolio;vm.loading=false;vm.error=null;}).catch(function(error){vm.error='Failed to load card portfolio';vm.loading=false;});}loadPortfolio();vm.selectCard=function(card){var idx=vm.selectedCards.indexOf(card.cardId);if(idx>-1){vm.selectedCards.splice(idx,1);}else{vm.selectedCards.push(card.cardId);}};vm.compareCards=function(){if(vm.selectedCards.length>=2){$location.path('/cards/compare').search({ids:vm.selectedCards.join(',')});}};vm.viewCardDetail=function(cardId){$location.path('/cards/'+cardId);};}]);
+})();

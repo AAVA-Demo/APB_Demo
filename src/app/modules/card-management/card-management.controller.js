@@ -1,25 +1,4 @@
 (function(){
 'use strict';
-angular.module('app.cardManagement').controller('CardManagementController',['$scope','$location','CardService',function($scope,$location,CardService){
-const vm=this;
-vm.loading=true;
-vm.error=null;
-vm.cards=[];
-vm.viewCardDetail=viewCardDetail;
-function init(){
-vm.loading=true;
-vm.error=null;
-CardService.getAllCards().then(function(cards){
-vm.cards=cards;
-vm.loading=false;
-}).catch(function(error){
-vm.error=error.message||'Failed to load cards';
-vm.loading=false;
-});
-}
-function viewCardDetail(cardId){
-$location.path('/cards/'+cardId);
-}
-init();
-}]);
+angular.module('app.cardManagement').controller('CardManagementController',['$scope','$routeParams','CardInfoService','TransactionDataService',function($scope,$routeParams,CardInfoService,TransactionDataService){var vm=this;vm.card=null;vm.transactions=null;vm.loading=true;vm.error=null;vm.currentPage=1;vm.pageSize=20;vm.totalCount=0;function loadCardDetail(){vm.loading=true;var cardId=$routeParams.cardId;CardInfoService.getCardById(cardId).then(function(card){vm.card=card;return loadTransactions(cardId);}).then(function(){vm.loading=false;vm.error=null;}).catch(function(error){vm.error='Failed to load card details';vm.loading=false;});}function loadTransactions(cardId){return TransactionDataService.getTransactions(cardId,vm.currentPage,vm.pageSize).then(function(response){vm.transactions=response.transactions||response;vm.totalCount=response.totalCount||vm.transactions.length;});}loadCardDetail();vm.nextPage=function(){if(vm.currentPage*vm.pageSize<vm.totalCount){vm.currentPage++;loadTransactions($routeParams.cardId);}};vm.prevPage=function(){if(vm.currentPage>1){vm.currentPage--;loadTransactions($routeParams.cardId);}};}]);
 })();

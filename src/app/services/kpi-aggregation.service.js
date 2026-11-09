@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('creditCardApp').service('KPIAggregationService',['CreditCardService','$q',function(CreditCardService,$q){var self=this;self.getKPIs=function(){return CreditCardService.fetchAllCards().then(function(cards){var kpis={monthlySpend:0,totalCreditLimit:0,totalAvailableCredit:0,totalOutstanding:0,utilizationRate:0,lastRefreshed:new Date()};cards.forEach(function(card){kpis.monthlySpend+=card.currentMonthSpend||0;kpis.totalCreditLimit+=card.creditLimit||0;kpis.totalAvailableCredit+=card.availableCredit||0;kpis.totalOutstanding+=card.outstandingAmount||0;});if(kpis.totalCreditLimit>0){kpis.utilizationRate=((kpis.totalOutstanding/kpis.totalCreditLimit)*100).toFixed(2);}return kpis;}).catch(function(error){console.error('Error calculating KPIs:',error);return $q.reject(error);});};}]);
+})();

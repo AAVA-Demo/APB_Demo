@@ -1,0 +1,65 @@
+<div class="analytics-container">
+<div class="page-header">
+<h1>Spending Analytics</h1>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.analytics">
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Monthly Spend Trends</div>
+<div class="panel-body">
+<trend-chart data="vm.analytics.monthlyTrends"></trend-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Category-Wise Spending</div>
+<div class="panel-body">
+<category-breakdown data="vm.analytics.categoryBreakdown"></category-breakdown>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Spending Summary</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analytics.categoryBreakdown">
+<td>{{cat.category}}</td>
+<td>{{cat.amount|currency}}</td>
+<td>{{cat.percentage}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Total Spending</div>
+<div class="panel-body">
+<h3>{{vm.analytics.totalSpend|currency}}</h3>
+<p>Period: {{vm.analytics.periodStart|date:'mediumDate'}} - {{vm.analytics.periodEnd|date:'mediumDate'}}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

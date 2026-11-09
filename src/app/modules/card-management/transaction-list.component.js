@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('app.cardManagement').component('transactionList',{bindings:{transactions:'<'},template:'<div class="transaction-list"><table class="table table-striped"><thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th>Amount</th><th>Status</th></tr></thead><tbody><tr ng-repeat="txn in $ctrl.transactions"><td>{{txn.date|date:"short"}}</td><td>{{txn.merchant}}</td><td>{{txn.category}}</td><td>{{txn.amount|currency}}</td><td><span class="label" ng-class="{\"label-success\":txn.status===\"Posted\",\"label-warning\":txn.status===\"Pending\"}">{{txn.status}}</span></td></tr></tbody></table></div>',controller:function(){var ctrl=this;}});
+})();

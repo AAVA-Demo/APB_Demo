@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('app.multiCard').controller('CardComparisonController',['$scope','$routeParams','CreditCardDataService',function($scope,$routeParams,CreditCardDataService){var vm=this;vm.cards=[];vm.loading=true;vm.error=null;function loadCards(){var cardIds=$routeParams.ids?$routeParams.ids.split(','):[];if(cardIds.length<2){vm.error='Please select at least 2 cards to compare';vm.loading=false;return;}vm.loading=true;CreditCardDataService.fetchCards(cardIds).then(function(cards){vm.cards=cards;vm.loading=false;vm.error=null;}).catch(function(error){vm.error='Failed to load card data';vm.loading=false;});}loadCards();}]);
+})();

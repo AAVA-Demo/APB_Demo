@@ -1,0 +1,46 @@
+<div class="comparison-container">
+<div class="page-header">
+<h1>Card Comparison</h1>
+<a href="#/cards" class="btn btn-default">Back to Cards</a>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading comparison...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.cards.length>0">
+<table class="table table-bordered table-striped">
+<thead>
+<tr>
+<th>Metric</th>
+<th ng-repeat="card in vm.cards">{{card.cardType}} {{card.cardNumber}}</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Credit Limit</strong></td>
+<td ng-repeat="card in vm.cards">{{card.creditLimit|currency}}</td>
+</tr>
+<tr>
+<td><strong>Available Credit</strong></td>
+<td ng-repeat="card in vm.cards">{{card.availableCredit|currency}}</td>
+</tr>
+<tr>
+<td><strong>Outstanding Amount</strong></td>
+<td ng-repeat="card in vm.cards">{{card.outstandingAmount|currency}}</td>
+</tr>
+<tr>
+<td><strong>Monthly Spend</strong></td>
+<td ng-repeat="card in vm.cards">{{card.currentMonthSpend|currency}}</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td ng-repeat="card in vm.cards"><span class="label" ng-class="{'label-success':card.status==='Active','label-danger':card.status==='Blocked'}">{{card.status}}</span></td>
+</tr>
+<tr>
+<td><strong>Expiry Date</strong></td>
+<td ng-repeat="card in vm.cards">{{card.expiryDate}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>

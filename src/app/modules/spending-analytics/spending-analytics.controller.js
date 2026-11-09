@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('app.spendingAnalytics').controller('SpendingAnalyticsController',['$scope','SpendingAnalyticsService','$filter',function($scope,SpendingAnalyticsService,$filter){var vm=this;vm.analytics=null;vm.loading=true;vm.error=null;vm.dateRange={start:new Date(new Date().setMonth(new Date().getMonth()-12)),end:new Date()};function loadAnalytics(){vm.loading=true;var startDate=$filter('date')(vm.dateRange.start,'yyyy-MM-dd');var endDate=$filter('date')(vm.dateRange.end,'yyyy-MM-dd');SpendingAnalyticsService.getAnalytics(startDate,endDate).then(function(analytics){vm.analytics=analytics;vm.loading=false;vm.error=null;}).catch(function(error){vm.error='Failed to load analytics data';vm.loading=false;});}loadAnalytics();vm.refreshAnalytics=function(){loadAnalytics();};}]);
+})();

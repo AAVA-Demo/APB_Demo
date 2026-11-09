@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('creditCardApp').component('cardTile',{bindings:{card:'<',onSelect:'&',onView:'&'},template:'<div class="card-tile panel panel-default"><div class="panel-body"><div class="checkbox"><label><input type="checkbox" ng-change="$ctrl.onSelect({card:$ctrl.card})"> Select</label></div><h4>{{$ctrl.card.cardType}}</h4><p class="card-number">{{$ctrl.card.cardNumber}}</p><div class="card-details"><p><strong>Credit Limit:</strong> {{$ctrl.card.creditLimit|currency}}</p><p><strong>Available:</strong> {{$ctrl.card.availableCredit|currency}}</p><p><strong>Outstanding:</strong> {{$ctrl.card.outstandingAmount|currency}}</p></div><button class="btn btn-sm btn-primary" ng-click="$ctrl.onView({cardId:$ctrl.card.cardId})">View Details</button></div></div>',controller:function(){var ctrl=this;}});
+})();
