@@ -1,36 +1,38 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a consolidated dashboard interface for managing multiple credit cards with real-time KPI tracking including monthly spend, total credit limit, available credit, and outstanding amounts, providing users with comprehensive financial position visibility across all cards.
+- **Summary:** This epic creates a consolidated dashboard interface for managing and monitoring multiple credit cards. Users can view critical financial metrics (monthly spend, total credit limit, available credit, outstanding amounts) across all cards, providing a comprehensive overview of credit utilization and financial position through a modern, responsive interface.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart LR
-    A["User"]
-    B["Dashboard UI"]
-    C["KPI Aggregation Service"]
-    D["Credit Card Data Service"]
+flowchart TD
+    A["User Interface"]
+    B["Dashboard Service"]
+    C["KPI Calculation Engine"]
+    D["Credit Card Data Source"]
     E["Authentication Service"]
-    F["Data Repository"]
+    F["Data Aggregation Layer"]
     A --> B
     B --> C
+    B --> F
+    F --> D
+    A --> E
     C --> D
-    D --> F
-    E --> B
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Credit card data source or mock data service, User authentication service for secure access
-  - **Downstream:** None explicitly mentioned
+- **Integration Points:**
+  - **Upstream:** Credit Card Data Source or Mock Data Service (provides card details and financial data), User Authentication Service (secures dashboard access)
+  - **Downstream:** None explicitly mentioned; KPI data may feed other analytics or reporting modules
+  - **Internal:** KPI Calculation Engine (computes aggregated financial metrics), Data Aggregation Layer (consolidates multi-card data)
 
-- **Key Assumptions:** 
-  - KPI calculations (available credit, outstanding amounts) are computed in real-time or near real-time from credit card data
-  - Dashboard supports responsive design through adaptive UI components that adjust to different screen sizes
+- **Key Assumptions:**
+  - Credit card data includes necessary fields for KPI calculation (credit limit, current balance, monthly transactions); assumes data completeness and accuracy.
+  - Real-time or near real-time data refresh is supported by the data source; refresh frequency and mechanism are not specified in the epic.
 
 - **NFR Highlights:** Dashboard must be responsive across desktop, tablet, and mobile devices; page load time must be under 2 seconds; support real-time data refresh for KPI metrics.
 
-- **Data Flow:** User authenticates via Authentication Service → Dashboard UI loads → KPI Aggregation Service requests data from Credit Card Data Service → Credit Card Data Service retrieves card information from Data Repository → Aggregated KPIs calculated (monthly spend, total credit limit, available credit, outstanding amounts) → KPIs and card portfolio displayed in responsive Dashboard UI → Real-time/near real-time refresh updates KPI values → User views consolidated financial position across all credit cards.
+- **Data Flow:** User authenticates and accesses dashboard via User Interface → Dashboard Service requests data from Credit Card Data Source through Data Aggregation Layer → Data Aggregation Layer consolidates data from multiple credit cards → KPI Calculation Engine computes monthly spend, total credit limit, available credit, and outstanding amounts → Calculated KPIs are returned to Dashboard Service → Dashboard displays aggregated metrics and individual card information in responsive layout → Real-time refresh updates KPI values as data changes.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully addresses the epic scope including dashboard interface, multiple credit card display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount tracking, responsive layout design, and KPI visualization. All NFRs are covered: responsive design across devices through adaptive UI, sub-2-second page load through optimized data retrieval, and real-time data refresh through periodic polling or push mechanisms. Dependencies on credit card data source and authentication service are properly integrated.
+- **Requirements Coverage:** The design fully addresses the epic's scope including dashboard interface, multiple credit card display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount tracking, responsive layout design, and KPI visualization. The architecture meets all NFR requirements for responsive design across devices, sub-2-second page load time, and real-time data refresh. Dependencies on credit card data source and authentication service are properly integrated. Out-of-scope items (real bank integration, card payments, fund transfers, loans, payment gateway integration) are correctly excluded from the design.
