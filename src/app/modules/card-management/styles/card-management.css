@@ -1,0 +1,11 @@
+.card-management-container { padding: 20px; }
+.card-item { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; min-height: 280px; }
+.card-item:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.card-type { margin-bottom: 10px; }
+.card-number { font-family: monospace; font-size: 16px; margin: 10px 0; }
+.card-details { margin: 15px 0; }
+.card-details div { margin: 5px 0; }
+.card-expiry { margin-top: 15px; color: #999; }
+.card-detail-container { padding: 20px; }
+.card-switcher { margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 4px; }
+.card-switcher label { margin-right: 10px; font-weight: bold; }

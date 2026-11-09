@@ -1,0 +1,67 @@
+<div class="analytics-container">
+  <div class="page-header">
+    <h1>Spending Analytics <small>Understand your spending patterns</small></h1>
+  </div>
+  <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.analyticsSummary">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading"><h3 class="panel-title">Category-Wise Spending</h3></div>
+          <div class="panel-body">
+            <chart-directive data="vm.analyticsSummary.categorySpending" on-select="vm.selectCategory(category)"></chart-directive>
+            <div class="category-legend" style="margin-top: 20px;">
+              <table class="table table-condensed">
+                <thead>
+                  <tr><th>Category</th><th>Amount</th><th>Percentage</th></tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="cat in vm.analyticsSummary.categorySpending | orderBy:'-amount'">
+                    <td>{{cat.category}}</td>
+                    <td>{{cat.amount | currency}}</td>
+                    <td>{{cat.percentage}}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading"><h3 class="panel-title">Monthly Spend Trends</h3></div>
+          <div class="panel-body">
+            <trend-chart-directive data="vm.analyticsSummary.monthlyTrends"></trend-chart-directive>
+            <div class="trend-summary" style="margin-top: 20px;">
+              <p><strong>Total Spend (Last 12 Months):</strong> {{vm.analyticsSummary.totalSpend | currency}}</p>
+              <p><strong>Average Monthly Spend:</strong> {{vm.analyticsSummary.totalSpend / vm.analyticsSummary.monthlyTrends.length | currency}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default" ng-if="vm.selectedCategory">
+      <div class="panel-heading">
+        <h3 class="panel-title">Transactions in {{vm.selectedCategory}} <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearCategoryFilter()">Clear Filter</button></h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr><th>Date</th><th>Description</th><th>Merchant</th><th>Amount</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="txn in vm.filteredTransactions | orderBy:'-date'">
+              <td>{{txn.date | date:'short'}}</td>
+              <td>{{txn.description}}</td>
+              <td>{{txn.merchantName}}</td>
+              <td>{{txn.amount | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="text-center" ng-if="vm.loading">
+    <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i> Loading analytics...</div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+.analytics-container { padding: 20px; }
+.category-legend { max-height: 300px; overflow-y: auto; }
+.trend-summary { padding: 15px; background: #f5f5f5; border-radius: 4px; }
+.trend-summary p { margin: 5px 0; font-size: 14px; }

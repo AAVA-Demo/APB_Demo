@@ -1,0 +1,13 @@
+<div class="card-management-container">
+  <div class="page-header">
+    <h1>My Credit Cards <small>Manage your card portfolio</small></h1>
+  </div>
+  <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  <div ng-if="!vm.loading">
+    <div class="alert alert-info" ng-if="vm.cards.length === 0">No credit cards found. Please add a card to get started.</div>
+    <card-list cards="vm.cards" on-select="vm.viewCardDetails(cardId)"></card-list>
+  </div>
+  <div class="text-center" ng-if="vm.loading">
+    <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i> Loading cards...</div>
+  </div>
+</div>
