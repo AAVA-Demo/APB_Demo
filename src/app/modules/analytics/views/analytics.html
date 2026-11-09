@@ -1,0 +1,66 @@
+<div ng-controller="AnalyticsController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics & Insights</h2>
+    </div>
+  </div>
+  <div class="filter-panel">
+    <div class="row">
+      <div class="col-md-3">
+        <label>From Date</label>
+        <input type="date" class="form-control" ng-model="vm.dateRange.from">
+      </div>
+      <div class="col-md-3">
+        <label>To Date</label>
+        <input type="date" class="form-control" ng-model="vm.dateRange.to">
+      </div>
+      <div class="col-md-3" style="margin-top: 25px;">
+        <button class="btn btn-primary" ng-click="vm.applyDateRange()">Apply Date Range</button>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger alert-custom">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.analyticsData">
+    <div class="row">
+      <div class="col-md-12">
+        <spending-chart chart-data="vm.monthlyTrendsConfig" chart-type="line" chart-title="Monthly Spend Trends"></spending-chart>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <spending-chart chart-data="vm.cardWiseConfig" chart-type="bar" chart-title="Card-Wise Spending"></spending-chart>
+      </div>
+      <div class="col-md-6">
+        <spending-chart chart-data="vm.categoryWiseConfig" chart-type="doughnut" chart-title="Category-Wise Spending"></spending-chart>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analyticsData.categoryWiseSpending track by cat.category">
+                <td>{{cat.category}}</td>
+                <td>${{cat.amount | number:2}}</td>
+                <td>{{cat.percentage | number:2}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

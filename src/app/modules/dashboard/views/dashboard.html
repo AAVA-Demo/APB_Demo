@@ -1,0 +1,48 @@
+<div ng-controller="DashboardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Credit Card Dashboard</h2>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger alert-custom">
+    <strong>Error:</strong> {{vm.error}}
+    <button class="btn btn-sm btn-danger pull-right" ng-click="vm.retry()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Total Credit Limit" value="vm.kpiData.totalCreditLimit" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Available Credit" value="vm.kpiData.totalAvailableCredit" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Total Outstanding" value="vm.kpiData.totalOutstanding" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Monthly Spend" value="vm.kpiData.totalMonthlySpend" format="currency"></kpi-widget>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Credit Utilization" value="vm.kpiData.creditUtilizationPercent" format="percent" css-class="{{vm.getUtilizationClass()}}"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Active Cards" value="vm.kpiData.activeCardsCount" format="number"></kpi-widget>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Your Credit Cards</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards track by card.cardId">
+        <card-summary card="card"></card-summary>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div ng-controller="TransactionDetailController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Transaction Details</h2>
+      <button class="btn btn-default" ng-click="vm.goBack()">Back to Transactions</button>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading transaction details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger alert-custom">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.transaction" class="card-summary" style="margin-top: 20px;">
+    <h3>{{vm.transaction.merchantName}}</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Transaction ID:</strong> {{vm.transaction.transactionId}}</p>
+        <p><strong>Date:</strong> {{vm.transaction.transactionDate | date:'MMM dd, yyyy HH:mm'}}</p>
+        <p><strong>Category:</strong> {{vm.transaction.category}}</p>
+        <p><strong>Status:</strong> <span class="label" ng-class="{'label-success': vm.transaction.status === 'Completed', 'label-warning': vm.transaction.status === 'Pending', 'label-danger': vm.transaction.status === 'Failed'}">{{vm.transaction.status}}</span></p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Card:</strong> {{vm.transaction.cardName}} ({{vm.transaction.cardId}})</p>
+        <p><strong>Amount:</strong> {{vm.transaction.currency}} {{vm.transaction.amount | number:2}}</p>
+        <p><strong>Description:</strong> {{vm.transaction.description}}</p>
+      </div>
+    </div>
+  </div>
+</div>
