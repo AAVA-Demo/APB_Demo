@@ -1,0 +1,53 @@
+<div class="card-management-container">
+<h2>My Credit Cards</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading cards...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="vm.comparison && !vm.loading" class="panel panel-info">
+<div class="panel-heading">Portfolio Summary</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-md-4">
+<strong>Total Credit Limit:</strong> ${{vm.comparison.totalCreditLimit | number:2}}
+</div>
+<div class="col-md-4">
+<strong>Total Available:</strong> ${{vm.comparison.totalAvailableCredit | number:2}}
+</div>
+<div class="col-md-4">
+<strong>Total Outstanding:</strong> ${{vm.comparison.totalOutstanding | number:2}}
+</div>
+</div>
+</div>
+</div>
+<div ng-if="vm.cards.length && !vm.loading">
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-sm btn-default" ng-click="vm.setSortBy('cardType')">Sort by Type</button>
+<button class="btn btn-sm btn-default" ng-click="vm.setSortBy('creditLimit')">Sort by Limit</button>
+<button class="btn btn-sm btn-default" ng-click="vm.setSortBy('availableCredit')">Sort by Available</button>
+</div>
+</div>
+<div class="row card-list">
+<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards | orderBy:vm.sortBy:vm.sortReverse">
+<div class="panel panel-default card-item">
+<div class="panel-body">
+<h4>{{card.cardType}}</h4>
+<p><strong>Card Number:</strong> {{card.cardNumber | cardMask}}</p>
+<p><strong>Holder:</strong> {{card.cardHolderName}}</p>
+<p><strong>Expires:</strong> {{card.expiryDate}}</p>
+<hr>
+<p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p>
+<p><strong>Available:</strong> ${{card.availableCredit | number:2}}</p>
+<p><strong>Outstanding:</strong> ${{card.outstandingBalance | number:2}}</p>
+<p><strong>Card Spend:</strong> ${{card.cardWiseSpend | number:2}}</p>
+<p><strong>Utilization:</strong> {{card.getUtilizationPercentage()}}%</p>
+<a href="#/cards/{{card.cardId}}" class="btn btn-primary btn-sm">View Details</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

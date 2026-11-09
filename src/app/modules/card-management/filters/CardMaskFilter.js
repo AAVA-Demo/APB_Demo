@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('cardManagementModule').filter('cardMask',function(){return function(cardNumber){if(!cardNumber)return'';var cleaned=cardNumber.replace(/\s/g,'');if(cleaned.length<4)return'**** **** **** '+cleaned;var lastFour=cleaned.slice(-4);return'**** **** **** '+lastFour;};});})();

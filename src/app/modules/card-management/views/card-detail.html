@@ -1,0 +1,34 @@
+<div class="card-detail-container">
+<h2>Card Details</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="vm.card && !vm.loading" class="panel panel-primary">
+<div class="panel-heading">
+<h3 class="panel-title">{{vm.card.cardType}} - {{vm.card.cardNumber | cardMask}}</h3>
+</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-md-6">
+<h4>Card Information</h4>
+<p><strong>Card Holder:</strong> {{vm.card.cardHolderName}}</p>
+<p><strong>Card Number:</strong> {{vm.card.cardNumber | cardMask}}</p>
+<p><strong>Expiry Date:</strong> {{vm.card.expiryDate}}</p>
+<p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+</div>
+<div class="col-md-6">
+<h4>Financial Summary</h4>
+<p><strong>Credit Limit:</strong> ${{vm.card.creditLimit | number:2}}</p>
+<p><strong>Available Credit:</strong> ${{vm.card.availableCredit | number:2}}</p>
+<p><strong>Outstanding Balance:</strong> ${{vm.card.outstandingBalance | number:2}}</p>
+<p><strong>Card-Wise Spend:</strong> ${{vm.card.cardWiseSpend | number:2}}</p>
+<p><strong>Utilization:</strong> {{vm.card.getUtilizationPercentage()}}%</p>
+</div>
+</div>
+</div>
+</div>
+<a href="#/cards" class="btn btn-default">Back to Cards</a>
+</div>

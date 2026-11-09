@@ -1,0 +1,36 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Filter Options</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-md-12">
+<label>Categories:</label>
+<button class="btn btn-sm" ng-class="vm.selectedCategory===cat?'btn-primary':'btn-default'" ng-repeat="cat in vm.categories" ng-click="vm.filterByCategory(cat)">{{cat}}</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<spending-chart chart-data="vm.trends" chart-type="line" chart-title="Monthly Spending Trend (Last 12 Months)"></spending-chart>
+</div>
+</div>
+<div class="row" style="margin-top:30px;">
+<div class="col-md-12">
+<spending-chart chart-data="vm.categoryBreakdown" chart-type="doughnut" chart-title="Category-Wise Spending Breakdown"></spending-chart>
+</div>
+</div>
+</div>
+</div>

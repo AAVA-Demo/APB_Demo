@@ -1,0 +1,17 @@
+<div class="panel panel-default kpi-widget">
+<div class="panel-body">
+<div class="row">
+<div class="col-xs-9">
+<div class="kpi-label">{{kpi.label}}</div>
+<div class="kpi-value">{{kpi.formattedValue}}</div>
+<div class="kpi-trend" ng-class="getTrendClass()">
+<span class="glyphicon" ng-class="getTrendIcon()"></span>
+<span ng-if="kpi.trendPercentage">{{kpi.trendPercentage}}%</span>
+</div>
+</div>
+<div class="col-xs-3 text-right">
+<span class="glyphicon kpi-icon" ng-class="kpi.icon"></span>
+</div>
+</div>
+</div>
+</div>
