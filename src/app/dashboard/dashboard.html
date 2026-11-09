@@ -1,0 +1,52 @@
+<div ng-controller="DashboardController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Dashboard Overview <button class="btn btn-sm btn-primary pull-right" ng-click="vm.refresh()">Refresh</button></h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading KPI data...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.kpiData">
+<div class="col-md-3">
+<div class="kpi-card">
+<h3>Monthly Spend</h3>
+<div class="value">${{vm.kpiData.monthlySpend|number:2}}</div>
+<small>Current month total</small>
+</div>
+</div>
+<div class="col-md-3">
+<div class="kpi-card">
+<h3>Total Credit Limit</h3>
+<div class="value">${{vm.kpiData.totalCreditLimit|number:0}}</div>
+<small>Across all cards</small>
+</div>
+</div>
+<div class="col-md-3">
+<div class="kpi-card">
+<h3>Available Credit</h3>
+<div class="value">${{vm.kpiData.availableCredit|number:0}}</div>
+<small>Ready to use</small>
+</div>
+</div>
+<div class="col-md-3">
+<div class="kpi-card">
+<h3>Outstanding Amount</h3>
+<div class="value">${{vm.kpiData.outstandingAmount|number:2}}</div>
+<small>Total balance due</small>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.kpiData">
+<div class="col-md-12">
+<p class="text-muted text-right"><small>Last updated: {{vm.kpiData.lastUpdated|date:'medium'}}</small></p>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.kpiData">
+<div class="col-md-12">
+<div class="text-center">
+<a ui-sref="cards" class="btn btn-primary">Manage Cards</a>
+<a ui-sref="analytics" class="btn btn-info">View Analytics</a>
+</div>
+</div>
+</div>
+</div>

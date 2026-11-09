@@ -1,0 +1,40 @@
+<div ng-controller="AnalyticsController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Analytics & Spending Insights</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.spendingData">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<spending-chart chart-data="vm.spendingData.monthlyTrends" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.spendingData">
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<spending-chart chart-data="vm.spendingData.categoryBreakdown" chart-type="pie"></spending-chart>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Category Breakdown</h3>
+<div ng-repeat="cat in vm.spendingData.categoryBreakdown" class="category-item">
+<span><strong>{{cat.category}}</strong></span>
+<span>${{cat.amount|number:0}} ({{cat.percentage}}%)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.spendingData">
+<div class="col-md-12 text-center" style="margin-top:20px">
+<a ui-sref="dashboard" class="btn btn-default">Back to Dashboard</a>
+<a ui-sref="cards" class="btn btn-primary">Manage Cards</a>
+</div>
+</div>
+</div>

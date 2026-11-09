@@ -1,0 +1,48 @@
+<div ng-controller="CardManagementController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Credit Card Management</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading your cards...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.cardAggregation">
+<div class="col-md-12">
+<div class="panel panel-info">
+<div class="panel-heading"><strong>Summary</strong></div>
+<div class="panel-body">
+<p><strong>Total Cards:</strong> {{vm.cardAggregation.totalCards}}</p>
+<p><strong>Aggregated Credit Limit:</strong> ${{vm.cardAggregation.aggregatedLimit|number:0}}</p>
+<p><strong>Aggregated Balance:</strong> ${{vm.cardAggregation.aggregatedBalance|number:2}}</p>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.cardAggregation">
+<div class="col-md-12">
+<h3>Your Cards</h3>
+<div ng-repeat="card in vm.cardAggregation.cards track by card.cardId" class="card-item" ng-click="vm.selectCard(card)">
+<h4>{{card.cardName}} <span class="label label-default">{{card.issuer}}</span></h4>
+<p><strong>Card Number:</strong> {{card.cardNumber}}</p>
+<div class="row">
+<div class="col-sm-3"><strong>Credit Limit:</strong> ${{card.creditLimit|number:0}}</div>
+<div class="col-sm-3"><strong>Current Balance:</strong> ${{card.currentBalance|number:2}}</div>
+<div class="col-sm-3"><strong>Available Credit:</strong> ${{card.availableCredit|number:0}}</div>
+<div class="col-sm-3"><strong>Monthly Spend:</strong> ${{card.monthlySpend|number:2}}</div>
+</div>
+<div ng-if="vm.selectedCard.cardId===card.cardId" class="well" style="margin-top:10px">
+<h5>Detailed Spend Analysis</h5>
+<p><strong>Utilization Rate:</strong> {{(card.currentBalance/card.creditLimit*100)|number:1}}%</p>
+<p><strong>Card Type:</strong> {{card.cardType}}</p>
+<p class="text-muted">This card has spent ${{card.monthlySpend|number:2}} this month. Balance is ${{card.currentBalance|number:2}}.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.cardAggregation">
+<div class="col-md-12 text-center" style="margin-top:20px">
+<a ui-sref="dashboard" class="btn btn-default">Back to Dashboard</a>
+<a ui-sref="analytics" class="btn btn-info">View Analytics</a>
+</div>
+</div>
+</div>
