@@ -1,0 +1,60 @@
+<div class="portfolio-dashboard">
+  <h2>Credit Card Portfolio</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading portfolio...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row summary-row">
+      <div class="col-xs-12 col-sm-4">
+        <div class="summary-card">
+          <h4>Total Credit Limit</h4>
+          <p class="amount">${{ vm.portfolio.totalCreditLimit | number:2 }}</p>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <div class="summary-card">
+          <h4>Total Available Credit</h4>
+          <p class="amount">${{ vm.portfolio.totalAvailableCredit | number:2 }}</p>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <div class="summary-card">
+          <h4>Total Outstanding</h4>
+          <p class="amount">${{ vm.portfolio.totalOutstanding | number:2 }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row card-grid">
+      <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.portfolio.cards">
+        <div class="card-item">
+          <div class="card-header">
+            <span class="card-type">{{ card.cardType }}</span>
+            <span class="card-status" ng-class="{'status-active': card.status === 'Active', 'status-blocked': card.status === 'Blocked'}">{{ card.status }}</span>
+          </div>
+          <div class="card-body">
+            <p class="card-number">{{ card.cardNumber }}</p>
+            <p class="cardholder-name">{{ card.cardholderName }}</p>
+            <div class="card-details">
+              <div class="detail-row">
+                <span class="label">Credit Limit:</span>
+                <span class="value">${{ card.creditLimit | number:2 }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Available Credit:</span>
+                <span class="value">${{ card.availableCredit | number:2 }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Outstanding Balance:</span>
+                <span class="value">${{ card.outstandingBalance | number:2 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="last-updated">Last updated: {{ vm.portfolio.lastUpdated | date:'medium' }}</p>
+  </div>
+</div>

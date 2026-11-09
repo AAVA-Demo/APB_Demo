@@ -1,0 +1,9 @@
+.analytics-dashboard { padding: 20px; }
+.filter-section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+.filter-section label { display: flex; flex-direction: column; font-weight: 500; color: #495057; }
+.filter-section input { margin-top: 5px; }
+.analytics-content { margin-top: 30px; }
+.chart-container { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.chart-container h4 { margin: 0 0 15px 0; color: #495057; font-size: 18px; }
+.chart { max-height: 400px; }
+.last-updated { text-align: right; color: #6c757d; font-size: 14px; margin-top: 20px; }

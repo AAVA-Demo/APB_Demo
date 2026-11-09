@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Management Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/assets/css/portfolio.css">
+  <link rel="stylesheet" href="src/app/assets/css/kpi.css">
+  <link rel="stylesheet" href="src/app/assets/css/analytics.css">
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#/portfolio">Portfolio</a></li>
+        <li><a href="#/kpi">KPI Dashboard</a></li>
+        <li><a href="#/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/shared/constants/spending-categories.constant.js"></script>
+  <script src="src/app/shared/constants/api-config.constant.js"></script>
+  <script src="src/app/services/http-interceptor.service.js"></script>
+  <script src="src/app/modules/portfolio/portfolio.module.js"></script>
+  <script src="src/app/modules/portfolio/factories/card-data.factory.js"></script>
+  <script src="src/app/modules/portfolio/services/card-info.service.js"></script>
+  <script src="src/app/modules/portfolio/services/balance.service.js"></script>
+  <script src="src/app/modules/portfolio/services/portfolio.service.js"></script>
+  <script src="src/app/modules/portfolio/controllers/portfolio-dashboard.controller.js"></script>
+  <script src="src/app/modules/kpi/kpi.module.js"></script>
+  <script src="src/app/modules/kpi/services/transaction.service.js"></script>
+  <script src="src/app/modules/kpi/services/credit-card.service.js"></script>
+  <script src="src/app/modules/kpi/services/aggregation.service.js"></script>
+  <script src="src/app/modules/kpi/services/kpi.service.js"></script>
+  <script src="src/app/modules/kpi/directives/kpi-card.directive.js"></script>
+  <script src="src/app/modules/kpi/controllers/kpi-dashboard.controller.js"></script>
+  <script src="src/app/modules/analytics/analytics.module.js"></script>
+  <script src="src/app/modules/analytics/factories/historical-data.factory.js"></script>
+  <script src="src/app/modules/analytics/services/transaction-data.service.js"></script>
+  <script src="src/app/modules/analytics/services/data-aggregation.service.js"></script>
+  <script src="src/app/modules/analytics/services/analytics.service.js"></script>
+  <script src="src/app/modules/analytics/directives/spending-chart.directive.js"></script>
+  <script src="src/app/modules/analytics/controllers/analytics-dashboard.controller.js"></script>
+</body>
+</html>

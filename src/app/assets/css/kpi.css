@@ -1,0 +1,7 @@
+.kpi-dashboard { padding: 20px; }
+.kpi-row { margin-top: 30px; }
+.kpi-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 20px; }
+.kpi-card .kpi-icon { font-size: 40px; margin-bottom: 10px; }
+.kpi-card .kpi-content h4 { margin: 10px 0 5px 0; font-size: 16px; font-weight: 500; }
+.kpi-card .kpi-value { font-size: 28px; font-weight: bold; margin: 0; }
+.last-refreshed { text-align: right; color: #6c757d; font-size: 14px; margin-top: 20px; }

@@ -1,0 +1,24 @@
+<div class="kpi-dashboard">
+  <h2>Financial KPI Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading KPI data...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row kpi-row">
+    <div class="col-xs-12 col-sm-6 col-lg-3">
+      <kpi-card title="Monthly Spend" value="vm.kpiData.monthlySpend" icon="glyphicon-credit-card"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-lg-3">
+      <kpi-card title="Total Credit Limit" value="vm.kpiData.totalCreditLimit" icon="glyphicon-stats"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-lg-3">
+      <kpi-card title="Available Credit" value="vm.kpiData.availableCredit" icon="glyphicon-ok-circle"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-lg-3">
+      <kpi-card title="Outstanding Amount" value="vm.kpiData.outstandingAmount" icon="glyphicon-exclamation-sign"></kpi-card>
+    </div>
+  </div>
+  <p ng-if="!vm.loading && !vm.error" class="last-refreshed">Last refreshed: {{ vm.kpiData.lastRefreshed | date:'medium' }}</p>
+</div>

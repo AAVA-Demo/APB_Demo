@@ -1,0 +1,31 @@
+<div class="analytics-dashboard">
+  <h2>Spending Analytics and Insights</h2>
+  <div class="filter-section">
+    <label>Start Date: <input type="date" ng-model="vm.dateRange.startDate" class="form-control"></label>
+    <label>End Date: <input type="date" ng-model="vm.dateRange.endDate" class="form-control"></label>
+    <button ng-click="vm.applyFilter()" class="btn btn-primary">Apply Filter</button>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics data...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="analytics-content">
+    <div class="row">
+      <div class="col-xs-12">
+        <spending-chart chart-data="vm.analyticsData.monthlyTrends" chart-type="line" chart-title="Monthly Spending Trends"></spending-chart>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <spending-chart chart-data="vm.analyticsData.cardWiseSpend" chart-type="bar" chart-title="Card-Wise Spending"></spending-chart>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <spending-chart chart-data="vm.analyticsData.categoryWiseSpend" chart-type="pie" chart-title="Category-Wise Spending"></spending-chart>
+      </div>
+    </div>
+    <p class="last-updated">Last updated: {{ vm.analyticsData.lastUpdated | date:'medium' }}</p>
+    <p>Total Transactions: {{ vm.analyticsData.totalTransactions }}</p>
+  </div>
+</div>
