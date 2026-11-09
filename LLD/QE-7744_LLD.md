@@ -2,61 +2,53 @@
 
 ## a. Architecture Mapping
 
-**Component to AngularJS Artifact Mapping:**
-- Analytics Service → AngularJS Service (`analyticsService.js`) for business logic and data aggregation
-- Transaction Service Integration → AngularJS Factory (`transactionFactory.js`) for REST API calls
-- Categorization Engine Integration → AngularJS Service (`categorizationService.js`) for category assignment logic
-- Spending Visualization UI → AngularJS Controller (`spendingAnalyticsController.js`) + Directive (`spendingChart.directive.js`)
-- Category Filter Component → AngularJS Controller (`categoryFilterController.js`)
-- Trend Analysis Component → AngularJS Controller (`trendAnalysisController.js`)
+**Component to Artifact Mapping:**
+- Analytics UI → AngularJS Module (`analyticsModule`) + Controller (`AnalyticsController`)
+- Visualization Service → AngularJS Service (`VisualizationService`) for chart configuration and rendering
+- Transaction Service → AngularJS Factory (`TransactionFactory`) for API calls to fetch transaction data
+- Categorization Engine → Backend API (consumed via `CategoryService` Factory)
+- Aggregation Service → AngularJS Service (`AggregationService`) for client-side data processing
 
 **Recommended Folder Structure:**
 ```
 app/
 ├── modules/
 │   └── analytics/
+│       ├── analytics.module.js
 │       ├── controllers/
-│       │   ├── spendingAnalyticsController.js
-│       │   ├── categoryFilterController.js
-│       │   └── trendAnalysisController.js
+│       │   └── analytics.controller.js
 │       ├── services/
-│       │   ├── analyticsService.js
-│       │   └── categorizationService.js
+│       │   ├── visualization.service.js
+│       │   ├── aggregation.service.js
+│       │   └── category.service.js
 │       ├── factories/
-│       │   └── transactionFactory.js
-│       ├── directives/
-│       │   └── spendingChart.directive.js
+│       │   └── transaction.factory.js
 │       └── views/
-│           ├── analytics-dashboard.html
-│           └── category-breakdown.html
+│           └── analytics.html
 ```
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| analyticsModule | Module | Root module for analytics feature | angular, ngRoute, chart.js |
-| spendingAnalyticsController | Controller | Manages spending analytics view state and user interactions | analyticsService, $scope |
-| categoryFilterController | Controller | Handles category selection and filtering logic | analyticsService, $scope |
-| trendAnalysisController | Controller | Manages monthly trend display and comparison | analyticsService, $scope |
-| analyticsService | Service | Aggregates transaction data, calculates category totals, generates trend data | transactionFactory, categorizationService |
-| categorizationService | Service | Assigns transactions to predefined categories based on merchant data | transactionFactory |
-| transactionFactory | Factory | REST API calls to transaction service endpoint | $http, $q |
-| spendingChart | Directive | Renders interactive charts using Chart.js library | chart.js |
+| analyticsModule | Module | Root module for analytics feature | ngRoute, chart.js |
+| AnalyticsController | Controller | Manages analytics UI state, triggers data fetch and chart rendering | VisualizationService, AggregationService, TransactionFactory |
+| VisualizationService | Service | Configures and renders charts using Chart.js library | Chart.js, $timeout |
+| AggregationService | Service | Aggregates transaction data by category and month | None |
+| TransactionFactory | Factory | Fetches transaction data from REST API | $http, $q |
+| CategoryService | Service | Retrieves category metadata and validates categorization | $http |
 
 ## c. Data Model
 
 **Transaction Model:**
 ```javascript
 {
-  transactionId: String,
+  id: String,
   cardId: String,
-  amount: Number,
   merchantName: String,
-  merchantCode: String,
-  category: String, // One of: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
-  transactionDate: Date,
-  description: String
+  amount: Number,
+  date: Date,
+  category: String // One of: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
 }
 ```
 
@@ -81,49 +73,44 @@ app/
 
 ## d. Data Flow
 
-User navigates to the Analytics Dashboard view, triggering `spendingAnalyticsController` initialization. The controller calls `analyticsService.getCategorySpending()`, which invokes `transactionFactory.getTransactions()` to fetch raw transaction data via REST API. The `categorizationService` processes transactions and assigns categories based on merchant codes. `analyticsService` aggregates data by category and month, returning structured `CategorySpending` and `MonthlyTrend` objects to the controller. The controller binds this data to `$scope`, and the `spendingChart` directive renders interactive visualizations. User interactions (category filter, month selection) trigger controller methods that update the scope, causing automatic view refresh.
+User navigates to Analytics view → AnalyticsController initializes and calls TransactionFactory.getTransactions() → Factory makes REST API call to /api/transactions → Response data is passed to AggregationService for grouping by category and month → Aggregated data is formatted by VisualizationService → Chart.js renders interactive category-wise and monthly trend charts in the view → User interactions (hover, click) trigger chart updates via VisualizationService.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant Controller as spendingAnalyticsController
-    participant Service as analyticsService
-    participant Factory as transactionFactory
-    participant API as Transaction REST API
-    
-    User->>View: Navigate to Analytics Dashboard
-    View->>Controller: Initialize controller
-    Controller->>Service: getCategorySpending(userId)
-    Service->>Factory: getTransactions(userId)
-    Factory->>API: GET /api/transactions?userId={userId}
-    API-->>Factory: Return transaction list
-    Factory-->>Service: Return transactions
-    Service->>Service: Categorize and aggregate data
-    Service-->>Controller: Return CategorySpending array
-    Controller->>View: Bind data to $scope
-    View->>View: Render charts via spendingChart directive
-    View-->>User: Display category-wise spending visualization
-    User->>View: Select category filter
-    View->>Controller: filterByCategory(category)
-    Controller->>View: Update $scope with filtered data
-    View-->>User: Display filtered spending data
+    participant AnalyticsController
+    participant TransactionFactory
+    participant API
+    participant AggregationService
+    participant VisualizationService
+    participant ChartJS
+
+    User->>AnalyticsController: Navigate to Analytics
+    AnalyticsController->>TransactionFactory: getTransactions(userId, dateRange)
+    TransactionFactory->>API: GET /api/transactions?userId=X&from=Y&to=Z
+    API-->>TransactionFactory: Transaction data (JSON)
+    TransactionFactory-->>AnalyticsController: Transactions array
+    AnalyticsController->>AggregationService: aggregateByCategory(transactions)
+    AggregationService-->>AnalyticsController: CategorySpending array
+    AnalyticsController->>VisualizationService: renderCategoryChart(data)
+    VisualizationService->>ChartJS: Create pie/bar chart
+    ChartJS-->>User: Display interactive chart
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS Dependency Injection to inject `analyticsService`, `transactionFactory`, and `categorizationService` into controllers
-- Implement ES6 classes for services and factories with arrow functions for cleaner syntax
-- Use `$http` service with Promises (`$q`) for asynchronous REST API calls to transaction service
-- Integrate Chart.js via custom AngularJS directive for rendering interactive, responsive charts
-- Cache aggregated category data in `analyticsService` for 5 minutes to optimize performance and meet <1s rendering NFR
+- Use AngularJS Dependency Injection to inject TransactionFactory, AggregationService, and VisualizationService into AnalyticsController.
+- Leverage Chart.js (v2.9+) for rendering responsive, interactive charts; wrap Chart.js API calls in VisualizationService for reusability.
+- Implement client-side caching in TransactionFactory using $cacheFactory to reduce redundant API calls for the same date range.
+- Use ES6 arrow functions and const/let for cleaner, modern JavaScript code within services and factories.
+- Apply lodash or native Array methods (map, reduce, filter) in AggregationService for efficient data transformation.
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors; user-friendly notifications displayed via toastr; fallback to cached data when available.
+HTTP interceptor captures API errors; user-friendly notifications displayed via toastr or AngularJS $mdToast; fallback to empty state UI on data load failure.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; token-based authentication inherited from existing SSO integration.
+Requires token-based auth via existing SSO; all API calls include Authorization header with JWT token.

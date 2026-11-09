@@ -2,27 +2,25 @@
 
 ## a. Architecture Mapping
 
-**Component to AngularJS Artifact Mapping:**
-- Dashboard Service → AngularJS Service (`dashboardService.js`) for KPI calculation and aggregation logic
-- Credit Card Data Service Integration → AngularJS Factory (`creditCardFactory.js`) for card data REST API calls
-- Calculation Engine Integration → AngularJS Service (`calculationService.js`) for KPI computation
-- Dashboard UI → AngularJS Controller (`dashboardController.js`) + View (`dashboard.html`)
-- KPI Widget Component → AngularJS Directive (`kpiWidget.directive.js`) for reusable KPI display
+**Component to Artifact Mapping:**
+- Dashboard Interface → AngularJS Module (`dashboardModule`) + Controller (`DashboardController`)
+- KPI Calculation Engine → AngularJS Service (`KPIService`) for aggregating and calculating KPIs
+- Credit Card Data Service → AngularJS Factory (`CreditCardFactory`) for fetching card data
+- Transaction Data Service → AngularJS Factory (`TransactionFactory`) for fetching transaction data
 
 **Recommended Folder Structure:**
 ```
 app/
 ├── modules/
 │   └── dashboard/
+│       ├── dashboard.module.js
 │       ├── controllers/
-│       │   └── dashboardController.js
+│       │   └── dashboard.controller.js
 │       ├── services/
-│       │   ├── dashboardService.js
-│       │   └── calculationService.js
+│       │   └── kpi.service.js
 │       ├── factories/
-│       │   └── creditCardFactory.js
-│       ├── directives/
-│       │   └── kpiWidget.directive.js
+│       │   ├── credit-card.factory.js
+│       │   └── transaction.factory.js
 │       └── views/
 │           └── dashboard.html
 ```
@@ -31,12 +29,11 @@ app/
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| dashboardModule | Module | Root module for dashboard feature | angular, ngRoute |
-| dashboardController | Controller | Manages dashboard view state and KPI data binding | dashboardService, $scope, $interval |
-| dashboardService | Service | Orchestrates KPI data retrieval and aggregation across multiple cards | creditCardFactory, calculationService |
-| calculationService | Service | Performs KPI calculations (total limit, available credit, outstanding, monthly spend) | None |
-| creditCardFactory | Factory | REST API calls to credit card data service for card balances and transactions | $http, $q |
-| kpiWidget | Directive | Reusable component for displaying individual KPI with icon, label, and value | None |
+| dashboardModule | Module | Root module for dashboard feature | ngRoute, ngAnimate |
+| DashboardController | Controller | Manages dashboard UI, triggers KPI calculation and refresh | KPIService, CreditCardFactory, TransactionFactory |
+| KPIService | Service | Calculates monthly spend, total credit limit, available credit, outstanding amount | None |
+| CreditCardFactory | Factory | Fetches all credit cards with balances and limits | $http, $q |
+| TransactionFactory | Factory | Fetches current month's transactions for spend calculation | $http, $q, $filter |
 
 ## c. Data Model
 
@@ -51,66 +48,68 @@ app/
 }
 ```
 
-**CreditCardSummary Model:**
+**CreditCard Model:**
 ```javascript
 {
   cardId: String,
   creditLimit: Number,
-  currentBalance: Number,
   availableCredit: Number,
-  monthlySpend: Number
+  outstandingBalance: Number
+}
+```
+
+**Transaction Model:**
+```javascript
+{
+  id: String,
+  cardId: String,
+  amount: Number,
+  date: Date,
+  type: String // "debit" or "credit"
 }
 ```
 
 ## d. Data Flow
 
-User navigates to the Dashboard view, triggering `dashboardController` initialization. The controller calls `dashboardService.getKPIs(userId)`, which invokes `creditCardFactory.fetchAllCardSummaries(userId)` to retrieve card data via REST API. The factory returns an array of `CreditCardSummary` objects. `dashboardService` passes this data to `calculationService`, which aggregates values to compute total credit limit (sum of all card limits), available credit (sum of available credit across cards), outstanding amount (sum of current balances), and monthly spend (sum of monthly spend across cards). The aggregated `DashboardKPI` object is returned to the controller and bound to `$scope.kpis`. The `kpiWidget` directive renders each KPI. `$interval` service refreshes KPI data every 5 minutes to maintain real-time visibility.
+User navigates to Dashboard → DashboardController initializes and calls CreditCardFactory.getAllCards() and TransactionFactory.getCurrentMonthTransactions() in parallel → Both API responses received → KPIService.calculateKPIs(cards, transactions) aggregates data to compute monthly spend, total credit limit, available credit, and outstanding amount → Calculated KPIs bound to controller scope → Dashboard view displays KPI widgets with real-time values → Background $interval triggers periodic refresh every 30 seconds.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant Controller as dashboardController
-    participant DashService as dashboardService
-    participant CalcService as calculationService
-    participant Factory as creditCardFactory
-    participant API as Credit Card API
-    
-    User->>View: Navigate to Dashboard
-    View->>Controller: Initialize controller
-    Controller->>DashService: getKPIs(userId)
-    DashService->>Factory: fetchAllCardSummaries(userId)
-    Factory->>API: GET /api/cards/summary?userId={userId}
-    API-->>Factory: Return card summaries
-    Factory-->>DashService: Return CreditCardSummary array
-    DashService->>CalcService: calculateKPIs(cardSummaries)
-    CalcService->>CalcService: Aggregate totals
-    CalcService-->>DashService: Return DashboardKPI object
-    DashService-->>Controller: Return KPIs
-    Controller->>View: Bind KPIs to $scope
-    View->>View: Render KPI widgets via kpiWidget directive
-    View-->>User: Display dashboard with KPIs
-    Note over Controller: $interval refreshes every 5 min
-    Controller->>DashService: getKPIs(userId)
-    DashService-->>Controller: Return updated KPIs
-    Controller->>View: Update $scope
-    View-->>User: Refresh KPI display
+    participant DashboardController
+    participant CreditCardFactory
+    participant TransactionFactory
+    participant API
+    participant KPIService
+
+    User->>DashboardController: Navigate to Dashboard
+    DashboardController->>CreditCardFactory: getAllCards(userId)
+    DashboardController->>TransactionFactory: getCurrentMonthTransactions(userId)
+    CreditCardFactory->>API: GET /api/cards?userId=X
+    TransactionFactory->>API: GET /api/transactions?userId=X&month=current
+    API-->>CreditCardFactory: cards[]
+    API-->>TransactionFactory: transactions[]
+    CreditCardFactory-->>DashboardController: cards[]
+    TransactionFactory-->>DashboardController: transactions[]
+    DashboardController->>KPIService: calculateKPIs(cards, transactions)
+    KPIService-->>DashboardController: DashboardKPI object
+    DashboardController-->>User: Display KPI widgets
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS Dependency Injection to inject `dashboardService`, `calculationService`, and `creditCardFactory` into `dashboardController`
-- Implement `$interval` service to auto-refresh KPI data every 5 minutes for real-time updates
-- Use ES6 classes for services with arrow functions for cleaner, more maintainable code
-- Cache KPI data in `dashboardService` to reduce API calls and improve performance
-- Implement responsive Bootstrap grid layout for KPI widgets to support desktop, tablet, and mobile devices
+- Use AngularJS Dependency Injection to inject KPIService, CreditCardFactory, and TransactionFactory into DashboardController.
+- Leverage $q.all() to parallelize API calls for cards and transactions to meet the 2-second load time requirement.
+- Implement $interval for periodic KPI refresh (every 30 seconds) with cancellation on scope destroy to prevent memory leaks.
+- Use AngularJS $filter('currency') for formatting monetary values in the view.
+- Apply Bootstrap cards or panels for responsive KPI widget layout.
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors; fallback to last cached KPI values; user notifications displayed via toastr.
+HTTP interceptor captures API errors; fallback to cached KPI data if available; user notification via toastr on failure; retry mechanism for transient errors.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; all API calls secured with JWT tokens; standard input validation applied.
+Requires token-based auth via existing SSO; all API calls include Authorization header with JWT token; KPI data is user-specific and access-controlled.
