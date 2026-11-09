@@ -1,0 +1,76 @@
+{
+  "users": {
+    "userWithActiveCards": {
+      "username": "user_with_active_cards",
+      "password": "Pass@123"
+    },
+    "userNoCurrentMonthTxns": {
+      "username": "user_no_current_month_txns",
+      "password": "Pass@123"
+    },
+    "userWithInvalidTxnData": {
+      "username": "user_with_invalid_txn_data",
+      "password": "Pass@123"
+    },
+    "userWithOverlimitCard": {
+      "username": "user_with_overlimit_card",
+      "password": "Pass@123"
+    },
+    "userWithInactiveCard": {
+      "username": "user_with_inactive_card",
+      "password": "Pass@123"
+    },
+    "userWith12Months": {
+      "username": "user_with_12months",
+      "password": "Pass@123"
+    },
+    "newUser3Months": {
+      "username": "new_user_3months",
+      "password": "Pass@123"
+    },
+    "newUser1Month": {
+      "username": "new_user_1month",
+      "password": "Pass@123"
+    },
+    "userWithAllCategories": {
+      "username": "user_with_all_categories",
+      "password": "Pass@123"
+    },
+    "userWithNullCategories": {
+      "username": "user_with_null_categories",
+      "password": "Pass@123"
+    },
+    "userWith10Cards": {
+      "username": "user_with_10_cards",
+      "password": "Pass@123"
+    },
+    "userWithNoCards": {
+      "username": "user_with_no_cards",
+      "password": "Pass@123"
+    },
+    "userWithExpiredCards": {
+      "username": "user_with_expired_cards",
+      "password": "Pass@123"
+    },
+    "userWithMultipleCards": {
+      "username": "user_with_multiple_cards",
+      "password": "Pass@123"
+    },
+    "userWithNewCard": {
+      "username": "user_with_new_card",
+      "password": "Pass@123"
+    }
+  },
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "expectedCategories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ]
+}
