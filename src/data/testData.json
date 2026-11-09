@@ -1,0 +1,64 @@
+{
+  "users": {
+    "testuser_kpi": {
+      "username": "testuser_kpi",
+      "password": "Pass@123"
+    },
+    "testuser_zerotxn": {
+      "username": "testuser_zerotxn",
+      "password": "Pass@123"
+    },
+    "testuser_kpi_validation": {
+      "username": "testuser_kpi_validation",
+      "password": "Pass@123"
+    },
+    "testuser_realtime": {
+      "username": "testuser_realtime",
+      "password": "Pass@123"
+    },
+    "testuser_highutil": {
+      "username": "testuser_highutil",
+      "password": "Pass@123"
+    },
+    "testuser_payment": {
+      "username": "testuser_payment",
+      "password": "Pass@123"
+    },
+    "testuser_limited_spending": {
+      "username": "testuser_limited_spending",
+      "password": "Pass@123"
+    },
+    "testuser_6months": {
+      "username": "testuser_6months",
+      "password": "Pass@123"
+    },
+    "testuser_3months": {
+      "username": "testuser_3months",
+      "password": "Pass@123"
+    },
+    "testuser_5cards": {
+      "username": "testuser_5cards",
+      "password": "Pass@123"
+    },
+    "testuser_nocards": {
+      "username": "testuser_nocards",
+      "password": "Pass@123"
+    },
+    "testuser_10cards": {
+      "username": "testuser_10cards",
+      "password": "Pass@123"
+    },
+    "testuser_multicard": {
+      "username": "testuser_multicard",
+      "password": "Pass@123"
+    },
+    "testuser_newcard": {
+      "username": "testuser_newcard",
+      "password": "Pass@123"
+    },
+    "testuser_highutil_card": {
+      "username": "testuser_highutil_card",
+      "password": "Pass@123"
+    }
+  }
+}
