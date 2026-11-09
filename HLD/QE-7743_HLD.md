@@ -1,36 +1,34 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic provides a unified interface for users to view and manage multiple credit cards simultaneously. Users can access card-specific details, perform card-wise spend analysis, and navigate seamlessly between cards. The system consolidates information from multiple card sources into a single view, displaying card status, limits, and usage patterns.
+- **Summary:** This epic provides users with the ability to view and manage multiple credit cards within a single consolidated interface, supporting card-specific details, card-wise spend analysis, seamless navigation between cards, and comprehensive card status monitoring.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["User Interface"]
     B["Card Management Service"]
-    C["Data Aggregation Layer"]
+    C["Card Data Aggregation Service"]
     D["Card Issuer Data Feeds"]
-    E["Card Details Repository"]
+    E["Card Status Monitoring Service"]
     A --> B
     B --> C
     C --> D
-    C --> E
     B --> E
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Credit card data aggregation services for retrieving multi-source card information
-  - **Downstream:** Card issuer data feeds for real-time card status and details
-  - **Internal:** Card Details Repository for storing consolidated card data
+- **Integration Points:**
+  - **Upstream:** Card Issuer Data Feeds (for retrieving information from multiple card sources)
+  - **Downstream:** Credit Card Data Aggregation Services
 
-- **Key Assumptions:** 
-  - Card data will be provided in a standardized format by the aggregation service
-  - User authentication and card ownership verification are handled by upstream identity services
+- **Key Assumptions:**
+  - Card data is aggregated from multiple card issuer feeds with assumed standardized data format for consistency.
+  - Card switching latency under 100ms assumes client-side caching of recently viewed cards.
 
-- **NFR Highlights:** System must support at least 10 cards per user with card switching latency under 100ms; data consistency across all card views required
+- **NFR Highlights:** System must support display of at least 10 credit cards per user; card switching and navigation must be instantaneous with less than 100ms latency; data consistency across all card views.
 
-- **Data Flow:** User requests card list → Card Management Service queries Data Aggregation Layer → Aggregation Layer fetches from Card Issuer Data Feeds and Card Details Repository → Consolidated card data returned to UI → User selects specific card → Service retrieves detailed card information → Card-wise spend analysis and status displayed to user
+- **Data Flow:** User requests card list → Card Management Service retrieves cards from Card Data Aggregation Service → Card Data Aggregation Service fetches data from Card Issuer Data Feeds → Card Status Monitoring Service provides real-time status updates → Individual card details and spend analysis displayed → User navigates between cards with sub-100ms response time through optimized caching.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully covers the epic's scope including multiple credit card display, card-wise spend analysis, individual card details view, card selection/navigation, and card status monitoring. The component architecture supports the NFR requirements for supporting 10+ cards with sub-100ms switching latency through the Data Aggregation Layer and Card Details Repository. All stated dependencies on card data aggregation services and card issuer data feeds are addressed in the integration points.
+- **Requirements Coverage:** The design addresses all scope elements including multiple credit card display, card-wise spend analysis, individual card details view, card selection and navigation, and card status monitoring. All NFRs are architecturally supported: 10 cards per user through scalable data structures, sub-100ms card switching through client-side caching and optimized service calls, and data consistency through centralized Card Data Aggregation Service. Dependencies on credit card data aggregation services and card issuer data feeds are explicitly integrated in the component architecture.

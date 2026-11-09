@@ -1,36 +1,35 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a consolidated dashboard displaying key performance indicators (KPIs) for the user's credit card portfolio. The dashboard provides real-time visibility into monthly spend, total credit limit, available credit, and outstanding amounts across all cards through a responsive, modern interface that loads within 2 seconds.
+- **Summary:** This epic enables users to access a consolidated dashboard displaying key performance indicators for their credit card portfolio, including monthly spend, total credit limit, available credit, and outstanding amounts across all cards from a single responsive interface with real-time visibility.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Responsive Dashboard UI"]
-    B["KPI Aggregation Service"]
+    B["KPI Management Service"]
     C["Credit Card Data Sources"]
     D["Real-time Data Refresh Engine"]
-    E["KPI Calculation Module"]
+    E["KPI Calculation Service"]
     A --> B
     B --> E
     E --> C
+    B --> D
     D --> C
-    D --> B
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Credit card data sources for retrieving card balances, limits, and transaction data
-  - **Internal:** Real-time Data Refresh Engine for KPI metric updates
-  - **Internal:** KPI Calculation Module for computing aggregated metrics
+- **Integration Points:**
+  - **Upstream:** Credit Card Data Sources (for retrieving card balances, limits, and transaction data)
+  - **Downstream:** KPI Calculation Service, Real-time Data Refresh Engine
 
-- **Key Assumptions:** 
-  - Credit card data sources provide APIs with response times under 1 second to meet 2-second dashboard load requirement
-  - KPI calculations (available credit, outstanding amounts) follow standard financial formulas
+- **Key Assumptions:**
+  - KPI metrics are pre-calculated and cached with periodic refresh to meet 2-second load time requirement.
+  - Responsive design assumes modern web framework with adaptive layouts for desktop, tablet, and mobile.
 
-- **NFR Highlights:** Dashboard must load within 2 seconds; responsive design across desktop, tablet, and mobile; real-time data refresh capability for KPI metrics
+- **NFR Highlights:** Dashboard must load within 2 seconds; system must support responsive design across desktop, tablet, and mobile devices; real-time data refresh capability for KPI metrics.
 
-- **Data Flow:** User accesses dashboard → Dashboard UI requests KPIs from KPI Aggregation Service → Service triggers KPI Calculation Module → Module queries Credit Card Data Sources for balances, limits, and transactions → Calculations performed (monthly spend, total limit, available credit, outstanding) → Aggregated KPIs returned to UI → Dashboard renders responsive layout with metrics → Real-time Data Refresh Engine periodically polls data sources → Updated KPIs pushed to dashboard
+- **Data Flow:** User accesses dashboard → Responsive Dashboard UI loads → KPI Management Service requests metrics from KPI Calculation Service → KPI Calculation Service retrieves data from Credit Card Data Sources → Calculations performed for monthly spend, total credit limit, available credit, outstanding amounts → Real-time Data Refresh Engine ensures latest data → Consolidated KPIs displayed on responsive interface with automatic refresh capability.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design comprehensively addresses all stated requirements including dashboard KPI display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount monitoring, and responsive layout implementation. The architecture supports the 2-second load time NFR through the KPI Aggregation Service and efficient data retrieval patterns. The Real-time Data Refresh Engine addresses the real-time refresh capability requirement. Responsive design is explicitly included in the Dashboard UI component. All dependencies on credit card data sources are properly integrated.
+- **Requirements Coverage:** The design fully covers all scope elements including dashboard KPIs display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount monitoring, and responsive layout implementation. All NFRs are architecturally supported: 2-second load time through pre-calculated KPIs and caching, responsive design through adaptive UI framework, and real-time data refresh through dedicated refresh engine. The dependency on credit card data sources for retrieving card balances, limits, and transaction data is explicitly addressed in the component flow.

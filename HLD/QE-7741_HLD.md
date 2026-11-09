@@ -1,39 +1,36 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic provides interactive visualizations and analytics for users to understand spending patterns through category-wise breakdowns and monthly trends. The system categorizes transactions across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) and delivers actionable insights through interactive charts with drill-down capabilities, handling at least 12 months of transaction history.
+- **Summary:** This epic delivers interactive visualizations and analytics capabilities enabling users to understand spending patterns through category-wise breakdowns (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) and monthly spend trends with actionable insights for financial decision-making.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart TD
-    A["Analytics Dashboard UI"]
-    B["Visualization Engine"]
-    C["Analytics Service"]
-    D["Transaction Categorization Engine"]
-    E["Transaction Data Feed"]
-    F["Analytics Data Store"]
+flowchart LR
+    A["User Interface"]
+    B["Analytics Engine"]
+    C["Transaction Categorization Service"]
+    D["Credit Card Systems"]
+    E["Visualization Rendering Service"]
+    F["Transaction Data Store"]
     A --> B
     B --> C
-    C --> D
-    D --> E
     C --> F
-    D --> F
+    F --> D
+    B --> E
 ```
 
-- **Integration Points:** 
-  - **Upstream:** Transaction data feed from credit card systems for raw transaction data
-  - **External:** Transaction categorization engine/service for automated category assignment
-  - **External:** Visualization libraries (e.g., D3.js, Chart.js) for chart rendering
-  - **Internal:** Analytics Data Store for processed transaction and category data
+- **Integration Points:**
+  - **Upstream:** Credit Card Systems (transaction data feed source)
+  - **Downstream:** Transaction Categorization Engine/Service, Visualization Libraries for chart rendering
 
-- **Key Assumptions:** 
-  - Transactions arrive with sufficient metadata (merchant name, MCC codes) to enable accurate categorization
-  - The 9 predefined categories cover the majority of user transactions; miscellaneous category handles edge cases
+- **Key Assumptions:**
+  - Transactions are categorized automatically using predefined rules or ML models into the nine categories.
+  - Analytics visualizations assume 12-month historical data is pre-aggregated for performance to meet 1.5-second rendering requirement.
 
-- **NFR Highlights:** Visualizations must render within 1.5 seconds; support 12+ months of transaction history; interactive charts with drill-down; handle 1000+ transactions per card
+- **NFR Highlights:** Analytics visualizations must render within 1.5 seconds; system must handle transaction history of at least 12 months; charts must be interactive and support drill-down capabilities; support for at least 1000 transactions per card.
 
-- **Data Flow:** User accesses analytics dashboard → Analytics Dashboard UI requests data from Analytics Service → Service queries Analytics Data Store for historical transaction data → If new transactions exist, Transaction Categorization Engine processes raw data from Transaction Data Feed → Transactions assigned to predefined categories → Categorized data stored in Analytics Data Store → Analytics Service aggregates data by category and time period → Visualization Engine generates interactive charts (category-wise breakdown, monthly trends) → Charts rendered in UI within 1.5 seconds → User interacts with charts (filtering, drill-down) → Service responds with detailed transaction views
+- **Data Flow:** User requests spending analytics → Analytics Engine queries Transaction Data Store for historical data (12 months) → Transaction Categorization Service provides category mappings → Analytics Engine performs aggregations and trend calculations → Visualization Rendering Service generates interactive charts → User interacts with multi-category filtering and drill-down capabilities for deeper insights into spending patterns.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully addresses all requirements in the epic scope including category-wise spending visualization, monthly spend trends analysis, interactive charts and graphs, transaction categorization, spending pattern identification, and multi-category filtering. The architecture supports all NFRs: the Visualization Engine and Analytics Service are designed to meet the 1.5-second rendering requirement; the Analytics Data Store is structured to handle 12+ months of history and 1000+ transactions per card; interactive and drill-down capabilities are provided through the Visualization Engine. All dependencies are properly integrated including transaction data feeds, categorization engine/service, and visualization libraries. The 9 predefined categories from the epic are explicitly supported by the Transaction Categorization Engine.
+- **Requirements Coverage:** The design comprehensively addresses all scope elements including category-wise spending visualization, monthly spend trends analysis, interactive charts and graphs, transaction categorization, spending pattern identification, and multi-category filtering. All NFRs are architecturally supported: 1.5-second rendering through pre-aggregated data and optimized queries, 12-month transaction history handling through dedicated data store, interactive drill-down through modern visualization library, and support for 1000+ transactions per card through scalable data architecture. All dependencies (transaction data feed from credit card systems, transaction categorization engine/service, visualization libraries) are explicitly integrated in the component architecture.
