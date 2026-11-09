@@ -1,34 +1,32 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a centralized, responsive dashboard that displays key performance indicators (KPIs) for the user's credit card portfolio, including monthly spend, total credit limit, available credit, and outstanding amounts. The dashboard provides real-time visibility into financial health and credit utilization across all credit cards in a single interface.
+- **Summary:** This epic delivers a responsive, centralized dashboard that consolidates key performance indicators (KPIs) for the user's credit card portfolio. The dashboard displays monthly spend, total credit limit, available credit, and outstanding amounts across all cards, providing real-time visibility into financial health and enabling informed spending decisions.
 
 - **Component Flow:**
-
 ```mermaid
 flowchart LR
     A["User Browser"]
-    B["Dashboard UI Layer"]
-    C["API Gateway"]
-    D["KPI Aggregation Service"]
-    E["Credit Card Data Service"]
-    F["Data Store"]
+    B["Dashboard UI Component"]
+    C["KPI Aggregation Service"]
+    D["Credit Card Data Service"]
+    E["Transaction Service"]
     A --> B
     B --> C
     C --> D
-    D --> E
-    E --> F
+    C --> E
 ```
 
 - **Integration Points:** 
-  - Credit card data source or mock data service for retrieving card balances and transaction data
-  - User authentication service (implied for secure access)
+  - **Upstream:** Credit card data source/service for retrieving card balances and limits
+  - **Upstream:** Transaction service for calculating monthly spend and outstanding amounts
+  - **Downstream:** Dashboard UI renders aggregated KPI data to user
 
 - **Key Assumptions:** 
-  - KPI calculations (monthly spend, available credit) are computed server-side and cached for performance
-  - Data refresh occurs at regular intervals or on-demand, with a default refresh strategy defined by the backend service
+  - KPI calculations are performed server-side by aggregation service; data is refreshed on dashboard load or user-triggered refresh
+  - Credit card and transaction data are available via RESTful APIs with standardized JSON response format
 
-- **NFR Highlights:** Responsive design across desktop, tablet, and mobile devices; optimized dashboard load time for quick KPI access; accessible and user-friendly UI
+- **NFR Highlights:** Dashboard must load within 2 seconds; support responsive design for mobile, tablet, and desktop; handle real-time data refresh for KPI updates
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design covers all stated scope elements including dashboard interface development, KPI displays (monthly spend, total credit limit, available credit, outstanding amount), responsive layout, and real-time visibility. The component flow supports aggregation from multiple cards and responsive UI rendering across devices as specified in the NFRs.
+- **Requirements Coverage:** The design covers all stated scope elements including monthly spend KPI, total credit limit aggregation, available credit calculation, outstanding amount tracking, responsive layout, and consolidated multi-card view. The component flow demonstrates integration with required data services, and the architecture supports the specified NFRs for load time and responsive design.
