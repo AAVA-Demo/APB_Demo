@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Dashboard Overview
+      <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()" ng-disabled="vm.loading">
+        <span class="glyphicon glyphicon-refresh" ng-class="{'glyphicon-refresh-animate': vm.loading}"></span> Refresh
+      </button>
+    </h2>
+    <p class="text-muted" ng-if="vm.lastUpdated">Last updated: {{vm.lastUpdated | date:'medium'}}</p>
+    <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card label="'Total Credit Limit'" value="vm.kpis.totalCreditLimit" format="'currency'"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card label="'Available Credit'" value="vm.kpis.totalAvailableCredit" format="'currency'"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card label="'Outstanding Amount'" value="vm.kpis.totalOutstanding" format="'currency'"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card label="'Monthly Spend'" value="vm.kpis.totalMonthlySpend" format="'currency'"></kpi-card>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="kpi-card">
+      <h4>Credit Cards</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Card Number</th>
+            <th>Type</th>
+            <th>Credit Limit</th>
+            <th>Available</th>
+            <th>Outstanding</th>
+            <th>Monthly Spend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="card in vm.kpis.cards">
+            <td>{{card.cardNumber}}</td>
+            <td>{{card.cardType}}</td>
+            <td>{{card.creditLimit | currency}}</td>
+            <td>{{card.availableCredit | currency}}</td>
+            <td>{{card.outstandingAmount | currency}}</td>
+            <td>{{card.monthlySpend | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <p>Loading dashboard data...</p>
+  </div>
+</div>

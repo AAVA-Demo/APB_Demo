@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Transactions</h2>
+    <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="filter-panel">
+      <h4>Filters</h4>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Search</label>
+            <input type="text" class="form-control" ng-model="vm.filters.searchText" ng-change="vm.applyFilters()" placeholder="Merchant or description">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Card</label>
+            <select class="form-control" ng-model="vm.filters.cardId" ng-change="vm.applyFilters()">
+              <option value="">All Cards</option>
+              <option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.cardNumber}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>From Date</label>
+            <input type="date" class="form-control" ng-model="vm.filters.dateFrom" ng-change="vm.applyFilters()">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>To Date</label>
+            <input type="date" class="form-control" ng-model="vm.filters.dateTo" ng-change="vm.applyFilters()">
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>Min Amount</label>
+            <input type="number" class="form-control" ng-model="vm.filters.minAmount" ng-change="vm.applyFilters()">
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>Max Amount</label>
+            <input type="number" class="form-control" ng-model="vm.filters.maxAmount" ng-change="vm.applyFilters()">
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-default btn-block" ng-click="vm.clearFilters()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <p class="text-muted">Showing {{vm.filteredTransactions.length}} of {{vm.transactions.length}} transactions</p>
+    <div class="transaction-card" ng-repeat="txn in vm.filteredTransactions">
+      <div class="row">
+        <div class="col-md-3">
+          <strong>{{txn.merchantName}}</strong><br>
+          <small class="text-muted">{{txn.transactionDate | date:'medium'}}</small>
+        </div>
+        <div class="col-md-2">
+          <small class="text-muted">Card</small><br>
+          {{txn.cardNumber}}
+        </div>
+        <div class="col-md-2">
+          <small class="text-muted">Category</small><br>
+          {{txn.category}}
+        </div>
+        <div class="col-md-2">
+          <small class="text-muted">Status</small><br>
+          <span class="label" ng-class="{'label-success': txn.status === 'Posted', 'label-warning': txn.status === 'Pending'}">{{txn.status}}</span>
+        </div>
+        <div class="col-md-2 text-right">
+          <small class="text-muted">Amount</small><br>
+          <strong class="amount-negative">{{txn.amount | currency}}</strong>
+        </div>
+        <div class="col-md-1 text-right">
+          <button class="btn btn-xs btn-default">Details</button>
+        </div>
+      </div>
+      <div class="row" ng-if="txn.description">
+        <div class="col-md-12">
+          <small class="text-muted">{{txn.description}}</small>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.filteredTransactions.length === 0" class="text-center">
+      <p class="text-muted">No transactions found matching your filters.</p>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <p>Loading transactions...</p>
+  </div>
+</div>
