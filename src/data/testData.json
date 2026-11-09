@@ -1,0 +1,103 @@
+{
+  "users": {
+    "test_user_kpi": {
+      "username": "test_user_kpi",
+      "password": "Test@123"
+    },
+    "test_user_no_cards": {
+      "username": "test_user_no_cards",
+      "password": "Test@456"
+    },
+    "test_user_service_down": {
+      "username": "test_user_service_down",
+      "password": "Test@789"
+    },
+    "test_user_three_cards": {
+      "username": "test_user_three_cards",
+      "password": "Test@123"
+    },
+    "test_user_single_card": {
+      "username": "test_user_single_card",
+      "password": "Test@456"
+    },
+    "test_user_responsive": {
+      "username": "test_user_responsive",
+      "password": "Test@789"
+    },
+    "test_user_transactions": {
+      "username": "test_user_transactions",
+      "password": "Test@123"
+    },
+    "test_user_no_transactions": {
+      "username": "test_user_no_transactions",
+      "password": "Test@456"
+    },
+    "test_user_sorted_transactions": {
+      "username": "test_user_sorted_transactions",
+      "password": "Test@789"
+    },
+    "test_user_multi_card": {
+      "username": "test_user_multi_card",
+      "password": "Test@123"
+    },
+    "test_user_advanced_filters": {
+      "username": "test_user_advanced_filters",
+      "password": "Test@789"
+    },
+    "test_user_multi_category": {
+      "username": "test_user_multi_category",
+      "password": "Test@123"
+    },
+    "test_user_limited_categories": {
+      "username": "test_user_limited_categories",
+      "password": "Test@456"
+    },
+    "test_user_analytics": {
+      "username": "test_user_analytics",
+      "password": "Test@789"
+    },
+    "test_user_six_months": {
+      "username": "test_user_six_months",
+      "password": "Test@123"
+    },
+    "test_user_three_months": {
+      "username": "test_user_three_months",
+      "password": "Test@456"
+    },
+    "test_user_interactive_chart": {
+      "username": "test_user_interactive_chart",
+      "password": "Test@789"
+    }
+  },
+  "urls": {
+    "baseUrl": "https://creditcard-dashboard.example.com",
+    "loginUrl": "https://creditcard-dashboard.example.com/login",
+    "dashboardUrl": "https://creditcard-dashboard.example.com/#!/dashboard",
+    "transactionsUrl": "https://creditcard-dashboard.example.com/#!/transactions",
+    "analyticsUrl": "https://creditcard-dashboard.example.com/#!/analytics"
+  },
+  "expectedValues": {
+    "performanceThresholds": {
+      "dashboardLoadTime": 2000,
+      "transactionLoadTime": 1000,
+      "analyticsLoadTime": 3000
+    },
+    "kpiValues": {
+      "monthlySpend": "$5,000",
+      "totalCreditLimit": "$50,000",
+      "availableCredit": "$35,000",
+      "outstandingAmount": "$15,000"
+    },
+    "categories": [
+      "Food & Dining",
+      "Fuel",
+      "Shopping",
+      "Travel",
+      "Entertainment",
+      "Utilities",
+      "Healthcare",
+      "Education",
+      "Miscellaneous"
+    ]
+  }
+}
