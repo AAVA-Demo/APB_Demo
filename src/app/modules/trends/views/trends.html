@@ -1,0 +1,47 @@
+<div class="trends-container">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<h3>Loading Trends...</h3>
+</div>
+</div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-xs-12">
+<h2>Monthly Spend Trends</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 col-md-3">
+<h4>Filter by Card</h4>
+<select class="form-control" ng-model="vm.selectedCard" ng-change="vm.filterByCard(vm.selectedCard)">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.cardType}} - {{card.cardNumber}}</option>
+</select>
+</div>
+<div class="col-xs-12 col-md-9">
+<trend-chart trends="vm.monthlyTrends" card-data="vm.cardSpendSummary" selected-card="vm.selectedCard"></trend-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>Card-wise Spending Summary</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Card</th>
+<th>Total Spend</th>
+<th>Monthly Average</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.cardSpendSummary">
+<td>{{card.cardName}}</td>
+<td>{{card.totalSpend | currency}}</td>
+<td>{{card.totalSpend/card.monthlyData.length | currency}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>

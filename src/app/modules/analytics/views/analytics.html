@@ -1,0 +1,65 @@
+<div class="analytics-container">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<h3>Loading Analytics...</h3>
+</div>
+</div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-xs-12">
+<h2>Spending Analytics</h2>
+<p>Total Spend: {{vm.analyticsData.totalSpend | currency}}</p>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 col-md-6">
+<h3>Category Breakdown</h3>
+<category-chart data="vm.analyticsData" on-select="vm.onCategorySelect(category)"></category-chart>
+</div>
+<div class="col-xs-12 col-md-6">
+<h3>Category Details</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Spend</th>
+<th>Transactions</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.categoryBreakdown" ng-click="vm.onCategorySelect(cat.category)" style="cursor:pointer;">
+<td>{{cat.category}}</td>
+<td>{{cat.totalSpend | currency}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentage | number:2}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="row" ng-if="vm.selectedCategory">
+<div class="col-xs-12">
+<h3>Transactions for {{vm.selectedCategory}}</h3>
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Date</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.categoryTransactions">
+<td>{{txn.transactionDate | date:'short'}}</td>
+<td>{{txn.merchant}}</td>
+<td>{{txn.amount | currency}}</td>
+<td>{{txn.description}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
