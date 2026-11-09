@@ -1,0 +1,118 @@
+{
+  "users": {
+    "activeCards": {
+      "username": "user_with_cards@test.com",
+      "password": "Test@1234"
+    },
+    "noCurrentTransactions": {
+      "username": "user_no_current_txn@test.com",
+      "password": "Test@1234"
+    },
+    "calculationCheck": {
+      "username": "user_multi_cards@test.com",
+      "password": "Test@1234"
+    },
+    "sixMonthsHistory": {
+      "username": "user_6months@test.com",
+      "password": "Test@1234"
+    },
+    "oneMonthHistory": {
+      "username": "user_1month@test.com",
+      "password": "Test@1234"
+    },
+    "multiMonthHistory": {
+      "username": "user_multi_months@test.com",
+      "password": "Test@1234"
+    },
+    "multiCategory": {
+      "username": "user_multi_category@test.com",
+      "password": "Test@1234"
+    },
+    "singleTransactionCategory": {
+      "username": "user_single_txn@test.com",
+      "password": "Test@1234"
+    },
+    "twoCards": {
+      "username": "user_two_cards@test.com",
+      "password": "Test@1234"
+    },
+    "multiCardCategory": {
+      "username": "user_card_analysis@test.com",
+      "password": "Test@1234"
+    },
+    "limitedCategories": {
+      "username": "user_no_travel@test.com",
+      "password": "Test@1234"
+    },
+    "threeCards": {
+      "username": "user_three_cards@test.com",
+      "password": "Test@1234"
+    },
+    "noCards": {
+      "username": "user_no_cards@test.com",
+      "password": "Test@1234"
+    },
+    "mixedCardStatus": {
+      "username": "user_mixed_status@test.com",
+      "password": "Test@1234"
+    },
+    "multiCardsHistory": {
+      "username": "user_multi_cards_history@test.com",
+      "password": "Test@1234"
+    },
+    "newCard": {
+      "username": "user_new_card@test.com",
+      "password": "Test@1234"
+    },
+    "validateSpend": {
+      "username": "user_validate_spend@test.com",
+      "password": "Test@1234"
+    },
+    "threeActiveCards": {
+      "username": "user_three_active@test.com",
+      "password": "Test@1234"
+    },
+    "inactiveCard": {
+      "username": "user_inactive_card@test.com",
+      "password": "Test@1234"
+    },
+    "validateCredit": {
+      "username": "user_validate_credit@test.com",
+      "password": "Test@1234"
+    }
+  },
+  "expectedValues": {
+    "monthlySpend": "$2,500.00",
+    "totalCreditLimit": "$25,000.00",
+    "availableCredit": "$18,000.00",
+    "outstandingAmount": "$7,000.00"
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "cards": {
+    "chaseVisa": {
+      "name": "Chase Visa",
+      "maskedNumber": "****1234",
+      "type": "Visa"
+    },
+    "citiMastercard": {
+      "name": "Citi Mastercard",
+      "maskedNumber": "****5678",
+      "type": "Mastercard"
+    },
+    "amex": {
+      "name": "Amex",
+      "maskedNumber": "****9012",
+      "type": "Amex"
+    }
+  }
+}
