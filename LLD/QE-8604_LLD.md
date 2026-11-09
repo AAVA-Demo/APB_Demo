@@ -1,40 +1,42 @@
 # Low-Level Design: Transaction Management and Display
-**Epic ID:** QE-8604
+**Epic ID:** QE-8604  
+**Branch:** PERFTEST20261109190052
+
+---
 
 ## a. Architecture Mapping
 
-- **User Interface** → AngularJS Module (`transactionModule`) + Controller (`TransactionController`)
-- **Transaction Management Service** → AngularJS Service (`TransactionManagementService`) for business logic and state management
-- **Transaction Data Service** → AngularJS Factory (`TransactionDataFactory`) for REST API integration
-- **Credit Card Service** → AngularJS Factory (`CreditCardFactory`) for card association
-- **Categorization Service** → AngularJS Service (`CategorizationService`) for transaction categorization
+- **User Interface** → AngularJS Module (`app.transactions`) + Controller (`TransactionController`)
+- **Transaction Management Module** → Service (`TransactionManagementService`) for transaction operations and filtering
+- **Transaction Data Service** → Factory (`TransactionDataFactory`) for REST API integration
+- **Credit Card Service** → Factory (`CreditCardFactory`) for card association
+- **Categorization Service** → Service (`CategorizationService`) for transaction category assignment
 
 **Recommended Folder Structure:**
 ```
 app/
-├── modules/
-│   └── transactions/
-│       ├── controllers/
-│       ├── services/
-│       ├── views/
-│       └── transaction.module.js
-├── shared/
-│   ├── factories/
-│   └── filters/
-└── assets/
+├── modules/transactions/
+│   ├── controllers/transaction.controller.js
+│   ├── services/transactionManagement.service.js
+│   ├── services/categorization.service.js
+│   ├── factories/transactionData.factory.js
+│   ├── factories/creditCard.factory.js
+│   └── views/transactions.html
 ```
+
+---
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| TransactionController | Controller | Manages transaction view state, handles search/filter inputs, coordinates pagination | TransactionManagementService, $scope, $location |
-| TransactionManagementService | Service | Orchestrates transaction retrieval, applies filters, manages pagination state | TransactionDataFactory, CreditCardFactory, CategorizationService, $q |
-| TransactionDataFactory | Factory | Fetches paginated transaction data from REST API with query parameters | $http, $q |
-| CreditCardFactory | Factory | Retrieves credit card information for transaction-card association | $http, $q |
-| CategorizationService | Service | Assigns categories to transactions and provides category filter options | None |
-| transactionTable | Directive | Renders paginated transaction table with sortable columns and responsive layout | None |
-| transactionDetail | Directive | Displays detailed transaction information in modal or expanded row | None |
+| TransactionController | Controller | Manages transaction list view, handles search/filter inputs, pagination, and transaction detail display | TransactionManagementService, $scope |
+| TransactionManagementService | Service | Orchestrates transaction retrieval, applies filters (date, amount, category, card), manages pagination state | TransactionDataFactory, CreditCardFactory, CategorizationService |
+| TransactionDataFactory | Factory | Fetches transaction history from REST API with query parameters for filtering | $http, $q |
+| CreditCardFactory | Factory | Retrieves card details for associating transactions with specific cards | $http, $q |
+| CategorizationService | Service | Assigns categories to transactions based on merchant or transaction type | None |
+
+---
 
 ## c. Data Model
 
@@ -43,26 +45,24 @@ app/
 {
   transactionId: String,
   cardId: String,
-  cardName: String,
+  cardNumber: String, // Masked (last 4 digits)
   amount: Number,
-  category: String,
   date: Date,
+  category: String,
   merchantName: String,
   description: String,
-  status: String // Posted, Pending
+  transactionType: String // Debit/Credit
 }
 ```
 
-**TransactionFilter Model:**
+**FilterCriteria Model:**
 ```javascript
 {
-  cardId: String,
-  category: String,
-  startDate: Date,
-  endDate: Date,
-  searchTerm: String,
-  minAmount: Number,
-  maxAmount: Number
+  dateRange: {startDate: Date, endDate: Date},
+  amountRange: {min: Number, max: Number},
+  categories: Array<String>,
+  cardIds: Array<String>,
+  searchTerm: String
 }
 ```
 
@@ -71,14 +71,17 @@ app/
 {
   currentPage: Number,
   pageSize: Number,
-  totalRecords: Number,
-  totalPages: Number
+  totalRecords: Number
 }
 ```
 
-## d. Data Flow
+---
 
-User navigates to Transaction Management view → TransactionController initializes with default pagination (page 1, size 20) and calls TransactionManagementService.getTransactions(filters, pagination) → Service invokes TransactionDataFactory.fetchTransactions() with query parameters → REST API returns paginated transaction array with total count → For each transaction, CreditCardFactory.getCardName(cardId) retrieves associated card information → CategorizationService.assignCategory(transaction) ensures category assignment → TransactionManagementService returns enriched transaction list and pagination metadata to Controller → Controller binds data to $scope → View renders transactions using transactionTable directive with ng-repeat → User applies filters or searches triggering service call with updated parameters → Results update via two-way binding.
+ ## d. Data Flow
+
+User navigates to transaction view → TransactionController initializes and calls TransactionManagementService.getTransactions() → TransactionDataFactory fetches paginated transactions via REST API → CategorizationService assigns categories to each transaction → CreditCardFactory enriches transactions with card details → TransactionManagementService returns transaction list → Controller binds to view → User applies filters (date, category, card) → Controller updates filter criteria and calls TransactionManagementService.applyFilters() → Service re-fetches filtered transactions → View updates with filtered results and pagination controls.
+
+---
 
 ## e. Primary Sequence Diagram
 
@@ -88,40 +91,54 @@ sequenceDiagram
     participant TransactionController
     participant TransactionManagementService
     participant TransactionDataFactory
-    participant CreditCardFactory
     participant CategorizationService
+    participant CreditCardFactory
     participant API
     
-    User->>TransactionController: Load Transaction view / Apply filters
-    TransactionController->>TransactionManagementService: getTransactions(filters, pagination)
-    TransactionManagementService->>TransactionDataFactory: fetchTransactions(filters, page, size)
-    TransactionDataFactory->>API: GET /api/transactions?page=1&size=20&filters=X
-    API-->>TransactionDataFactory: {transactions: [], totalCount: N}
-    TransactionDataFactory-->>TransactionManagementService: Transaction array + count
-    loop For each transaction
-        TransactionManagementService->>CreditCardFactory: getCardName(cardId)
-        CreditCardFactory-->>TransactionManagementService: Card name
-        TransactionManagementService->>CategorizationService: assignCategory(transaction)
-        CategorizationService-->>TransactionManagementService: Categorized transaction
-    end
-    TransactionManagementService-->>TransactionController: Enriched transactions + pagination
-    TransactionController->>User: Display transaction table
-    User->>TransactionController: Click transaction for details
-    TransactionController->>User: Show transaction detail modal
+    User->>TransactionController: Navigate to Transactions
+    TransactionController->>TransactionManagementService: getTransactions(page, pageSize)
+    TransactionManagementService->>TransactionDataFactory: fetchTransactions(page, pageSize)
+    TransactionDataFactory->>API: GET /api/transactions?page=1&size=20
+    API-->>TransactionDataFactory: Transaction list
+    TransactionDataFactory-->>TransactionManagementService: Raw transactions
+    TransactionManagementService->>CategorizationService: categorizeTransactions(transactions)
+    CategorizationService-->>TransactionManagementService: Categorized transactions
+    TransactionManagementService->>CreditCardFactory: enrichWithCardDetails(transactions)
+    CreditCardFactory-->>TransactionManagementService: Enriched transactions
+    TransactionManagementService-->>TransactionController: Transaction list with pagination
+    TransactionController-->>User: Display transactions
+    User->>TransactionController: Apply filter (category, date)
+    TransactionController->>TransactionManagementService: applyFilters(filterCriteria)
+    TransactionManagementService->>TransactionDataFactory: fetchTransactions(filters)
+    TransactionDataFactory->>API: GET /api/transactions?category=X&dateRange=Y
+    API-->>TransactionDataFactory: Filtered transactions
+    TransactionDataFactory-->>TransactionManagementService: Filtered results
+    TransactionManagementService-->>TransactionController: Updated transaction list
+    TransactionController-->>User: Display filtered transactions
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Implement server-side pagination with query parameters (page, size) in TransactionDataFactory for efficient large dataset handling
-- Use AngularJS $location service to sync pagination and filter state with URL query parameters for bookmarkable views
-- Apply ES6 async/await pattern wrapped in $q for cleaner promise handling in TransactionManagementService
-- Implement debounce on search input using ng-model-options="{debounce: 500}" to reduce API calls during typing
-- Cache card names in CreditCardFactory using object map to avoid repeated lookups for same cardId
+- Use AngularJS ng-repeat with track by transactionId for efficient list rendering and updates.
+- Implement pagination using UI Bootstrap pagination directive with server-side pagination support.
+- TransactionDataFactory should support query parameters (page, size, filters) for efficient API calls with large datasets.
+- Apply AngularJS date and currency filters in view for formatted transaction display.
+- Use ES6 arrow functions and array methods (filter, map) in TransactionManagementService for clean filter logic.
+
+---
 
 ## g. Error Handling
 
-HTTP interceptor handles API errors; TransactionManagementService returns empty array with error flag; controller displays Bootstrap alert with retry option.
+HTTP interceptor handles API errors; TransactionManagementService displays user-friendly error messages; empty state view shown when no transactions found.
+
+---
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; transaction data requires authenticated session with valid JWT token.
+Token-based auth required for transaction API; card numbers masked to last 4 digits; standard input validation on filter inputs.
+
+---
+
+**End of LLD for QE-8604**

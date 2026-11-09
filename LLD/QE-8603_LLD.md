@@ -1,49 +1,49 @@
 # Low-Level Design: Dashboard KPIs and Credit Card Overview
-**Epic ID:** QE-8603
+**Epic ID:** QE-8603  
+**Branch:** PERFTEST20261109190052
+
+---
 
 ## a. Architecture Mapping
 
-- **User Dashboard** → AngularJS Module (`dashboardOverviewModule`) + Controller (`DashboardOverviewController`)
-- **KPI Aggregation Service** → AngularJS Service (`KPIAggregationService`) for KPI computation and caching
-- **Credit Card Data Service** → AngularJS Factory (`CardDataFactory`) for card information API calls
-- **Transaction Processing Service** → AngularJS Factory (`TransactionProcessingFactory`) for transaction data API calls
+- **Dashboard UI** → AngularJS Module (`app.kpiDashboard`) + Controller (`KPIDashboardController`)
+- **KPI Calculation Engine** → Service (`KPICalculationService`) for real-time KPI computation
+- **Credit Card Data Service** → Factory (`CreditCardDataFactory`) for card details and balances
+- **Transaction Processing Service** → Factory (`TransactionProcessingFactory`) for monthly spend and outstanding calculations
 
 **Recommended Folder Structure:**
 ```
 app/
-├── modules/
-│   └── dashboard-overview/
-│       ├── controllers/
-│       ├── services/
-│       ├── views/
-│       └── dashboard-overview.module.js
-├── shared/
-│   ├── factories/
-│   └── directives/
-└── assets/
+├── modules/kpiDashboard/
+│   ├── controllers/kpiDashboard.controller.js
+│   ├── services/kpiCalculation.service.js
+│   ├── factories/creditCardData.factory.js
+│   ├── factories/transactionProcessing.factory.js
+│   └── views/kpi-dashboard.html
 ```
+
+---
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| DashboardOverviewController | Controller | Manages dashboard overview state, initiates KPI loading, handles multi-card display logic | KPIAggregationService, $scope |
-| KPIAggregationService | Service | Aggregates KPI data across multiple cards, caches results, performs financial calculations | CardDataFactory, TransactionProcessingFactory, $q, $cacheFactory |
-| CardDataFactory | Factory | Retrieves credit card details and balances from REST API | $http, $q |
-| TransactionProcessingFactory | Factory | Fetches transaction data for monthly spend and outstanding calculations | $http, $q |
-| kpiCard | Directive | Renders individual KPI display card with formatted value and responsive layout | $filter |
-| creditCardList | Directive | Displays list of credit cards with summary information in responsive grid | None |
+| KPIDashboardController | Controller | Manages KPI dashboard view, fetches and displays four KPIs, handles multi-card aggregation | KPICalculationService, $scope |
+| KPICalculationService | Service | Computes monthly spend, total credit limit, available credit, and outstanding amount in real-time | CreditCardDataFactory, TransactionProcessingFactory |
+| CreditCardDataFactory | Factory | Retrieves credit card details, credit limits, and current balances from REST API | $http, $q |
+| TransactionProcessingFactory | Factory | Fetches transaction data for monthly spend and outstanding amount calculations | $http, $q |
+
+---
 
 ## c. Data Model
 
-**DashboardKPI Model:**
+**KPIData Model:**
 ```javascript
 {
   monthlySpend: Number,
   totalCreditLimit: Number,
   availableCredit: Number,
-  outstandingAmount: Number,
-  cardCount: Number
+  outstandingAmount: Number
 }
 ```
 
@@ -51,73 +51,79 @@ app/
 ```javascript
 {
   cardId: String,
-  cardName: String,
-  maskedNumber: String,
+  cardNumber: String, // Masked
   creditLimit: Number,
-  availableCredit: Number,
   currentBalance: Number,
-  cardType: String
+  availableCredit: Number
 }
 ```
 
-**TransactionSummary Model:**
+**MonthlyTransaction Model:**
 ```javascript
 {
-  totalAmount: Number,
-  transactionCount: Number,
-  period: String // Current month
+  transactionId: String,
+  cardId: String,
+  amount: Number,
+  date: Date
 }
 ```
+
+---
 
 ## d. Data Flow
 
-User lands on Dashboard Overview → DashboardOverviewController calls KPIAggregationService.getConsolidatedKPIs() → Service checks $cacheFactory for cached KPI data → If cache miss, service invokes CardDataFactory.getAllCards() and TransactionProcessingFactory.getMonthlyTransactions() in parallel → API responses return card details and transaction summaries → KPIAggregationService aggregates monthly spend, sums total credit limits, calculates available credit, and computes outstanding amounts → Aggregated KPIs are cached and returned to Controller → Controller binds KPIs and card list to $scope → View renders KPI cards and credit card list using directives with responsive Bootstrap grid.
+User accesses KPI dashboard → KPIDashboardController calls KPICalculationService.calculateKPIs() → KPICalculationService fetches all cards via CreditCardDataFactory (REST API) → Service fetches current month transactions via TransactionProcessingFactory (REST API) → KPICalculationService aggregates total credit limit (sum of all card limits), computes available credit (total limit - sum of current balances), calculates outstanding amount (sum of all card balances), and monthly spend (sum of current month transaction amounts) → Service returns KPIData object → Controller binds to view → UI displays four KPI cards with responsive layout.
+
+---
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant DashboardOverviewController
-    participant KPIAggregationService
-    participant CardDataFactory
+    participant KPIDashboardController
+    participant KPICalculationService
+    participant CreditCardDataFactory
     participant TransactionProcessingFactory
     participant API
     
-    User->>DashboardOverviewController: Load Dashboard Overview
-    DashboardOverviewController->>KPIAggregationService: getConsolidatedKPIs()
-    KPIAggregationService->>KPIAggregationService: Check cache
-    alt Cache miss
-        par Fetch data in parallel
-            KPIAggregationService->>CardDataFactory: getAllCards()
-            CardDataFactory->>API: GET /api/cards/all
-            API-->>CardDataFactory: Card array
-            CardDataFactory-->>KPIAggregationService: Card data
-        and
-            KPIAggregationService->>TransactionProcessingFactory: getMonthlyTransactions()
-            TransactionProcessingFactory->>API: GET /api/transactions/monthly
-            API-->>TransactionProcessingFactory: Transaction summary
-            TransactionProcessingFactory-->>KPIAggregationService: Transaction data
-        end
-        KPIAggregationService->>KPIAggregationService: Aggregate KPIs (sum, calculate)
-        KPIAggregationService->>KPIAggregationService: Store in cache
-    end
-    KPIAggregationService-->>DashboardOverviewController: DashboardKPI + Card list
-    DashboardOverviewController->>User: Render KPIs and card overview
+    User->>KPIDashboardController: Access KPI Dashboard
+    KPIDashboardController->>KPICalculationService: calculateKPIs()
+    KPICalculationService->>CreditCardDataFactory: getAllCards()
+    CreditCardDataFactory->>API: GET /api/creditcards
+    API-->>CreditCardDataFactory: Card list with balances
+    CreditCardDataFactory-->>KPICalculationService: Card data
+    KPICalculationService->>TransactionProcessingFactory: getMonthlyTransactions()
+    TransactionProcessingFactory->>API: GET /api/transactions?period=current_month
+    API-->>TransactionProcessingFactory: Monthly transactions
+    TransactionProcessingFactory-->>KPICalculationService: Transaction data
+    KPICalculationService->>KPICalculationService: Aggregate KPIs
+    KPICalculationService-->>KPIDashboardController: KPIData
+    KPIDashboardController-->>User: Display KPIs
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Use $cacheFactory in KPIAggregationService with 5-minute TTL to reduce redundant API calls for KPI data
-- Implement parallel API calls with $q.all() for optimal dashboard load performance
-- Apply ES6 destructuring and spread operator for cleaner data aggregation in service methods
-- Use Bootstrap responsive grid classes (col-xs, col-sm, col-md) in view templates for multi-device support
-- Implement $filter('currency') in kpiCard directive for consistent financial value formatting
+- Use AngularJS $q.all() in KPICalculationService to parallelize card and transaction API calls for optimized dashboard load time.
+- Implement Bootstrap responsive grid (col-lg-3, col-md-6, col-sm-12) for KPI card layout across device sizes.
+- Apply AngularJS currency and number filters in view for formatted KPI display.
+- KPICalculationService should use ES6 reduce() for clean aggregation of credit limits, balances, and transaction amounts.
+- Cache card data in CreditCardDataFactory using $cacheFactory to minimize redundant API calls during user session.
+
+---
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors; services return partial data with error indicators; controller shows Bootstrap alert for missing data.
+HTTP interceptor handles API errors; KPICalculationService returns partial KPIs if one data source fails; toast notification alerts user of incomplete data.
+
+---
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; sensitive financial data masked appropriately in UI.
+Token-based authentication required for all API endpoints; card numbers masked on client-side; standard input validation applied.
+
+---
+
+**End of LLD for QE-8603**

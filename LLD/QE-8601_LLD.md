@@ -1,39 +1,42 @@
 # Low-Level Design: Multi-Card Management and Tracking
-**Epic ID:** QE-8601
+**Epic ID:** QE-8601  
+**Branch:** PERFTEST20261109190052
+
+---
 
 ## a. Architecture Mapping
 
-- **Multi-Card UI** → AngularJS Module (`cardManagementModule`) + Controller (`CardManagementController`)
-- **Card Management Service** → AngularJS Service (`CardManagementService`) for card operations and state management
-- **Credit Card Repository** → AngularJS Factory (`CreditCardFactory`) for REST API integration
-- **Transaction Processing System** → AngularJS Factory (`TransactionFactory`) for transaction data retrieval
-- **Analytics Component** → AngularJS Service (`CardAnalyticsService`) for card comparison and trend analysis
+- **Multi-Card UI** → AngularJS Module (`app.multiCard`) + Controller (`MultiCardController`)
+- **Card Management Module** → Service (`CardManagementService`) for card operations and state management
+- **Credit Card Data Repository** → Factory (`CreditCardDataFactory`) for REST API integration
+- **Transaction Processing System** → Factory (`TransactionProcessingFactory`) for card-specific transaction data
+- **Card Analytics Engine** → Service (`CardAnalyticsService`) for card-wise spend analysis and comparison
 
 **Recommended Folder Structure:**
 ```
 app/
-├── modules/
-│   └── card-management/
-│       ├── controllers/
-│       ├── services/
-│       ├── views/
-│       └── card-management.module.js
-├── shared/
-│   ├── factories/
-│   └── components/
-└── assets/
+├── modules/multiCard/
+│   ├── controllers/multiCard.controller.js
+│   ├── services/cardManagement.service.js
+│   ├── services/cardAnalytics.service.js
+│   ├── factories/creditCardData.factory.js
+│   ├── factories/transactionProcessing.factory.js
+│   └── views/multi-card.html
 ```
+
+---
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| CardManagementController | Controller | Manages multi-card view state, handles user interactions for card selection and comparison | CardManagementService, CardAnalyticsService, $scope |
-| CardManagementService | Service | Orchestrates card data retrieval, maintains card list state, coordinates with analytics | CreditCardFactory, TransactionFactory, $q |
-| CreditCardFactory | Factory | Fetches credit card details and balances from REST API | $http, $q |
-| TransactionFactory | Factory | Retrieves card-specific transaction data for spending analysis | $http, $q |
-| CardAnalyticsService | Service | Calculates card utilization rates, spending patterns, and generates comparison metrics | None |
-| cardSummary | Directive | Renders individual card summary widget with key metrics and visual indicators | None |
+| MultiCardController | Controller | Manages multi-card view, handles card selection, displays card details and comparisons | CardManagementService, CardAnalyticsService, $scope |
+| CardManagementService | Service | Maintains card list state, provides card CRUD operations, handles card selection logic | CreditCardDataFactory |
+| CardAnalyticsService | Service | Computes card-wise spending, monthly trends per card, and portfolio-level aggregations | TransactionProcessingFactory, CreditCardDataFactory |
+| CreditCardDataFactory | Factory | Fetches credit card details, balances, and metadata from REST API | $http, $q |
+| TransactionProcessingFactory | Factory | Retrieves card-specific transaction history and spending data from API | $http, $q |
+
+---
 
 ## c. Data Model
 
@@ -41,82 +44,98 @@ app/
 ```javascript
 {
   cardId: String,
-  cardNumber: String, // Masked
-  cardType: String, // Visa, Mastercard, etc.
+  cardNumber: String, // Masked (e.g., ****1234)
+  cardType: String, // Visa, MasterCard, Amex, etc.
+  cardHolderName: String,
   creditLimit: Number,
   availableCredit: Number,
-  outstandingBalance: Number,
-  expiryDate: String,
-  cardholderName: String
+  outstandingAmount: Number,
+  expiryDate: String, // MM/YY
+  issuer: String
 }
 ```
 
-**CardSpending Model:**
+**CardSpendAnalysis Model:**
 ```javascript
 {
   cardId: String,
   monthlySpend: Number,
-  utilizationRate: Number, // Percentage
-  topCategories: Array<{category: String, amount: Number}>
+  categoryBreakdown: Array<{category: String, amount: Number}>,
+  trendData: Array<{month: String, spend: Number}>
 }
 ```
 
-**CardComparison Model:**
+**PortfolioSummary Model:**
 ```javascript
 {
-  cardId: String,
-  totalSpend: Number,
-  utilizationRate: Number,
-  transactionCount: Number
+  totalCards: Number,
+  totalCreditLimit: Number,
+  totalAvailableCredit: Number,
+  totalOutstanding: Number,
+  cards: Array<CreditCard>
 }
 ```
+
+---
 
 ## d. Data Flow
 
-User navigates to Multi-Card Management view → CardManagementController initializes and calls CardManagementService.getAllCards() → Service invokes CreditCardFactory.fetchCards() to retrieve card list via REST API → For each card, TransactionFactory.fetchCardTransactions(cardId) retrieves spending data → CardAnalyticsService processes transaction data to calculate utilization and spending patterns → Aggregated card data with analytics is returned to Controller → Controller binds data to $scope → View renders card list using ng-repeat with cardSummary directive → User selects cards for comparison triggering CardAnalyticsService.compareCards().
+User navigates to multi-card view → MultiCardController initializes and calls CardManagementService.getCards() → CreditCardDataFactory fetches card list via REST API → CardManagementService populates card list in scope → User selects a card → Controller calls CardAnalyticsService.getCardSpendAnalysis(cardId) → TransactionProcessingFactory retrieves card-specific transactions → CardAnalyticsService computes spend trends and category breakdown → Controller updates view with card details and analytics → User can compare cards or view portfolio summary.
+
+---
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardManagementController
+    participant MultiCardController
     participant CardManagementService
-    participant CreditCardFactory
-    participant TransactionFactory
+    participant CreditCardDataFactory
     participant CardAnalyticsService
-    participant API
+    participant TransactionProcessingFactory
     
-    User->>CardManagementController: Navigate to Multi-Card view
-    CardManagementController->>CardManagementService: getAllCards()
-    CardManagementService->>CreditCardFactory: fetchCards()
-    CreditCardFactory->>API: GET /api/cards
-    API-->>CreditCardFactory: Array of credit cards
-    CreditCardFactory-->>CardManagementService: Card data
-    loop For each card
-        CardManagementService->>TransactionFactory: fetchCardTransactions(cardId)
-        TransactionFactory->>API: GET /api/transactions?cardId=X
-        API-->>TransactionFactory: Transaction array
-        TransactionFactory-->>CardManagementService: Card transactions
-        CardManagementService->>CardAnalyticsService: calculateCardMetrics(card, transactions)
-        CardAnalyticsService-->>CardManagementService: Card metrics
-    end
-    CardManagementService-->>CardManagementController: Cards with analytics
-    CardManagementController->>User: Display multi-card view
+    User->>MultiCardController: Navigate to Multi-Card View
+    MultiCardController->>CardManagementService: getCards()
+    CardManagementService->>CreditCardDataFactory: fetchAllCards()
+    CreditCardDataFactory->>API: GET /api/creditcards
+    API-->>CreditCardDataFactory: Card list
+    CreditCardDataFactory-->>CardManagementService: Cards data
+    CardManagementService-->>MultiCardController: Portfolio summary
+    MultiCardController-->>User: Display all cards
+    User->>MultiCardController: Select card for details
+    MultiCardController->>CardAnalyticsService: getCardSpendAnalysis(cardId)
+    CardAnalyticsService->>TransactionProcessingFactory: fetchCardTransactions(cardId)
+    TransactionProcessingFactory->>API: GET /api/transactions?cardId=X
+    API-->>TransactionProcessingFactory: Card transactions
+    TransactionProcessingFactory-->>CardAnalyticsService: Transaction data
+    CardAnalyticsService->>CardAnalyticsService: Compute spend trends
+    CardAnalyticsService-->>MultiCardController: Card spend analysis
+    MultiCardController-->>User: Display card-specific analytics
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Use AngularJS $q.all() to fetch all card transactions in parallel for improved performance
-- Implement CardManagementService as singleton to maintain card state across view transitions
-- Apply ES6 template literals for dynamic API endpoint construction in factories
-- Use ng-repeat with track by cardId for efficient DOM updates when card data changes
-- Cache card data in CardManagementService with configurable TTL to reduce API calls
+- Use AngularJS $scope inheritance for card selection state management across nested views.
+- CardManagementService should maintain a singleton card list to avoid redundant API calls; use service pattern for shared state.
+- Implement card comparison using normalized metrics (utilization %, spend per category) for fair evaluation across different credit limits.
+- TransactionProcessingFactory should support query parameters (cardId, dateRange) for efficient card-specific data retrieval.
+- Apply ES6 template literals for dynamic card display formatting and masked card number rendering.
+
+---
 
 ## g. Error Handling
 
-HTTP interceptor handles API failures; factories return rejected promises; controller displays error notification using Bootstrap toast component.
+HTTP interceptor handles API errors; CardManagementService uses promise rejection with user-friendly messages; toast notifications for card load failures.
+
+---
 
 ## h. Security Notes
 
-Card numbers are masked on client-side; API endpoints require JWT authentication; sensitive card data transmitted over HTTPS only.
+Card numbers are masked on client-side; API returns only last 4 digits; token-based auth required for all card data endpoints.
+
+---
+
+**End of LLD for QE-8601**
