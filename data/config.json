@@ -1,0 +1,23 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "apiBaseUrl": "http://localhost:3000/api",
+  "defaultTimeout": 30000,
+  "environments": {
+    "dev": {
+      "baseUrl": "http://localhost:3000",
+      "apiBaseUrl": "http://localhost:3000/api"
+    },
+    "qa": {
+      "baseUrl": "https://qa.creditcard-dashboard.com",
+      "apiBaseUrl": "https://qa-api.creditcard-dashboard.com"
+    },
+    "staging": {
+      "baseUrl": "https://staging.creditcard-dashboard.com",
+      "apiBaseUrl": "https://staging-api.creditcard-dashboard.com"
+    },
+    "production": {
+      "baseUrl": "https://creditcard-dashboard.com",
+      "apiBaseUrl": "https://api.creditcard-dashboard.com"
+    }
+  }
+}
