@@ -1,0 +1,65 @@
+<div class="analytics-container">
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading Analytics...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Spending Analytics and Insights</h2>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>Filters</h4>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-6">
+            <select class="form-control" ng-model="vm.filters.timeRange" ng-change="vm.refreshAnalytics()">
+              <option value="all">All Time</option>
+              <option value="month">This Month</option>
+              <option value="quarter">This Quarter</option>
+              <option value="year">This Year</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-primary" ng-click="vm.refreshAnalytics()">Refresh Analytics</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Category-Wise Spending</h4>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-data="vm.categoryData" chart-type="'pie'" chart-title="'Spending by Category'"></chart-directive>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Monthly Spend Trend</h4>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-data="vm.monthlyData" chart-type="'line'" chart-title="'Monthly Spending Trends'"></chart-directive>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Card-Wise Spending</h4>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-data="vm.cardData" chart-type="'bar'" chart-title="'Spending by Card'"></chart-directive>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
