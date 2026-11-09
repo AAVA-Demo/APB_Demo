@@ -1,27 +1,24 @@
 (function() {
   'use strict';
-  angular.module('creditCardApp')
-    .service('AuthService', ['$http', '$window', '$q', function($http, $window, $q) {
-      this.validateSession = function() {
-        var token = $window.sessionStorage.getItem('authToken');
-        if (!token) {
-          return $q.reject('No token found');
+  angular.module('creditCardApp').service('AuthService', ['$http', '$window', '$q', function($http, $window, $q) {
+    const API_BASE = '/api';
+    this.login = function(credentials) {
+      return $http.post(`${API_BASE}/auth/login`, credentials).then(function(response) {
+        if (response.data.token) {
+          $window.localStorage.setItem('authToken', response.data.token);
         }
-        return $http.get('/api/auth/validate').then(function(response) {
-          return response.data;
-        });
-      };
-      this.isAuthenticated = function() {
-        return !!$window.sessionStorage.getItem('authToken');
-      };
-      this.redirectToLogin = function() {
-        $window.location.href = '/login';
-      };
-      this.setToken = function(token) {
-        $window.sessionStorage.setItem('authToken', token);
-      };
-      this.clearToken = function() {
-        $window.sessionStorage.removeItem('authToken');
-      };
-    }]);
+        return response.data;
+      });
+    };
+    this.logout = function() {
+      $window.localStorage.removeItem('authToken');
+    };
+    this.validateSession = function() {
+      const token = $window.localStorage.getItem('authToken');
+      return !!token;
+    };
+    this.getToken = function() {
+      return $window.localStorage.getItem('authToken');
+    };
+  }]);
 })();

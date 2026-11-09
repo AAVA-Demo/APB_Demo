@@ -1,41 +1,28 @@
 (function() {
   'use strict';
-  angular.module('dashboardModule')
-    .controller('DashboardController', ['$scope', '$interval', 'CreditCardDataService', 'AuthService', function($scope, $interval, CreditCardDataService, AuthService) {
-      var vm = this;
-      vm.kpis = {};
-      vm.cards = [];
+  angular.module('dashboardModule').controller('KPIDashboardController', ['DashboardKPIService', '$scope', '$interval', function(DashboardKPIService, $scope, $interval) {
+    const vm = this;
+    vm.kpiData = null;
+    vm.loading = true;
+    vm.error = null;
+    function loadKPIData() {
       vm.loading = true;
-      vm.error = null;
-      var refreshInterval;
-      function loadDashboardData() {
-        vm.loading = true;
-        AuthService.validateSession().then(function() {
-          return CreditCardDataService.getDashboardData();
-        }).then(function(data) {
-          vm.kpis = {
-            monthlySpend: data.monthlySpend || 0,
-            totalCreditLimit: data.totalCreditLimit || 0,
-            availableCredit: data.availableCredit || 0,
-            outstandingAmount: data.outstandingAmount || 0,
-            utilizationPercentage: data.utilizationPercentage || 0
-          };
-          vm.cards = data.cards || [];
-          vm.loading = false;
-          vm.error = null;
-        }).catch(function(error) {
-          vm.error = 'Failed to load dashboard data';
-          vm.loading = false;
-        });
-      }
-      loadDashboardData();
-      refreshInterval = $interval(function() {
-        loadDashboardData();
-      }, 30000);
-      $scope.$on('$destroy', function() {
-        if (refreshInterval) {
-          $interval.cancel(refreshInterval);
-        }
+      DashboardKPIService.getKPIData().then(function(data) {
+        vm.kpiData = data;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.error = 'Failed to load dashboard data';
+        vm.loading = false;
       });
-    }]);
+    }
+    loadKPIData();
+    const refreshInterval = $interval(function() {
+      loadKPIData();
+    }, 30000);
+    $scope.$on('$destroy', function() {
+      if (refreshInterval) {
+        $interval.cancel(refreshInterval);
+      }
+    });
+  }]);
 })();

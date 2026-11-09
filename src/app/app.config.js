@@ -1,57 +1,65 @@
 (function() {
   'use strict';
-  angular.module('creditCardApp')
-    .constant('API_ENDPOINTS', {
-      dashboard: '/api/dashboard/kpis',
-      transactions: '/api/transactions',
-      analytics: '/api/analytics/spending',
-      cards: '/api/cards'
-    })
-    .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
-      $routeProvider
-        .when('/dashboard', {
-          templateUrl: 'src/app/dashboard/views/dashboard.html',
-          controller: 'DashboardController',
-          controllerAs: 'vm'
-        })
-        .when('/transactions', {
-          templateUrl: 'src/app/transactions/views/transaction-list.html',
-          controller: 'TransactionListController',
-          controllerAs: 'vm'
-        })
-        .when('/analytics', {
-          templateUrl: 'src/app/analytics/views/analytics-dashboard.html',
-          controller: 'AnalyticsController',
-          controllerAs: 'vm'
-        })
-        .otherwise({
-          redirectTo: '/dashboard'
-        });
-      $httpProvider.interceptors.push('AuthInterceptor');
-    }])
-    .factory('AuthInterceptor', ['$q', '$window', function($q, $window) {
-      return {
-        request: function(config) {
-          var token = $window.sessionStorage.getItem('authToken');
-          if (token) {
-            config.headers.Authorization = 'Bearer ' + token;
-          }
-          return config;
-        },
-        responseError: function(rejection) {
-          if (rejection.status === 401) {
-            $window.location.href = '/login';
-          }
-          return $q.reject(rejection);
-        }
-      };
-    }])
-    .run(['$rootScope', 'AuthService', function($rootScope, AuthService) {
-      $rootScope.$on('$routeChangeStart', function(event, next) {
-        if (!AuthService.isAuthenticated()) {
-          event.preventDefault();
-          AuthService.redirectToLogin();
-        }
+  angular.module('creditCardApp').config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+    $routeProvider
+      .when('/', {
+        redirectTo: '/dashboard'
+      })
+      .when('/dashboard', {
+        templateUrl: 'src/app/dashboard/dashboard.view.html',
+        controller: 'KPIDashboardController',
+        controllerAs: 'vm'
+      })
+      .when('/cards', {
+        templateUrl: 'src/app/cards/card-list.view.html',
+        controller: 'CardListController',
+        controllerAs: 'vm'
+      })
+      .when('/cards/:cardId', {
+        templateUrl: 'src/app/cards/card-detail.view.html',
+        controller: 'CardDetailController',
+        controllerAs: 'vm'
+      })
+      .when('/cards/compare/:cardIds', {
+        templateUrl: 'src/app/cards/card-comparison.view.html',
+        controller: 'CardComparisonController',
+        controllerAs: 'vm'
+      })
+      .when('/transactions', {
+        templateUrl: 'src/app/transactions/transaction-list.view.html',
+        controller: 'TransactionListController',
+        controllerAs: 'vm'
+      })
+      .when('/transactions/:transactionId', {
+        templateUrl: 'src/app/transactions/transaction-detail.view.html',
+        controller: 'TransactionDetailController',
+        controllerAs: 'vm'
+      })
+      .when('/analytics', {
+        templateUrl: 'src/app/analytics/analytics.view.html',
+        controller: 'AnalyticsController',
+        controllerAs: 'vm'
+      })
+      .otherwise({
+        redirectTo: '/dashboard'
       });
-    }]);
+    $httpProvider.interceptors.push('AuthInterceptor');
+  }]).factory('AuthInterceptor', ['$q', '$window', '$location', function($q, $window, $location) {
+    return {
+      request: function(config) {
+        const token = $window.localStorage.getItem('authToken');
+        if (token) {
+          config.headers.Authorization = 'Bearer ' + token;
+        }
+        return config;
+      },
+      responseError: function(rejection) {
+        if (rejection.status === 401) {
+          $window.localStorage.removeItem('authToken');
+          $location.path('/login');
+        }
+        return $q.reject(rejection);
+      }
+    };
+  }]);
 })();

@@ -2,9 +2,9 @@
   'use strict';
   angular.module('creditCardApp', [
     'ngRoute',
-    'ngResource',
     'chart.js',
     'dashboardModule',
+    'cardManagementModule',
     'transactionModule',
     'analyticsModule'
   ]);
