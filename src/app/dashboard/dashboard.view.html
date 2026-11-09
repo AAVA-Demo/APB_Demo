@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Dashboard Overview</h2>
+    <p class="text-muted">Your credit card portfolio at a glance</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i>
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-md-3 col-sm-6">
+    <kpi-tile title="Monthly Spend" value="vm.kpis.monthlySpend" icon="credit-card"></kpi-tile>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-tile title="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="piggy-bank"></kpi-tile>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-tile title="Available Credit" value="vm.kpis.availableCredit" icon="ok-circle"></kpi-tile>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-tile title="Outstanding Amount" value="vm.kpis.outstandingAmount" icon="exclamation-sign"></kpi-tile>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row" style="margin-top:20px;">
+  <div class="col-md-12">
+    <p class="text-muted"><small>Last updated: {{vm.kpis.lastUpdated | date:'medium'}}</small></p>
+  </div>
+</div>

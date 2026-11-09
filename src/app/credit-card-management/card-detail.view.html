@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="#/cards" class="btn btn-default"><i class="glyphicon glyphicon-arrow-left"></i> Back to Cards</a>
+    <h2 style="margin-top:20px;">Card Details</h2>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i>
+  <p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error && vm.card" class="row">
+  <div class="col-md-6">
+    <div class="card-tile">
+      <h3>{{vm.card.cardType}} Card</h3>
+      <div class="card-number">{{vm.card.cardNumber}}</div>
+      <div class="card-type">{{vm.card.cardHolderName}} | Exp: {{vm.card.expiryDate}}</div>
+      <hr>
+      <div><strong>Credit Limit:</strong> ₹{{vm.card.creditLimit | number:0}}</div>
+      <div><strong>Available Credit:</strong> ₹{{vm.card.availableCredit | number:0}}</div>
+      <div><strong>Outstanding Amount:</strong> ₹{{vm.card.outstandingAmount | number:0}}</div>
+      <div><strong>Monthly Spend:</strong> ₹{{vm.card.monthlySpend | number:0}}</div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h3>Monthly Spend Trends</h3>
+      <spend-trend-chart trends="vm.card.monthlyTrends"></spend-trend-chart>
+    </div>
+  </div>
+</div>
