@@ -1,171 +1,111 @@
 const { expect } = require('@playwright/test');
-const logger = require('../../utils/logger');
 
 exports.DashboardPage = class DashboardPage {
   constructor(page) {
     this.page = page;
-    this.monthlySpendKPI = page.locator('[data-testid="monthly-spend"], .kpi-card:has-text("Monthly Spend"), .monthly-spend');
-    this.totalCreditLimitKPI = page.locator('[data-testid="total-credit-limit"], .kpi-card:has-text("Total Credit Limit"), .total-credit-limit');
-    this.availableCreditKPI = page.locator('[data-testid="available-credit"], .kpi-card:has-text("Available Credit"), .available-credit');
-    this.outstandingAmountKPI = page.locator('[data-testid="outstanding-amount"], .kpi-card:has-text("Outstanding Amount"), .outstanding-amount');
     
-    this.monthlySpendLabel = page.locator('[data-testid="monthly-spend-label"], .kpi-label:has-text("Monthly Spend")');
-    this.totalCreditLimitLabel = page.locator('[data-testid="total-credit-limit-label"], .kpi-label:has-text("Total Credit Limit")');
-    this.availableCreditLabel = page.locator('[data-testid="available-credit-label"], .kpi-label:has-text("Available Credit")');
-    this.outstandingAmountLabel = page.locator('[data-testid="outstanding-amount-label"], .kpi-label:has-text("Outstanding Amount")');
+    this.monthlySpendKPI = page.locator('[data-testid="kpi-monthly-spend"]');
+    this.totalCreditLimitKPI = page.locator('[data-testid="kpi-total-credit-limit"]');
+    this.availableCreditKPI = page.locator('[data-testid="kpi-available-credit"]');
+    this.outstandingAmountKPI = page.locator('[data-testid="kpi-outstanding-amount"]');
     
-    this.loadingIndicator = page.locator('.loading-spinner, .loader, [data-testid="loading"]');
-    this.lastUpdatedTimestamp = page.locator('.last-updated, [data-testid="last-updated"]');
-    this.errorMessage = page.locator('.error-message, .alert-danger, [data-testid="error"]');
-    this.noDataMessage = page.locator('.no-data-message, [data-testid="no-data"]');
-    this.dataFeedWarning = page.locator('.data-feed-warning, [data-testid="data-warning"]');
-    this.browserWarning = page.locator('.browser-warning, [data-testid="browser-warning"]');
-    this.kpiContainer = page.locator('.kpi-container, .dashboard-kpis, [data-testid="kpi-container"]');
+    this.monthlySpendCard = page.locator('.kpi-card:has-text("Monthly Spend")');
+    this.totalCreditLimitCard = page.locator('.kpi-card:has-text("Total Credit Limit")');
+    this.availableCreditCard = page.locator('.kpi-card:has-text("Available Credit")');
+    this.outstandingAmountCard = page.locator('.kpi-card:has-text("Outstanding Amount")');
+    
+    this.monthlySpendLabel = page.locator('[data-testid="label-monthly-spend"]');
+    this.totalCreditLimitLabel = page.locator('[data-testid="label-total-credit-limit"]');
+    this.availableCreditLabel = page.locator('[data-testid="label-available-credit"]');
+    this.outstandingAmountLabel = page.locator('[data-testid="label-outstanding-amount"]');
+    
+    this.loadingIndicator = page.locator('[data-testid="loading-indicator"]');
+    this.loadingMessage = page.locator('[data-testid="loading-message"]');
+    this.lastUpdatedTimestamp = page.locator('[data-testid="last-updated"]');
+    
+    this.noCardMessage = page.locator('[data-testid="no-card-message"]');
+    this.errorMessage = page.locator('[data-testid="error-message"]');
+    this.dataFeedWarning = page.locator('[data-testid="data-feed-warning"]');
+    
+    this.dashboardContainer = page.locator('[data-testid="dashboard-container"]');
+    this.kpiContainer = page.locator('[data-testid="kpi-container"]');
+  }
+
+  async navigate() {
+    await this.page.goto('/dashboard');
   }
 
   async waitForDashboardLoad() {
-    logger.info('Waiting for dashboard to load');
+    await expect(this.dashboardContainer).toBeVisible({ timeout: 5000 });
     await this.page.waitForLoadState('networkidle');
-    await expect(this.monthlySpendKPI.or(this.noDataMessage)).toBeVisible({ timeout: 10000 });
-    logger.info('Dashboard loaded');
   }
 
-  async getMonthlySpend() {
+  async getMonthlySpendValue() {
     await expect(this.monthlySpendKPI).toBeVisible();
-    const text = await this.monthlySpendKPI.textContent();
-    const match = text.match(/\$[0-9,]+\.[0-9]{2}/);
-    return match ? match[0] : '0';
+    return await this.monthlySpendKPI.textContent();
   }
 
-  async getTotalCreditLimit() {
+  async getTotalCreditLimitValue() {
     await expect(this.totalCreditLimitKPI).toBeVisible();
-    const text = await this.totalCreditLimitKPI.textContent();
-    const match = text.match(/\$[0-9,]+\.[0-9]{2}/);
-    return match ? match[0] : '0';
+    return await this.totalCreditLimitKPI.textContent();
   }
 
-  async getAvailableCredit() {
+  async getAvailableCreditValue() {
     await expect(this.availableCreditKPI).toBeVisible();
-    const text = await this.availableCreditKPI.textContent();
-    const match = text.match(/\$[0-9,]+\.[0-9]{2}/);
-    return match ? match[0] : '0';
+    return await this.availableCreditKPI.textContent();
   }
 
-  async getOutstandingAmount() {
+  async getOutstandingAmountValue() {
     await expect(this.outstandingAmountKPI).toBeVisible();
-    const text = await this.outstandingAmountKPI.textContent();
-    const match = text.match(/\$[0-9,]+\.[0-9]{2}/);
-    return match ? match[0] : '0';
+    return await this.outstandingAmountKPI.textContent();
   }
 
-  async hasLoadingIndicator() {
-    try {
-      await this.loadingIndicator.waitFor({ state: 'visible', timeout: 2000 });
-      return true;
-    } catch {
-      return false;
+  async getAllKPILabels() {
+    const labels = [];
+    const labelElements = await this.page.locator('.kpi-card .kpi-label').all();
+    for (const element of labelElements) {
+      labels.push(await element.textContent());
     }
-  }
-
-  async hasLastUpdatedTimestamp() {
-    try {
-      await this.lastUpdatedTimestamp.waitFor({ state: 'visible', timeout: 2000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async getLastUpdatedTimestamp() {
-    await expect(this.lastUpdatedTimestamp).toBeVisible();
-    return await this.lastUpdatedTimestamp.textContent();
-  }
-
-  async hasNoDataMessage() {
-    try {
-      await this.noDataMessage.waitFor({ state: 'visible', timeout: 3000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async getNoDataMessage() {
-    await expect(this.noDataMessage).toBeVisible();
-    return await this.noDataMessage.textContent();
-  }
-
-  async hasErrorMessage() {
-    try {
-      await this.errorMessage.waitFor({ state: 'visible', timeout: 3000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async getErrorMessage() {
-    await expect(this.errorMessage).toBeVisible();
-    return await this.errorMessage.textContent();
-  }
-
-  async hasDataFeedWarning() {
-    try {
-      await this.dataFeedWarning.waitFor({ state: 'visible', timeout: 3000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async getDataFeedWarning() {
-    await expect(this.dataFeedWarning).toBeVisible();
-    return await this.dataFeedWarning.textContent();
-  }
-
-  async hasBrowserWarning() {
-    try {
-      await this.browserWarning.waitFor({ state: 'visible', timeout: 2000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async getBrowserWarning() {
-    await expect(this.browserWarning).toBeVisible();
-    return await this.browserWarning.textContent();
-  }
-
-  async getKPILayout() {
-    const container = await this.kpiContainer.boundingBox();
-    const cards = await this.page.locator('.kpi-card').all();
-    
-    if (cards.length === 0) return 'unknown';
-    
-    const firstCard = await cards[0].boundingBox();
-    const secondCard = cards.length > 1 ? await cards[1].boundingBox() : null;
-    
-    if (!secondCard) return 'single';
-    
-    if (Math.abs(firstCard.y - secondCard.y) < 10) {
-      const cardsInRow = cards.filter(async (card) => {
-        const box = await card.boundingBox();
-        return Math.abs(box.y - firstCard.y) < 10;
-      }).length;
-      
-      if (cardsInRow === 4) return 'grid-4-column';
-      if (cardsInRow === 2) return 'grid-2-column';
-      return 'grid-2-row';
-    }
-    
-    return 'stacked';
+    return labels;
   }
 
   async getKPIFontSize() {
-    const kpiValue = this.page.locator('.kpi-value, .kpi-card .value').first();
-    await expect(kpiValue).toBeVisible();
-    const fontSize = await kpiValue.evaluate(el => window.getComputedStyle(el).fontSize);
+    const fontSize = await this.monthlySpendKPI.evaluate(el => {
+      return parseInt(window.getComputedStyle(el).fontSize);
+    });
     return fontSize;
+  }
+
+  async getKPILayout() {
+    const display = await this.kpiContainer.evaluate(el => {
+      return window.getComputedStyle(el).display;
+    });
+    return display;
+  }
+
+  async getGridColumnCount() {
+    const columns = await this.kpiContainer.evaluate(el => {
+      return window.getComputedStyle(el).gridTemplateColumns.split(' ').length;
+    });
+    return columns;
+  }
+
+  async getBrowserWarning() {
+    const warning = await this.page.locator('[data-testid="browser-warning"]');
+    if (await warning.isVisible()) {
+      return await warning.textContent();
+    }
+    return null;
+  }
+
+  async waitForKPIUpdate(previousValue, kpiLocator) {
+    await this.page.waitForFunction(
+      ({ locator, oldValue }) => {
+        const element = document.querySelector(locator);
+        return element && element.textContent !== oldValue;
+      },
+      { locator: await kpiLocator.getAttribute('data-testid'), oldValue: previousValue },
+      { timeout: 10000 }
+    );
   }
 };
