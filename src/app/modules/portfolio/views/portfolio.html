@@ -1,0 +1,20 @@
+<div class="portfolio-container">
+<h2>Credit Card Portfolio</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<card-list cards="vm.portfolioData" on-select="vm.selectCard(card)"></card-list>
+<div ng-if="vm.selectedCard" class="selected-card-details">
+<h3>Selected Card Details</h3>
+<p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+<p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+<p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit|currency}}</p>
+<p><strong>Current Balance:</strong> {{vm.selectedCard.currentBalance|currency}}</p>
+<p><strong>Available Credit:</strong> {{vm.selectedCard.availableCredit|currency}}</p>
+<p><strong>Total Spend:</strong> {{vm.selectedCard.metrics.totalSpend|currency}}</p>
+<p><strong>Utilization Rate:</strong> {{vm.selectedCard.metrics.utilizationRate}}%</p>
+<p><strong>Transaction Count:</strong> {{vm.selectedCard.metrics.transactionCount}}</p>
+<p><strong>Avg Transaction:</strong> {{vm.selectedCard.metrics.avgTransactionAmount|currency}}</p>
+</div>
+</div>
+</div>
