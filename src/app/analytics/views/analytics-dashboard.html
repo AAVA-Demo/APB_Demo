@@ -1,0 +1,107 @@
+<div class="analytics-container">
+  <h2>Spending Analytics and Insights</h2>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Date Range</h4>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-md-4">
+          <div class="form-group">
+            <label>From</label>
+            <input type="date" class="form-control" ng-model="vm.dateRange.from">
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <div class="form-group">
+            <label>To</label>
+            <input type="date" class="form-control" ng-model="vm.dateRange.to">
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary btn-block" ng-click="vm.refreshAnalytics()">Refresh</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Category-Wise Spending</h4>
+          </div>
+          <div class="panel-body" style="height: 400px;">
+            <canvas id="categoryChart" class="chart chart-pie" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels" chart-colors="vm.categoryChartColors" chart-options="vm.categoryChartOptions"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Monthly Spend Trends</h4>
+          </div>
+          <div class="panel-body" style="height: 400px;">
+            <canvas id="monthlyChart" class="chart chart-line" chart-data="vm.monthlyChartData" chart-labels="vm.monthlyChartLabels" chart-series="vm.monthlyChartSeries" chart-options="vm.monthlyChartOptions"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.categoryData.length > 0">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Category Breakdown Details</h4>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="text-right">Total Amount</th>
+                  <th class="text-right">Transaction Count</th>
+                  <th class="text-right">Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.categoryData track by cat.category" ng-click="vm.onCategoryClick(cat)" style="cursor: pointer;">
+                  <td>{{cat.category}}</td>
+                  <td class="text-right">{{cat.totalAmount | currency}}</td>
+                  <td class="text-right">{{cat.transactionCount}}</td>
+                  <td class="text-right">{{cat.percentage | number:1}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ng-if="vm.selectedCategory" style="display: block; background: rgba(0,0,0,0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" ng-click="vm.closeCategoryDetail()">&times;</button>
+            <h4 class="modal-title">{{vm.selectedCategory.category}} Details</h4>
+          </div>
+          <div class="modal-body">
+            <p><strong>Total Amount:</strong> {{vm.selectedCategory.totalAmount | currency}}</p>
+            <p><strong>Transaction Count:</strong> {{vm.selectedCategory.transactionCount}}</p>
+            <p><strong>Percentage of Total Spend:</strong> {{vm.selectedCategory.percentage | number:1}}%</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="vm.closeCategoryDetail()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
