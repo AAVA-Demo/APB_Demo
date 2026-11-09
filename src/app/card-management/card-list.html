@@ -1,0 +1,47 @@
+<div>
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i> Loading cards...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <i class="fa fa-exclamation-circle"></i> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row" style="margin-bottom: 15px;">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search cards..." ng-model="vm.filterText">
+      </div>
+      <div class="col-md-6">
+        <div class="btn-group pull-right">
+          <button class="btn btn-default" ng-click="vm.sortCards('cardType')">Sort by Type</button>
+          <button class="btn btn-default" ng-click="vm.sortCards('utilizationPercentage')">Sort by Utilization</button>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.portfolio" class="panel panel-info">
+      <div class="panel-heading"><strong>Portfolio Summary</strong></div>
+      <div class="panel-body">
+        <p><strong>Total Credit Limit:</strong> ${{vm.portfolio.totalCreditLimit | number:2}}</p>
+        <p><strong>Total Utilization:</strong> {{vm.portfolio.totalUtilization}}%</p>
+      </div>
+    </div>
+    <div class="card-item" ng-repeat="card in vm.cards | filter:vm.filterText | orderBy:vm.sortBy" ng-click="vm.viewCardDetail(card.cardId)">
+      <div class="row">
+        <div class="col-md-8">
+          <h4><i class="fa fa-credit-card"></i> {{card.cardType}} - {{card.cardNumber}}</h4>
+          <p><strong>Issuer:</strong> {{card.issuer}}</p>
+          <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}} | <strong>Available:</strong> ${{card.availableCredit | number:2}}</p>
+          <p><strong>Monthly Spend:</strong> ${{card.monthlySpend | number:2}}</p>
+        </div>
+        <div class="col-md-4 text-right">
+          <h3>{{card.utilizationPercentage}}%</h3>
+          <p class="text-muted">Utilization</p>
+        </div>
+      </div>
+      <card-utilization percentage="card.utilizationPercentage"></card-utilization>
+    </div>
+    <div ng-if="vm.cards.length === 0" class="alert alert-info">
+      <i class="fa fa-info-circle"></i> No credit cards found.
+    </div>
+  </div>
+</div>

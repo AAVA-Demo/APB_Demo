@@ -1,0 +1,24 @@
+<div>
+  <h2>Dashboard Overview</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i> Loading...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <i class="fa fa-exclamation-circle"></i> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-3 col-sm-6" ng-repeat="kpi in vm.kpis">
+      <kpi-card kpi="kpi"></kpi-card>
+    </div>
+  </div>
+  <div ng-if="vm.kpiData" class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Last Updated:</strong> {{vm.kpiData.lastUpdated | date:'medium'}}</div>
+        <div class="panel-body">
+          <p class="text-muted">Data refreshes automatically every 30 seconds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

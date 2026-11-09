@@ -1,0 +1,55 @@
+<div>
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i> Loading analytics...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <i class="fa fa-exclamation-circle"></i> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-md-12">
+        <button class="btn btn-primary" ng-click="vm.updateFilters()"><i class="fa fa-refresh"></i> Refresh Data</button>
+      </div>
+    </div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#category-view">Category Breakdown</a></li>
+      <li><a data-toggle="tab" href="#trends-view">Monthly Trends</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="category-view" class="tab-pane fade in active">
+        <div class="chart-container">
+          <h3>Category-Wise Spending</h3>
+          <spending-chart chart-data="vm.spendingData.categories" chart-type="pie"></spending-chart>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading"><strong>Category Details</strong></div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.spendingData.categories | orderBy:'-amount'" ng-click="vm.selectCategory(cat)" style="cursor: pointer;">
+                <td>{{cat.name}}</td>
+                <td>${{cat.amount | number:2}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="trends-view" class="tab-pane fade">
+        <div class="chart-container">
+          <h3>Monthly Spend Trends</h3>
+          <spending-chart chart-data="vm.spendingData.monthlyTrends" chart-type="line"></spending-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

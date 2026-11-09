@@ -1,0 +1,39 @@
+<div>
+  <button class="btn btn-default" ng-click="vm.goBack()"><i class="fa fa-arrow-left"></i> Back to Cards</button>
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i> Loading card details...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <i class="fa fa-exclamation-circle"></i> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.card" class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title"><i class="fa fa-credit-card"></i> {{vm.card.cardType}} - {{vm.card.cardNumber}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Card Information</h4>
+          <table class="table table-bordered">
+            <tr><td><strong>Issuer</strong></td><td>{{vm.card.issuer}}</td></tr>
+            <tr><td><strong>Card Type</strong></td><td>{{vm.card.cardType}}</td></tr>
+            <tr><td><strong>Card Number</strong></td><td>{{vm.card.cardNumber}}</td></tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <h4>Financial Summary</h4>
+          <table class="table table-bordered">
+            <tr><td><strong>Credit Limit</strong></td><td>${{vm.card.creditLimit | number:2}}</td></tr>
+            <tr><td><strong>Current Balance</strong></td><td>${{vm.card.currentBalance | number:2}}</td></tr>
+            <tr><td><strong>Available Credit</strong></td><td>${{vm.card.availableCredit | number:2}}</td></tr>
+            <tr><td><strong>Utilization</strong></td><td>{{vm.card.utilizationPercentage}}%</td></tr>
+            <tr><td><strong>Monthly Spend</strong></td><td>${{vm.card.monthlySpend | number:2}}</td></tr>
+          </table>
+        </div>
+      </div>
+      <h4>Utilization Meter</h4>
+      <card-utilization percentage="vm.card.utilizationPercentage"></card-utilization>
+    </div>
+  </div>
+</div>
