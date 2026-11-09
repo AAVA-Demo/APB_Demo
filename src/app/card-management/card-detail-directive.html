@@ -1,0 +1,21 @@
+<div class="chart-container">
+  <h3>{{card.cardType}} - {{card.cardNumber}}</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <p><strong>Issuer:</strong> {{card.issuerName}}</p>
+      <p><strong>Credit Limit:</strong> {{card.creditLimit | currency}}</p>
+      <p><strong>Current Balance:</strong> {{card.currentBalance | currency}}</p>
+      <p><strong>Available Credit:</strong> {{card.availableCredit | currency}}</p>
+      <p><strong>Expiry Date:</strong> {{card.expiryDate | date:'MM/yyyy'}}</p>
+      <p><strong>Last Synced:</strong> {{card.lastSyncTimestamp | date:'medium'}}</p>
+    </div>
+    <div class="col-md-6" ng-if="analysis">
+      <h4>Spending Analysis</h4>
+      <p><strong>Monthly Spend:</strong> {{analysis.monthlySpend | currency}}</p>
+      <h5>Category Breakdown:</h5>
+      <div class="category-row" ng-repeat="cat in analysis.categoryBreakdown">
+        <strong>{{cat.category}}:</strong> {{cat.amount | currency}}
+      </div>
+    </div>
+  </div>
+</div>

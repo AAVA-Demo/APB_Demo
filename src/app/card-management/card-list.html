@@ -1,0 +1,22 @@
+<div ng-controller="cardManagementController as vm">
+  <h2>My Credit Cards</h2>
+  <div class="error-banner" ng-if="vm.errorMessage">{{vm.errorMessage}}</div>
+  <div ng-if="vm.loading" class="text-center"><h3>Loading cards...</h3></div>
+  <div ng-if="!vm.loading">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Search cards..." ng-model="vm.filterText">
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards | filter:vm.filterCards track by card.cardId">
+        <div class="card-item" ng-click="vm.selectCard(card.cardId)">
+          <div class="card-number">{{card.cardNumber}}</div>
+          <p><strong>{{card.cardType}}</strong> - {{card.issuerName}}</p>
+          <p>Credit Limit: <strong>{{card.creditLimit | currency}}</strong></p>
+          <p>Balance: <strong>{{card.currentBalance | currency}}</strong></p>
+          <p>Available: <strong>{{card.availableCredit | currency}}</strong></p>
+          <a href="#!/cards/{{card.cardId}}" class="btn btn-sm btn-info">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

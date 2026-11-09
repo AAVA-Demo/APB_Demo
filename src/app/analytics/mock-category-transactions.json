@@ -1,0 +1,5 @@
+[
+  {"transactionId": "txn-001", "date": "2026-11-10T12:30:00Z", "merchant": "Starbucks", "amount": 12.50},
+  {"transactionId": "txn-002", "date": "2026-11-12T18:45:00Z", "merchant": "Chipotle", "amount": 25.00},
+  {"transactionId": "txn-003", "date": "2026-11-14T09:15:00Z", "merchant": "Panera Bread", "amount": 18.75}
+]

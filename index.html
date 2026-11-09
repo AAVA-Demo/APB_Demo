@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Analysis Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    body { padding-top: 20px; background-color: #f5f5f5; }
+    .kpi-card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+    .kpi-card h3 { margin: 0 0 10px 0; font-size: 16px; color: #666; }
+    .kpi-card .value { font-size: 28px; font-weight: bold; color: #333; }
+    .card-item { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+    .card-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .card-number { font-size: 18px; font-weight: bold; letter-spacing: 2px; }
+    .chart-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .category-row { padding: 10px; border-bottom: 1px solid #eee; }
+    .category-row:last-child { border-bottom: none; }
+    .error-banner { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Credit Card Analysis Dashboard</h1>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.routes.js"></script>
+  <script src="src/app/services/authFactory.js"></script>
+  <script src="src/app/services/authInterceptor.js"></script>
+  <script src="src/app/services/dataRefreshService.js"></script>
+  <script src="src/app/dashboard/dashboardController.js"></script>
+  <script src="src/app/dashboard/dashboardService.js"></script>
+  <script src="src/app/dashboard/kpiWidgetDirective.js"></script>
+  <script src="src/app/dashboard/kpiCardDirective.js"></script>
+  <script src="src/app/card-management/cardManagementController.js"></script>
+  <script src="src/app/card-management/cardManagementService.js"></script>
+  <script src="src/app/card-management/cardAnalyticsService.js"></script>
+  <script src="src/app/card-management/cardListDirective.js"></script>
+  <script src="src/app/card-management/cardDetailDirective.js"></script>
+  <script src="src/app/analytics/analyticsController.js"></script>
+  <script src="src/app/analytics/analyticsService.js"></script>
+  <script src="src/app/analytics/spendingChartDirective.js"></script>
+  <script src="src/app/analytics/categoryBreakdownDirective.js"></script>
+</body>
+</html>

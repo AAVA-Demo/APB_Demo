@@ -1,0 +1,26 @@
+[
+  {
+    "cardId": "card-001",
+    "userId": "user-001",
+    "cardNumber": "****1234",
+    "cardType": "Visa",
+    "creditLimit": 10000,
+    "currentBalance": 2500,
+    "availableCredit": 7500,
+    "issuerName": "Chase Bank",
+    "expiryDate": "2028-12-31",
+    "lastSyncTimestamp": "2026-11-15T10:00:00Z"
+  },
+  {
+    "cardId": "card-002",
+    "userId": "user-001",
+    "cardNumber": "****5678",
+    "cardType": "MasterCard",
+    "creditLimit": 15000,
+    "currentBalance": 4000,
+    "availableCredit": 11000,
+    "issuerName": "Citibank",
+    "expiryDate": "2027-06-30",
+    "lastSyncTimestamp": "2026-11-15T10:00:00Z"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "userId": "user-001",
+  "currentMonth": {
+    "month": "2026-11",
+    "totalSpend": 3250.75,
+    "categoryBreakdown": [
+      {"category": "Food & Dining", "totalAmount": 850.00, "transactionCount": 15, "percentageOfTotal": 26.15},
+      {"category": "Fuel", "totalAmount": 450.00, "transactionCount": 8, "percentageOfTotal": 13.85},
+      {"category": "Shopping", "totalAmount": 920.50, "transactionCount": 12, "percentageOfTotal": 28.31},
+      {"category": "Travel", "totalAmount": 300.00, "transactionCount": 2, "percentageOfTotal": 9.23},
+      {"category": "Entertainment", "totalAmount": 280.25, "transactionCount": 5, "percentageOfTotal": 8.62},
+      {"category": "Utilities", "totalAmount": 200.00, "transactionCount": 3, "percentageOfTotal": 6.15},
+      {"category": "Healthcare", "totalAmount": 150.00, "transactionCount": 2, "percentageOfTotal": 4.62},
+      {"category": "Education", "totalAmount": 50.00, "transactionCount": 1, "percentageOfTotal": 1.54},
+      {"category": "Miscellaneous", "totalAmount": 50.00, "transactionCount": 2, "percentageOfTotal": 1.54}
+    ]
+  },
+  "previousMonths": [
+    {"month": "2026-10", "totalSpend": 2980.50},
+    {"month": "2026-09", "totalSpend": 3100.00},
+    {"month": "2026-08", "totalSpend": 2750.25}
+  ],
+  "categories": [
+    {"category": "Food & Dining", "totalAmount": 850.00, "transactionCount": 15, "percentageOfTotal": 26.15},
+    {"category": "Fuel", "totalAmount": 450.00, "transactionCount": 8, "percentageOfTotal": 13.85},
+    {"category": "Shopping", "totalAmount": 920.50, "transactionCount": 12, "percentageOfTotal": 28.31},
+    {"category": "Travel", "totalAmount": 300.00, "transactionCount": 2, "percentageOfTotal": 9.23},
+    {"category": "Entertainment", "totalAmount": 280.25, "transactionCount": 5, "percentageOfTotal": 8.62},
+    {"category": "Utilities", "totalAmount": 200.00, "transactionCount": 3, "percentageOfTotal": 6.15},
+    {"category": "Healthcare", "totalAmount": 150.00, "transactionCount": 2, "percentageOfTotal": 4.62},
+    {"category": "Education", "totalAmount": 50.00, "transactionCount": 1, "percentageOfTotal": 1.54},
+    {"category": "Miscellaneous", "totalAmount": 50.00, "transactionCount": 2, "percentageOfTotal": 1.54}
+  ]
+}

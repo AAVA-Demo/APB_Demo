@@ -1,0 +1,12 @@
+<div ng-controller="cardManagementController as vm">
+  <h2>Card Details</h2>
+  <div class="error-banner" ng-if="vm.errorMessage">{{vm.errorMessage}}</div>
+  <div ng-if="vm.selectedCard">
+    <card-detail card="vm.selectedCard" analysis="vm.selectedCardAnalysis"></card-detail>
+    <a href="#!/cards" class="btn btn-default">Back to Cards</a>
+  </div>
+  <div ng-if="!vm.selectedCard && !vm.loading">
+    <p>Card not found.</p>
+    <a href="#!/cards" class="btn btn-default">Back to Cards</a>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{
+  "cardId": "card-001",
+  "monthlySpend": 1200.50,
+  "categoryBreakdown": [
+    {"category": "Food & Dining", "amount": 450.00},
+    {"category": "Fuel", "amount": 200.00},
+    {"category": "Shopping", "amount": 350.50},
+    {"category": "Entertainment", "amount": 200.00}
+  ]
+}
