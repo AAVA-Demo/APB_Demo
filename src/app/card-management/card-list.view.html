@@ -1,0 +1,45 @@
+<div class="row">
+<div class="col-md-12">
+<h2>My Credit Cards</h2>
+<p class="text-muted">Manage and view all your registered credit cards</p>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading cards...</p>
+</div>
+<div ng-if="!vm.loading" class="row">
+<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards">
+<div class="card-item" ng-click="vm.selectCard(card.cardId)" ng-class="{selected:vm.selectedCardId===card.cardId}">
+<div class="card-type">{{card.cardType}}</div>
+<div class="card-number">**** **** **** {{card.cardNumber}}</div>
+<div style="margin-top:10px">
+<strong>{{card.cardHolderName}}</strong>
+</div>
+<hr>
+<div class="row">
+<div class="col-xs-6">
+<small class="text-muted">Credit Limit</small><br>
+<strong>${{card.creditLimit}}</strong>
+</div>
+<div class="col-xs-6">
+<small class="text-muted">Available</small><br>
+<strong class="text-success">${{card.availableCredit}}</strong>
+</div>
+</div>
+<div class="row" style="margin-top:10px">
+<div class="col-xs-12">
+<small class="text-muted">Outstanding</small><br>
+<strong class="text-danger">${{card.outstandingBalance}}</strong>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="!vm.loading&&vm.cards.length===0" class="row">
+<div class="col-md-12">
+<div class="alert alert-info">
+<i class="fa fa-info-circle"></i> No credit cards found. Add your first card to get started.
+</div>
+</div>
+</div>

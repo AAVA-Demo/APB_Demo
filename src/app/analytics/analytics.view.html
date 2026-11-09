@@ -1,0 +1,53 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Spending Analytics</h2>
+<p class="text-muted">Analyze your spending patterns and category insights</p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="filter-panel">
+<form class="form-inline">
+<div class="form-group">
+<label>Start Date:</label>
+<input type="date" class="form-control" ng-model="vm.filters.startDate">
+</div>
+<div class="form-group" style="margin-left:10px">
+<label>End Date:</label>
+<input type="date" class="form-control" ng-model="vm.filters.endDate">
+</div>
+<div class="form-group" style="margin-left:10px">
+<label>Category:</label>
+<select class="form-control" ng-model="vm.filters.category">
+<option value="">All Categories</option>
+<option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+</select>
+</div>
+<button type="button" class="btn btn-primary" style="margin-left:10px" ng-click="vm.applyFilter()"><i class="fa fa-filter"></i> Apply Filter</button>
+</form>
+</div>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading" class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Category-wise Spending</h4>
+<spending-chart data="vm.categorySpending" chart-type="pie"></spending-chart>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Monthly Spend Trends</h4>
+<spending-chart data="vm.monthlyTrends" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+<div ng-if="!vm.loading" class="row">
+<div class="col-md-12">
+<category-breakdown data="vm.categorySpending"></category-breakdown>
+</div>
+</div>

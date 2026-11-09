@@ -1,0 +1,44 @@
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-default" ng-click="vm.goBack()"><i class="fa fa-arrow-left"></i> Back to Cards</button>
+<h2 style="margin-top:20px">Card Details</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading card details...</p>
+</div>
+<div ng-if="!vm.loading&&vm.card" class="row">
+<div class="col-md-6">
+<div class="kpi-card" style="text-align:left">
+<h3>{{vm.card.cardType}} Card</h3>
+<div class="card-number" style="font-size:24px;margin:20px 0">**** **** **** {{vm.card.cardNumber}}</div>
+<p><strong>Cardholder:</strong> {{vm.card.cardHolderName}}</p>
+<p><strong>Expiry:</strong> {{vm.card.expiryDate}}</p>
+<p><strong>Status:</strong> <span ng-class="{'text-success':vm.card.isActive,'text-danger':!vm.card.isActive}">{{vm.card.isActive?'Active':'Inactive'}}</span></p>
+</div>
+</div>
+<div class="col-md-6">
+<div class="kpi-card">
+<h4>Financial Summary</h4>
+<table class="table table-bordered" style="margin-top:20px">
+<tr>
+<td><strong>Credit Limit</strong></td>
+<td class="text-right">${{vm.card.creditLimit}}</td>
+</tr>
+<tr>
+<td><strong>Outstanding Balance</strong></td>
+<td class="text-right text-danger">${{vm.card.outstandingBalance}}</td>
+</tr>
+<tr>
+<td><strong>Available Credit</strong></td>
+<td class="text-right text-success">${{vm.card.availableCredit}}</td>
+</tr>
+<tr>
+<td><strong>Utilization</strong></td>
+<td class="text-right">{{((vm.card.outstandingBalance/vm.card.creditLimit)*100).toFixed(2)}}%</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
