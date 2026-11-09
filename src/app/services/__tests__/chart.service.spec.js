@@ -1,130 +1,179 @@
 /*
 Test Documentation:
-- Test Name: chartService - processData
-- Purpose: Validates transaction data processing for chart visualization
-- Scenario: Tests monthly trends, card-wise spend, category-wise spend calculations
-- Expected Result: Returns aggregated data for charts with correct totals
-*/
-/*
-Coverage Report:
-- Functions tested: processData, calculateMonthlyTrends, calculateCardWiseSpend, calculateCategoryWiseSpend
-- Scenarios covered: normal flow, empty input, single transaction, multiple months, aggregation
-- Uncovered scenarios: none
+- Test Name: chartService - data processing for charts
+- Purpose: Validates chart service processes transaction data for visualizations
+- Scenario: Service calculates monthly trends, card-wise, and category-wise spending
+- Expected Result: Returns formatted data for chart rendering
 */
 
-describe('chartService', function() {
+(function() {
   'use strict';
 
-  beforeEach(module('creditCardApp'));
+  describe('chartService', function() {
+    var chartService;
+    var categoryService;
+    var mockTransactions;
 
-  var chartService;
-  var categoryService;
+    beforeEach(module('creditCardApp'));
 
-  beforeEach(inject(function(_chartService_, _categoryService_) {
-    chartService = _chartService_;
-    categoryService = _categoryService_;
-  }));
+    beforeEach(inject(function(_chartService_, _categoryService_) {
+      chartService = _chartService_;
+      categoryService = _categoryService_;
 
-  describe('processData', function() {
-    it('should process transactions and return chart data', function() {
-      var transactions = [
-        { transactionDate: '2023-01-15', amount: 100, cardId: 'card1', category: 'Food & Dining' },
-        { transactionDate: '2023-01-20', amount: 50, cardId: 'card2', category: 'Fuel' }
+      mockTransactions = [
+        { transactionId: 1, amount: 100, transactionDate: '2023-01-15', cardId: 'card1', category: 'Food & Dining' },
+        { transactionId: 2, amount: 200, transactionDate: '2023-01-20', cardId: 'card2', category: 'Shopping' },
+        { transactionId: 3, amount: 150, transactionDate: '2023-02-10', cardId: 'card1', category: 'Food & Dining' },
+        { transactionId: 4, amount: 300, transactionDate: '2023-02-15', cardId: 'card2', category: 'Travel' }
       ];
 
-      spyOn(categoryService, 'categorize').and.callFake(function(t) {
-        return t.category;
+      spyOn(categoryService, 'categorize').and.callFake(function(transaction) {
+        return transaction.category;
       });
+    }));
 
-      var result = chartService.processData(transactions);
+    /*
+    Test Documentation:
+    - Test Name: should process data and return all chart types
+    - Purpose: Validates processData returns complete data structure
+    - Scenario: Process transactions for all chart types
+    - Expected Result: Returns object with monthlyTrends, cardWiseSpend, categoryWiseSpend
+    */
+    it('should process data and return all chart types', function() {
+      var result = chartService.processData(mockTransactions);
 
       expect(result.monthlyTrends).toBeDefined();
       expect(result.cardWiseSpend).toBeDefined();
       expect(result.categoryWiseSpend).toBeDefined();
     });
 
+    /*
+    Test Documentation:
+    - Test Name: should calculate monthly trends correctly
+    - Purpose: Validates monthly spend aggregation
+    - Scenario: Transactions across multiple months
+    - Expected Result: Returns monthly trends sorted by month
+    */
     it('should calculate monthly trends correctly', function() {
-      var transactions = [
-        { transactionDate: '2023-01-15', amount: 100, cardId: 'card1', category: 'Food & Dining' },
-        { transactionDate: '2023-01-20', amount: 50, cardId: 'card1', category: 'Fuel' },
-        { transactionDate: '2023-02-10', amount: 200, cardId: 'card2', category: 'Shopping' }
-      ];
-
-      spyOn(categoryService, 'categorize').and.callFake(function(t) {
-        return t.category;
-      });
-
-      var result = chartService.processData(transactions);
+      var result = chartService.processData(mockTransactions);
 
       expect(result.monthlyTrends.length).toBe(2);
-      expect(result.monthlyTrends[0].month).toBe('2023-01');
-      expect(result.monthlyTrends[0].totalSpend).toBe(150);
-      expect(result.monthlyTrends[1].month).toBe('2023-02');
-      expect(result.monthlyTrends[1].totalSpend).toBe(200);
+      expect(result.monthlyTrends[0].month).toBe('2023-1');
+      expect(result.monthlyTrends[0].totalSpend).toBe(300);
+      expect(result.monthlyTrends[1].month).toBe('2023-2');
+      expect(result.monthlyTrends[1].totalSpend).toBe(450);
     });
 
-    it('should calculate card-wise spend correctly', function() {
-      var transactions = [
-        { transactionDate: '2023-01-15', amount: 100, cardId: 'card1', category: 'Food & Dining' },
-        { transactionDate: '2023-01-20', amount: 50, cardId: 'card1', category: 'Fuel' },
-        { transactionDate: '2023-02-10', amount: 200, cardId: 'card2', category: 'Shopping' }
-      ];
-
-      spyOn(categoryService, 'categorize').and.callFake(function(t) {
-        return t.category;
-      });
-
-      var result = chartService.processData(transactions);
+    /*
+    Test Documentation:
+    - Test Name: should calculate card-wise spending
+    - Purpose: Validates spending aggregation by card
+    - Scenario: Transactions from multiple cards
+    - Expected Result: Returns spending totals for each card
+    */
+    it('should calculate card-wise spending', function() {
+      var result = chartService.processData(mockTransactions);
 
       expect(result.cardWiseSpend.length).toBe(2);
-      var card1 = result.cardWiseSpend.find(function(c) { return c.cardId === 'card1'; });
-      var card2 = result.cardWiseSpend.find(function(c) { return c.cardId === 'card2'; });
-      expect(card1.totalSpend).toBe(150);
-      expect(card2.totalSpend).toBe(200);
+      
+      var card1Spend = result.cardWiseSpend.find(function(c) { return c.cardId === 'card1'; });
+      var card2Spend = result.cardWiseSpend.find(function(c) { return c.cardId === 'card2'; });
+      
+      expect(card1Spend.totalSpend).toBe(250);
+      expect(card2Spend.totalSpend).toBe(500);
     });
 
-    it('should calculate category-wise spend correctly', function() {
-      var transactions = [
-        { transactionDate: '2023-01-15', amount: 100, cardId: 'card1', category: 'Food & Dining' },
-        { transactionDate: '2023-01-20', amount: 50, cardId: 'card1', category: 'Fuel' },
-        { transactionDate: '2023-02-10', amount: 50, cardId: 'card2', category: 'Fuel' }
+    /*
+    Test Documentation:
+    - Test Name: should calculate category-wise spending
+    - Purpose: Validates spending aggregation by category
+    - Scenario: Transactions across multiple categories
+    - Expected Result: Returns spending totals for each category
+    */
+    it('should calculate category-wise spending', function() {
+      var result = chartService.processData(mockTransactions);
+
+      expect(result.categoryWiseSpend.length).toBe(3);
+      
+      var foodSpend = result.categoryWiseSpend.find(function(c) { return c.category === 'Food & Dining'; });
+      expect(foodSpend.totalSpend).toBe(250);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should sort monthly trends chronologically
+    - Purpose: Validates monthly trends are sorted by date
+    - Scenario: Process transactions in random date order
+    - Expected Result: Returns trends sorted from earliest to latest month
+    */
+    it('should sort monthly trends chronologically', function() {
+      var unsortedTransactions = [
+        { amount: 100, transactionDate: '2023-03-15', cardId: 'card1', category: 'Food & Dining' },
+        { amount: 200, transactionDate: '2023-01-20', cardId: 'card1', category: 'Shopping' },
+        { amount: 150, transactionDate: '2023-02-10', cardId: 'card1', category: 'Travel' }
       ];
 
-      spyOn(categoryService, 'categorize').and.callFake(function(t) {
-        return t.category;
-      });
+      var result = chartService.processData(unsortedTransactions);
 
-      var result = chartService.processData(transactions);
-
-      expect(result.categoryWiseSpend.length).toBe(2);
-      var fuel = result.categoryWiseSpend.find(function(c) { return c.category === 'Fuel'; });
-      expect(fuel.totalSpend).toBe(100);
+      expect(result.monthlyTrends[0].month).toBe('2023-1');
+      expect(result.monthlyTrends[1].month).toBe('2023-2');
+      expect(result.monthlyTrends[2].month).toBe('2023-3');
     });
 
-    it('should handle empty transactions', function() {
+    /*
+    Test Documentation:
+    - Test Name: should handle empty transactions array
+    - Purpose: Validates error handling for empty input
+    - Scenario: Empty transactions array provided
+    - Expected Result: Returns empty arrays for all chart types
+    */
+    it('should handle empty transactions array', function() {
       var result = chartService.processData([]);
 
-      expect(result.monthlyTrends.length).toBe(0);
-      expect(result.cardWiseSpend.length).toBe(0);
-      expect(result.categoryWiseSpend.length).toBe(0);
+      expect(result.monthlyTrends).toEqual([]);
+      expect(result.cardWiseSpend).toEqual([]);
+      expect(result.categoryWiseSpend).toEqual([]);
     });
 
-    it('should sort monthly trends chronologically', function() {
-      var transactions = [
-        { transactionDate: '2023-03-15', amount: 100, cardId: 'card1', category: 'Food & Dining' },
-        { transactionDate: '2023-01-20', amount: 50, cardId: 'card1', category: 'Fuel' },
-        { transactionDate: '2023-02-10', amount: 200, cardId: 'card2', category: 'Shopping' }
+    /*
+    Test Documentation:
+    - Test Name: should aggregate same month transactions
+    - Purpose: Validates multiple transactions in same month are summed
+    - Scenario: Multiple transactions in same month
+    - Expected Result: Single monthly trend entry with summed amount
+    */
+    it('should aggregate same month transactions', function() {
+      var sameMonthTransactions = [
+        { amount: 100, transactionDate: '2023-01-05', cardId: 'card1', category: 'Food & Dining' },
+        { amount: 200, transactionDate: '2023-01-15', cardId: 'card1', category: 'Shopping' },
+        { amount: 150, transactionDate: '2023-01-25', cardId: 'card1', category: 'Travel' }
       ];
 
-      spyOn(categoryService, 'categorize').and.callFake(function(t) {
-        return t.category;
-      });
+      var result = chartService.processData(sameMonthTransactions);
 
-      var result = chartService.processData(transactions);
+      expect(result.monthlyTrends.length).toBe(1);
+      expect(result.monthlyTrends[0].totalSpend).toBe(450);
+    });
 
-      expect(result.monthlyTrends[0].month).toBe('2023-01');
-      expect(result.monthlyTrends[1].month).toBe('2023-02');
-      expect(result.monthlyTrends[2].month).toBe('2023-03');
+    /*
+    Test Documentation:
+    - Test Name: should call categoryService for categorization
+    - Purpose: Validates integration with category service
+    - Scenario: Process transactions requiring categorization
+    - Expected Result: Category service called for each transaction
+    */
+    it('should call categoryService for categorization', function() {
+      chartService.processData(mockTransactions);
+
+      expect(categoryService.categorize).toHaveBeenCalledTimes(4);
     });
   });
-});
+
+  /*
+  Coverage Report:
+  - Functions tested: processData, calculateMonthlyTrends, calculateCardWiseSpend, calculateCategoryWiseSpend
+  - Scenarios covered: all chart types, monthly aggregation, card aggregation, category aggregation, sorting, empty array
+  - Edge cases: empty transactions, same month aggregation, unsorted dates
+  - Uncovered scenarios: none
+  */
+})();

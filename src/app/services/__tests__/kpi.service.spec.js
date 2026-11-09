@@ -1,46 +1,116 @@
 /*
 Test Documentation:
-- Test Name: kpiService - calculateKPIs
-- Purpose: Validates KPI calculation from card data
-- Scenario: Tests calculation with multiple cards, empty array, single card, missing fields
-- Expected Result: Returns correct aggregated KPIs with proper defaults
-*/
-/*
-Coverage Report:
-- Functions tested: calculateKPIs
-- Scenarios covered: multiple cards, empty array, single card, missing fields, zero values
-- Uncovered scenarios: none
+- Test Name: kpiService - KPI calculations
+- Purpose: Validates KPI service calculates financial metrics correctly
+- Scenario: Service aggregates card data into KPIs
+- Expected Result: Returns calculated KPIs with correct values
 */
 
-describe('kpiService', function() {
+(function() {
   'use strict';
 
-  beforeEach(module('creditCardApp'));
+  describe('kpiService', function() {
+    var kpiService;
+    var mockCards;
 
-  var kpiService;
+    beforeEach(module('creditCardApp'));
 
-  beforeEach(inject(function(_kpiService_) {
-    kpiService = _kpiService_;
-  }));
+    beforeEach(inject(function(_kpiService_) {
+      kpiService = _kpiService_;
 
-  describe('calculateKPIs', function() {
-    it('should calculate KPIs from multiple cards', function() {
-      var cards = [
-        { creditLimit: 5000, availableCredit: 3000, outstandingAmount: 2000, monthlySpend: 1500 },
-        { creditLimit: 3000, availableCredit: 2000, outstandingAmount: 1000, monthlySpend: 800 }
+      mockCards = [
+        { cardId: 1, creditLimit: 5000, availableCredit: 3000, outstandingAmount: 2000, monthlySpend: 1500 },
+        { cardId: 2, creditLimit: 10000, availableCredit: 8000, outstandingAmount: 2000, monthlySpend: 2500 }
       ];
+    }));
 
-      var result = kpiService.calculateKPIs(cards);
+    /*
+    Test Documentation:
+    - Test Name: should calculate total credit limit
+    - Purpose: Validates total credit limit aggregation
+    - Scenario: Multiple cards with different credit limits
+    - Expected Result: Returns sum of all credit limits
+    */
+    it('should calculate total credit limit', function() {
+      var result = kpiService.calculateKPIs(mockCards);
 
-      expect(result.totalCreditLimit).toBe(8000);
-      expect(result.totalAvailableCredit).toBe(5000);
-      expect(result.totalOutstandingAmount).toBe(3000);
-      expect(result.monthlySpend).toBe(2300);
-      expect(result.cardCount).toBe(2);
-      expect(result.lastUpdated).toBeDefined();
+      expect(result.totalCreditLimit).toBe(15000);
     });
 
-    it('should return zero values for empty cards array', function() {
+    /*
+    Test Documentation:
+    - Test Name: should calculate total available credit
+    - Purpose: Validates total available credit aggregation
+    - Scenario: Multiple cards with different available credits
+    - Expected Result: Returns sum of all available credits
+    */
+    it('should calculate total available credit', function() {
+      var result = kpiService.calculateKPIs(mockCards);
+
+      expect(result.totalAvailableCredit).toBe(11000);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should calculate total outstanding amount
+    - Purpose: Validates total outstanding amount aggregation
+    - Scenario: Multiple cards with outstanding balances
+    - Expected Result: Returns sum of all outstanding amounts
+    */
+    it('should calculate total outstanding amount', function() {
+      var result = kpiService.calculateKPIs(mockCards);
+
+      expect(result.totalOutstandingAmount).toBe(4000);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should calculate monthly spend
+    - Purpose: Validates monthly spend aggregation
+    - Scenario: Multiple cards with monthly spending
+    - Expected Result: Returns sum of all monthly spends
+    */
+    it('should calculate monthly spend', function() {
+      var result = kpiService.calculateKPIs(mockCards);
+
+      expect(result.monthlySpend).toBe(4000);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should count number of cards
+    - Purpose: Validates card count
+    - Scenario: Multiple cards provided
+    - Expected Result: Returns correct card count
+    */
+    it('should count number of cards', function() {
+      var result = kpiService.calculateKPIs(mockCards);
+
+      expect(result.cardCount).toBe(2);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should include last updated timestamp
+    - Purpose: Validates timestamp is included in KPIs
+    - Scenario: Calculate KPIs
+    - Expected Result: Returns lastUpdated as Date object
+    */
+    it('should include last updated timestamp', function() {
+      var result = kpiService.calculateKPIs(mockCards);
+
+      expect(result.lastUpdated).toBeDefined();
+      expect(result.lastUpdated instanceof Date).toBe(true);
+    });
+
+    /*
+    Test Documentation:
+    - Test Name: should handle empty cards array
+    - Purpose: Validates error handling for empty input
+    - Scenario: Empty cards array provided
+    - Expected Result: Returns zero values for all KPIs
+    */
+    it('should handle empty cards array', function() {
       var result = kpiService.calculateKPIs([]);
 
       expect(result.totalCreditLimit).toBe(0);
@@ -48,47 +118,67 @@ describe('kpiService', function() {
       expect(result.totalOutstandingAmount).toBe(0);
       expect(result.monthlySpend).toBe(0);
       expect(result.cardCount).toBe(0);
-      expect(result.lastUpdated).toBeDefined();
     });
 
-    it('should return zero values for null cards', function() {
+    /*
+    Test Documentation:
+    - Test Name: should handle null cards
+    - Purpose: Validates error handling for null input
+    - Scenario: Null cards provided
+    - Expected Result: Returns zero values for all KPIs
+    */
+    it('should handle null cards', function() {
       var result = kpiService.calculateKPIs(null);
 
       expect(result.totalCreditLimit).toBe(0);
+      expect(result.totalAvailableCredit).toBe(0);
+      expect(result.totalOutstandingAmount).toBe(0);
+      expect(result.monthlySpend).toBe(0);
       expect(result.cardCount).toBe(0);
     });
 
-    it('should handle cards with missing fields', function() {
-      var cards = [
-        { creditLimit: 5000 },
-        { availableCredit: 2000 }
+    /*
+    Test Documentation:
+    - Test Name: should handle cards with missing properties
+    - Purpose: Validates handling of incomplete card data
+    - Scenario: Cards with undefined or null properties
+    - Expected Result: Treats missing values as zero
+    */
+    it('should handle cards with missing properties', function() {
+      var incompleteCards = [
+        { cardId: 1, creditLimit: 5000 },
+        { cardId: 2, availableCredit: 3000 }
       ];
 
-      var result = kpiService.calculateKPIs(cards);
+      var result = kpiService.calculateKPIs(incompleteCards);
 
       expect(result.totalCreditLimit).toBe(5000);
-      expect(result.totalAvailableCredit).toBe(2000);
+      expect(result.totalAvailableCredit).toBe(3000);
       expect(result.totalOutstandingAmount).toBe(0);
       expect(result.monthlySpend).toBe(0);
     });
 
-    it('should calculate KPIs for single card', function() {
-      var cards = [
-        { creditLimit: 5000, availableCredit: 3000, outstandingAmount: 2000, monthlySpend: 1500 }
-      ];
-
-      var result = kpiService.calculateKPIs(cards);
+    /*
+    Test Documentation:
+    - Test Name: should handle single card
+    - Purpose: Validates calculation with single card
+    - Scenario: Array with one card
+    - Expected Result: Returns KPIs for single card
+    */
+    it('should handle single card', function() {
+      var singleCard = [mockCards[0]];
+      var result = kpiService.calculateKPIs(singleCard);
 
       expect(result.totalCreditLimit).toBe(5000);
       expect(result.cardCount).toBe(1);
     });
-
-    it('should include lastUpdated timestamp', function() {
-      var cards = [{ creditLimit: 5000 }];
-
-      var result = kpiService.calculateKPIs(cards);
-
-      expect(result.lastUpdated).toEqual(jasmine.any(Date));
-    });
   });
-});
+
+  /*
+  Coverage Report:
+  - Functions tested: calculateKPIs
+  - Scenarios covered: all KPI calculations, empty array, null input, missing properties, single card
+  - Edge cases: empty array, null, undefined properties
+  - Uncovered scenarios: none
+  */
+})();
