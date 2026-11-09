@@ -3,114 +3,136 @@
 
 ## a. Architecture Mapping
 
-- **Module:** `dashboardModule` - Main AngularJS module for dashboard features
-- **Controller:** `DashboardController` - Manages KPI display and card overview logic
-- **Service:** `CreditCardDataService` - Fetches aggregated credit card data and KPIs from REST API
-- **Service:** `AuthService` - Handles user authentication and session validation
-- **Directive:** `kpiCard` - Reusable component for displaying individual KPI metrics
-- **Directive:** `cardSummary` - Displays individual credit card summary information
+| HLD Component | AngularJS Artifact | Mapping |
+|---------------|-------------------|----------|
+| User Interface Dashboard | Module: `dashboardModule` | Main module for dashboard features |
+| KPI Dashboard Service | Service: `DashboardService` | Business logic for KPI calculation and aggregation |
+| Credit Card Data Service | Factory: `CreditCardDataFactory` | REST API calls for credit card data |
+| User Authentication Service | Service: `AuthService` | User authentication and session management |
+| Dashboard Controller | Controller: `DashboardController` | Manages dashboard view and KPI display |
+| KPI Card Directive | Directive: `kpiCard` | Reusable component for displaying individual KPIs |
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /dashboard
-      /controllers
-        dashboard.controller.js
-      /services
-        credit-card-data.service.js
-        auth.service.js
-      /directives
-        kpi-card.directive.js
-        card-summary.directive.js
-      /views
-        dashboard.html
+app/
+├── modules/
+│   └── dashboard/
+│       ├── dashboard.module.js
+│       ├── controllers/
+│       │   └── dashboard.controller.js
+│       ├── services/
+│       │   ├── dashboard.service.js
+│       │   └── auth.service.js
+│       ├── factories/
+│       │   └── credit-card-data.factory.js
+│       ├── directives/
+│       │   └── kpi-card.directive.js
+│       └── views/
+│           ├── dashboard.html
+│           └── kpi-card.template.html
 ```
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|---------------|----------------|------------------|
-| dashboardModule | Module | Root module for dashboard features | ngRoute, ngResource |
-| DashboardController | Controller | Manages dashboard view, KPI display, data refresh | CreditCardDataService, AuthService, $scope, $interval |
-| CreditCardDataService | Service | Fetches aggregated card data and KPIs from API | $http, $q, API_ENDPOINTS |
-| AuthService | Service | Validates user session and manages authentication state | $http, $window, $q |
-| kpiCard | Directive | Renders individual KPI with icon, label, and value | None |
-| cardSummary | Directive | Displays credit card summary with limit, balance, available credit | None |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| dashboardModule | Module | Encapsulates all dashboard and KPI features | ngRoute, ui.bootstrap |
+| DashboardController | Controller | Manages dashboard initialization, KPI refresh, and user interactions | DashboardService, AuthService, $scope, $interval |
+| DashboardService | Service | Orchestrates KPI calculation (monthly spend, credit limit, available credit, outstanding) | CreditCardDataFactory, $q |
+| CreditCardDataFactory | Factory | Makes REST API calls to retrieve credit card balances, limits, and transactions | $http, $q |
+| AuthService | Service | Handles user authentication, token management, and session validation | $http, $window |
+| kpiCard | Directive | Renders individual KPI with label, value, and optional trend indicator | None |
 
 ## c. Data Model
 
-**DashboardKPI Object:**
+**KPI Object:**
 ```javascript
 {
-  monthlySpend: Number,
-  totalCreditLimit: Number,
-  availableCredit: Number,
-  outstandingAmount: Number,
-  utilizationPercentage: Number
+  label: String, // "Monthly Spend", "Total Credit Limit", "Available Credit", "Outstanding Amount"
+  value: Number,
+  currency: String,
+  trend: String, // "up", "down", "neutral"
+  trendPercentage: Number
 }
 ```
 
-**CreditCard Object:**
+**CreditCardSummary Object:**
 ```javascript
 {
   cardId: String,
   cardNumber: String, // masked
-  cardType: String, // 'Visa', 'Mastercard'
+  balance: Number,
   creditLimit: Number,
-  currentBalance: Number,
   availableCredit: Number,
-  outstandingAmount: Number,
-  dueDate: Date
+  outstandingAmount: Number
+}
+```
+
+**DashboardData Object:**
+```javascript
+{
+  kpis: Array<KPI>,
+  cards: Array<CreditCardSummary>,
+  lastUpdated: Date
 }
 ```
 
 ## d. Data Flow
 
-User logs in and navigates to dashboard → AuthService validates session token → DashboardController initializes and calls CreditCardDataService.getDashboardData() → Service sends GET request to /api/dashboard/kpis with auth token → API Gateway validates token with User Authentication Service → Credit Card Data Service retrieves all user cards from Database → Service calculates aggregated KPIs (total limit, available credit, monthly spend, outstanding) → Returns JSON response → DashboardController updates $scope with KPIs and card list → View renders KPI cards using kpiCard directive and card summaries using cardSummary directive → $interval triggers auto-refresh every 30 seconds for near real-time updates.
+User logs in via AuthService, which validates credentials and stores the auth token. User navigates to the dashboard, initializing DashboardController. The controller calls DashboardService.getDashboardData() to fetch KPIs. DashboardService invokes CreditCardDataFactory.getAllCards() to retrieve all linked credit cards via GET `/api/cards`. For each card, the service calculates aggregated KPIs: sum of all credit limits, sum of available credit, sum of outstanding amounts, and monthly spend from transactions. The service returns a DashboardData object containing KPI array and card summaries. The controller binds DashboardData to $scope, and kpiCard directives render each KPI. The controller sets up $interval to auto-refresh KPIs every 30 seconds by re-calling DashboardService.getDashboardData().
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
+    participant DashboardView
     participant DashboardController
+    participant DashboardService
+    participant CreditCardDataFactory
     participant AuthService
-    participant CreditCardDataService
     participant API
-    participant Database
 
-    User->>DashboardController: Navigate to dashboard
+    User->>AuthService: Login with credentials
+    AuthService->>API: POST /api/auth/login
+    API-->>AuthService: Return auth token
+    AuthService-->>User: Store token, redirect to dashboard
+    User->>DashboardView: Access dashboard
+    DashboardView->>DashboardController: Initialize controller
     DashboardController->>AuthService: validateSession()
     AuthService-->>DashboardController: Session valid
-    DashboardController->>CreditCardDataService: getDashboardData()
-    CreditCardDataService->>API: GET /api/dashboard/kpis
-    API->>Database: Fetch user credit cards
-    Database-->>API: Return card records
-    API->>API: Calculate KPIs (aggregate limits, balances)
-    API-->>CreditCardDataService: JSON response (KPIs + cards)
-    CreditCardDataService-->>DashboardController: dashboardData
-    DashboardController-->>User: Render KPIs and card summaries
+    DashboardController->>DashboardService: getDashboardData()
+    DashboardService->>CreditCardDataFactory: getAllCards()
+    CreditCardDataFactory->>API: GET /api/cards
+    API-->>CreditCardDataFactory: Return card array
+    CreditCardDataFactory-->>DashboardService: Return cards
+    loop For each card
+        DashboardService->>DashboardService: Calculate KPIs (sum limits, balances, outstanding)
+    end
+    DashboardService-->>DashboardController: Return DashboardData with KPIs
+    DashboardController-->>DashboardView: Bind to $scope.dashboardData
+    DashboardView-->>User: Display KPIs and card overview
     Note over DashboardController: Auto-refresh every 30s
-    DashboardController->>CreditCardDataService: getDashboardData()
-    CreditCardDataService->>API: GET /api/dashboard/kpis
-    API-->>CreditCardDataService: Updated data
-    CreditCardDataService-->>DashboardController: refreshedData
-    DashboardController-->>User: Update UI
+    DashboardController->>DashboardService: getDashboardData() [auto-refresh]
+    DashboardService->>CreditCardDataFactory: getAllCards()
+    Note over CreditCardDataFactory,API: Repeat data fetch
+    DashboardService-->>DashboardController: Return updated DashboardData
+    DashboardController-->>DashboardView: Update $scope.dashboardData
+    DashboardView-->>User: Refresh KPIs
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS DI to inject services into DashboardController; register all components with dashboardModule
-- Implement ES6 class syntax for services with constructor-based injection pattern
-- Use $interval service for auto-refresh with 30-second interval; cancel interval on $scope.$on('$destroy')
-- Implement responsive grid layout using Bootstrap 3/4 grid system with col-xs/sm/md/lg classes
-- Use ng-repeat with track by cardId for card list rendering performance
+- Use AngularJS DI to inject services and factories into controllers; register all components with dashboardModule.
+- Implement auto-refresh using $interval service with 30-second interval; cancel interval on $scope.$destroy to prevent memory leaks.
+- Use $http interceptor to attach auth token to all API requests and handle 401 unauthorized responses by redirecting to login.
+- Apply responsive design using Bootstrap grid system (col-md-3 for KPI cards) to ensure mobile compatibility.
+- Use ES6: const/let for variables, arrow functions for callbacks, template literals for dynamic API URLs.
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors; display user-friendly error messages via notification service; implement retry with exponential backoff for transient failures.
+Use $http interceptor to catch API errors; display error notifications using toastr; handle session expiration by redirecting to login page.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; all API calls include Authorization header with JWT token; session validation on dashboard load.
+Requires token-based auth via existing SSO; all API calls include auth token in Authorization header; validate session on dashboard load and before each API call.
