@@ -1,0 +1,38 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="btn-group" role="group">
+        <button class="btn btn-default" ng-class="{'active':vm.timeRange==='Last 3 months'}" ng-click="vm.changeTimeRange('Last 3 months')">Last 3 Months</button>
+        <button class="btn btn-default" ng-class="{'active':vm.timeRange==='Last 6 months'}" ng-click="vm.changeTimeRange('Last 6 months')">Last 6 Months</button>
+        <button class="btn btn-default" ng-class="{'active':vm.timeRange==='Last 12 months'}" ng-click="vm.changeTimeRange('Last 12 months')">Last 12 Months</button>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12 col-md-6">
+      <h3>Category-Wise Spending</h3>
+      <spending-chart data="vm.analyticsData.categorySpending" on-select="vm.selectCategory(category)"></spending-chart>
+    </div>
+    <div class="col-xs-12 col-md-6">
+      <h3>Monthly Spend Trends</h3>
+      <trend-chart data="vm.analyticsData.monthlyTrends"></trend-chart>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.selectedCategory" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-info">
+        <div class="panel-heading">Selected Category: {{vm.selectedCategory.categoryName}}</div>
+        <div class="panel-body">
+          <p><strong>Total Amount:</strong> ${{vm.selectedCategory.totalAmount | number:2}}</p>
+          <p><strong>Transaction Count:</strong> {{vm.selectedCategory.transactionCount}}</p>
+          <p><strong>Percentage of Total:</strong> {{vm.selectedCategory.percentage | number:1}}%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

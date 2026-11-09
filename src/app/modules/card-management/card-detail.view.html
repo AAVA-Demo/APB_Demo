@@ -1,0 +1,41 @@
+<div class="card-detail-container">
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.selectedCard" class="panel panel-default">
+    <div class="panel-heading">
+      <h3>{{vm.selectedCard.cardholderName}} - {{vm.selectedCard.cardType}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <p><strong>Card Number:</strong> ****{{vm.selectedCard.cardNumber.slice(-4)}}</p>
+          <p><strong>Expiry Date:</strong> {{vm.selectedCard.expiryDate | date:'MM/yyyy'}}</p>
+          <p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</p>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <p><strong>Outstanding Balance:</strong> ${{vm.selectedCard.outstandingBalance | number:2}}</p>
+          <p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:2}}</p>
+          <p><strong>Utilization Rate:</strong> {{vm.selectedCard.utilizationRate | number:1}}%</p>
+        </div>
+      </div>
+      <div class="row" ng-if="vm.selectedCard.monthlySpend">
+        <div class="col-xs-12">
+          <h4>Spending Analysis</h4>
+          <p><strong>Monthly Spend:</strong> ${{vm.selectedCard.monthlySpend | number:2}}</p>
+          <div ng-if="vm.selectedCard.categoryBreakdown">
+            <h5>Category Breakdown</h5>
+            <ul>
+              <li ng-repeat="(category,amount) in vm.selectedCard.categoryBreakdown">{{category}}: ${{amount | number:2}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-default" ng-click="vm.selectCard(null)" ui-sref="cards">Back to Cards</button>
+    </div>
+  </div>
+</div>
