@@ -1,0 +1,33 @@
+{
+  "baseURL": "https://creditcard.example.com",
+  "apiBaseURL": "https://creditcard.example.com/api",
+  "timeout": 30000,
+  "retryAttempts": 2,
+  "environments": {
+    "dev": {
+      "url": "https://dev.creditcard.example.com",
+      "apiUrl": "https://dev-api.creditcard.example.com"
+    },
+    "staging": {
+      "url": "https://staging.creditcard.example.com",
+      "apiUrl": "https://staging-api.creditcard.example.com"
+    },
+    "production": {
+      "url": "https://creditcard.example.com",
+      "apiUrl": "https://api.creditcard.example.com"
+    }
+  },
+  "testData": {
+    "categories": [
+      "Food & Dining",
+      "Fuel",
+      "Shopping",
+      "Travel",
+      "Entertainment",
+      "Utilities",
+      "Healthcare",
+      "Education",
+      "Miscellaneous"
+    ]
+  }
+}
