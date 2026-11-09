@@ -1,35 +1,34 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a centralized, responsive dashboard that aggregates and displays key performance indicators (KPIs) for a user's credit card portfolio. Core metrics include monthly spend, total credit limit, available credit, and outstanding amounts across multiple cards, enabling users to monitor their financial health at a glance.
+- **Summary:** This epic delivers a modern, responsive dashboard providing a consolidated view of all credit cards with key performance indicators: monthly spend, total credit limit, available credit, and outstanding amount. The dashboard serves as the central interface for monitoring credit card portfolio health and financial metrics at a glance.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart TD
-    A["User Interface - Dashboard"]
-    B["Dashboard Service"]
+    A["Dashboard UI"]
+    B["KPI Management Service"]
     C["Credit Card Data Source"]
-    D["Transaction Aggregation Service"]
-    E["KPI Calculation Engine"]
+    D["Transaction Data Aggregation Service"]
+    E["Data Layer"]
     A --> B
     B --> C
     B --> D
+    C --> E
     D --> E
-    E --> B
-    B --> A
 ```
 
 - **Integration Points:**
-  - **Upstream:** Credit card data source (provides card details, limits, balances)
-  - **Upstream:** Transaction data aggregation service (provides spend calculations)
-  - **Downstream:** User interface layer (consumes KPI data for display)
+  - **Upstream:** Credit Card Data Source (provides card details, limits, and balances)
+  - **Upstream:** Transaction Data Aggregation Service (aggregates transaction data for monthly spend and outstanding calculations)
+  - **Downstream:** Responsive UI (renders dashboard across devices)
 
 - **Key Assumptions:** 
-  - KPI calculations are performed server-side with near real-time data refresh.
-  - Dashboard supports a reasonable upper limit of credit cards per user (e.g., up to 20 cards).
+  - KPI calculations are performed server-side with caching strategies to meet performance requirements.
+  - Transaction Data Aggregation Service provides pre-aggregated monthly spend metrics to reduce computation overhead.
 
-- **NFR Highlights:** Responsive layouts across devices; acceptable performance for loading and displaying KPIs for multiple credit cards.
+- **NFR Highlights:** System must provide responsive layouts across devices; Dashboard must load and display KPIs with acceptable performance for multiple credit cards.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design addresses all stated scope items including KPI display, monthly spend tracking, credit limit aggregation, available credit calculation, outstanding amount tracking, multiple card view, and responsive layout. Integration dependencies with credit card data source and transaction aggregation service are identified and incorporated into the component flow. NFRs for responsiveness and performance are acknowledged in the architecture.
+- **Requirements Coverage:** The design addresses all scope requirements including dashboard KPIs display, monthly spend tracking, total credit limit aggregation, available credit calculation, outstanding amount tracking, multiple credit card view, and responsive layout design. Dependencies on credit card data source and transaction data aggregation service are incorporated. NFRs for responsive layouts and acceptable performance are acknowledged.
