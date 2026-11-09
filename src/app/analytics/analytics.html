@@ -1,0 +1,23 @@
+<div ng-if="vm.loading" class="text-center">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+  <strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Spending Analytics & Insights</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <spend-trend-chart chart-data="vm.analyticsData.monthlyTrends"></spend-trend-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <card-wise-chart chart-data="vm.analyticsData.cardWiseSpend"></card-wise-chart>
+    </div>
+    <div class="col-md-6">
+      <category-chart chart-data="vm.analyticsData.categorySpend"></category-chart>
+    </div>
+  </div>
+</div>

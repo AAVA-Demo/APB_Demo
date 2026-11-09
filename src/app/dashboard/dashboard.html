@@ -1,0 +1,29 @@
+<div ng-if="vm.loading" class="text-center">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+  <strong>Error:</strong> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Credit Card Portfolio Dashboard</h2>
+  <div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget kpi-value="vm.kpis.monthlySpend" kpi-label="Monthly Spend" kpi-icon="fa-credit-card" kpi-format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget kpi-value="vm.kpis.totalCreditLimit" kpi-label="Total Credit Limit" kpi-icon="fa-money" kpi-format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget kpi-value="vm.kpis.availableCredit" kpi-label="Available Credit" kpi-icon="fa-check-circle" kpi-format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget kpi-value="vm.kpis.outstanding" kpi-label="Outstanding Amount" kpi-icon="fa-exclamation-circle" kpi-format="currency"></kpi-widget>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <card-list cards="vm.cards"></card-list>
+    </div>
+  </div>
+</div>
