@@ -1,0 +1,20 @@
+<div class="kpi-container">
+<h2>Financial KPIs and Spending Insights</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading KPIs...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error" class="row">
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card kpi="{label:'Monthly Spend',value:vm.kpiData.monthlySpend,icon:'glyphicon-usd'}"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card kpi="{label:'Total Credit Limit',value:vm.kpiData.totalCreditLimit,icon:'glyphicon-credit-card'}"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card kpi="{label:'Available Credit',value:vm.kpiData.availableCredit,icon:'glyphicon-ok-circle'}"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<kpi-card kpi="{label:'Outstanding Amount',value:vm.kpiData.outstandingAmount,icon:'glyphicon-exclamation-sign'}"></kpi-card>
+</div>
+</div>
+<p class="text-muted" ng-if="!vm.loading">Last updated: {{vm.kpiData.lastUpdated|date:'short'}}</p>
+</div>

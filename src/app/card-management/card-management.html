@@ -1,0 +1,10 @@
+<div class="card-management-container">
+<h2>Card Management</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading cards...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error" class="row">
+<div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="card in vm.cards track by card.cardId">
+<card-tile card="card"></card-tile>
+</div>
+</div>
+</div>

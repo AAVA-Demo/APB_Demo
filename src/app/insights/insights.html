@@ -1,0 +1,17 @@
+<div class="insights-container">
+<h2>Analytics and Spending Insights</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading insights...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-6">
+<h4>Category-Wise Spending</h4>
+<insight-chart data="vm.analyticsData.categorySpending" chart-type="pie"></insight-chart>
+</div>
+<div class="col-md-6">
+<h4>Monthly Spend Trends</h4>
+<insight-chart data="vm.analyticsData.monthlyTrends" chart-type="line"></insight-chart>
+</div>
+</div>
+</div>
+</div>

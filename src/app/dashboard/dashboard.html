@@ -1,0 +1,32 @@
+<div class="dashboard-container">
+<h2>Dashboard KPIs</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading KPIs...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error" class="row">
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="panel panel-primary">
+<div class="panel-heading"><h4>Monthly Spend</h4></div>
+<div class="panel-body"><h3>${{vm.kpiData.monthlySpend}}</h3></div>
+</div>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="panel panel-success">
+<div class="panel-heading"><h4>Total Credit Limit</h4></div>
+<div class="panel-body"><h3>${{vm.kpiData.totalCreditLimit}}</h3></div>
+</div>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="panel panel-info">
+<div class="panel-heading"><h4>Available Credit</h4></div>
+<div class="panel-body"><h3>${{vm.kpiData.availableCredit}}</h3></div>
+</div>
+</div>
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="panel panel-warning">
+<div class="panel-heading"><h4>Outstanding Amount</h4></div>
+<div class="panel-body"><h3>${{vm.kpiData.outstandingAmount}}</h3></div>
+</div>
+</div>
+</div>
+<p class="text-muted" ng-if="!vm.loading">Last updated: {{vm.kpiData.lastUpdated|date:'short'}}</p>
+</div>

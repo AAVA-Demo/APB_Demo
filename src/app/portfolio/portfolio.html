@@ -1,0 +1,22 @@
+<div class="portfolio-container">
+<h2>Credit Card Portfolio</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading portfolio...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<portfolio-summary summary="vm.portfolio.summary"></portfolio-summary>
+<h3>Your Credit Cards</h3>
+<div class="row">
+<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="card in vm.portfolio.cards track by card.cardId">
+<div class="panel panel-default">
+<div class="panel-heading"><strong>{{card.cardType}}</strong> {{card.cardNumber}}</div>
+<div class="panel-body">
+<p><strong>Credit Limit:</strong> ${{card.creditLimit}}</p>
+<p><strong>Available:</strong> ${{card.availableCredit}}</p>
+<p><strong>Outstanding:</strong> ${{card.outstandingAmount}}</p>
+<p class="text-muted"><small>Updated: {{card.lastUpdated|date:'short'}}</small></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

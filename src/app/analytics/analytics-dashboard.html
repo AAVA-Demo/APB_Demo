@@ -1,0 +1,24 @@
+<div class="analytics-container">
+<h2>Spending Analytics and Visualization</h2>
+<analytics-filter filters="vm.filters" on-apply="vm.applyFilters()"></analytics-filter>
+<div ng-if="vm.loading" class="alert alert-info">Loading analytics...</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-6">
+<h4>Category-Wise Spending</h4>
+<visualization-chart data="vm.dashboardData.categoryAnalytics" type="pie"></visualization-chart>
+</div>
+<div class="col-md-6">
+<h4>Card-Wise Spending</h4>
+<visualization-chart data="vm.dashboardData.cardSpends" type="bar"></visualization-chart>
+</div>
+</div>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<h4>Monthly Spend Trends</h4>
+<visualization-chart data="vm.dashboardData.monthlyTrends" type="line"></visualization-chart>
+</div>
+</div>
+</div>
+</div>
