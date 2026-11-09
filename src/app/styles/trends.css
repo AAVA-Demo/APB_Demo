@@ -1,0 +1,8 @@
+.trends-container { padding: 20px; }
+.filter-section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.filter-section label { font-weight: bold; display: block; margin-bottom: 5px; }
+.card-filter-list { max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px; }
+.card-filter-list label { font-weight: normal; display: block; margin-bottom: 5px; }
+.chart-section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.chart-section h3 { margin-top: 0; }
+@media (max-width: 768px) { .filter-section { padding: 15px; } .chart-section { padding: 15px; } }

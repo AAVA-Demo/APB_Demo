@@ -1,0 +1,71 @@
+<div class="trends-container">
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading trend data...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Monthly Spend Trends and Card-wise Analysis</h2>
+    <div class="row filter-section">
+      <div class="col-xs-12 col-sm-4">
+        <label>Start Date:</label>
+        <input type="date" class="form-control" ng-model="vm.startDate" ng-change="vm.onDateChange()">
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <label>End Date:</label>
+        <input type="date" class="form-control" ng-model="vm.endDate" ng-change="vm.onDateChange()">
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <label>Select Cards:</label>
+        <div class="card-filter-list">
+          <div ng-repeat="card in vm.cards track by card.cardId">
+            <label>
+              <input type="checkbox" ng-checked="vm.isCardSelected(card.cardId)" ng-click="vm.toggleCardSelection(card.cardId)">
+              {{card.cardType}} - {{card.cardNumber.slice(-4)}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="chart-section">
+          <h3>Monthly Spend Trends</h3>
+          <trend-chart chart-type="line" chart-data="vm.monthlyTrends" chart-title="Monthly Spending Over Time"></trend-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="chart-section">
+          <h3>Card-wise Spending Breakdown</h3>
+          <trend-chart chart-type="bar" chart-data="vm.cardWiseData" chart-title="Spending by Credit Card"></trend-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Card-wise Spending Details</h3>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Card</th>
+                <th>Total Spend</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="card in vm.cardWiseData track by card.cardId">
+                <td>{{card.cardName}}</td>
+                <td>{{vm.formatCurrency(card.totalSpend)}}</td>
+                <td>{{card.percentage}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="transactions-container">
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading transactions...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Transaction Monitoring and Spending Analytics</h2>
+    <div class="row">
+      <div class="col-xs-12 col-md-8">
+        <div class="transaction-section">
+          <h3>Transaction History</h3>
+          <div class="filter-section">
+            <label>Filter by Category:</label>
+            <select class="form-control" ng-model="vm.selectedCategory" ng-change="vm.filterByCategory(vm.selectedCategory)">
+              <option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+            </select>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped transaction-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Merchant</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="txn in vm.getPaginatedTransactions() track by txn.transactionId">
+                  <td>{{vm.formatDate(txn.transactionDate)}}</td>
+                  <td>{{txn.merchantName}}</td>
+                  <td><span class="category-badge">{{txn.category}}</span></td>
+                  <td>{{vm.formatCurrency(txn.amount)}}</td>
+                  <td>{{txn.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-controls">
+            <button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.currentPage === 1">Previous</button>
+            <span class="page-info">Page {{vm.currentPage}} of {{vm.getTotalPages()}}</span>
+            <button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="vm.currentPage === vm.getTotalPages()">Next</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-4">
+        <div class="analytics-section">
+          <h3>Category-wise Spending</h3>
+          <category-chart chart-data="vm.categoryData" on-category-click="vm.filterByCategory"></category-chart>
+          <div class="category-list">
+            <div class="category-item" ng-repeat="cat in vm.categoryData track by cat.category">
+              <div class="category-name">{{cat.category}}</div>
+              <div class="category-amount">{{vm.formatCurrency(cat.totalSpend)}}</div>
+              <div class="category-percentage">{{cat.percentage}}%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

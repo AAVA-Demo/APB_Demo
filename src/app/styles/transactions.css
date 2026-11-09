@@ -1,0 +1,16 @@
+.transactions-container { padding: 20px; }
+.transaction-section, .analytics-section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.filter-section { margin-bottom: 20px; }
+.filter-section label { font-weight: bold; margin-right: 10px; }
+.transaction-table { font-size: 14px; }
+.transaction-table th { background: #f5f5f5; font-weight: bold; }
+.category-badge { display: inline-block; padding: 4px 8px; background: #e3f2fd; color: #1976d2; border-radius: 4px; font-size: 12px; }
+.pagination-controls { text-align: center; margin-top: 20px; }
+.pagination-controls button { margin: 0 10px; }
+.page-info { display: inline-block; margin: 0 15px; font-weight: bold; }
+.category-list { margin-top: 20px; }
+.category-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+.category-name { font-weight: bold; flex: 2; }
+.category-amount { flex: 1; text-align: right; }
+.category-percentage { flex: 1; text-align: right; color: #666; }
+@media (max-width: 768px) { .transaction-table { font-size: 12px; } }

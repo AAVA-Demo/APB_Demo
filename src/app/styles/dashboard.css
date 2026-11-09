@@ -1,0 +1,14 @@
+.dashboard-container { padding: 20px; }
+.kpi-section { margin-bottom: 30px; }
+.kpi-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; }
+.kpi-card h4 { margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; }
+.kpi-value { font-size: 28px; font-weight: bold; color: #333; margin: 0; }
+.card-portfolio-section { margin-top: 30px; }
+.credit-card-item { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: #fff; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.card-header h4 { margin: 0 0 5px 0; font-size: 18px; }
+.card-number { font-size: 16px; letter-spacing: 2px; margin: 0; }
+.card-details { margin-top: 15px; }
+.detail-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+.detail-row .label { font-size: 13px; opacity: 0.9; }
+.detail-row .value { font-size: 14px; font-weight: bold; }
+@media (max-width: 768px) { .kpi-card { margin-bottom: 10px; } .credit-card-item { margin-bottom: 15px; } }
