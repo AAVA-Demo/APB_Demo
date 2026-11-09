@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('spendingAnalyticsModule',['ui.router']);angular.module('spendingInsightsModule',['ui.router']);})();

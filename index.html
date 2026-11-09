@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;padding-top:20px}
+.kpi-card{background:#fff;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.kpi-value{font-size:32px;font-weight:bold;color:#333}
+.kpi-label{font-size:14px;color:#666;margin-top:5px}
+.card-tile{background:#fff;border-radius:8px;padding:15px;margin-bottom:15px;box-shadow:0 2px 4px rgba(0,0,0,0.1);cursor:pointer;transition:transform 0.2s}
+.card-tile:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.15)}
+.utilization-bar{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin-top:10px}
+.utilization-fill{height:100%;background:#4caf50;transition:width 0.3s}
+.utilization-fill.warning{background:#ff9800}
+.utilization-fill.danger{background:#f44336}
+.chart-container{background:#fff;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+canvas{max-width:100%;height:auto!important}
+.category-item{padding:10px;border-bottom:1px solid #eee}
+.category-item:last-child{border-bottom:none}
+.category-name{font-weight:bold;color:#333}
+.category-amount{color:#4caf50;float:right}
+.trend-indicator{display:inline-block;margin-left:10px}
+.trend-up{color:#4caf50}
+.trend-down{color:#f44336}
+.loading-spinner{text-align:center;padding:40px}
+.error-message{background:#f44336;color:#fff;padding:15px;border-radius:4px;margin-bottom:20px}
+@media(max-width:768px){.kpi-value{font-size:24px}.card-tile{margin-bottom:10px}}
+</style>
+</head>
+<body>
+<div class="container" ng-controller="MainController as main">
+<div class="row">
+<div class="col-md-12">
+<h1>Credit Card Dashboard</h1>
+<div ng-show="main.loading" class="loading-spinner"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+<div ng-show="main.error" class="error-message">{{main.error}}<button ng-click="main.retry()" class="btn btn-sm btn-default pull-right">Retry</button></div>
+</div>
+</div>
+<div ui-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/auth.service.js"></script>
+<script src="src/app/services/http-interceptor.service.js"></script>
+<script src="src/app/controllers/main.controller.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/dashboard.controller.js"></script>
+<script src="src/app/dashboard/kpi-card.directive.js"></script>
+<script src="src/app/dashboard/services/credit-card-data.service.js"></script>
+<script src="src/app/dashboard/services/transaction-processing.service.js"></script>
+<script src="src/app/dashboard/services/kpi-aggregation.service.js"></script>
+<script src="src/app/dashboard/services/kpi-calculation.service.js"></script>
+<script src="src/app/dashboard/factories/dashboard-refresh.factory.js"></script>
+<script src="src/app/portfolio/portfolio.module.js"></script>
+<script src="src/app/portfolio/portfolio.controller.js"></script>
+<script src="src/app/portfolio/portfolio-card.directive.js"></script>
+<script src="src/app/portfolio/services/card-management.service.js"></script>
+<script src="src/app/portfolio/services/card-data.service.js"></script>
+<script src="src/app/portfolio/services/spending-calculation.service.js"></script>
+<script src="src/app/portfolio/services/data-aggregation.service.js"></script>
+<script src="src/app/portfolio/factories/user-profile.factory.js"></script>
+<script src="src/app/portfolio/factories/data-storage.factory.js"></script>
+<script src="src/app/analytics/analytics.module.js"></script>
+<script src="src/app/analytics/analytics.controller.js"></script>
+<script src="src/app/analytics/insights.controller.js"></script>
+<script src="src/app/analytics/spending-chart.directive.js"></script>
+<script src="src/app/analytics/trend-chart.directive.js"></script>
+<script src="src/app/analytics/category-pie-chart.directive.js"></script>
+<script src="src/app/analytics/services/transaction-data.service.js"></script>
+<script src="src/app/analytics/services/transaction.service.js"></script>
+<script src="src/app/analytics/services/category-classification.service.js"></script>
+<script src="src/app/analytics/services/analytics-processing.service.js"></script>
+<script src="src/app/analytics/services/data-analytics-engine.service.js"></script>
+<script src="src/app/analytics/factories/analytics-cache.factory.js"></script>
+<script src="src/app/analytics/factories/visualization.factory.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').controller('MainController',['$scope','$state',MainController]);function MainController($scope,$state){var vm=this;vm.loading=false;vm.error=null;vm.retry=retry;function retry(){vm.error=null;$state.reload();}}})();

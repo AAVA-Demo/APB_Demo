@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp',['ui.router','dashboardModule','portfolioManagementModule','spendingAnalyticsModule','spendingInsightsModule']);})();
