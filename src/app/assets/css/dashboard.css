@@ -1,0 +1,10 @@
+.dashboard-container{padding:20px;}
+.kpi-row{margin-top:20px;}
+.kpi-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1);display:flex;align-items:center;}
+.kpi-icon{font-size:48px;color:#337ab7;margin-right:20px;}
+.kpi-content h4{margin:0 0 10px 0;color:#666;font-size:14px;}
+.kpi-content h2{margin:0;color:#333;font-size:28px;font-weight:bold;}
+@media(max-width:768px){
+.kpi-card{flex-direction:column;text-align:center;}
+.kpi-icon{margin-right:0;margin-bottom:10px;}
+}

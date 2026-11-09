@@ -1,0 +1,55 @@
+<div class="analytics-container">
+<h1>Spending Analytics</h1>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+<button class="btn btn-sm btn-primary" ng-click="vm.loadAnalytics()">Retry</button>
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Category-Wise Spending</h4></div>
+<div class="panel-body">
+<spending-chart labels="vm.categoryLabels" data="vm.categoryValues" type="pie" on-click="vm.onCategoryClick(points,evt)"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Monthly Spend Trend</h4></div>
+<div class="panel-body">
+<spending-chart labels="vm.monthlyLabels" data="vm.monthlyValues" type="line"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="vm.selectedCategory" class="panel panel-info">
+<div class="panel-heading">
+<h4>Transactions in {{vm.selectedCategory}}
+<button class="btn btn-xs btn-default pull-right" ng-click="vm.clearFilter()">Clear Filter</button>
+</h4>
+</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Date</th>
+<th>Merchant</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.filteredTransactions">
+<td>{{txn.transactionDate | date:'short'}}</td>
+<td>{{txn.merchantName}}</td>
+<td>{{txn.amount | currency}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>

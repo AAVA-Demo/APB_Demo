@@ -1,0 +1,6 @@
+.analytics-container{padding:20px;}
+.panel{margin-bottom:20px;}
+.chart{max-height:300px;}
+@media(max-width:768px){
+.chart{max-height:200px;}
+}

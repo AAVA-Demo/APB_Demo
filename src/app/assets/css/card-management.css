@@ -1,0 +1,15 @@
+.card-management-container{padding:20px;}
+.card-tile{background:#fff;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;cursor:pointer;transition:box-shadow 0.3s;}
+.card-tile:hover{box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+.card-header{display:flex;justify-content:space-between;margin-bottom:10px;}
+.card-type{font-weight:bold;color:#337ab7;}
+.card-issuer{color:#666;}
+.card-number{font-size:18px;font-family:monospace;margin-bottom:10px;}
+.card-balance,.card-limit{margin-bottom:5px;}
+.card-balance .label,.card-limit .label{color:#666;}
+.card-balance .value,.card-limit .value{font-weight:bold;float:right;}
+.card-utilization{margin-top:10px;}
+.card-detail-container{padding:20px;}
+@media(max-width:768px){
+.card-tile{margin-bottom:15px;}
+}

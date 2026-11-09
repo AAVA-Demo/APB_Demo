@@ -1,0 +1,23 @@
+<div class="card-management-container">
+<h1>My Credit Cards</h1>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading cards...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+<button class="btn btn-sm btn-primary" ng-click="vm.loadCards()">Retry</button>
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="form-group">
+<input type="text" class="form-control" placeholder="Filter by card type, issuer, or number..." ng-model="vm.filterText">
+</div>
+<div class="row">
+<div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards | cardFilter:vm.filterText">
+<card-tile card="card" on-select="vm.selectCard(card)"></card-tile>
+</div>
+</div>
+<div ng-if="(vm.cards | cardFilter:vm.filterText).length===0" class="alert alert-info">
+No cards match your filter.
+</div>
+</div>
+</div>

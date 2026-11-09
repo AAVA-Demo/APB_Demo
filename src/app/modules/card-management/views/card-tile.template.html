@@ -1,0 +1,20 @@
+<div class="card-tile" ng-click="onSelect({card:card})">
+<div class="card-header">
+<span class="card-type">{{card.cardType}}</span>
+<span class="card-issuer">{{card.issuer}}</span>
+</div>
+<div class="card-number">{{card.maskedNumber}}</div>
+<div class="card-balance">
+<span class="label">Balance:</span>
+<span class="value">{{card.currentBalance | currency}}</span>
+</div>
+<div class="card-limit">
+<span class="label">Limit:</span>
+<span class="value">{{card.creditLimit | currency}}</span>
+</div>
+<div class="card-utilization">
+<div class="progress">
+<div class="progress-bar" ng-class="{'progress-bar-success':card.utilization<50,'progress-bar-warning':card.utilization>=50&&card.utilization<80,'progress-bar-danger':card.utilization>=80}" role="progressbar" style="width:{{card.utilization}}%">{{card.utilization}}%</div>
+</div>
+</div>
+</div>

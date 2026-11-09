@@ -1,0 +1,56 @@
+<div class="card-detail-container" ng-if="vm.selectedCard">
+<button class="btn btn-default" ng-click="vm.backToList()">&larr; Back to Cards</button>
+<h1>Card Details</h1>
+<div class="panel panel-primary">
+<div class="panel-heading">
+<h3>{{vm.selectedCard.cardType}} - {{vm.selectedCard.issuer}}</h3>
+</div>
+<div class="panel-body">
+<p><strong>Card Number:</strong> {{vm.selectedCard.maskedNumber}}</p>
+<p><strong>Status:</strong> <span class="label label-success">{{vm.selectedCard.status}}</span></p>
+<p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit | currency}}</p>
+<p><strong>Current Balance:</strong> {{vm.selectedCard.currentBalance | currency}}</p>
+<p><strong>Available Credit:</strong> {{vm.selectedCard.availableCredit | currency}}</p>
+<p><strong>Utilization:</strong> {{vm.selectedCard.utilization}}%</p>
+<div class="progress">
+<div class="progress-bar" ng-class="{'progress-bar-success':vm.selectedCard.utilization<50,'progress-bar-warning':vm.selectedCard.utilization>=50&&vm.selectedCard.utilization<80,'progress-bar-danger':vm.selectedCard.utilization>=80}" role="progressbar" style="width:{{vm.selectedCard.utilization}}%">{{vm.selectedCard.utilization}}%</div>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Monthly Spend Analysis</h4></div>
+<div class="panel-body">
+<p><strong>Monthly Spend:</strong> {{vm.selectedCard.monthlySpend | currency}}</p>
+<h5>Spending Trend</h5>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Month</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="trend in vm.selectedCard.spendingTrend">
+<td>{{trend.month}}</td>
+<td>{{trend.amount | currency}}</td>
+</tr>
+</tbody>
+</table>
+<h5>Top Spending Categories</h5>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.selectedCard.topCategories">
+<td>{{cat.category}}</td>
+<td>{{cat.amount | currency}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
