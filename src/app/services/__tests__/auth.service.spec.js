@@ -1,218 +1,209 @@
 /*
 Test Documentation:
-- Test Name: AuthService Unit Tests
-- Purpose: Validate authentication token management, session storage integration, and initialization logic
-- Scenario: Tests cover token retrieval, storage, authentication state, and mock token generation
-- Expected Result: Service should correctly manage authentication tokens in sessionStorage and provide accurate authentication state
+- Test Name: AuthService - authenticate method
+- Purpose: Validates that authentication creates and stores token
+- Scenario: User authenticates for the first time
+- Expected Result: Token is created and stored in session storage
 */
-
-(function() {
-  'use strict';
-
-  describe('AuthService', function() {
-    var AuthService, $window;
-
-    beforeEach(module('creditCardApp'));
-
-    beforeEach(inject(function(_AuthService_, _$window_) {
-      AuthService = _AuthService_;
-      $window = _$window_;
-      $window.sessionStorage.clear();
-    }));
-
-    afterEach(function() {
-      $window.sessionStorage.clear();
-    });
-
-    describe('init method', function() {
-      it('should generate and store mock token if no token exists', function() {
-        AuthService.init();
-        var token = $window.sessionStorage.getItem('authToken');
-        expect(token).toBeDefined();
-        expect(token).toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-      });
-
-      it('should not overwrite existing token on init', function() {
-        var existingToken = 'existing-token-123';
-        $window.sessionStorage.setItem('authToken', existingToken);
-
-        AuthService.init();
-
-        var token = $window.sessionStorage.getItem('authToken');
-        expect(token).toBe(existingToken);
-      });
-
-      it('should create valid JWT-like mock token', function() {
-        AuthService.init();
-        var token = AuthService.getToken();
-        var parts = token.split('.');
-        expect(parts.length).toBe(3);
-      });
-    });
-
-    describe('getToken method', function() {
-      it('should return null when no token is stored', function() {
-        var token = AuthService.getToken();
-        expect(token).toBeNull();
-      });
-
-      it('should return stored token', function() {
-        var mockToken = 'test-token-456';
-        $window.sessionStorage.setItem('authToken', mockToken);
-
-        var token = AuthService.getToken();
-        expect(token).toBe(mockToken);
-      });
-
-      it('should return token after init', function() {
-        AuthService.init();
-        var token = AuthService.getToken();
-        expect(token).toBeDefined();
-        expect(token).not.toBeNull();
-      });
-    });
-
-    describe('setToken method', function() {
-      it('should store token in sessionStorage', function() {
-        var testToken = 'new-token-789';
-        AuthService.setToken(testToken);
-
-        var storedToken = $window.sessionStorage.getItem('authToken');
-        expect(storedToken).toBe(testToken);
-      });
-
-      it('should overwrite existing token', function() {
-        $window.sessionStorage.setItem('authToken', 'old-token');
-        var newToken = 'new-token-updated';
-
-        AuthService.setToken(newToken);
-
-        var storedToken = $window.sessionStorage.getItem('authToken');
-        expect(storedToken).toBe(newToken);
-      });
-
-      it('should handle empty string token', function() {
-        AuthService.setToken('');
-        var token = $window.sessionStorage.getItem('authToken');
-        expect(token).toBe('');
-      });
-
-      it('should handle null token', function() {
-        AuthService.setToken(null);
-        var token = $window.sessionStorage.getItem('authToken');
-        expect(token).toBe('null');
-      });
-    });
-
-    describe('isAuthenticated method', function() {
-      it('should return false when no token exists', function() {
-        var isAuth = AuthService.isAuthenticated();
-        expect(isAuth).toBe(false);
-      });
-
-      it('should return true when token exists', function() {
-        $window.sessionStorage.setItem('authToken', 'valid-token');
-        var isAuth = AuthService.isAuthenticated();
-        expect(isAuth).toBe(true);
-      });
-
-      it('should return true after init', function() {
-        AuthService.init();
-        var isAuth = AuthService.isAuthenticated();
-        expect(isAuth).toBe(true);
-      });
-
-      it('should return false for empty string token', function() {
-        $window.sessionStorage.setItem('authToken', '');
-        var isAuth = AuthService.isAuthenticated();
-        expect(isAuth).toBe(false);
-      });
-
-      it('should return true for any non-empty token', function() {
-        $window.sessionStorage.setItem('authToken', 'any-token');
-        var isAuth = AuthService.isAuthenticated();
-        expect(isAuth).toBe(true);
-      });
-    });
-
-    describe('integration scenarios', function() {
-      it('should maintain token across multiple getToken calls', function() {
-        var testToken = 'persistent-token';
-        AuthService.setToken(testToken);
-
-        var token1 = AuthService.getToken();
-        var token2 = AuthService.getToken();
-        var token3 = AuthService.getToken();
-
-        expect(token1).toBe(testToken);
-        expect(token2).toBe(testToken);
-        expect(token3).toBe(testToken);
-      });
-
-      it('should reflect authentication state changes immediately', function() {
-        expect(AuthService.isAuthenticated()).toBe(false);
-
-        AuthService.setToken('new-token');
-        expect(AuthService.isAuthenticated()).toBe(true);
-
-        $window.sessionStorage.removeItem('authToken');
-        expect(AuthService.isAuthenticated()).toBe(false);
-      });
-
-      it('should handle rapid token updates', function() {
-        AuthService.setToken('token1');
-        AuthService.setToken('token2');
-        AuthService.setToken('token3');
-
-        var finalToken = AuthService.getToken();
-        expect(finalToken).toBe('token3');
-      });
-    });
-
-    describe('edge cases', function() {
-      it('should handle sessionStorage being cleared externally', function() {
-        AuthService.setToken('test-token');
-        expect(AuthService.isAuthenticated()).toBe(true);
-
-        $window.sessionStorage.clear();
-        expect(AuthService.isAuthenticated()).toBe(false);
-        expect(AuthService.getToken()).toBeNull();
-      });
-
-      it('should handle special characters in token', function() {
-        var specialToken = 'token!@#$%^&*()_+-={}[]|:;<>?,./~`';
-        AuthService.setToken(specialToken);
-        var retrievedToken = AuthService.getToken();
-        expect(retrievedToken).toBe(specialToken);
-      });
-
-      it('should handle very long token strings', function() {
-        var longToken = new Array(1000).join('a');
-        AuthService.setToken(longToken);
-        var retrievedToken = AuthService.getToken();
-        expect(retrievedToken).toBe(longToken);
-      });
-    });
-  });
-
-})();
-
+/*
+Test Documentation:
+- Test Name: AuthService - isAuthenticated method
+- Purpose: Validates authentication status check
+- Scenario: Check if user has valid authentication token
+- Expected Result: Returns true when token exists, false otherwise
+*/
+/*
+Test Documentation:
+- Test Name: AuthService - logout method
+- Purpose: Validates that logout clears authentication state
+- Scenario: Authenticated user logs out
+- Expected Result: Token is removed from memory and session storage
+*/
+/*
+Test Documentation:
+- Test Name: AuthInterceptor - request method
+- Purpose: Validates that Authorization header is added to HTTP requests
+- Scenario: HTTP request is made with valid authentication
+- Expected Result: Bearer token is added to request headers
+*/
 /*
 Coverage Report:
-- Functions tested: init, getToken, setToken, isAuthenticated
-- Scenarios covered:
-  * Token initialization with mock JWT
-  * Token storage and retrieval
-  * Authentication state validation
-  * Token overwriting and updates
-  * Empty and null token handling
-  * SessionStorage integration
-  * Edge cases (special characters, long strings, external clearing)
-  * Integration scenarios (multiple calls, state changes)
-- Uncovered scenarios:
-  * Token expiration validation
-  * Token refresh mechanism
-  * Multi-tab synchronization
-  * localStorage fallback
-  * Token encryption/decryption
+- Functions tested: authenticate, isAuthenticated, getToken, logout, AuthInterceptor.request
+- Scenarios covered: initial authentication, token retrieval, logout, HTTP interception, session storage
+- Uncovered scenarios: token expiration, token refresh
 */
+
+describe('AuthService', function() {
+  'use strict';
+  
+  var AuthService, $window;
+  
+  beforeEach(module('creditCardApp'));
+  
+  beforeEach(inject(function(_AuthService_, _$window_) {
+    AuthService = _AuthService_;
+    $window = _$window_;
+    $window.sessionStorage.clear();
+  }));
+  
+  afterEach(function() {
+    $window.sessionStorage.clear();
+  });
+  
+  describe('authenticate method', function() {
+    it('should create and return authentication token', function() {
+      var token = AuthService.authenticate();
+      
+      expect(token).toBeDefined();
+      expect(typeof token).toBe('string');
+      expect(token.length).toBeGreaterThan(0);
+    });
+    
+    it('should store token in session storage', function() {
+      AuthService.authenticate();
+      
+      var storedToken = $window.sessionStorage.getItem('authToken');
+      expect(storedToken).toBeDefined();
+      expect(storedToken).toBe('mock-jwt-token-12345');
+    });
+    
+    it('should return existing token if already authenticated', function() {
+      var firstToken = AuthService.authenticate();
+      var secondToken = AuthService.authenticate();
+      
+      expect(firstToken).toBe(secondToken);
+    });
+    
+    it('should use token from session storage if available', function() {
+      $window.sessionStorage.setItem('authToken', 'existing-token');
+      
+      var token = AuthService.getToken();
+      expect(token).toBe('existing-token');
+    });
+  });
+  
+  describe('isAuthenticated method', function() {
+    it('should return true when user is authenticated', function() {
+      AuthService.authenticate();
+      
+      expect(AuthService.isAuthenticated()).toBe(true);
+    });
+    
+    it('should return false when user is not authenticated', function() {
+      AuthService.logout();
+      
+      expect(AuthService.isAuthenticated()).toBe(false);
+    });
+    
+    it('should return true if token exists in session storage', function() {
+      $window.sessionStorage.setItem('authToken', 'valid-token');
+      
+      expect(AuthService.isAuthenticated()).toBe(true);
+    });
+  });
+  
+  describe('getToken method', function() {
+    it('should return current authentication token', function() {
+      AuthService.authenticate();
+      var token = AuthService.getToken();
+      
+      expect(token).toBe('mock-jwt-token-12345');
+    });
+    
+    it('should return null after logout', function() {
+      AuthService.authenticate();
+      AuthService.logout();
+      
+      var token = AuthService.getToken();
+      expect(token).toBeNull();
+    });
+  });
+  
+  describe('logout method', function() {
+    it('should clear authentication token', function() {
+      AuthService.authenticate();
+      AuthService.logout();
+      
+      var token = AuthService.getToken();
+      expect(token).toBeNull();
+    });
+    
+    it('should remove token from session storage', function() {
+      AuthService.authenticate();
+      AuthService.logout();
+      
+      var storedToken = $window.sessionStorage.getItem('authToken');
+      expect(storedToken).toBeNull();
+    });
+    
+    it('should update authentication status', function() {
+      AuthService.authenticate();
+      expect(AuthService.isAuthenticated()).toBe(true);
+      
+      AuthService.logout();
+      expect(AuthService.isAuthenticated()).toBe(false);
+    });
+  });
+});
+
+describe('AuthInterceptor', function() {
+  'use strict';
+  
+  var AuthInterceptor, AuthService, $window;
+  
+  beforeEach(module('creditCardApp'));
+  
+  beforeEach(inject(function(_AuthInterceptor_, _AuthService_, _$window_) {
+    AuthInterceptor = _AuthInterceptor_;
+    AuthService = _AuthService_;
+    $window = _$window_;
+    $window.sessionStorage.clear();
+  }));
+  
+  describe('request method', function() {
+    it('should add Authorization header to request config', function() {
+      AuthService.authenticate();
+      
+      var config = { headers: {} };
+      var modifiedConfig = AuthInterceptor.request(config);
+      
+      expect(modifiedConfig.headers.Authorization).toBeDefined();
+      expect(modifiedConfig.headers.Authorization).toContain('Bearer');
+    });
+    
+    it('should use correct token in Authorization header', function() {
+      AuthService.authenticate();
+      var token = AuthService.getToken();
+      
+      var config = { headers: {} };
+      var modifiedConfig = AuthInterceptor.request(config);
+      
+      expect(modifiedConfig.headers.Authorization).toBe('Bearer ' + token);
+    });
+    
+    it('should not add Authorization header if no token exists', function() {
+      AuthService.logout();
+      
+      var config = { headers: {} };
+      var modifiedConfig = AuthInterceptor.request(config);
+      
+      expect(modifiedConfig.headers.Authorization).toBeUndefined();
+    });
+    
+    it('should preserve existing headers', function() {
+      AuthService.authenticate();
+      
+      var config = { 
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Custom-Header': 'custom-value'
+        } 
+      };
+      var modifiedConfig = AuthInterceptor.request(config);
+      
+      expect(modifiedConfig.headers['Content-Type']).toBe('application/json');
+      expect(modifiedConfig.headers['X-Custom-Header']).toBe('custom-value');
+      expect(modifiedConfig.headers.Authorization).toBeDefined();
+    });
+  });
+});
