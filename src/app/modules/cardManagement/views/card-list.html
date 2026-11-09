@@ -1,0 +1,28 @@
+<div class="card-list-view">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading cards...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length === 0" class="alert alert-warning">
+    No credit cards found.
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length > 0" class="row">
+    <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards track by card.cardId">
+      <div class="card card-item" ng-click="vm.selectCard(card.cardId)">
+        <div class="card-body" style="padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fff;">
+          <h4 style="margin-top: 0;">{{card.cardType}}</h4>
+          <p><strong>{{card.cardNumber}}</strong></p>
+          <p>{{card.cardHolderName}}</p>
+          <p><small>Expires: {{card.expiryDate}}</small></p>
+          <hr>
+          <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p>
+          <p><strong>Current Balance:</strong> ${{card.currentBalance | number:2}}</p>
+          <p><strong>Available Credit:</strong> ${{card.availableCredit | number:2}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="analytics-view">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading analytics...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form class="form-inline">
+              <div class="form-group">
+                <label>Month:</label>
+                <input type="month" class="form-control" ng-model="vm.filters.month">
+              </div>
+              <button type="button" class="btn btn-primary" ng-click="vm.applyFilters()">
+                <span class="glyphicon glyphicon-filter"></span> Apply Filters
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Category-wise Spending</h3>
+        <spending-chart chart-data="vm.spendingData" chart-type="category"></spending-chart>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-md-12">
+        <h3>Monthly Spending Trend</h3>
+        <spending-chart chart-data="vm.trendData" chart-type="trend"></spending-chart>
+      </div>
+    </div>
+    <div ng-if="vm.spendingData" class="row" style="margin-top: 30px;">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h4 class="panel-title">Spending Summary</h4>
+          </div>
+          <div class="panel-body">
+            <p><strong>Total Spend:</strong> {{vm.spendingData.currency}} {{vm.spendingData.totalSpend | number:2}}</p>
+            <p><strong>Month:</strong> {{vm.spendingData.month}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
