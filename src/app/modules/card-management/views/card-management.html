@@ -1,0 +1,19 @@
+<div class="card-management-container">
+  <div class="page-header">
+    <h1>My Credit Cards <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()"><i class="fa fa-refresh"></i> Refresh</button></h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Loading credit cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="alert alert-info">
+      <strong>Total Cards:</strong> {{vm.cards.length}} | Click on any card to view detailed information
+    </div>
+    <card-list cards="vm.cards" on-card-click="vm.viewCardDetails(card)"></card-list>
+  </div>
+  <card-detail-modal card="vm.selectedCard" show="vm.showModal" on-close="vm.closeModal()"></card-detail-modal>
+</div>
