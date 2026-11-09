@@ -1,0 +1,85 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+}
+.navbar {
+  margin-bottom: 20px;
+  border-radius: 0;
+}
+.kpi-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+.kpi-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.kpi-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+.card-tile {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.card-tile:hover {
+  transform: translateY(-5px);
+}
+.card-number {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 15px 0;
+}
+.card-holder {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.card-expiry {
+  font-size: 12px;
+  opacity: 0.9;
+}
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.alert-custom {
+  margin-top: 20px;
+}
+.card-detail-section {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.detail-label {
+  font-weight: 600;
+  color: #666;
+}
+.detail-value {
+  color: #333;
+  font-weight: bold;
+}

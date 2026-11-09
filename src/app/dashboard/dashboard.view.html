@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger alert-custom">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget title="'Monthly Spend'" value="vm.kpis.monthlySpend" format="'currency'"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget title="'Total Credit Limit'" value="vm.kpis.totalCreditLimit" format="'currency'"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget title="'Available Credit'" value="vm.kpis.availableCredit" format="'currency'"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget title="'Outstanding Amount'" value="vm.kpis.outstandingAmount" format="'currency'"></kpi-widget>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12">
+      <div class="kpi-card">
+        <div class="kpi-title">Credit Utilization</div>
+        <div class="kpi-value">{{vm.kpis.utilizationPercentage}}%</div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12">
+      <p class="text-muted"><small>Last updated: {{vm.kpis.lastUpdated | date:'medium'}}</small></p>
+    </div>
+  </div>
+</div>
