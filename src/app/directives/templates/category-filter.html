@@ -1,0 +1,4 @@
+<div class="category-filter">
+  <button ng-repeat="category in categories" class="btn btn-sm btn-default category-btn" ng-class="{active: category === selectedCategory}" ng-click="filterCategory(category)">{{category}}</button>
+  <button class="btn btn-sm btn-default category-btn" ng-click="filterCategory(null)">All</button>
+</div>

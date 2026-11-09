@@ -1,0 +1,5 @@
+.analytics-container { padding: 20px; }
+.chart-container { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.chart-container h3 { margin-top: 0; color: #333; }
+.category-filter { margin-bottom: 20px; }
+.category-btn { margin: 5px; }

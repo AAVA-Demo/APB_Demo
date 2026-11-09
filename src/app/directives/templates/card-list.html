@@ -1,0 +1,7 @@
+<div class="card-list">
+  <div ng-repeat="card in cards track by card.cardId" class="card-item" ng-class="{selected: card.cardId === selectedCardId}" ng-click="selectCard(card)">
+    <h4>{{card.cardName}}</h4>
+    <p>****{{card.lastFourDigits || card.cardNumber.slice(-4)}}</p>
+    <p><strong>Balance:</strong> {{card.outstandingBalance | currency}}</p>
+  </div>
+</div>

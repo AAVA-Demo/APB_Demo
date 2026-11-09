@@ -1,0 +1,30 @@
+<div class="analytics-container">
+  <h2>Spending Analytics & Insights</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <cc-category-filter on-filter="vm.filterByCategory(category)"></cc-category-filter>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h3>Monthly Spend Trends</h3>
+          <cc-spending-chart chart-type="line" chart-data="vm.analyticsData.monthlyTrends"></cc-spending-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h3>Category-wise Spending</h3>
+          <cc-spending-chart chart-type="pie" chart-data="vm.analyticsData.categoryBreakdown" selected-category="vm.selectedCategory"></cc-spending-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
