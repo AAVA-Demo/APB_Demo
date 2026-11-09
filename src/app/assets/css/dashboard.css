@@ -1,0 +1,6 @@
+.dashboard-container { padding: 20px; }
+.kpi-section { margin-bottom: 30px; }
+.kpi-card { text-align: center; margin-bottom: 15px; }
+.kpi-card .panel-body h3 { margin: 10px 0; font-size: 28px; font-weight: bold; }
+.table-responsive { margin-top: 20px; }
+.progress { margin: 0; }

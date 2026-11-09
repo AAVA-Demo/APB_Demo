@@ -1,0 +1,6 @@
+.transactions-container { padding: 20px; }
+.filter-panel { margin-bottom: 20px; }
+.filter-panel .panel-body { padding: 15px; }
+.filter-panel label { font-weight: bold; margin-bottom: 5px; display: block; }
+.filter-panel button { margin-right: 5px; }
+.table-responsive { margin-top: 20px; }
