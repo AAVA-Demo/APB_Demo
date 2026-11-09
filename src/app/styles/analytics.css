@@ -1,0 +1,11 @@
+.analytics-container { padding: 20px; }
+.filter-panel { margin-bottom: 20px; }
+.filter-panel label { font-weight: bold; margin-bottom: 5px; display: block; }
+.panel-default { margin-bottom: 20px; }
+.panel-heading h4 { margin: 0; font-weight: bold; }
+.panel-body { min-height: 300px; }
+canvas { max-height: 400px; }
+@media (max-width: 768px) {
+  .panel-body { min-height: 250px; }
+  canvas { max-height: 300px; }
+}

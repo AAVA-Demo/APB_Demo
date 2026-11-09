@@ -1,0 +1,38 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>Credit Card Dashboard <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()"><i class="glyphicon glyphicon-refresh"></i> Refresh</button></h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading dashboard...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row kpi-section">
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget title="Monthly Spend" value="vm.kpis.monthlySpend" icon="glyphicon-credit-card" currency="$"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget title="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="glyphicon-piggy-bank" currency="$"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget title="Available Credit" value="vm.kpis.totalAvailableCredit" icon="glyphicon-ok-circle" currency="$"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget title="Total Outstanding" value="vm.kpis.totalOutstanding" icon="glyphicon-exclamation-sign" currency="$"></kpi-widget>
+      </div>
+    </div>
+    <div class="row cards-section">
+      <div class="col-md-12">
+        <h3>Your Credit Cards</h3>
+      </div>
+      <div class="col-md-6 col-lg-4" ng-repeat="card in vm.cards">
+        <card-summary card="card"></card-summary>
+      </div>
+      <div class="col-md-12" ng-if="vm.cards.length === 0">
+        <div class="alert alert-info">No credit cards found.</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.dashboard-container { padding: 20px; }
+.kpi-section { margin-bottom: 30px; }
+.kpi-widget { text-align: center; min-height: 150px; transition: transform 0.2s; }
+.kpi-widget:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.kpi-icon { font-size: 48px; color: #337ab7; margin-bottom: 10px; }
+.kpi-content h4 { margin: 10px 0; color: #666; font-size: 14px; text-transform: uppercase; }
+.kpi-content h2 { margin: 0; color: #333; font-weight: bold; }
+.cards-section { margin-top: 30px; }
+.card-summary { margin-bottom: 20px; }
+.card-summary .panel-heading { background-color: #5bc0de; color: white; }
+.card-summary .progress { margin-top: 10px; height: 25px; }
+.card-summary .progress-bar { background-color: #5cb85c; line-height: 25px; }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@media (max-width: 768px) {
+  .kpi-widget { margin-bottom: 15px; }
+  .card-summary { margin-bottom: 15px; }
+}
