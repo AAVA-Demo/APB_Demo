@@ -1,0 +1,10 @@
+{
+  "baseURL": "https://creditcard-dashboard.example.com",
+  "timeout": 30000,
+  "retries": 2,
+  "headless": true,
+  "slowMo": 0,
+  "screenshot": "only-on-failure",
+  "video": "retain-on-failure",
+  "trace": "on-first-retry"
+}

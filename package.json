@@ -1,0 +1,32 @@
+{
+  "name": "credit-card-dashboard-automation",
+  "version": "1.0.0",
+  "description": "Playwright automation for Credit Card Dashboard - CreditCardNew20261109185933",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:dashboard-kpis": "playwright test dashboard-kpis.spec.js",
+    "test:spending-analytics": "playwright test spending-analytics.spec.js",
+    "test:responsive-dashboard": "playwright test responsive-dashboard.spec.js",
+    "test:card-management": "playwright test card-management.spec.js",
+    "test:monthly-trends": "playwright test monthly-trends.spec.js",
+    "test:multiple-cards": "playwright test multiple-cards.spec.js"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "credit-card",
+    "dashboard"
+  ],
+  "author": "DevOps Integration Engineer",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "winston": "^3.11.0"
+  }
+}
