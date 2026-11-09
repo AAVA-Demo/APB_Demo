@@ -1,0 +1,18 @@
+{
+  "baseUrl": "https://app.example.com",
+  "apiBaseUrl": "https://api.example.com",
+  "timeout": 30000,
+  "retryAttempts": 2,
+  "screenshotOnFailure": true,
+  "headless": false,
+  "slowMo": 0,
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "environments": {
+    "dev": "https://dev.example.com",
+    "staging": "https://staging.example.com",
+    "production": "https://app.example.com"
+  }
+}

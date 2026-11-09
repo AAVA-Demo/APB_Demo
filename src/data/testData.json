@@ -1,0 +1,72 @@
+{
+  "users": {
+    "activeUser": {
+      "username": "active_user",
+      "password": "Test@123"
+    },
+    "multiCardUser": {
+      "username": "multicard_user",
+      "password": "Test@123"
+    },
+    "noCardUser": {
+      "username": "nocard_user",
+      "password": "Test@123"
+    },
+    "newCardUser": {
+      "username": "newcard_user",
+      "password": "Test@123"
+    },
+    "limitedUser": {
+      "username": "limited_user",
+      "password": "Test@123"
+    },
+    "longtermUser": {
+      "username": "longterm_user",
+      "password": "Test@123"
+    },
+    "newUser": {
+      "username": "newuser",
+      "password": "Test@123"
+    }
+  },
+  "expectedKPIs": {
+    "totalCreditLimit": 150000,
+    "availableCredit": 95000,
+    "outstandingAmount": 55000,
+    "creditUtilization": 36.67
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "cards": {
+    "hdfc": {
+      "bankName": "HDFC Bank",
+      "last4Digits": "1234",
+      "creditLimit": 50000,
+      "availableCredit": 32000,
+      "outstandingBalance": 18000
+    },
+    "icici": {
+      "bankName": "ICICI Bank",
+      "last4Digits": "5678",
+      "creditLimit": 75000,
+      "availableCredit": 54500,
+      "outstandingBalance": 20500
+    },
+    "sbi": {
+      "bankName": "SBI Card",
+      "last4Digits": "9012",
+      "creditLimit": 25000,
+      "availableCredit": 8500,
+      "outstandingBalance": 16500
+    }
+  }
+}
