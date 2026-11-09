@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading KPI data...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Monthly Spend</div>
+        <div class="panel-body">
+          <h3>₹{{vm.kpis.monthlySpend | number:0}}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">Total Credit Limit</div>
+        <div class="panel-body">
+          <h3>₹{{vm.kpis.totalCreditLimit | number:0}}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">Available Credit</div>
+        <div class="panel-body">
+          <h3>₹{{vm.kpis.availableCredit | number:0}}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-warning">
+        <div class="panel-heading">Outstanding Amount</div>
+        <div class="panel-body">
+          <h3>₹{{vm.kpis.totalOutstanding | number:0}}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Credit Utilization</div>
+        <div class="panel-body">
+          <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" style="width: {{vm.kpis.utilizationRate}}%">
+              {{vm.kpis.utilizationRate}}%
+            </div>
+          </div>
+          <p class="text-muted">Last updated: {{vm.kpis.lastUpdated | date:'short'}}</p>
+          <button class="btn btn-primary" ng-click="vm.refreshKPIs()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

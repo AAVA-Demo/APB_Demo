@@ -1,0 +1,29 @@
+<div class="card-list-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards">
+      <div class="panel panel-default card-panel" ng-click="vm.selectCard(card.cardId)" style="cursor:pointer;">
+        <div class="panel-heading">
+          <strong>{{card.cardLabel || 'Card'}}</strong>
+        </div>
+        <div class="panel-body">
+          <p><strong>Card Number:</strong> {{card.cardNumber | cardMask}}</p>
+          <p><strong>Issuer:</strong> {{card.issuer}}</p>
+          <p><strong>Credit Limit:</strong> ₹{{card.creditLimit | number:0}}</p>
+          <p><strong>Available:</strong> ₹{{card.availableCredit | number:0}}</p>
+          <p><strong>Outstanding:</strong> ₹{{card.outstandingAmount | number:0}}</p>
+          <span class="label" ng-class="card.status === 'Active' ? 'label-success' : 'label-default'">{{card.status}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length === 0" class="alert alert-info">
+    No credit cards found. Please add a card to get started.
+  </div>
+</div>

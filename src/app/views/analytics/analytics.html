@@ -1,0 +1,73 @@
+<div class="analytics-container">
+  <h2>Transaction Analytics & Spending Insights</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Filters</div>
+        <div class="panel-body">
+          <label>Date Range (Months):</label>
+          <select ng-model="vm.dateRange.months" ng-change="vm.refreshInsights()" class="form-control" style="width:200px;display:inline-block;margin-left:10px;">
+            <option value="3">Last 3 Months</option>
+            <option value="6">Last 6 Months</option>
+            <option value="12" selected>Last 12 Months</option>
+          </select>
+          <button class="btn btn-primary" ng-click="vm.refreshInsights()" style="margin-left:10px;">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.insights" class="row">
+    <div class="col-xs-12 col-md-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Category-wise Spending</div>
+        <div class="panel-body">
+          <spending-chart chart-data="vm.categoryChartData" chart-type="pie"></spending-chart>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+      <div class="panel panel-success">
+        <div class="panel-heading">Monthly Spend Trends</div>
+        <div class="panel-body">
+          <spending-chart chart-data="vm.monthlyChartData" chart-type="line"></spending-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.insights" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-info">
+        <div class="panel-heading">Spending Summary</div>
+        <div class="panel-body">
+          <p><strong>Total Spend:</strong> ₹{{vm.insights.totalSpend | number:0}}</p>
+          <p><strong>Top Category:</strong> {{vm.insights.topCategory}}</p>
+          <h4>Category Details</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Transactions</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.insights.categorySpends">
+                <td>{{cat.category}}</td>
+                <td>₹{{cat.totalAmount | number:0}}</td>
+                <td>{{cat.transactionCount}}</td>
+                <td>{{cat.percentage}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
