@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics & Insights</h2>
+    <p class="text-muted">Understand your spending patterns and trends</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+</div>
+<div ng-if="vm.error && !vm.loading" class="alert alert-danger error-alert">
+  <strong>Error!</strong> Unable to load analytics data. Please try again later.
+</div>
+<div ng-if="!vm.loading && !vm.error">
+  <div class="row category-filter">
+    <div class="col-md-12">
+      <h4>Filter by Category:</h4>
+      <div>
+        <span ng-repeat="category in vm.availableCategories" class="category-badge" ng-class="{active: vm.isCategorySelected(category)}" ng-click="vm.toggleCategory(category)">{{category}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <chart-visualizer chart-type="category" on-drill-down="vm.drillDown(category)"></chart-visualizer>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container">
+        <chart-visualizer chart-type="monthly"></chart-visualizer>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Transaction Details ({{vm.filteredTransactions.length}} transactions)</h3>
+        </div>
+        <div class="panel-body">
+          <div class="transaction-list">
+            <div ng-repeat="txn in vm.filteredTransactions | orderBy:'-date'" class="transaction-item">
+              <div class="row">
+                <div class="col-xs-6">
+                  <strong>{{txn.merchant}}</strong>
+                  <br><small class="text-muted">{{txn.date | date:'short'}}</small>
+                </div>
+                <div class="col-xs-3">
+                  <span class="label label-info">{{txn.category}}</span>
+                </div>
+                <div class="col-xs-3 text-right">
+                  <strong>${{txn.amount | number:2}}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

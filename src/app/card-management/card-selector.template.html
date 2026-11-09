@@ -1,0 +1,21 @@
+<div class="card-selector">
+  <div ng-repeat="card in $ctrl.cards" class="card-item" ng-class="{selected: $ctrl.isSelected(card)}" ng-click="$ctrl.onSelect({card: card})">
+    <div class="row">
+      <div class="col-xs-8">
+        <strong>{{card.cardType}}</strong> ****{{card.cardNumber.slice(-4)}}
+        <br><small class="text-muted">{{card.issuer}}</small>
+      </div>
+      <div class="col-xs-4 text-right">
+        <span class="label" ng-class="{'label-success': card.status === 'Active', 'label-warning': card.status === 'Inactive', 'label-danger': card.status === 'Blocked'}">{{card.status}}</span>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <div class="col-xs-6">
+        <small>Limit: ${{card.creditLimit | number:0}}</small>
+      </div>
+      <div class="col-xs-6 text-right">
+        <small>Available: ${{card.availableCredit | number:0}}</small>
+      </div>
+    </div>
+  </div>
+</div>
