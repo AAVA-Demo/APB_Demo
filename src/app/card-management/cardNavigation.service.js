@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('cardManagementModule').service('cardNavigationService',['$rootScope','$location',function($rootScope,$location){var selectedCard=null;this.selectCard=function(cardId){selectedCard=cardId;$rootScope.$broadcast('card:selected',cardId);$location.path('/cards/'+cardId);};this.getSelectedCard=function(){return selectedCard;};}]);})();

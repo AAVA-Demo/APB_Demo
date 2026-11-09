@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('transactionDataService',['$http','$q',function($http,$q){var service={getTransactions:getTransactions};return service;function getTransactions(){return $http.get('/api/transactions').then(function(response){return response.data;},function(error){return $q.reject(error);});}}]);})();
