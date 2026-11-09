@@ -1,0 +1,18 @@
+(function() {
+  'use strict';
+  angular.module('creditCard.analytics')
+    .service('TransactionCategorizationService', ['$http', '$q', function($http, $q) {
+      var categories = ['Food & Dining', 'Fuel', 'Shopping', 'Travel', 'Entertainment', 'Utilities', 'Healthcare', 'Education', 'Miscellaneous'];
+      this.categorizeTransactions = function(transactions) {
+        return transactions.map(function(txn) {
+          if (!txn.category || categories.indexOf(txn.category) === -1) {
+            txn.category = 'Miscellaneous';
+          }
+          return txn;
+        });
+      };
+      this.getCategories = function() {
+        return categories;
+      };
+    }]);
+})();

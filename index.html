@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+  <style>
+    body { padding-top: 20px; background-color: #f5f5f5; }
+    .kpi-widget { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; text-align: center; }
+    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; }
+    .kpi-label { font-size: 14px; color: #7f8c8d; margin-top: 8px; }
+    .card-tile { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; cursor: pointer; transition: transform 0.2s; }
+    .card-tile:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .card-tile.selected { border: 2px solid #3498db; }
+    .chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .nav-tabs { margin-bottom: 20px; }
+    .loading-spinner { text-align: center; padding: 40px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#!/dashboard">Credit Card Dashboard</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="#!/dashboard">Dashboard</a></li>
+          <li><a href="#!/portfolio">Portfolio</a></li>
+          <li><a href="#!/analytics">Analytics</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/auth.factory.js"></script>
+  <script src="src/app/services/local-storage.service.js"></script>
+  <script src="src/app/services/http-interceptor.service.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.module.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.service.js"></script>
+  <script src="src/app/modules/dashboard/kpi-calculation.service.js"></script>
+  <script src="src/app/modules/dashboard/credit-card-data.service.js"></script>
+  <script src="src/app/modules/dashboard/directives/kpi-widget.directive.js"></script>
+  <script src="src/app/modules/portfolio/portfolio.module.js"></script>
+  <script src="src/app/modules/portfolio/portfolio.controller.js"></script>
+  <script src="src/app/modules/portfolio/portfolio.service.js"></script>
+  <script src="src/app/modules/portfolio/card-details.service.js"></script>
+  <script src="src/app/modules/portfolio/transaction.service.js"></script>
+  <script src="src/app/modules/portfolio/directives/card-list.directive.js"></script>
+  <script src="src/app/modules/portfolio/factories/user-profile.factory.js"></script>
+  <script src="src/app/modules/analytics/analytics.module.js"></script>
+  <script src="src/app/modules/analytics/analytics.controller.js"></script>
+  <script src="src/app/modules/analytics/analytics.service.js"></script>
+  <script src="src/app/modules/analytics/transaction-categorization.service.js"></script>
+  <script src="src/app/modules/analytics/data-analytics.service.js"></script>
+  <script src="src/app/modules/analytics/directives/spending-chart.directive.js"></script>
+  <script src="src/app/modules/analytics/factories/visualization.factory.js"></script>
+</body>
+</html>

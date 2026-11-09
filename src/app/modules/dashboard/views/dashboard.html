@@ -1,0 +1,36 @@
+<div ng-cloak>
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading dashboard...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{ vm.error }}
+    <button class="btn btn-sm btn-primary" ng-click="vm.refresh()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && vm.kpis">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Monthly Spend" value="vm.kpis.monthlySpend" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Available Credit" value="vm.kpis.availableCredit" format="currency"></kpi-widget>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-widget label="Outstanding Amount" value="vm.kpis.outstandingAmount" format="currency"></kpi-widget>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="alert alert-info">
+          <strong>Last Updated:</strong> {{ vm.kpis.lastUpdated | date:'medium' }}
+          <button class="btn btn-xs btn-default pull-right" ng-click="vm.refresh()">
+            <i class="glyphicon glyphicon-refresh"></i> Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

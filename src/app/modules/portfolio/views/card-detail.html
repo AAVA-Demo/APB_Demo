@@ -1,0 +1,28 @@
+<div ng-cloak>
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading card details...
+  </div>
+  <div ng-if="!vm.loading && vm.selectedCard">
+    <button class="btn btn-default" ng-click="vm.clearSelection()">
+      <i class="glyphicon glyphicon-arrow-left"></i> Back to Portfolio
+    </button>
+    <div class="card-tile" style="margin-top: 20px;">
+      <h3>{{ vm.selectedCard.cardType }} {{ vm.selectedCard.cardNumber }}</h3>
+      <div class="row">
+        <div class="col-md-3">
+          <strong>Credit Limit:</strong> ₹{{ vm.selectedCard.creditLimit | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Available:</strong> ₹{{ vm.selectedCard.availableCredit | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Outstanding:</strong> ₹{{ vm.selectedCard.outstandingAmount | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Utilization:</strong> {{ vm.selectedCard.analysis.utilizationPercent }}%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

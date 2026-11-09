@@ -1,0 +1,64 @@
+<div ng-cloak>
+  <h2>Credit Card Portfolio</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading portfolio...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="!vm.loading && !vm.selectedCard">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Filter cards..." ng-model="vm.filterText">
+    </div>
+    <card-list cards="vm.getFilteredCards()" on-select="vm.selectCard(cardId)" selected-card-id="vm.selectedCard ? vm.selectedCard.cardId : null"></card-list>
+  </div>
+  <div ng-if="!vm.loading && vm.selectedCard">
+    <button class="btn btn-default" ng-click="vm.clearSelection()">
+      <i class="glyphicon glyphicon-arrow-left"></i> Back to Portfolio
+    </button>
+    <div class="card-tile" style="margin-top: 20px;">
+      <h3>{{ vm.selectedCard.cardType }} {{ vm.selectedCard.cardNumber }}</h3>
+      <div class="row">
+        <div class="col-md-3">
+          <strong>Credit Limit:</strong> ₹{{ vm.selectedCard.creditLimit | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Available:</strong> ₹{{ vm.selectedCard.availableCredit | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Outstanding:</strong> ₹{{ vm.selectedCard.outstandingAmount | number }}
+        </div>
+        <div class="col-md-3">
+          <strong>Utilization:</strong> {{ vm.selectedCard.analysis.utilizationPercent }}%
+        </div>
+      </div>
+    </div>
+    <div class="chart-container" style="margin-top: 20px;">
+      <h4>Spending Analysis</h4>
+      <p><strong>Total Spend:</strong> ₹{{ vm.selectedCard.analysis.totalSpend | number }}</p>
+      <p><strong>Monthly Spend:</strong> ₹{{ vm.selectedCard.analysis.monthlySpend | number }}</p>
+      <p><strong>Transaction Count:</strong> {{ vm.selectedCard.analysis.transactionCount }}</p>
+    </div>
+    <div class="chart-container" style="margin-top: 20px;">
+      <h4>Transactions</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Merchant</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="txn in vm.selectedCard.analysis.transactions track by txn.transactionId">
+            <td>{{ txn.transactionDate | date:'short' }}</td>
+            <td>{{ txn.merchantName }}</td>
+            <td>{{ txn.category }}</td>
+            <td>₹{{ txn.amount | number }}</td>
+            <td>{{ txn.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

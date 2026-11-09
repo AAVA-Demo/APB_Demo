@@ -1,0 +1,56 @@
+<div ng-cloak>
+  <h2>Spending Analytics & Insights</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="!vm.loading && vm.analyticsData">
+    <div class="alert alert-info">
+      <strong>Analysis Period:</strong> {{ vm.timeRange.startDate | date:'mediumDate' }} to {{ vm.timeRange.endDate | date:'mediumDate' }}
+      <span class="pull-right"><strong>Total Spend:</strong> ₹{{ vm.analyticsData.totalSpend | number }}</span>
+    </div>
+    <div ng-if="vm.selectedCategory" class="alert alert-warning">
+      <strong>Filtered by:</strong> {{ vm.selectedCategory }}
+      <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearCategoryFilter()">
+        <i class="glyphicon glyphicon-remove"></i> Clear Filter
+      </button>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <spending-chart data="vm.analyticsData.categorySpending" chart-type="pie" on-category-click="vm.selectCategory(category)"></spending-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <spending-chart data="vm.getFilteredTrends()" chart-type="line"></spending-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Transaction Count</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analyticsData.categorySpending track by cat.category" ng-click="vm.selectCategory(cat.category)" style="cursor: pointer;">
+                <td>{{ cat.category }}</td>
+                <td>₹{{ cat.totalAmount | number }}</td>
+                <td>{{ cat.transactionCount }}</td>
+                <td>{{ cat.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
