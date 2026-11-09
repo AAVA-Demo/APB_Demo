@@ -1,0 +1,1 @@
+angular.module('kpiDashboardModule').factory('RealTimeDataRefreshFactory',['$interval','$rootScope',function($interval,$rootScope){return{startRefresh:function(callback,interval){return $interval(function(){callback();$rootScope.$broadcast('kpiDataRefreshed');},interval);}};}]);

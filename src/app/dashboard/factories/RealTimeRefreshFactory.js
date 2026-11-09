@@ -1,0 +1,1 @@
+angular.module('creditCardDashboardModule').factory('RealTimeRefreshFactory',['$interval','$rootScope',function($interval,$rootScope){return{startRefresh:function(callback,interval){return $interval(function(){callback();$rootScope.$broadcast('dataRefreshed');},interval);}};}]);

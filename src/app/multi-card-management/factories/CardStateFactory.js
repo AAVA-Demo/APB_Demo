@@ -1,0 +1,1 @@
+angular.module('multiCardManagementModule').factory('CardStateFactory',['$rootScope',function($rootScope){let selectedCardId=null;return{setSelectedCard:function(cardId){selectedCardId=cardId;$rootScope.$broadcast('cardStateChanged',cardId);},getSelectedCard:function(){return selectedCardId;}};}]);

@@ -1,0 +1,1 @@
+angular.module('multiCardManagementModule').service('SpendAnalysisEngine',['$http','$q',function($http,$q){const BASE_URL='/api/cards';this.getCardSpendAnalysis=function(cardId){const deferred=$q.defer();$http.get(BASE_URL+'/'+cardId+'/spending').then(function(response){deferred.resolve(response.data);},function(error){deferred.reject(error);});return deferred.promise;};}]);

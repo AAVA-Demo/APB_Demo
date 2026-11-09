@@ -1,0 +1,1 @@
+angular.module('analyticsInsightsModule').component('dataVisualization',{bindings:{data:'<'},template:'<div><category-pie-chart></category-pie-chart><monthly-trend-chart></monthly-trend-chart><card-wise-bar-chart></card-wise-bar-chart></div>'});

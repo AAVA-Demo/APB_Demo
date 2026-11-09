@@ -1,0 +1,1 @@
+angular.module('creditCardApp',['ngRoute','creditCardDashboardModule','kpiDashboardModule','transactionManagementModule','analyticsInsightsModule','spendingAnalyticsModule','multiCardManagementModule']);

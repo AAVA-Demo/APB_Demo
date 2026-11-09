@@ -1,0 +1,1 @@
+angular.module('transactionManagementModule').filter('cardFilter',[function(){return function(transactions,cardId){if(!cardId){return transactions;}return transactions.filter(function(txn){return txn.cardId===cardId;});};}]);

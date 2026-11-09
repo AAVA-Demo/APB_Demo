@@ -1,0 +1,1 @@
+angular.module('transactionManagementModule').service('CreditCardService',['$http','$q',function($http,$q){const BASE_URL='/api/cards';this.getCards=function(userId){const deferred=$q.defer();$http.get(BASE_URL+'?userId='+userId).then(function(response){deferred.resolve(response.data);},function(error){deferred.reject(error);});return deferred.promise;};}]);
