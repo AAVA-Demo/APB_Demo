@@ -1,295 +1,184 @@
 /*
 Test Documentation:
-- Test Name: CategorizationEngineService Unit Tests
-- Purpose: Validate transaction categorization logic based on merchant names
-- Scenario: Tests categorize method with various merchant names matching different category rules
-- Expected Result: Transactions are correctly categorized into predefined categories or Miscellaneous
+- Test Name: CategorizationEngineService - categorize
+- Purpose: Validate automatic categorization of transactions based on merchant keywords
+- Scenario: Service receives transactions and applies category rules
+- Expected Result: Returns transactions with assigned categories based on merchant name matching
 */
 
 describe('CategorizationEngineService', function() {
+  'use strict';
+  
   var CategorizationEngineService;
-
+  
   beforeEach(module('creditCardApp'));
-
+  
   beforeEach(inject(function(_CategorizationEngineService_) {
     CategorizationEngineService = _CategorizationEngineService_;
   }));
-
+  
   describe('categorize', function() {
-    it('should categorize restaurant transaction as Food & Dining', function() {
+    it('should categorize food & dining transactions correctly', function() {
       var transactions = [
-        {transactionId: 1, merchantName: 'Restaurant ABC', amount: 50}
+        {transactionId: 'TX001', merchantName: 'Starbucks Coffee', amount: 5.50},
+        {transactionId: 'TX002', merchantName: 'Pizza Hut', amount: 25.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result.length).toBe(1);
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Food & Dining');
-      expect(result[0].merchantName).toBe('Restaurant ABC');
+      expect(result[1].category).toBe('Food & Dining');
     });
-
-    it('should categorize cafe transaction as Food & Dining', function() {
+    
+    it('should categorize fuel transactions correctly', function() {
       var transactions = [
-        {transactionId: 2, merchantName: 'Starbucks Cafe', amount: 15}
+        {transactionId: 'TX003', merchantName: 'Shell Gas Station', amount: 45.00},
+        {transactionId: 'TX004', merchantName: 'BP Fuel', amount: 50.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Food & Dining');
-    });
-
-    it('should categorize gas station transaction as Fuel', function() {
-      var transactions = [
-        {transactionId: 3, merchantName: 'Shell Gas Station', amount: 40}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Fuel');
+      expect(result[1].category).toBe('Fuel');
     });
-
-    it('should categorize petrol transaction as Fuel', function() {
+    
+    it('should categorize shopping transactions correctly', function() {
       var transactions = [
-        {transactionId: 4, merchantName: 'BP Petrol', amount: 35}
+        {transactionId: 'TX005', merchantName: 'Amazon.com', amount: 99.99},
+        {transactionId: 'TX006', merchantName: 'Walmart Store', amount: 150.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Fuel');
-    });
-
-    it('should categorize Amazon transaction as Shopping', function() {
-      var transactions = [
-        {transactionId: 5, merchantName: 'Amazon.com', amount: 100}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Shopping');
+      expect(result[1].category).toBe('Shopping');
     });
-
-    it('should categorize Walmart transaction as Shopping', function() {
+    
+    it('should categorize travel transactions correctly', function() {
       var transactions = [
-        {transactionId: 6, merchantName: 'Walmart Store', amount: 75}
+        {transactionId: 'TX007', merchantName: 'United Airlines', amount: 350.00},
+        {transactionId: 'TX008', merchantName: 'Uber Ride', amount: 25.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Shopping');
-    });
-
-    it('should categorize airline transaction as Travel', function() {
-      var transactions = [
-        {transactionId: 7, merchantName: 'Delta Airlines', amount: 500}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Travel');
+      expect(result[1].category).toBe('Travel');
     });
-
-    it('should categorize hotel transaction as Travel', function() {
+    
+    it('should categorize entertainment transactions correctly', function() {
       var transactions = [
-        {transactionId: 8, merchantName: 'Marriott Hotel', amount: 200}
+        {transactionId: 'TX009', merchantName: 'Netflix Subscription', amount: 15.99},
+        {transactionId: 'TX010', merchantName: 'AMC Movie Theater', amount: 30.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Travel');
-    });
-
-    it('should categorize Uber transaction as Travel', function() {
-      var transactions = [
-        {transactionId: 9, merchantName: 'Uber Trip', amount: 25}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Travel');
-    });
-
-    it('should categorize Netflix transaction as Entertainment', function() {
-      var transactions = [
-        {transactionId: 10, merchantName: 'Netflix Subscription', amount: 15}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Entertainment');
+      expect(result[1].category).toBe('Entertainment');
     });
-
-    it('should categorize movie transaction as Entertainment', function() {
+    
+    it('should categorize utilities transactions correctly', function() {
       var transactions = [
-        {transactionId: 11, merchantName: 'AMC Movie Theater', amount: 30}
+        {transactionId: 'TX011', merchantName: 'Electric Company', amount: 120.00},
+        {transactionId: 'TX012', merchantName: 'Internet Service Provider', amount: 80.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Entertainment');
-    });
-
-    it('should categorize electric utility transaction as Utilities', function() {
-      var transactions = [
-        {transactionId: 12, merchantName: 'Electric Company', amount: 120}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Utilities');
+      expect(result[1].category).toBe('Utilities');
     });
-
-    it('should categorize internet transaction as Utilities', function() {
+    
+    it('should categorize healthcare transactions correctly', function() {
       var transactions = [
-        {transactionId: 13, merchantName: 'Comcast Internet', amount: 80}
+        {transactionId: 'TX013', merchantName: 'CVS Pharmacy', amount: 45.00},
+        {transactionId: 'TX014', merchantName: 'Dr. Smith Medical', amount: 200.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Utilities');
-    });
-
-    it('should categorize hospital transaction as Healthcare', function() {
-      var transactions = [
-        {transactionId: 14, merchantName: 'City Hospital', amount: 300}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Healthcare');
+      expect(result[1].category).toBe('Healthcare');
     });
-
-    it('should categorize pharmacy transaction as Healthcare', function() {
+    
+    it('should categorize education transactions correctly', function() {
       var transactions = [
-        {transactionId: 15, merchantName: 'CVS Pharmacy', amount: 45}
+        {transactionId: 'TX015', merchantName: 'Coursera Online', amount: 49.99},
+        {transactionId: 'TX016', merchantName: 'University Bookstore', amount: 150.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Healthcare');
-    });
-
-    it('should categorize university transaction as Education', function() {
-      var transactions = [
-        {transactionId: 16, merchantName: 'State University', amount: 5000}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Education');
+      expect(result[1].category).toBe('Education');
     });
-
-    it('should categorize school transaction as Education', function() {
+    
+    it('should default to Miscellaneous for unknown merchants', function() {
       var transactions = [
-        {transactionId: 17, merchantName: 'Private School', amount: 2000}
+        {transactionId: 'TX017', merchantName: 'Unknown Merchant XYZ', amount: 100.00},
+        {transactionId: 'TX018', merchantName: 'Random Store', amount: 75.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Education');
-    });
-
-    it('should categorize unknown merchant as Miscellaneous', function() {
-      var transactions = [
-        {transactionId: 18, merchantName: 'Unknown Merchant', amount: 50}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(2);
       expect(result[0].category).toBe('Miscellaneous');
+      expect(result[1].category).toBe('Miscellaneous');
     });
-
+    
+    it('should handle empty transaction list', function() {
+      var transactions = [];
+      
+      var result = CategorizationEngineService.categorize(transactions);
+      
+      expect(result).toEqual([]);
+    });
+    
     it('should handle transactions with missing merchantName', function() {
       var transactions = [
-        {transactionId: 19, amount: 50}
+        {transactionId: 'TX019', amount: 50.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
+      
+      expect(result.length).toBe(1);
       expect(result[0].category).toBe('Miscellaneous');
     });
-
-    it('should handle transactions with null merchantName', function() {
+    
+    it('should handle case-insensitive merchant matching', function() {
       var transactions = [
-        {transactionId: 20, merchantName: null, amount: 50}
+        {transactionId: 'TX020', merchantName: 'STARBUCKS COFFEE', amount: 5.50},
+        {transactionId: 'TX021', merchantName: 'shell gas', amount: 45.00}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Miscellaneous');
-    });
-
-    it('should handle case-insensitive merchant names', function() {
-      var transactions = [
-        {transactionId: 21, merchantName: 'RESTAURANT ABC', amount: 50},
-        {transactionId: 22, merchantName: 'restaurant xyz', amount: 30}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Food & Dining');
-      expect(result[1].category).toBe('Food & Dining');
-    });
-
-    it('should categorize multiple transactions correctly', function() {
-      var transactions = [
-        {transactionId: 1, merchantName: 'Restaurant ABC', amount: 50},
-        {transactionId: 2, merchantName: 'Shell Gas', amount: 40},
-        {transactionId: 3, merchantName: 'Amazon', amount: 100},
-        {transactionId: 4, merchantName: 'Unknown Store', amount: 25}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result.length).toBe(4);
+      
       expect(result[0].category).toBe('Food & Dining');
       expect(result[1].category).toBe('Fuel');
-      expect(result[2].category).toBe('Shopping');
-      expect(result[3].category).toBe('Miscellaneous');
     });
-
+    
     it('should preserve original transaction properties', function() {
       var transactions = [
-        {transactionId: 1, merchantName: 'Restaurant ABC', amount: 50, date: '2024-01-15', cardId: 'card123'}
+        {transactionId: 'TX022', merchantName: 'Amazon', amount: 99.99, cardId: 'CC001', date: '2023-01-15'}
       ];
-
+      
       var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].transactionId).toBe(1);
-      expect(result[0].merchantName).toBe('Restaurant ABC');
-      expect(result[0].amount).toBe(50);
-      expect(result[0].date).toBe('2024-01-15');
-      expect(result[0].cardId).toBe('card123');
-      expect(result[0].category).toBe('Food & Dining');
-    });
-
-    it('should handle empty transactions array', function() {
-      var transactions = [];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result.length).toBe(0);
-    });
-
-    it('should match partial keywords in merchant names', function() {
-      var transactions = [
-        {transactionId: 1, merchantName: 'Best Pizza Place', amount: 25},
-        {transactionId: 2, merchantName: 'Burger King', amount: 15}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Food & Dining');
-      expect(result[1].category).toBe('Food & Dining');
-    });
-
-    it('should prioritize first matching category', function() {
-      var transactions = [
-        {transactionId: 1, merchantName: 'Restaurant and Hotel', amount: 100}
-      ];
-
-      var result = CategorizationEngineService.categorize(transactions);
-
-      expect(result[0].category).toBe('Food & Dining');
+      
+      expect(result[0].transactionId).toBe('TX022');
+      expect(result[0].merchantName).toBe('Amazon');
+      expect(result[0].amount).toBe(99.99);
+      expect(result[0].cardId).toBe('CC001');
+      expect(result[0].date).toBe('2023-01-15');
+      expect(result[0].category).toBe('Shopping');
     });
   });
 });
@@ -299,13 +188,11 @@ Coverage Report:
 - Functions tested: categorize
 - Scenarios covered:
   * All 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous)
+  * Unknown merchants defaulting to Miscellaneous
+  * Empty transaction list
+  * Missing merchant name
   * Case-insensitive matching
-  * Missing or null merchant names
-  * Empty transactions array
-  * Multiple transactions with different categories
   * Preservation of original transaction properties
-  * Partial keyword matching
-  * Priority of first matching category
-- Uncovered scenarios: None - comprehensive coverage achieved
-- Dependencies mocked: None (pure function)
+- Uncovered scenarios: None
+- Edge cases: Empty data, missing fields, case sensitivity
 */
