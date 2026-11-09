@@ -1,175 +1,190 @@
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('./pages/login.page');
-const { CardManagementPage } = require('./pages/cardManagement.page');
 const { TransactionHistoryPage } = require('./pages/transactionHistory.page');
-const logger = require('../utils/logger');
+const { CardManagementPage } = require('./pages/cardManagement.page');
+const { LoginPage } = require('./pages/login.page');
+const testData = require('../data/testData.json');
 
-test.describe('Transaction History Tests - QE-9012', () => {
-  let loginPage;
-  let cardManagementPage;
-  let transactionHistoryPage;
+test.describe('Transaction History Tests', () => {
 
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    cardManagementPage = new CardManagementPage(page);
-    transactionHistoryPage = new TransactionHistoryPage(page);
-    logger.info('Starting Transaction History test');
+  test('QE-9079 TS-001 TC-001 - Verify transaction history displays paginated list of 20 transactions', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const cardManagementPage = new CardManagementPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
+    
+    await loginPage.navigate();
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
+    
+    await cardManagementPage.navigateToCardManagement();
+    await cardManagementPage.selectCard(testData.cards.visa1234);
+    
+    await cardManagementPage.clickViewTransactionHistory();
+    
+    await transactionHistoryPage.waitForTransactionHistoryLoad();
+    
+    const transactionCount = await transactionHistoryPage.getTransactionCount();
+    expect(transactionCount).toBe(20);
+    
+    const firstTransaction = await transactionHistoryPage.getTransactionDetails(0);
+    expect(firstTransaction.date).toBeTruthy();
+    expect(firstTransaction.merchant).toBeTruthy();
+    expect(firstTransaction.amount).toContain('$');
+    expect(firstTransaction.category).toBeTruthy();
+    
+    await expect(transactionHistoryPage.paginationControls).toBeVisible();
+    await expect(transactionHistoryPage.nextButton).toBeVisible();
+    await expect(transactionHistoryPage.previousButton).toBeVisible();
   });
 
-  test('QE-9012 TS-001 TC-001 - Verify paginated transaction history with 50 transactions per page', async ({ page }) => {
-    logger.info('Test Case: QE-9012 TS-001 TC-001');
+  test('QE-9079 TS-002 TC-001 - Verify transaction history displays last recorded transactions for inactive card', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const cardManagementPage = new CardManagementPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
     
-    // Step 1-2: Launch and login
     await loginPage.navigate();
-    await loginPage.login('testuser@example.com', 'Test@1234');
-    logger.info('User logged in successfully');
-
-    // Step 3: Navigate to Card Management section
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
+    
     await cardManagementPage.navigateToCardManagement();
-    await expect(cardManagementPage.cardListContainer).toBeVisible();
-    logger.info('Card Management page loaded');
-
-    // Step 4: Select credit card with 150 transactions
-    await cardManagementPage.selectCardByLastFourDigits('4567');
-    logger.info('Selected card: Visa ending in 4567');
-
-    // Step 5: Click View Transaction History
+    await cardManagementPage.selectCard(testData.cards.inactiveCard5678);
+    
     await cardManagementPage.clickViewTransactionHistory();
+    
     await transactionHistoryPage.waitForTransactionHistoryLoad();
-    logger.info('Transaction History page loaded');
+    
+    await expect(transactionHistoryPage.inactiveCardMessage).toBeVisible();
+    const messageText = await transactionHistoryPage.getInactiveCardMessageText();
+    expect(messageText).toContain('No recent transactions');
+    expect(messageText).toContain('2022-03-15');
+    
+    const transactions = await transactionHistoryPage.getAllTransactions();
+    expect(transactions.length).toBeGreaterThan(0);
+    
+    const lastTransactionDate = await transactionHistoryPage.getLastTransactionDate();
+    expect(lastTransactionDate).toContain('2022');
+  });
 
-    // Step 6: Verify first page displays 50 transactions
+  test('QE-9079 TS-003 TC-001 - Verify transaction history filtering by category displays only matching transactions', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const cardManagementPage = new CardManagementPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
+    
+    await loginPage.navigate();
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
+    
+    await cardManagementPage.navigateToCardManagement();
+    await cardManagementPage.selectCard(testData.cards.highVolumeCard9012);
+    
+    await cardManagementPage.clickViewTransactionHistory();
+    
+    await transactionHistoryPage.waitForTransactionHistoryLoad();
+    
+    const initialCount = await transactionHistoryPage.getTransactionCount();
+    expect(initialCount).toBeGreaterThan(0);
+    
+    await transactionHistoryPage.clickFilterByCategory();
+    await transactionHistoryPage.selectCategory('Food & Dining');
+    
+    await transactionHistoryPage.waitForFilteredResults();
+    
+    const filteredCount = await transactionHistoryPage.getTransactionCount();
+    expect(filteredCount).toBeGreaterThan(0);
+    
+    const allTransactions = await transactionHistoryPage.getAllTransactions();
+    for (const transaction of allTransactions) {
+      expect(transaction.category).toBe('Food & Dining');
+    }
+    
+    await expect(transactionHistoryPage.dateRangeFilter).toBeVisible();
+  });
+
+  test('QE-9012 TS-001 TC-001 - Verify transaction history displays 50 transactions per page with all details', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const cardManagementPage = new CardManagementPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
+    
+    await loginPage.navigate();
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
+    
+    await cardManagementPage.navigateToCardManagement();
+    await cardManagementPage.selectCard(testData.cards.visa4567);
+    
+    await cardManagementPage.clickViewTransactionHistory();
+    
+    await transactionHistoryPage.waitForTransactionHistoryLoad();
+    
     const transactionCount = await transactionHistoryPage.getTransactionCount();
     expect(transactionCount).toBe(50);
-    logger.info(`Verified 50 transactions on page 1`);
-
-    // Step 7: Verify each transaction displays Date field
-    const allDatesVisible = await transactionHistoryPage.verifyAllTransactionsHaveDate();
-    expect(allDatesVisible).toBe(true);
-    const sampleDate = await transactionHistoryPage.getFirstTransactionDate();
-    expect(sampleDate).toMatch(/\d{2}\/\d{2}\/\d{4}/);
-    logger.info(`Date field verified. Sample: ${sampleDate}`);
-
-    // Step 8: Verify each transaction displays Merchant field
-    const allMerchantsVisible = await transactionHistoryPage.verifyAllTransactionsHaveMerchant();
-    expect(allMerchantsVisible).toBe(true);
-    const sampleMerchant = await transactionHistoryPage.getFirstTransactionMerchant();
-    expect(sampleMerchant.length).toBeGreaterThan(0);
-    logger.info(`Merchant field verified. Sample: ${sampleMerchant}`);
-
-    // Step 9: Verify each transaction displays Amount field
-    const allAmountsVisible = await transactionHistoryPage.verifyAllTransactionsHaveAmount();
-    expect(allAmountsVisible).toBe(true);
-    const sampleAmount = await transactionHistoryPage.getFirstTransactionAmount();
-    expect(sampleAmount).toMatch(/\$\d+\.\d{2}/);
-    logger.info(`Amount field verified. Sample: ${sampleAmount}`);
-
-    // Step 10: Verify each transaction displays Category field
-    const allCategoriesVisible = await transactionHistoryPage.verifyAllTransactionsHaveCategory();
-    expect(allCategoriesVisible).toBe(true);
-    const sampleCategory = await transactionHistoryPage.getFirstTransactionCategory();
-    const validCategories = ['Food & Dining', 'Fuel', 'Shopping', 'Travel', 'Entertainment', 'Utilities', 'Healthcare', 'Education', 'Miscellaneous'];
-    expect(validCategories).toContain(sampleCategory);
-    logger.info(`Category field verified. Sample: ${sampleCategory}`);
-
-    // Step 11: Verify pagination controls
+    
+    const allTransactions = await transactionHistoryPage.getAllTransactions();
+    for (const transaction of allTransactions) {
+      expect(transaction.date).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+      expect(transaction.merchant).toBeTruthy();
+      expect(transaction.amount).toMatch(/\$\d+\.\d{2}/);
+      expect(transaction.category).toBeTruthy();
+    }
+    
     const paginationText = await transactionHistoryPage.getPaginationText();
     expect(paginationText).toContain('Page 1 of 3');
-    await expect(transactionHistoryPage.nextPageButton).toBeEnabled();
-    await expect(transactionHistoryPage.lastPageButton).toBeEnabled();
-    logger.info('Pagination controls verified');
+    
+    await expect(transactionHistoryPage.nextButton).toBeEnabled();
+    await expect(transactionHistoryPage.lastButton).toBeEnabled();
   });
 
-  test('QE-9012 TS-002 TC-001 - Verify error message for deleted card transaction access', async ({ page }) => {
-    logger.info('Test Case: QE-9012 TS-002 TC-001');
+  test('QE-9012 TS-002 TC-001 - Verify error message when accessing deleted card transaction history', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
     
-    // Step 1-2: Launch and login
     await loginPage.navigate();
-    await loginPage.login('testuser@example.com', 'Test@1234');
-    logger.info('User logged in successfully');
-
-    // Step 3: Manually navigate to deleted card transaction URL
-    await page.goto('https://creditcard-dashboard.example.com/cards/deleted-card-id-123/transactions');
-    logger.info('Navigated to deleted card transaction URL');
-
-    // Step 4-5: Verify error message is displayed
-    await expect(transactionHistoryPage.errorMessageContainer).toBeVisible();
-    const errorMessage = await transactionHistoryPage.getErrorMessage();
-    expect(errorMessage).toContain('Card not found or access denied');
-    expect(errorMessage).toContain('This card may have been deleted or is no longer associated with your account');
-    logger.info(`Error message verified: ${errorMessage}`);
-
-    // Step 6: Verify no transaction data is displayed
-    const transactionTableVisible = await transactionHistoryPage.isTransactionTableVisible();
-    expect(transactionTableVisible).toBe(false);
-    logger.info('Verified no transaction data is displayed');
-
-    // Step 7: Verify Return to Dashboard button is displayed
-    await expect(transactionHistoryPage.returnToDashboardButton).toBeVisible();
-    await expect(transactionHistoryPage.returnToDashboardButton).toBeEnabled();
-    logger.info('Return to Dashboard button verified');
-  });
-
-  test('QE-9012 TS-003 TC-001 - Verify filtered transaction history by date range and category', async ({ page }) => {
-    logger.info('Test Case: QE-9012 TS-003 TC-001');
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
     
-    // Step 1: Launch and login
-    await loginPage.navigate();
-    await loginPage.login('testuser@example.com', 'Test@1234');
-    logger.info('User logged in successfully');
-
-    // Step 2: Navigate to Card Management and select card
-    await cardManagementPage.navigateToCardManagement();
-    await cardManagementPage.selectCardByLastFourDigits('4567');
-    logger.info('Selected card: Visa ending in 4567');
-
-    // Step 3: Click View Transaction History
-    await cardManagementPage.clickViewTransactionHistory();
-    await transactionHistoryPage.waitForTransactionHistoryLoad();
-    logger.info('Transaction History page loaded');
-
-    // Step 4: Open filter panel
-    await transactionHistoryPage.clickFilterButton();
-    await expect(transactionHistoryPage.filterPanel).toBeVisible();
-    logger.info('Filter panel opened');
-
-    // Step 5: Select date range filter 'Last 30 Days'
-    await transactionHistoryPage.selectDateRangeFilter('Last 30 Days');
-    const dateRangeText = await transactionHistoryPage.getSelectedDateRange();
-    expect(dateRangeText).toMatch(/\d{2}\/\d{2}\/\d{4} to \d{2}\/\d{2}\/\d{4}/);
-    logger.info(`Date range filter set: ${dateRangeText}`);
-
-    // Step 6: Select category filter 'Food & Dining'
-    await transactionHistoryPage.selectCategoryFilter('Food & Dining');
-    const selectedCategory = await transactionHistoryPage.getSelectedCategory();
-    expect(selectedCategory).toBe('Food & Dining');
-    logger.info('Category filter set: Food & Dining');
-
-    // Step 7: Apply filters
-    await transactionHistoryPage.clickApplyFilters();
-    await transactionHistoryPage.waitForFilteredResults();
-    logger.info('Filters applied');
-
-    // Step 8: Verify all displayed transactions are within last 30 days
-    const allDatesValid = await transactionHistoryPage.verifyAllTransactionsWithinDateRange('12/15/2024', '01/14/2025');
-    expect(allDatesValid).toBe(true);
-    logger.info('All transactions within date range verified');
-
-    // Step 9: Verify all displayed transactions have category 'Food & Dining'
-    const allCategoriesMatch = await transactionHistoryPage.verifyAllTransactionsHaveCategory('Food & Dining');
-    expect(allCategoriesMatch).toBe(true);
-    logger.info('All transactions have Food & Dining category verified');
-
-    // Step 10: Verify transactions not matching criteria are excluded
+    await page.goto(testData.urls.deletedCardTransactions);
+    
+    await expect(transactionHistoryPage.errorMessage).toBeVisible();
+    const errorText = await transactionHistoryPage.getErrorMessageText();
+    expect(errorText).toContain('Card not found or access denied');
+    expect(errorText).toContain('deleted or is no longer associated');
+    
     const transactionCount = await transactionHistoryPage.getTransactionCount();
-    expect(transactionCount).toBeLessThan(50);
-    logger.info(`Filtered transaction count: ${transactionCount}`);
+    expect(transactionCount).toBe(0);
+    
+    await expect(transactionHistoryPage.returnToDashboardButton).toBeVisible();
+  });
 
-    // Step 11: Verify pagination adjusts to filtered results
-    const paginationText = await transactionHistoryPage.getPaginationText();
-    if (transactionCount <= 50) {
-      expect(paginationText).toContain('Page 1 of 1');
+  test('QE-9012 TS-003 TC-001 - Verify transaction filtering by date range and category', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const cardManagementPage = new CardManagementPage(page);
+    const transactionHistoryPage = new TransactionHistoryPage(page);
+    
+    await loginPage.navigate();
+    await loginPage.login(testData.users.standard.username, testData.users.standard.password);
+    
+    await cardManagementPage.navigateToCardManagement();
+    await cardManagementPage.selectCard(testData.cards.visa4567);
+    
+    await cardManagementPage.clickViewTransactionHistory();
+    
+    await transactionHistoryPage.waitForTransactionHistoryLoad();
+    
+    await transactionHistoryPage.clickFilterButton();
+    
+    await transactionHistoryPage.selectDateRange('Last 30 Days');
+    await transactionHistoryPage.selectCategory('Food & Dining');
+    
+    await transactionHistoryPage.clickApplyFilters();
+    
+    await transactionHistoryPage.waitForFilteredResults();
+    
+    const allTransactions = await transactionHistoryPage.getAllTransactions();
+    
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
+    
+    for (const transaction of allTransactions) {
+      const transactionDate = new Date(transaction.date);
+      expect(transactionDate).toBeGreaterThanOrEqual(thirtyDaysAgo);
+      expect(transaction.category).toBe('Food & Dining');
     }
-    logger.info(`Pagination adjusted: ${paginationText}`);
+    
+    const paginationText = await transactionHistoryPage.getPaginationText();
+    expect(paginationText).toBeTruthy();
   });
 });

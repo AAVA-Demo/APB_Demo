@@ -1,160 +1,114 @@
 const { expect } = require('@playwright/test');
-const logger = require('../../utils/logger');
 
 exports.TransactionHistoryPage = class TransactionHistoryPage {
   constructor(page) {
     this.page = page;
-    this.transactionHistoryContainer = page.locator('.transaction-history-container');
-    this.transactionTable = page.locator('table.transaction-table');
-    this.transactionRows = page.locator('table.transaction-table tbody tr');
-    this.filterButton = page.locator('button[data-action="filter"]');
-    this.filterPanel = page.locator('.filter-panel');
-    this.dateRangeDropdown = page.locator('select[name="dateRange"]');
-    this.categoryDropdown = page.locator('select[name="category"]');
-    this.applyFiltersButton = page.locator('button[data-action="apply-filters"]');
-    this.paginationContainer = page.locator('.pagination-container');
-    this.nextPageButton = page.locator('button[data-action="next-page"]');
-    this.lastPageButton = page.locator('button[data-action="last-page"]');
-    this.errorMessageContainer = page.locator('.error-message-container');
-    this.returnToDashboardButton = page.locator('a[href="/dashboard"]');
-    this.transactionDateCells = page.locator('td.transaction-date');
-    this.transactionMerchantCells = page.locator('td.transaction-merchant');
-    this.transactionAmountCells = page.locator('td.transaction-amount');
-    this.transactionCategoryCells = page.locator('td.transaction-category');
+    
+    this.transactionHistoryContainer = page.locator('[data-testid="transaction-history-container"]');
+    this.transactionRows = page.locator('[data-testid="transaction-row"]');
+    
+    this.paginationControls = page.locator('[data-testid="pagination-controls"]');
+    this.nextButton = page.locator('[data-testid="pagination-next"]');
+    this.previousButton = page.locator('[data-testid="pagination-previous"]');
+    this.lastButton = page.locator('[data-testid="pagination-last"]');
+    this.paginationText = page.locator('[data-testid="pagination-text"]');
+    
+    this.inactiveCardMessage = page.locator('[data-testid="inactive-card-message"]');
+    
+    this.filterButton = page.locator('[data-testid="filter-button"]');
+    this.categoryFilterDropdown = page.locator('[data-testid="category-filter-dropdown"]');
+    this.dateRangeFilter = page.locator('[data-testid="date-range-filter"]');
+    this.applyFiltersButton = page.locator('[data-testid="apply-filters-button"]');
+    
+    this.errorMessage = page.locator('[data-testid="error-message"]');
+    this.returnToDashboardButton = page.locator('[data-testid="return-to-dashboard-button"]');
   }
 
   async waitForTransactionHistoryLoad() {
-    await expect(this.transactionHistoryContainer).toBeVisible();
+    await this.transactionHistoryContainer.waitFor({ state: 'visible', timeout: 5000 });
     await this.page.waitForLoadState('networkidle');
-    await expect(this.transactionTable).toBeVisible();
-    logger.info('Transaction History page loaded');
   }
 
   async getTransactionCount() {
-    await expect(this.transactionTable).toBeVisible();
+    await this.transactionRows.first().waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
     return await this.transactionRows.count();
   }
 
-  async verifyAllTransactionsHaveDate() {
-    const count = await this.transactionDateCells.count();
-    const transactionCount = await this.getTransactionCount();
-    return count === transactionCount;
-  }
-
-  async verifyAllTransactionsHaveMerchant() {
-    const count = await this.transactionMerchantCells.count();
-    const transactionCount = await this.getTransactionCount();
-    return count === transactionCount;
-  }
-
-  async verifyAllTransactionsHaveAmount() {
-    const count = await this.transactionAmountCells.count();
-    const transactionCount = await this.getTransactionCount();
-    return count === transactionCount;
-  }
-
-  async verifyAllTransactionsHaveCategory(expectedCategory = null) {
-    const count = await this.transactionCategoryCells.count();
-    const transactionCount = await this.getTransactionCount();
+  async getTransactionDetails(index) {
+    const row = this.transactionRows.nth(index);
+    await expect(row).toBeVisible();
     
-    if (expectedCategory) {
-      const categories = await this.transactionCategoryCells.allTextContents();
-      return categories.every(cat => cat.trim() === expectedCategory);
+    const date = await row.locator('[data-testid="transaction-date"]').textContent();
+    const merchant = await row.locator('[data-testid="transaction-merchant"]').textContent();
+    const amount = await row.locator('[data-testid="transaction-amount"]').textContent();
+    const category = await row.locator('[data-testid="transaction-category"]').textContent();
+    
+    return { date, merchant, amount, category };
+  }
+
+  async getAllTransactions() {
+    const count = await this.getTransactionCount();
+    const transactions = [];
+    
+    for (let i = 0; i < count; i++) {
+      const transaction = await this.getTransactionDetails(i);
+      transactions.push(transaction);
     }
     
-    return count === transactionCount;
+    return transactions;
   }
 
-  async getFirstTransactionDate() {
-    await expect(this.transactionDateCells.first()).toBeVisible();
-    const date = await this.transactionDateCells.first().textContent();
-    return date.trim();
+  async getInactiveCardMessageText() {
+    await expect(this.inactiveCardMessage).toBeVisible();
+    return await this.inactiveCardMessage.textContent();
   }
 
-  async getFirstTransactionMerchant() {
-    await expect(this.transactionMerchantCells.first()).toBeVisible();
-    const merchant = await this.transactionMerchantCells.first().textContent();
-    return merchant.trim();
+  async getLastTransactionDate() {
+    const firstTransaction = await this.getTransactionDetails(0);
+    return firstTransaction.date;
   }
 
-  async getFirstTransactionAmount() {
-    await expect(this.transactionAmountCells.first()).toBeVisible();
-    const amount = await this.transactionAmountCells.first().textContent();
-    return amount.trim();
+  async clickFilterByCategory() {
+    await expect(this.categoryFilterDropdown).toBeVisible();
+    await this.categoryFilterDropdown.click();
   }
 
-  async getFirstTransactionCategory() {
-    await expect(this.transactionCategoryCells.first()).toBeVisible();
-    const category = await this.transactionCategoryCells.first().textContent();
-    return category.trim();
-  }
-
-  async getPaginationText() {
-    await expect(this.paginationContainer).toBeVisible();
-    const text = await this.paginationContainer.locator('.pagination-text').textContent();
-    return text.trim();
-  }
-
-  async clickFilterButton() {
-    await expect(this.filterButton).toBeVisible();
-    await expect(this.filterButton).toBeEnabled();
-    await this.filterButton.click();
-    logger.info('Clicked Filter button');
-  }
-
-  async selectDateRangeFilter(dateRange) {
-    await expect(this.dateRangeDropdown).toBeVisible();
-    await this.dateRangeDropdown.selectOption({ label: dateRange });
-    logger.info(`Selected date range: ${dateRange}`);
-  }
-
-  async selectCategoryFilter(category) {
-    await expect(this.categoryDropdown).toBeVisible();
-    await this.categoryDropdown.selectOption({ label: category });
-    logger.info(`Selected category: ${category}`);
-  }
-
-  async getSelectedDateRange() {
-    const selectedOption = await this.dateRangeDropdown.locator('option:checked').textContent();
-    return selectedOption.trim();
-  }
-
-  async getSelectedCategory() {
-    const selectedOption = await this.categoryDropdown.locator('option:checked').textContent();
-    return selectedOption.trim();
-  }
-
-  async clickApplyFilters() {
-    await expect(this.applyFiltersButton).toBeVisible();
-    await expect(this.applyFiltersButton).toBeEnabled();
-    await this.applyFiltersButton.click();
-    logger.info('Clicked Apply Filters button');
+  async selectCategory(category) {
+    const categoryOption = this.page.locator(`[data-testid="category-option-${category.replace(/\s+/g, '-').toLowerCase()}"]`);
+    await expect(categoryOption).toBeVisible();
+    await categoryOption.click();
   }
 
   async waitForFilteredResults() {
     await this.page.waitForLoadState('networkidle');
-    await expect(this.transactionTable).toBeVisible();
-    logger.info('Filtered results loaded');
+    await this.transactionRows.first().waitFor({ state: 'visible', timeout: 3000 });
   }
 
-  async verifyAllTransactionsWithinDateRange(startDate, endDate) {
-    const dates = await this.transactionDateCells.allTextContents();
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    
-    return dates.every(dateStr => {
-      const transactionDate = new Date(dateStr.trim());
-      return transactionDate >= start && transactionDate <= end;
-    });
+  async clickFilterButton() {
+    await expect(this.filterButton).toBeVisible();
+    await this.filterButton.click();
   }
 
-  async getErrorMessage() {
-    await expect(this.errorMessageContainer).toBeVisible();
-    const message = await this.errorMessageContainer.textContent();
-    return message.trim();
+  async selectDateRange(range) {
+    await expect(this.dateRangeFilter).toBeVisible();
+    await this.dateRangeFilter.click();
+    const rangeOption = this.page.locator(`[data-testid="date-range-${range.replace(/\s+/g, '-').toLowerCase()}"]`);
+    await expect(rangeOption).toBeVisible();
+    await rangeOption.click();
   }
 
-  async isTransactionTableVisible() {
-    return await this.transactionTable.isVisible();
+  async clickApplyFilters() {
+    await expect(this.applyFiltersButton).toBeVisible();
+    await this.applyFiltersButton.click();
+  }
+
+  async getPaginationText() {
+    await expect(this.paginationText).toBeVisible();
+    return await this.paginationText.textContent();
+  }
+
+  async getErrorMessageText() {
+    await expect(this.errorMessage).toBeVisible();
+    return await this.errorMessage.textContent();
   }
 };
