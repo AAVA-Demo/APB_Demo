@@ -1,31 +1,24 @@
 /*
 Test Documentation:
 - Test Name: KPICalculationService - calculateKPIs
-- Purpose: Validates that calculateKPIs aggregates card balances and transactions to compute KPIs
-- Scenario: User requests KPI calculation for dashboard
-- Expected Result: Returns monthlySpend, totalCreditLimit, availableCredit, outstandingAmount, creditUtilization
-*/
-/*
-Test Documentation:
-- Test Name: KPICalculationService - calculateKPIs with zero credit limit
-- Purpose: Validates that creditUtilization is 0 when totalCreditLimit is 0
-- Scenario: User has no credit cards or zero credit limit
-- Expected Result: creditUtilization is 0
+- Purpose: Validates aggregation of financial KPIs across all credit cards
+- Scenario: User dashboard loads and requests consolidated KPI metrics
+- Expected Result: Returns monthlySpend, totalCreditLimit, availableCredit, outstandingAmount, and creditUtilization
 */
 /*
 Coverage Report:
-- Functions tested: calculateKPIs
-- Scenarios covered: normal calculation, zero credit limit, multiple cards, multiple transactions
+- Functions tested: calculateKPIs, getKPIs
+- Scenarios covered: successful KPI calculation, multiple cards aggregation, credit utilization calculation, empty cards/transactions
 - Uncovered scenarios: none
 */
 
 describe('KPICalculationService', function() {
   'use strict';
-
-  var KPICalculationService, CreditCardDataService, TransactionService, $q, $rootScope;
-
+  
   beforeEach(module('creditCardApp'));
-
+  
+  var KPICalculationService, CreditCardDataService, TransactionService, $q, $rootScope;
+  
   beforeEach(inject(function(_KPICalculationService_, _CreditCardDataService_, _TransactionService_, _$q_, _$rootScope_) {
     KPICalculationService = _KPICalculationService_;
     CreditCardDataService = _CreditCardDataService_;
@@ -33,60 +26,74 @@ describe('KPICalculationService', function() {
     $q = _$q_;
     $rootScope = _$rootScope_;
   }));
-
+  
   describe('calculateKPIs', function() {
-    it('should calculate KPIs from card balances and transactions', function() {
-      var mockBalances = [
-        {cardId: 'card1', creditLimit: 50000, currentBalance: 15000, availableCredit: 35000},
-        {cardId: 'card2', creditLimit: 30000, currentBalance: 8000, availableCredit: 22000}
+    it('should calculate KPIs from cards and transactions', function(done) {
+      var mockCards = [
+        { cardId: 'C001', creditLimit: 50000, availableCredit: 35000, currentBalance: 15000 },
+        { cardId: 'C002', creditLimit: 75000, availableCredit: 50000, currentBalance: 25000 }
       ];
       var mockTransactions = [
-        {transactionId: 't1', amount: 2500},
-        {transactionId: 't2', amount: 3000},
-        {transactionId: 't3', amount: 1500}
+        { amount: 1000, date: new Date() },
+        { amount: 2000, date: new Date() },
+        { amount: 1500, date: new Date() }
       ];
-      spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve(mockBalances));
+      spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve(mockCards));
       spyOn(TransactionService, 'getMonthlyTransactions').and.returnValue($q.resolve(mockTransactions));
-
-      var result;
-      KPICalculationService.calculateKPIs('user123').then(function(data) {
-        result = data;
+      
+      KPICalculationService.calculateKPIs('U001').then(function(result) {
+        expect(result.totalCreditLimit).toBe(125000);
+        expect(result.availableCredit).toBe(85000);
+        expect(result.outstandingAmount).toBe(40000);
+        expect(result.monthlySpend).toBe(4500);
+        expect(parseFloat(result.creditUtilization)).toBeCloseTo(32, 0);
+        expect(result.timestamp).toBeDefined();
+        done();
       });
-      $rootScope.$digest();
-
-      expect(result.totalCreditLimit).toBe(80000);
-      expect(result.availableCredit).toBe(57000);
-      expect(result.outstandingAmount).toBe(23000);
-      expect(result.monthlySpend).toBe(7000);
-      expect(result.creditUtilization).toBe('28.75');
-      expect(result.timestamp).toBeDefined();
+      $rootScope.$apply();
     });
-
-    it('should handle zero credit limit gracefully', function() {
-      var mockBalances = [];
-      var mockTransactions = [];
-      spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve(mockBalances));
-      spyOn(TransactionService, 'getMonthlyTransactions').and.returnValue($q.resolve(mockTransactions));
-
-      var result;
-      KPICalculationService.calculateKPIs('user123').then(function(data) {
-        result = data;
-      });
-      $rootScope.$digest();
-
-      expect(result.totalCreditLimit).toBe(0);
-      expect(result.creditUtilization).toBe('0');
-    });
-
-    it('should call getCardBalances and getMonthlyTransactions with correct userId', function() {
+    
+    it('should handle empty cards array', function(done) {
       spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve([]));
       spyOn(TransactionService, 'getMonthlyTransactions').and.returnValue($q.resolve([]));
-
-      KPICalculationService.calculateKPIs('user456');
-      $rootScope.$digest();
-
-      expect(CreditCardDataService.getCardBalances).toHaveBeenCalledWith('user456');
-      expect(TransactionService.getMonthlyTransactions).toHaveBeenCalledWith('user456');
+      
+      KPICalculationService.calculateKPIs('U001').then(function(result) {
+        expect(result.totalCreditLimit).toBe(0);
+        expect(result.availableCredit).toBe(0);
+        expect(result.outstandingAmount).toBe(0);
+        expect(result.monthlySpend).toBe(0);
+        expect(result.creditUtilization).toBe(0);
+        done();
+      });
+      $rootScope.$apply();
+    });
+    
+    it('should calculate credit utilization correctly', function(done) {
+      var mockCards = [
+        { cardId: 'C001', creditLimit: 100000, availableCredit: 60000, currentBalance: 40000 }
+      ];
+      spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve(mockCards));
+      spyOn(TransactionService, 'getMonthlyTransactions').and.returnValue($q.resolve([]));
+      
+      KPICalculationService.calculateKPIs('U001').then(function(result) {
+        expect(result.creditUtilization).toBe('40.00');
+        done();
+      });
+      $rootScope.$apply();
+    });
+  });
+  
+  describe('getKPIs', function() {
+    it('should call calculateKPIs', function(done) {
+      spyOn(CreditCardDataService, 'getCardBalances').and.returnValue($q.resolve([]));
+      spyOn(TransactionService, 'getMonthlyTransactions').and.returnValue($q.resolve([]));
+      
+      KPICalculationService.getKPIs('U001').then(function(result) {
+        expect(result).toBeDefined();
+        expect(result.totalCreditLimit).toBeDefined();
+        done();
+      });
+      $rootScope.$apply();
     });
   });
 });

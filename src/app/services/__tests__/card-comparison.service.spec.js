@@ -1,87 +1,78 @@
 /*
 Test Documentation:
 - Test Name: CardComparisonService - compareCards
-- Purpose: Validates that compareCards fetches card details and returns comparison data
-- Scenario: User compares multiple cards
-- Expected Result: Returns array with cardName, utilizationRate, monthlySpend, availableCredit for each card
-*/
-/*
-Test Documentation:
-- Test Name: CardComparisonService - compareCards with unknown card
-- Purpose: Validates that compareCards handles unknown card IDs gracefully
-- Scenario: User provides card ID that doesn't exist
-- Expected Result: Returns 'Unknown' for cardName and 0 for metrics
+- Purpose: Validates side-by-side comparison of multiple credit cards
+- Scenario: User selects multiple cards for comparison
+- Expected Result: Returns comparison data with utilizationRate, monthlySpend, and availableCredit for each selected card
 */
 /*
 Coverage Report:
 - Functions tested: compareCards
-- Scenarios covered: valid cards, unknown cards, multiple cards comparison
+- Scenarios covered: successful card comparison, filtering by cardIds, card name generation
 - Uncovered scenarios: none
 */
 
 describe('CardComparisonService', function() {
   'use strict';
-
-  var CardComparisonService, CreditCardDataService, $q, $rootScope;
-
+  
   beforeEach(module('creditCardApp'));
-
+  
+  var CardComparisonService, CreditCardDataService, $q, $rootScope;
+  
   beforeEach(inject(function(_CardComparisonService_, _CreditCardDataService_, _$q_, _$rootScope_) {
     CardComparisonService = _CardComparisonService_;
     CreditCardDataService = _CreditCardDataService_;
     $q = _$q_;
     $rootScope = _$rootScope_;
   }));
-
+  
   describe('compareCards', function() {
-    it('should return comparison data for valid card IDs', function() {
+    it('should return comparison data for selected cards', function(done) {
       var mockCards = [
-        {cardId: 'card1', cardType: 'Visa', lastFourDigits: '1234', utilizationRate: 30, monthlySpend: 12000, availableCredit: 35000},
-        {cardId: 'card2', cardType: 'MasterCard', lastFourDigits: '5678', utilizationRate: 27, monthlySpend: 6500, availableCredit: 22000}
+        { cardId: 'C001', cardType: 'Visa', maskedNumber: '**** **** **** 9012', utilizationRate: 30, monthlySpend: 12000, availableCredit: 35000 },
+        { cardId: 'C002', cardType: 'MasterCard', maskedNumber: '**** **** **** 9903', utilizationRate: 33.33, monthlySpend: 18000, availableCredit: 50000 },
+        { cardId: 'C003', cardType: 'Amex', maskedNumber: '**** **** **** 0005', utilizationRate: 20, monthlySpend: 15000, availableCredit: 80000 }
       ];
-      spyOn(CreditCardDataService, 'fetchAllCards').and.returnValue($q.resolve(mockCards));
-
-      var result;
-      CardComparisonService.compareCards(['card1', 'card2']).then(function(data) {
-        result = data;
+      spyOn(CreditCardDataService, 'getAllCards').and.returnValue($q.resolve(mockCards));
+      
+      CardComparisonService.compareCards(['C001', 'C003']).then(function(result) {
+        expect(result.length).toBe(2);
+        expect(result[0].cardId).toBe('C001');
+        expect(result[0].cardName).toBe('Visa 9012');
+        expect(result[0].utilizationRate).toBe(30);
+        expect(result[1].cardId).toBe('C003');
+        expect(result[1].cardName).toBe('Amex 0005');
+        done();
       });
-      $rootScope.$digest();
-
-      expect(result.length).toBe(2);
-      expect(result[0].cardId).toBe('card1');
-      expect(result[0].cardName).toBe('Visa 1234');
-      expect(result[0].utilizationRate).toBe(30);
-      expect(result[0].monthlySpend).toBe(12000);
-      expect(result[0].availableCredit).toBe(35000);
+      $rootScope.$apply();
     });
-
-    it('should handle unknown card IDs gracefully', function() {
+    
+    it('should filter cards by provided cardIds', function(done) {
       var mockCards = [
-        {cardId: 'card1', cardType: 'Visa', lastFourDigits: '1234', utilizationRate: 30, monthlySpend: 12000, availableCredit: 35000}
+        { cardId: 'C001', cardType: 'Visa', maskedNumber: '**** **** **** 9012', utilizationRate: 30, monthlySpend: 12000, availableCredit: 35000 },
+        { cardId: 'C002', cardType: 'MasterCard', maskedNumber: '**** **** **** 9903', utilizationRate: 33.33, monthlySpend: 18000, availableCredit: 50000 }
       ];
-      spyOn(CreditCardDataService, 'fetchAllCards').and.returnValue($q.resolve(mockCards));
-
-      var result;
-      CardComparisonService.compareCards(['card1', 'card999']).then(function(data) {
-        result = data;
+      spyOn(CreditCardDataService, 'getAllCards').and.returnValue($q.resolve(mockCards));
+      
+      CardComparisonService.compareCards(['C002']).then(function(result) {
+        expect(result.length).toBe(1);
+        expect(result[0].cardId).toBe('C002');
+        done();
       });
-      $rootScope.$digest();
-
-      expect(result.length).toBe(2);
-      expect(result[1].cardId).toBe('card999');
-      expect(result[1].cardName).toBe('Unknown');
-      expect(result[1].utilizationRate).toBe(0);
-      expect(result[1].monthlySpend).toBe(0);
-      expect(result[1].availableCredit).toBe(0);
+      $rootScope.$apply();
     });
-
-    it('should call fetchAllCards for each card ID', function() {
-      spyOn(CreditCardDataService, 'fetchAllCards').and.returnValue($q.resolve([]));
-
-      CardComparisonService.compareCards(['card1', 'card2', 'card3']);
-      $rootScope.$digest();
-
-      expect(CreditCardDataService.fetchAllCards.calls.count()).toBe(3);
+    
+    it('should return empty array if no matching cards found', function(done) {
+      var mockCards = [
+        { cardId: 'C001', cardType: 'Visa', maskedNumber: '**** **** **** 9012', utilizationRate: 30, monthlySpend: 12000, availableCredit: 35000 }
+      ];
+      spyOn(CreditCardDataService, 'getAllCards').and.returnValue($q.resolve(mockCards));
+      
+      CardComparisonService.compareCards(['C999']).then(function(result) {
+        expect(result.length).toBe(0);
+        done();
+      });
+      $rootScope.$apply();
     });
   });
 });

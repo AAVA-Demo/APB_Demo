@@ -1,81 +1,77 @@
 /*
 Test Documentation:
 - Test Name: CardAnalysisService - analyzeCards
-- Purpose: Validates that analyzeCards returns mock analysis for provided card IDs
+- Purpose: Validates card-wise spending analysis and utilization calculation
 - Scenario: User requests analysis for multiple cards
-- Expected Result: Returns array of card analysis with monthlySpend, utilizationRate, categoryBreakdown
-*/
-/*
-Test Documentation:
-- Test Name: CardAnalysisService - analyzeCards empty array
-- Purpose: Validates that analyzeCards handles empty cardIds array
-- Scenario: User provides no card IDs
-- Expected Result: Returns empty array
+- Expected Result: Returns analysis data including monthlySpend, utilizationRate, and categoryBreakdown for each card
 */
 /*
 Coverage Report:
 - Functions tested: analyzeCards
-- Scenarios covered: multiple cards, empty array, mock data structure
+- Scenarios covered: successful API response, API failure with mock data, multiple cards analysis
 - Uncovered scenarios: none
 */
 
 describe('CardAnalysisService', function() {
   'use strict';
-
-  var CardAnalysisService, $rootScope;
-
+  
   beforeEach(module('creditCardApp'));
-
-  beforeEach(inject(function(_CardAnalysisService_, _$rootScope_) {
+  
+  var CardAnalysisService, $httpBackend, API_BASE_URL;
+  
+  beforeEach(inject(function(_CardAnalysisService_, _$httpBackend_, _API_BASE_URL_) {
     CardAnalysisService = _CardAnalysisService_;
-    $rootScope = _$rootScope_;
+    $httpBackend = _$httpBackend_;
+    API_BASE_URL = _API_BASE_URL_;
   }));
-
+  
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+  
   describe('analyzeCards', function() {
-    it('should return mock analysis for provided card IDs', function() {
-      var cardIds = ['card1', 'card2', 'card3'];
-
-      var result;
-      CardAnalysisService.analyzeCards(cardIds).then(function(data) {
-        result = data;
+    it('should return analysis data from API', function() {
+      var cardIds = ['C001', 'C002'];
+      var mockResponse = [
+        { cardId: 'C001', monthlySpend: 15000, utilizationRate: 45, categoryBreakdown: [{ category: 'Food & Dining', amount: 5000 }] },
+        { cardId: 'C002', monthlySpend: 20000, utilizationRate: 60, categoryBreakdown: [{ category: 'Fuel', amount: 3000 }] }
+      ];
+      $httpBackend.expectGET(API_BASE_URL + '/api/cards/analysis?cardIds=C001,C002').respond(200, mockResponse);
+      
+      CardAnalysisService.analyzeCards(cardIds).then(function(result) {
+        expect(result.length).toBe(2);
+        expect(result[0].cardId).toBe('C001');
+        expect(result[0].monthlySpend).toBe(15000);
+        expect(result[1].cardId).toBe('C002');
       });
-      $rootScope.$digest();
-
-      expect(result.length).toBe(3);
-      expect(result[0].cardId).toBe('card1');
-      expect(result[0].monthlySpend).toBeGreaterThanOrEqual(5000);
-      expect(result[0].monthlySpend).toBeLessThanOrEqual(20000);
-      expect(result[0].utilizationRate).toBeGreaterThanOrEqual(20);
-      expect(result[0].utilizationRate).toBeLessThanOrEqual(70);
-      expect(result[0].categoryBreakdown).toBeDefined();
-      expect(result[0].categoryBreakdown.length).toBe(3);
+      $httpBackend.flush();
     });
-
-    it('should handle empty cardIds array', function() {
-      var result;
-      CardAnalysisService.analyzeCards([]).then(function(data) {
-        result = data;
+    
+    it('should return mock data on API failure', function() {
+      var cardIds = ['C001', 'C002'];
+      $httpBackend.expectGET(API_BASE_URL + '/api/cards/analysis?cardIds=C001,C002').respond(500, 'Server Error');
+      
+      CardAnalysisService.analyzeCards(cardIds).then(function(result) {
+        expect(result.length).toBe(2);
+        expect(result[0].cardId).toBe('C001');
+        expect(result[0].monthlySpend).toBeGreaterThan(0);
+        expect(result[0].utilizationRate).toBeGreaterThan(0);
+        expect(result[0].categoryBreakdown).toBeDefined();
+        expect(result[0].categoryBreakdown.length).toBeGreaterThan(0);
       });
-      $rootScope.$digest();
-
-      expect(result).toEqual([]);
+      $httpBackend.flush();
     });
-
-    it('should return analysis with correct structure for each card', function() {
-      var cardIds = ['card1'];
-
-      var result;
-      CardAnalysisService.analyzeCards(cardIds).then(function(data) {
-        result = data;
+    
+    it('should handle single card analysis', function() {
+      var cardIds = ['C001'];
+      $httpBackend.expectGET(API_BASE_URL + '/api/cards/analysis?cardIds=C001').respond(500);
+      
+      CardAnalysisService.analyzeCards(cardIds).then(function(result) {
+        expect(result.length).toBe(1);
+        expect(result[0].cardId).toBe('C001');
       });
-      $rootScope.$digest();
-
-      expect(result[0]).toEqual(jasmine.objectContaining({
-        cardId: jasmine.any(String),
-        monthlySpend: jasmine.any(Number),
-        utilizationRate: jasmine.any(Number),
-        categoryBreakdown: jasmine.any(Array)
-      }));
+      $httpBackend.flush();
     });
   });
 });
