@@ -1,135 +1,97 @@
 # Low-Level Design: Credit Card Management and Visualization
 **Epic ID:** QE-7735
 
----
-
 ## a. Architecture Mapping
 
-- **Card Management Module** → AngularJS Module (`creditCardManagement`)
-- **Card Selector Component** → AngularJS Controller (`CardSelectorController`) + Directive (`cardSelector`)
-- **Card Detail Viewer** → AngularJS Controller (`CardDetailController`) + View Template
-- **Card Management Service** → AngularJS Service (`CardManagementService`) for business logic and API calls
-- **Card Repository Access** → AngularJS Factory (`CardRepository`) for data access layer
-- **Dashboard KPI Integration** → AngularJS Service (`DashboardKPIService`) for aggregated metrics
+- **cardManagementModule** (AngularJS Module) - Root module for card management features
+- **cardListController** (Controller) - Manages display of multiple credit cards
+- **cardDetailController** (Controller) - Handles individual card detail view
+- **cardNavigationService** (Service) - Manages card switching and selection logic
+- **cardDataService** (Factory) - Fetches card data from REST API
+- **cardSummaryDirective** (Directive) - Renders card summary tiles
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── modules/
-│   └── creditCardManagement/
-│       ├── controllers/
-│       │   ├── cardSelectorController.js
-│       │   └── cardDetailController.js
-│       ├── services/
-│       │   ├── cardManagementService.js
-│       │   └── dashboardKPIService.js
-│       ├── factories/
-│       │   └── cardRepository.js
-│       ├── directives/
-│       │   └── cardSelector.js
-│       ├── views/
-│       │   ├── card-list.html
-│       │   └── card-detail.html
-│       └── creditCardManagement.module.js
+/app
+  /modules
+    /card-management
+      /controllers (cardListController.js, cardDetailController.js)
+      /services (cardNavigationService.js, cardDataService.js)
+      /directives (cardSummaryDirective.js)
+      /views (card-list.html, card-detail.html)
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| `creditCardManagement` | Module | Root module for credit card management features | `ngRoute`, `ui.bootstrap` |
-| `CardSelectorController` | Controller | Manages card selection, switching, and list display | `CardManagementService`, `$scope` |
-| `CardDetailController` | Controller | Displays detailed card information (spend, limits, balances) | `CardManagementService`, `DashboardKPIService`, `$routeParams` |
-| `CardManagementService` | Service | Fetches card data, handles card switching logic, ensures data consistency | `CardRepository`, `$q`, `$http` |
-| `CardRepository` | Factory | Data access layer for credit card CRUD operations | `$http`, `API_CONFIG` |
-| `DashboardKPIService` | Service | Provides aggregated KPI metrics for card comparison | `$http`, `API_CONFIG` |
-| `cardSelector` | Directive | Reusable UI component for card selection dropdown/list | `CardManagementService` |
-
----
+| cardManagementModule | Module | Bootstraps card management feature | angular, ngRoute |
+| cardListController | Controller | Displays list of user's credit cards | cardDataService, cardNavigationService |
+| cardDetailController | Controller | Shows detailed view of selected card | cardDataService, $routeParams |
+| cardNavigationService | Service | Manages card selection state and navigation | $rootScope |
+| cardDataService | Factory | Fetches card data via REST API | $http, $q |
+| cardSummaryDirective | Directive | Renders individual card summary tile | None |
 
 ## c. Data Model
 
 **CreditCard Object:**
 ```javascript
 {
-  cardId: String,              // Unique card identifier
-  cardNumber: String,          // Masked card number (e.g., "**** **** **** 1234")
-  cardHolderName: String,      // Cardholder name
-  cardType: String,            // e.g., "Visa", "MasterCard", "Amex"
-  creditLimit: Number,         // Total credit limit
-  availableCredit: Number,     // Available credit
-  outstandingBalance: Number,  // Current outstanding amount
-  monthlySpend: Number,        // Current month's spend
-  expiryDate: String,          // MM/YY format
-  status: String               // "Active", "Blocked", "Expired"
+  cardId: String,
+  cardNumber: String (masked),
+  cardType: String,
+  cardHolderName: String,
+  creditLimit: Number,
+  availableCredit: Number,
+  outstandingAmount: Number,
+  monthlySpend: Number,
+  expiryDate: String,
+  isActive: Boolean
 }
 ```
-
-**CardListResponse Object:**
-```javascript
-{
-  cards: Array<CreditCard>,    // Array of credit card objects
-  totalCards: Number           // Total number of cards
-}
-```
-
----
 
 ## d. Data Flow
 
-User loads the card management interface → `CardSelectorController` initializes and calls `CardManagementService.getAllCards()` → Service invokes `CardRepository.fetchCards()` which makes REST API call to `/api/cards` → Card list retrieved and cached → User selects a specific card from the selector → `CardSelectorController` broadcasts card selection event → `CardDetailController` listens to event and calls `CardManagementService.getCardDetails(cardId)` → Service retrieves detailed card data (sub-500ms via cache or optimized API) → `DashboardKPIService` fetches aggregated metrics for comparison → View updates with card-specific spending, limits, and balances → User can switch between up to 20 cards with instant navigation.
-
----
+User accesses card management view → cardListController initializes and calls cardDataService.getAllCards() → Service makes GET /api/cards REST call → Response parsed into CreditCard model array → Cards rendered via cardSummaryDirective → User clicks card → cardNavigationService.selectCard(cardId) updates state → $routeParams triggers cardDetailController → Controller fetches detailed card data via cardDataService.getCardById(cardId) → Detailed view rendered with spending, limits, and balances.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardSelectorCtrl
-    participant CardMgmtService
-    participant CardRepository
-    participant API
-    participant CardDetailCtrl
-    
-    User->>CardSelectorCtrl: Load card management page
-    CardSelectorCtrl->>CardMgmtService: getAllCards()
-    CardMgmtService->>CardRepository: fetchCards()
-    CardRepository->>API: GET /api/cards
-    API-->>CardRepository: CardListResponse
-    CardRepository-->>CardMgmtService: cards[]
-    CardMgmtService-->>CardSelectorCtrl: cards[]
-    CardSelectorCtrl-->>User: Display card list
-    User->>CardSelectorCtrl: Select card (cardId)
-    CardSelectorCtrl->>CardMgmtService: getCardDetails(cardId)
-    CardMgmtService->>CardRepository: fetchCardById(cardId)
-    CardRepository->>API: GET /api/cards/{cardId}
-    API-->>CardRepository: CreditCard
-    CardRepository-->>CardMgmtService: cardDetails
-    CardMgmtService-->>CardDetailCtrl: cardDetails
-    CardDetailCtrl-->>User: Display card details (spend, limits, balances)
-```
+    participant cardListController
+    participant cardNavigationService
+    participant cardDataService
+    participant REST API
+    participant cardDetailController
 
----
+    User->>cardListController: Access card list view
+    cardListController->>cardDataService: getAllCards()
+    cardDataService->>REST API: GET /api/cards
+    REST API-->>cardDataService: Card array response
+    cardDataService-->>cardListController: CreditCard[]
+    cardListController->>User: Display card summaries
+    User->>cardNavigationService: Click card (selectCard)
+    cardNavigationService->>cardDetailController: Navigate to detail view
+    cardDetailController->>cardDataService: getCardById(cardId)
+    cardDataService->>REST API: GET /api/cards/{cardId}
+    REST API-->>cardDataService: Card detail response
+    cardDataService-->>cardDetailController: CreditCard object
+    cardDetailController->>User: Display card details
+```
 
 ## f. Implementation Notes
 
-- Use AngularJS DI to inject `CardManagementService` and `CardRepository` into controllers for testability
-- Implement client-side caching in `CardManagementService` using `$cacheFactory` to achieve sub-500ms card switching
-- Use `$http` interceptors for consistent error handling and authentication token injection
-- Leverage `ng-repeat` with `track by cardId` for optimized card list rendering
-- Use `$routeParams` or `$stateParams` (if using UI-Router) for card detail navigation
-
----
+- Use AngularJS $http service with promise-based pattern for all REST API calls
+- Implement cardNavigationService as singleton with $rootScope event broadcasting for card selection changes
+- Apply AngularJS DI via function parameter annotation for minification safety
+- Cache card list data in cardDataService for sub-500ms card switching performance
+- Use ng-repeat with track by cardId for efficient list rendering
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user-friendly notifications via `toastr` or Bootstrap modals for API failures.
-
----
+HTTP interceptor captures API errors; cardDataService wraps calls in $q promises with rejection handlers; user notified via toastr or modal dialog.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; card data transmission over HTTPS with masked card numbers in UI.
+Requires token-based auth via existing SSO; card numbers masked on client; all API calls over HTTPS.

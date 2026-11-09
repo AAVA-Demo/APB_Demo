@@ -1,130 +1,104 @@
 # Low-Level Design: Credit Card Dashboard and KPI Management
 **Epic ID:** QE-7736
 
----
-
 ## a. Architecture Mapping
 
-- **Dashboard Module** → AngularJS Module (`creditCardDashboard`)
-- **Dashboard Interface** → AngularJS Controller (`DashboardController`) + View Template
-- **KPI Management Service** → AngularJS Service (`KPIManagementService`) for KPI calculations and data aggregation
-- **Data Aggregator** → AngularJS Factory (`DataAggregatorFactory`) for server-side data processing
-- **Credit Card Data Source** → REST API integration via `$http`
-- **Authentication Service** → AngularJS Service (`AuthService`) for user authentication
+- **dashboardModule** (AngularJS Module) - Root module for dashboard feature
+- **dashboardController** (Controller) - Manages dashboard view and KPI display
+- **kpiService** (Service) - Calculates and manages KPI metrics
+- **cardDataService** (Factory) - Fetches card data from REST API
+- **refreshService** (Service) - Handles real-time data refresh logic
+- **kpiCardDirective** (Directive) - Renders individual KPI metric cards
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── modules/
-│   └── creditCardDashboard/
-│       ├── controllers/
-│       │   └── dashboardController.js
-│       ├── services/
-│       │   ├── kpiManagementService.js
-│       │   └── authService.js
-│       ├── factories/
-│       │   └── dataAggregatorFactory.js
-│       ├── views/
-│       │   └── dashboard.html
-│       └── creditCardDashboard.module.js
+/app
+  /modules
+    /dashboard
+      /controllers (dashboardController.js)
+      /services (kpiService.js, cardDataService.js, refreshService.js)
+      /directives (kpiCardDirective.js)
+      /views (dashboard.html)
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| `creditCardDashboard` | Module | Root module for dashboard and KPI features | `ngRoute`, `ui.bootstrap` |
-| `DashboardController` | Controller | Manages dashboard UI, displays KPIs, handles real-time refresh | `KPIManagementService`, `AuthService`, `$scope`, `$interval` |
-| `KPIManagementService` | Service | Fetches and calculates KPIs (monthly spend, credit limit, available credit, outstanding) | `DataAggregatorFactory`, `$http`, `$q` |
-| `DataAggregatorFactory` | Factory | Aggregates data from credit card data source, performs server-side calculations | `$http`, `API_CONFIG` |
-| `AuthService` | Service | Handles user authentication and session management | `$http`, `$window`, `API_CONFIG` |
-
----
+| dashboardModule | Module | Bootstraps dashboard feature | angular, ngRoute |
+| dashboardController | Controller | Orchestrates dashboard view and KPI updates | kpiService, cardDataService, refreshService |
+| kpiService | Service | Calculates monthly spend, credit limit, available credit, outstanding amounts | None |
+| cardDataService | Factory | Fetches aggregated card data via REST API | $http, $q |
+| refreshService | Service | Polls or listens for data updates and triggers refresh | $interval, $rootScope |
+| kpiCardDirective | Directive | Renders individual KPI metric with label and value | None |
 
 ## c. Data Model
 
 **DashboardKPI Object:**
 ```javascript
 {
-  monthlySpend: Number,         // Total spend for current month across all cards
-  totalCreditLimit: Number,     // Sum of credit limits across all cards
-  availableCredit: Number,      // Total available credit
-  outstandingAmount: Number,    // Total outstanding balance
-  cardCount: Number,            // Number of active cards
-  lastUpdated: Date             // Timestamp of last data refresh
+  totalCreditLimit: Number,
+  totalAvailableCredit: Number,
+  totalOutstandingAmount: Number,
+  monthlySpend: Number,
+  cardCount: Number,
+  lastUpdated: Date
 }
 ```
 
-**CreditCardSummary Object:**
+**CreditCard Object (summary):**
 ```javascript
 {
   cardId: String,
-  cardNumber: String,           // Masked
   cardType: String,
-  monthlySpend: Number,
   creditLimit: Number,
   availableCredit: Number,
-  outstandingBalance: Number
+  outstandingAmount: Number,
+  monthlySpend: Number
 }
 ```
 
----
-
 ## d. Data Flow
 
-User navigates to dashboard → `AuthService` validates authentication → `DashboardController` initializes and calls `KPIManagementService.getKPIs()` → Service invokes `DataAggregatorFactory.aggregateCardData()` which makes REST API call to `/api/dashboard/kpis` → Server-side aggregation returns calculated KPIs → KPIs displayed in responsive dashboard UI (WCAG 2.1 compliant) → `$interval` triggers periodic refresh (every 30 seconds) for real-time/near real-time updates → `KPIManagementService` fetches updated data → Dashboard UI updates KPI values → User views consolidated financial position across all credit cards within 2-second load time.
-
----
+User authenticates and accesses dashboard → dashboardController initializes and calls cardDataService.getDashboardData() → Service makes GET /api/dashboard REST call → Response contains card array and aggregated metrics → kpiService.calculateKPIs(cards) computes total credit limit, available credit, outstanding amount, and monthly spend → KPIs and card list rendered via kpiCardDirective → refreshService polls API every 30 seconds → On data change, $rootScope broadcasts 'dashboard:refresh' event → dashboardController re-fetches data and updates view.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AuthService
-    participant DashboardCtrl
-    participant KPIMgmtService
-    participant DataAggregator
-    participant API
-    
-    User->>AuthService: Navigate to dashboard
-    AuthService->>AuthService: Validate authentication
-    AuthService-->>DashboardCtrl: Auth success
-    DashboardCtrl->>KPIMgmtService: getKPIs()
-    KPIMgmtService->>DataAggregator: aggregateCardData()
-    DataAggregator->>API: GET /api/dashboard/kpis
-    API-->>DataAggregator: DashboardKPI
-    DataAggregator-->>KPIMgmtService: aggregatedKPIs
-    KPIMgmtService-->>DashboardCtrl: kpiData
-    DashboardCtrl-->>User: Display KPIs (monthly spend, credit limit, available credit, outstanding)
-    Note over DashboardCtrl: $interval triggers refresh every 30s
-    DashboardCtrl->>KPIMgmtService: getKPIs() [refresh]
-    KPIMgmtService->>API: GET /api/dashboard/kpis
-    API-->>KPIMgmtService: Updated KPIs
-    KPIMgmtService-->>DashboardCtrl: Updated kpiData
-    DashboardCtrl-->>User: Update KPI display
-```
+    participant dashboardController
+    participant cardDataService
+    participant REST API
+    participant kpiService
+    participant refreshService
 
----
+    User->>dashboardController: Access dashboard
+    dashboardController->>cardDataService: getDashboardData()
+    cardDataService->>REST API: GET /api/dashboard
+    REST API-->>cardDataService: {cards[], aggregatedMetrics}
+    cardDataService-->>dashboardController: Dashboard data
+    dashboardController->>kpiService: calculateKPIs(cards)
+    kpiService-->>dashboardController: DashboardKPI object
+    dashboardController->>User: Display KPIs and cards
+    refreshService->>REST API: Poll GET /api/dashboard (every 30s)
+    REST API-->>refreshService: Updated data
+    refreshService->>dashboardController: Broadcast 'dashboard:refresh'
+    dashboardController->>User: Update KPIs in real-time
+```
 
 ## f. Implementation Notes
 
-- Use AngularJS `$interval` service for periodic KPI refresh (30-second intervals) to achieve real-time/near real-time updates
-- Implement responsive design using Bootstrap grid system and media queries for desktop/tablet/mobile support
-- Use `ng-cloak` to prevent FOUC (Flash of Unstyled Content) during initial load
-- Leverage `$q` promises for asynchronous KPI data fetching and error handling
-- Ensure WCAG 2.1 compliance through semantic HTML, ARIA labels, and keyboard navigation support
-
----
+- Use AngularJS $interval service for 30-second polling in refreshService
+- Apply AngularJS two-way data binding for automatic KPI updates on model change
+- Implement responsive grid layout using Bootstrap 3 col-* classes for mobile/tablet/desktop
+- Use AngularJS $http caching for sub-2-second initial load performance
+- Inject dependencies via explicit array notation for minification compatibility
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors; user notified via Bootstrap alert components with retry option.
-
----
+HTTP interceptor with $q rejection; refreshService handles polling failures silently with exponential backoff; user notified on critical errors via modal.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; all API calls include JWT in Authorization header.
+Requires token-based auth via existing SSO; all API calls authenticated with JWT in Authorization header.

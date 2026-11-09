@@ -1,147 +1,107 @@
 # Low-Level Design: Spending Analytics and Insights
 **Epic ID:** QE-7737
 
----
-
 ## a. Architecture Mapping
 
-- **Analytics Module** → AngularJS Module (`spendingAnalytics`)
-- **Analytics Dashboard** → AngularJS Controller (`AnalyticsDashboardController`) + View Template
-- **Spend Analysis Service** → AngularJS Service (`SpendAnalysisService`) for analytics logic
-- **Category Classification Engine** → AngularJS Factory (`CategoryClassifierFactory`) for transaction categorization
-- **Transaction Data Service** → AngularJS Service (`TransactionDataService`) for transaction data access
-- **Visualization Engine** → AngularJS Directive (`chartVisualizer`) using Chart.js or D3.js
+- **analyticsModule** (AngularJS Module) - Root module for analytics feature
+- **analyticsController** (Controller) - Manages analytics view and chart interactions
+- **transactionDataService** (Factory) - Fetches transaction data from REST API
+- **categoryService** (Service) - Handles category classification logic
+- **chartService** (Service) - Prepares data for chart rendering
+- **spendChartDirective** (Directive) - Renders interactive charts using Chart.js
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── modules/
-│   └── spendingAnalytics/
-│       ├── controllers/
-│       │   └── analyticsDashboardController.js
-│       ├── services/
-│       │   ├── spendAnalysisService.js
-│       │   └── transactionDataService.js
-│       ├── factories/
-│       │   └── categoryClassifierFactory.js
-│       ├── directives/
-│       │   └── chartVisualizer.js
-│       ├── views/
-│       │   └── analytics-dashboard.html
-│       └── spendingAnalytics.module.js
+/app
+  /modules
+    /analytics
+      /controllers (analyticsController.js)
+      /services (transactionDataService.js, categoryService.js, chartService.js)
+      /directives (spendChartDirective.js)
+      /views (analytics.html)
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| `spendingAnalytics` | Module | Root module for spending analytics features | `ngRoute`, `chart.js`, `ui.bootstrap` |
-| `AnalyticsDashboardController` | Controller | Manages analytics dashboard, handles user interactions (filtering, drill-down) | `SpendAnalysisService`, `$scope`, `$filter` |
-| `SpendAnalysisService` | Service | Aggregates spending data, calculates monthly trends, card-wise breakdowns | `TransactionDataService`, `CategoryClassifierFactory`, `$q` |
-| `TransactionDataService` | Service | Fetches transaction data from API | `$http`, `API_CONFIG` |
-| `CategoryClassifierFactory` | Factory | Classifies transactions into nine categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) | None (rule-based logic) |
-| `chartVisualizer` | Directive | Renders interactive charts (monthly trends, card-wise, category-wise) using Chart.js | `Chart.js library` |
-
----
+| analyticsModule | Module | Bootstraps analytics feature | angular, ngRoute, chart.js |
+| analyticsController | Controller | Manages analytics view, filters, and drill-down | transactionDataService, chartService |
+| transactionDataService | Factory | Fetches transaction data via REST API | $http, $q |
+| categoryService | Service | Maps transactions to nine predefined categories | None |
+| chartService | Service | Aggregates data for monthly trends and category breakdowns | categoryService |
+| spendChartDirective | Directive | Renders Chart.js line/bar/pie charts with interactivity | chart.js |
 
 ## c. Data Model
 
-**SpendingAnalytics Object:**
+**Transaction Object:**
 ```javascript
 {
-  monthlyTrends: Array<MonthlySpend>,    // Monthly spend data
-  cardWiseSpend: Array<CardSpend>,       // Spend breakdown by card
-  categoryWiseSpend: Array<CategorySpend>, // Spend breakdown by category
-  totalSpend: Number,                    // Total spend across all cards
-  period: String                         // Analysis period (e.g., "Last 6 months")
-}
-```
-
-**MonthlySpend Object:**
-```javascript
-{
-  month: String,      // e.g., "Jan 2026"
-  amount: Number      // Total spend for the month
-}
-```
-
-**CardSpend Object:**
-```javascript
-{
+  transactionId: String,
   cardId: String,
-  cardNumber: String,  // Masked
-  amount: Number       // Total spend on this card
+  amount: Number,
+  merchant: String,
+  category: String, // One of 9 categories
+  transactionDate: Date,
+  description: String
 }
 ```
 
-**CategorySpend Object:**
+**AnalyticsData Object:**
 ```javascript
 {
-  category: String,    // One of nine categories
-  amount: Number,      // Total spend in this category
-  percentage: Number   // Percentage of total spend
+  monthlyTrends: [{month: String, totalSpend: Number}],
+  cardWiseSpend: [{cardId: String, totalSpend: Number}],
+  categoryWiseSpend: [{category: String, totalSpend: Number}]
 }
 ```
-
----
 
 ## d. Data Flow
 
-User accesses analytics dashboard → `AnalyticsDashboardController` initializes and calls `SpendAnalysisService.getSpendingAnalytics()` → Service invokes `TransactionDataService.fetchTransactions()` which makes REST API call to `/api/transactions` → Raw transaction data retrieved → `CategoryClassifierFactory` categorizes each transaction into one of nine categories using rule-based logic → `SpendAnalysisService` aggregates data by month, card, and category → Aggregated data passed to `chartVisualizer` directive → Chart.js renders interactive charts (monthly trends, card-wise breakdown, category-wise spending) within 1 second → User interacts with charts through filtering (date range, card selection) and drill-down (click category to view transactions) → Controller updates data model → Charts re-render with filtered data.
-
----
+User accesses analytics view → analyticsController calls transactionDataService.getTransactions() → Service makes GET /api/transactions REST call → Transactions retrieved and passed to chartService.processData() → categoryService categorizes each transaction into one of nine categories → chartService aggregates spending by month, card, and category → Processed data returned as AnalyticsData object → spendChartDirective renders monthly trend line chart, card-wise bar chart, and category-wise pie chart → User applies filter (date range, card) → analyticsController re-processes data and updates charts.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AnalyticsDashboardCtrl
-    participant SpendAnalysisService
-    participant TransactionDataService
-    participant CategoryClassifier
-    participant API
-    participant ChartVisualizer
-    
-    User->>AnalyticsDashboardCtrl: Load analytics dashboard
-    AnalyticsDashboardCtrl->>SpendAnalysisService: getSpendingAnalytics()
-    SpendAnalysisService->>TransactionDataService: fetchTransactions()
-    TransactionDataService->>API: GET /api/transactions
-    API-->>TransactionDataService: transactions[]
-    TransactionDataService-->>SpendAnalysisService: rawTransactions
-    SpendAnalysisService->>CategoryClassifier: categorizeTransactions(rawTransactions)
-    CategoryClassifier-->>SpendAnalysisService: categorizedTransactions
-    SpendAnalysisService->>SpendAnalysisService: Aggregate by month, card, category
-    SpendAnalysisService-->>AnalyticsDashboardCtrl: SpendingAnalytics
-    AnalyticsDashboardCtrl->>ChartVisualizer: Render charts (monthly, card-wise, category-wise)
-    ChartVisualizer-->>User: Display interactive charts
-    User->>AnalyticsDashboardCtrl: Filter by date range / card
-    AnalyticsDashboardCtrl->>SpendAnalysisService: getFilteredAnalytics(filters)
-    SpendAnalysisService-->>AnalyticsDashboardCtrl: Filtered analytics
-    AnalyticsDashboardCtrl->>ChartVisualizer: Re-render charts
-    ChartVisualizer-->>User: Updated charts
-```
+    participant analyticsController
+    participant transactionDataService
+    participant REST API
+    participant chartService
+    participant categoryService
+    participant spendChartDirective
 
----
+    User->>analyticsController: Access analytics view
+    analyticsController->>transactionDataService: getTransactions()
+    transactionDataService->>REST API: GET /api/transactions
+    REST API-->>transactionDataService: Transaction[]
+    transactionDataService-->>analyticsController: Transactions
+    analyticsController->>chartService: processData(transactions)
+    chartService->>categoryService: categorize(transaction)
+    categoryService-->>chartService: Category assigned
+    chartService-->>analyticsController: AnalyticsData
+    analyticsController->>spendChartDirective: Render charts
+    spendChartDirective->>User: Display interactive charts
+    User->>analyticsController: Apply filter (date/card)
+    analyticsController->>chartService: processData(filteredTransactions)
+    chartService-->>analyticsController: Updated AnalyticsData
+    analyticsController->>spendChartDirective: Update charts
+    spendChartDirective->>User: Display updated charts
+```
 
 ## f. Implementation Notes
 
-- Use Chart.js library integrated via `angular-chart.js` wrapper for AngularJS compatibility and 1-second render time
-- Implement `CategoryClassifierFactory` with rule-based logic (merchant name/MCC code mapping to categories)
-- Cache aggregated analytics data in `SpendAnalysisService` using `$cacheFactory` to optimize performance
-- Use `ng-click` on chart elements for drill-down functionality (navigate to transaction list filtered by category)
-- Leverage `$filter` service for date range filtering and data manipulation
-
----
+- Integrate Chart.js library via bower or CDN; wrap in AngularJS directive for two-way binding
+- Use AngularJS $filter service for date range and card filtering on client-side
+- Implement categoryService with static mapping of transaction categories to nine predefined categories
+- Apply AngularJS $scope.$watch for reactive chart updates on filter changes
+- Use Web Workers (if supported) for data aggregation to meet 1-second rendering NFR
 
 ## g. Error Handling
 
-Try/catch blocks in service methods with fallback to cached data; user notified via toastr on API failures.
-
----
+HTTP interceptor handles API errors; chartService validates data integrity; user notified via toastr on rendering failures.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; transaction data transmitted over HTTPS.
+Standard input validation and secure API calls assumed; token-based auth via existing SSO.

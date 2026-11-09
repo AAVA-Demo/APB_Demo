@@ -1,67 +1,48 @@
 # Low-Level Design: Credit Card Portfolio Management and Dashboard KPIs
 **Epic ID:** QE-7738
 
----
-
 ## a. Architecture Mapping
 
-- **Portfolio Management Module** → AngularJS Module (`creditCardPortfolio`)
-- **Dashboard UI** → AngularJS Controller (`PortfolioDashboardController`) + View Template
-- **KPI Aggregation Service** → AngularJS Service (`KPIAggregationService`) for KPI calculations
-- **Credit Card Data Service** → AngularJS Service (`CreditCardDataService`) for card data access
-- **Authentication Service** → AngularJS Service (`AuthService`) for user authentication
-- **Data Repository** → REST API integration via `$http`
+- **portfolioModule** (AngularJS Module) - Root module for portfolio management
+- **portfolioController** (Controller) - Manages portfolio dashboard view
+- **kpiCalculationService** (Service) - Computes aggregated KPI metrics
+- **cardDataService** (Factory) - Fetches card data from REST API
+- **dataAggregationService** (Service) - Consolidates multi-card data
+- **kpiDisplayDirective** (Directive) - Renders KPI metric tiles
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── modules/
-│   └── creditCardPortfolio/
-│       ├── controllers/
-│       │   └── portfolioDashboardController.js
-│       ├── services/
-│       │   ├── kpiAggregationService.js
-│       │   ├── creditCardDataService.js
-│       │   └── authService.js
-│       ├── views/
-│       │   └── portfolio-dashboard.html
-│       └── creditCardPortfolio.module.js
+/app
+  /modules
+    /portfolio
+      /controllers (portfolioController.js)
+      /services (kpiCalculationService.js, cardDataService.js, dataAggregationService.js)
+      /directives (kpiDisplayDirective.js)
+      /views (portfolio.html)
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| `creditCardPortfolio` | Module | Root module for portfolio management and KPI tracking | `ngRoute`, `ui.bootstrap` |
-| `PortfolioDashboardController` | Controller | Manages portfolio dashboard UI, displays KPIs, handles real-time refresh | `KPIAggregationService`, `CreditCardDataService`, `AuthService`, `$scope`, `$interval` |
-| `KPIAggregationService` | Service | Aggregates and calculates KPIs (monthly spend, total credit limit, available credit, outstanding amounts) | `CreditCardDataService`, `$q` |
-| `CreditCardDataService` | Service | Fetches credit card data from repository | `$http`, `API_CONFIG`, `$cacheFactory` |
-| `AuthService` | Service | Handles user authentication and session management | `$http`, `$window`, `API_CONFIG` |
-
----
+| portfolioModule | Module | Bootstraps portfolio management feature | angular, ngRoute |
+| portfolioController | Controller | Orchestrates portfolio view and KPI display | kpiCalculationService, dataAggregationService |
+| kpiCalculationService | Service | Calculates monthly spend, total credit limit, available credit, outstanding amounts | None |
+| cardDataService | Factory | Fetches card data via REST API | $http, $q |
+| dataAggregationService | Service | Consolidates data from multiple credit cards | cardDataService |
+| kpiDisplayDirective | Directive | Renders individual KPI tile with icon and value | None |
 
 ## c. Data Model
 
 **PortfolioKPI Object:**
 ```javascript
 {
-  monthlySpend: Number,         // Total monthly spend across all cards
-  totalCreditLimit: Number,     // Sum of credit limits
-  availableCredit: Number,      // Total available credit
-  outstandingAmount: Number,    // Total outstanding balance
-  creditUtilization: Number,    // Percentage of credit used
-  cardCount: Number,            // Number of cards in portfolio
-  lastRefreshed: Date           // Last data refresh timestamp
-}
-```
-
-**CreditCardPortfolio Object:**
-```javascript
-{
-  cards: Array<CreditCard>,     // Array of credit card objects
-  kpis: PortfolioKPI            // Aggregated KPIs
+  totalCreditLimit: Number,
+  totalAvailableCredit: Number,
+  totalOutstandingAmount: Number,
+  monthlySpend: Number,
+  creditUtilization: Number, // Percentage
+  cardCount: Number
 }
 ```
 
@@ -69,73 +50,54 @@ app/
 ```javascript
 {
   cardId: String,
-  cardNumber: String,           // Masked
+  cardNumber: String (masked),
   cardType: String,
   creditLimit: Number,
   availableCredit: Number,
-  outstandingBalance: Number,
+  outstandingAmount: Number,
   monthlySpend: Number
 }
 ```
 
----
-
 ## d. Data Flow
 
-User navigates to portfolio dashboard → `AuthService` validates authentication → `PortfolioDashboardController` initializes and calls `KPIAggregationService.getPortfolioKPIs()` → Service invokes `CreditCardDataService.fetchAllCards()` which makes REST API call to `/api/cards/portfolio` → Card data retrieved from data repository → `KPIAggregationService` calculates aggregated KPIs (monthly spend, total credit limit, available credit, outstanding amounts) in real-time → KPIs and card portfolio displayed in responsive dashboard UI → `$interval` triggers periodic refresh (every 30 seconds) for real-time/near real-time updates → `CreditCardDataService` fetches updated data → Dashboard UI updates KPI values → User views consolidated financial position across all credit cards with sub-2-second page load.
-
----
+User authenticates and accesses portfolio dashboard → portfolioController calls dataAggregationService.getAggregatedData() → Service calls cardDataService.getAllCards() which makes GET /api/cards REST call → Card array retrieved → dataAggregationService consolidates data from all cards → kpiCalculationService.calculateKPIs(cards) computes total credit limit, available credit, outstanding amount, monthly spend, and credit utilization percentage → PortfolioKPI object returned → portfolioController binds KPIs to view → kpiDisplayDirective renders each KPI metric in responsive tile layout → Real-time refresh updates KPIs automatically.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AuthService
-    participant PortfolioDashboardCtrl
-    participant KPIAggregationService
-    participant CreditCardDataService
-    participant API
-    
-    User->>AuthService: Navigate to portfolio dashboard
-    AuthService->>AuthService: Validate authentication
-    AuthService-->>PortfolioDashboardCtrl: Auth success
-    PortfolioDashboardCtrl->>KPIAggregationService: getPortfolioKPIs()
-    KPIAggregationService->>CreditCardDataService: fetchAllCards()
-    CreditCardDataService->>API: GET /api/cards/portfolio
-    API-->>CreditCardDataService: CreditCardPortfolio
-    CreditCardDataService-->>KPIAggregationService: cards[]
-    KPIAggregationService->>KPIAggregationService: Calculate KPIs (monthly spend, credit limit, available credit, outstanding)
-    KPIAggregationService-->>PortfolioDashboardCtrl: PortfolioKPI
-    PortfolioDashboardCtrl-->>User: Display portfolio and KPIs
-    Note over PortfolioDashboardCtrl: $interval triggers refresh every 30s
-    PortfolioDashboardCtrl->>KPIAggregationService: getPortfolioKPIs() [refresh]
-    KPIAggregationService->>CreditCardDataService: fetchAllCards()
-    CreditCardDataService->>API: GET /api/cards/portfolio
-    API-->>CreditCardDataService: Updated portfolio
-    CreditCardDataService-->>KPIAggregationService: Updated cards[]
-    KPIAggregationService-->>PortfolioDashboardCtrl: Updated KPIs
-    PortfolioDashboardCtrl-->>User: Update dashboard display
-```
+    participant portfolioController
+    participant dataAggregationService
+    participant cardDataService
+    participant REST API
+    participant kpiCalculationService
 
----
+    User->>portfolioController: Access portfolio dashboard
+    portfolioController->>dataAggregationService: getAggregatedData()
+    dataAggregationService->>cardDataService: getAllCards()
+    cardDataService->>REST API: GET /api/cards
+    REST API-->>cardDataService: CreditCard[]
+    cardDataService-->>dataAggregationService: Card array
+    dataAggregationService->>kpiCalculationService: calculateKPIs(cards)
+    kpiCalculationService-->>dataAggregationService: PortfolioKPI
+    dataAggregationService-->>portfolioController: Aggregated data
+    portfolioController->>User: Display KPIs and card list
+```
 
 ## f. Implementation Notes
 
-- Use AngularJS `$interval` service for periodic KPI refresh (30-second intervals) to achieve real-time/near real-time updates
-- Implement responsive design using Bootstrap grid system for desktop/tablet/mobile support
-- Cache card data in `CreditCardDataService` using `$cacheFactory` to optimize sub-2-second page load
-- Use `$q.all()` for parallel data fetching if multiple API calls are required
-- Leverage AngularJS two-way data binding for automatic UI updates when KPI data changes
-
----
+- Use AngularJS $http service with caching for sub-2-second page load
+- Implement kpiCalculationService with pure functions for testability
+- Apply Bootstrap grid system for responsive layout across desktop/tablet/mobile
+- Use AngularJS $interval for real-time data refresh every 30 seconds
+- Inject dependencies via explicit array notation for minification safety
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user notification via Bootstrap modals; retry mechanism for failed API calls.
-
----
+HTTP interceptor with $q rejection; dataAggregationService handles partial failures gracefully; user notified via modal on critical errors.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; all API calls include JWT in Authorization header; card data transmitted over HTTPS.
+Requires token-based auth via existing SSO; card numbers masked; all API calls over HTTPS with JWT authentication.

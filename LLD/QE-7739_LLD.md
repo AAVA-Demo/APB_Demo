@@ -1,158 +1,111 @@
 # Low-Level Design: Transaction Management and Monitoring
 **Epic ID:** QE-7739
 
----
-
 ## a. Architecture Mapping
 
-- **Transaction Management Module** → AngularJS Module (`transactionManagement`)
-- **User Interface** → AngularJS Controller (`TransactionListController`) + View Template
-- **Transaction Management Service** → AngularJS Service (`TransactionManagementService`) for business logic
-- **Search and Filter Engine** → AngularJS Filter (`transactionFilter`) + Service (`SearchFilterService`)
-- **Transaction Data Repository** → REST API integration via `$http`
-- **Card Management System** → AngularJS Service (`CardManagementService`) for card-transaction linking
-- **Authentication Service** → AngularJS Service (`AuthService`) for user authentication
+- **transactionModule** (AngularJS Module) - Root module for transaction management
+- **transactionListController** (Controller) - Manages transaction list view
+- **transactionDetailController** (Controller) - Handles transaction detail view
+- **transactionService** (Factory) - Fetches transaction data via REST API
+- **searchFilterService** (Service) - Handles search and filter logic
+- **transactionTableDirective** (Directive) - Renders paginated transaction table
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── modules/
-│   └── transactionManagement/
-│       ├── controllers/
-│       │   └── transactionListController.js
-│       ├── services/
-│       │   ├── transactionManagementService.js
-│       │   ├── searchFilterService.js
-│       │   ├── cardManagementService.js
-│       │   └── authService.js
-│       ├── filters/
-│       │   └── transactionFilter.js
-│       ├── views/
-│       │   ├── transaction-list.html
-│       │   └── transaction-detail.html
-│       └── transactionManagement.module.js
+/app
+  /modules
+    /transactions
+      /controllers (transactionListController.js, transactionDetailController.js)
+      /services (transactionService.js, searchFilterService.js)
+      /directives (transactionTableDirective.js)
+      /views (transaction-list.html, transaction-detail.html)
 ```
-
----
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| `transactionManagement` | Module | Root module for transaction tracking and monitoring | `ngRoute`, `ui.bootstrap`, `ngTable` |
-| `TransactionListController` | Controller | Manages transaction list display, search, filter, and pagination | `TransactionManagementService`, `SearchFilterService`, `$scope` |
-| `TransactionManagementService` | Service | Fetches transaction data, handles transaction details retrieval | `$http`, `CardManagementService`, `$q`, `API_CONFIG` |
-| `SearchFilterService` | Service | Implements search and filter logic (date range, amount, merchant, category, card) | `$filter` |
-| `transactionFilter` | Filter | Custom AngularJS filter for client-side transaction filtering | None |
-| `CardManagementService` | Service | Links transactions to specific credit cards | `$http`, `API_CONFIG` |
-| `AuthService` | Service | Handles user authentication and authorization | `$http`, `$window`, `API_CONFIG` |
-
----
+| transactionModule | Module | Bootstraps transaction management feature | angular, ngRoute |
+| transactionListController | Controller | Displays paginated transaction list with search/filter | transactionService, searchFilterService |
+| transactionDetailController | Controller | Shows detailed view of selected transaction | transactionService, $routeParams |
+| transactionService | Factory | Fetches transactions via REST API | $http, $q |
+| searchFilterService | Service | Applies search and filter criteria to transaction list | $filter |
+| transactionTableDirective | Directive | Renders transaction table with sorting and pagination | None |
 
 ## c. Data Model
 
 **Transaction Object:**
 ```javascript
 {
-  transactionId: String,        // Unique transaction identifier
-  cardId: String,               // Associated credit card ID
-  cardNumber: String,           // Masked card number
-  amount: Number,               // Transaction amount
-  merchant: String,             // Merchant name
-  category: String,             // Transaction category (e.g., "Food & Dining")
-  transactionDate: Date,        // Transaction date and time
-  description: String,          // Transaction description
-  status: String,               // "Posted", "Pending", "Declined"
-  location: String              // Transaction location (optional)
+  transactionId: String,
+  cardId: String,
+  cardNumber: String (masked),
+  amount: Number,
+  merchant: String,
+  category: String,
+  transactionDate: Date,
+  status: String,
+  description: String
 }
 ```
 
-**TransactionListResponse Object:**
-```javascript
-{
-  transactions: Array<Transaction>, // Array of transaction objects
-  totalCount: Number,               // Total number of transactions
-  page: Number,                     // Current page number
-  pageSize: Number                  // Number of transactions per page
-}
-```
-
-**SearchFilterCriteria Object:**
+**SearchFilter Object:**
 ```javascript
 {
   dateFrom: Date,
   dateTo: Date,
+  cardId: String,
   minAmount: Number,
   maxAmount: Number,
   merchant: String,
-  category: String,
-  cardId: String
+  category: String
 }
 ```
 
----
-
 ## d. Data Flow
 
-User authenticates via `AuthService` → User navigates to transaction management interface → `TransactionListController` initializes and calls `TransactionManagementService.fetchTransactions()` → Service makes REST API call to `/api/transactions` with pagination parameters → Transaction data retrieved from repository (linked to cards via `CardManagementService`) → Transactions displayed in paginated list (using ng-table) → User applies search/filter criteria (date range, amount, merchant, category, card) → `SearchFilterService` processes criteria and calls API with filter parameters → Filtered transaction list retrieved within 500ms (optimized with indexed queries) → User clicks on a transaction to view details → `TransactionManagementService.getTransactionDetails(transactionId)` fetches detailed information → Transaction details displayed including amount, merchant, date, category, and associated card → System handles up to 10,000 transactions per user efficiently with pagination and lazy loading.
-
----
+User authenticates and accesses transaction list → transactionListController calls transactionService.getTransactions() → Service makes GET /api/transactions REST call → Up to 10,000 transactions retrieved within 500ms → Transactions displayed in paginated table via transactionTableDirective → User applies search/filter criteria → searchFilterService.applyFilter(transactions, filter) filters transactions client-side → Filtered results displayed → User clicks transaction → transactionDetailController fetches detailed data via transactionService.getTransactionById(id) → Detailed view rendered with all transaction attributes.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AuthService
-    participant TransactionListCtrl
-    participant TransactionMgmtService
-    participant SearchFilterService
-    participant API
-    participant CardMgmtService
-    
-    User->>AuthService: Authenticate
-    AuthService-->>User: Auth success
-    User->>TransactionListCtrl: Load transaction list
-    TransactionListCtrl->>TransactionMgmtService: fetchTransactions(page, pageSize)
-    TransactionMgmtService->>API: GET /api/transactions?page=1&size=50
-    API-->>TransactionMgmtService: TransactionListResponse
-    TransactionMgmtService->>CardMgmtService: linkTransactionsToCards(transactions)
-    CardMgmtService-->>TransactionMgmtService: Linked transactions
-    TransactionMgmtService-->>TransactionListCtrl: transactions[]
-    TransactionListCtrl-->>User: Display transaction list
-    User->>TransactionListCtrl: Apply filters (date, amount, merchant, category, card)
-    TransactionListCtrl->>SearchFilterService: applyFilters(criteria)
-    SearchFilterService->>TransactionMgmtService: fetchFilteredTransactions(criteria)
-    TransactionMgmtService->>API: GET /api/transactions?filters={criteria}
-    API-->>TransactionMgmtService: Filtered transactions
-    TransactionMgmtService-->>TransactionListCtrl: Filtered transactions[]
-    TransactionListCtrl-->>User: Display filtered list
-    User->>TransactionListCtrl: Select transaction for details
-    TransactionListCtrl->>TransactionMgmtService: getTransactionDetails(transactionId)
-    TransactionMgmtService->>API: GET /api/transactions/{transactionId}
-    API-->>TransactionMgmtService: Transaction details
-    TransactionMgmtService-->>TransactionListCtrl: transactionDetails
-    TransactionListCtrl-->>User: Display transaction details
-```
+    participant transactionListController
+    participant transactionService
+    participant REST API
+    participant searchFilterService
+    participant transactionDetailController
 
----
+    User->>transactionListController: Access transaction list
+    transactionListController->>transactionService: getTransactions()
+    transactionService->>REST API: GET /api/transactions
+    REST API-->>transactionService: Transaction[] (up to 10,000)
+    transactionService-->>transactionListController: Transactions
+    transactionListController->>User: Display paginated table
+    User->>searchFilterService: Apply filter criteria
+    searchFilterService->>transactionListController: Filtered transactions
+    transactionListController->>User: Display filtered results
+    User->>transactionDetailController: Click transaction
+    transactionDetailController->>transactionService: getTransactionById(id)
+    transactionService->>REST API: GET /api/transactions/{id}
+    REST API-->>transactionService: Transaction detail
+    transactionService-->>transactionDetailController: Transaction object
+    transactionDetailController->>User: Display transaction details
+```
 
 ## f. Implementation Notes
 
-- Use `ng-table` directive for efficient pagination and sorting of up to 10,000 transactions
-- Implement server-side pagination and filtering to meet 500ms retrieval requirement
-- Use AngularJS `$filter` service for client-side filtering when working with cached data
-- Leverage `$http` interceptors for authentication token injection and secure data transmission
-- Implement lazy loading for transaction details to optimize initial page load
-
----
+- Use AngularJS $http service with response caching for 500ms retrieval performance
+- Implement client-side pagination using AngularJS $filter with page size of 50 transactions
+- Apply searchFilterService with debounced search input (300ms delay) for performance
+- Use ng-repeat with track by transactionId for efficient table rendering
+- Inject dependencies via explicit array notation for minification compatibility
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user notification via toastr; retry mechanism for transient API failures.
-
----
+HTTP interceptor captures API errors; transactionService wraps calls in $q promises with rejection handlers; user notified via toastr.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; secure data transmission over HTTPS; sensitive transaction data encrypted at rest.
+Requires token-based auth via existing SSO; secure data transmission over HTTPS; card numbers masked in transaction list.
