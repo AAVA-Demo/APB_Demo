@@ -1,0 +1,23 @@
+class Logger {
+  static info(message) {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] [INFO] ${message}`);
+  }
+  
+  static error(message) {
+    const timestamp = new Date().toISOString();
+    console.error(`[${timestamp}] [ERROR] ${message}`);
+  }
+  
+  static warn(message) {
+    const timestamp = new Date().toISOString();
+    console.warn(`[${timestamp}] [WARN] ${message}`);
+  }
+  
+  static debug(message) {
+    const timestamp = new Date().toISOString();
+    console.debug(`[${timestamp}] [DEBUG] ${message}`);
+  }
+}
+
+module.exports = Logger;
