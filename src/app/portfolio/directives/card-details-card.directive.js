@@ -1,0 +1,6 @@
+(function(){
+'use strict';
+angular.module('creditCard.portfolio').directive('cardDetailsCard',[function(){
+return{restrict:'E',scope:{card:'=',spending:'=',onSelect:'&',selected:'='},template:'<div class="card-details" ng-class="{\"panel-primary\":selected}"><div class="checkbox"><label><input type="checkbox" ng-model="selected" ng-change="onSelect()"> Compare</label></div><h4>{{card.cardHolderName}}</h4><p><strong>Card Number:</strong> ****{{card.cardNumber.slice(-4)}}</p><p><strong>Card Type:</strong> {{card.cardType}}</p><p><strong>Credit Limit:</strong> {{card.creditLimit|currency}}</p><p><strong>Available Credit:</strong> {{card.availableCredit|currency}}</p><p><strong>Outstanding Amount:</strong> {{card.outstandingAmount|currency}}</p><p><strong>Monthly Spend:</strong> {{spending.monthlySpend|currency}}</p><p><strong>Status:</strong> <span class="label" ng-class="{\"label-success\":card.status===\"Active\",\"label-danger\":card.status!==\"Active\"}">{{card.status}}</span></p><p><strong>Expiry:</strong> {{card.expiryDate}}</p></div>'};
+}]);
+})();
