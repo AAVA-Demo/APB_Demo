@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics</h2>
+    <div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+    <div ng-if="vm.error" class="alert alert-danger alert-inline">{{vm.error}} <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button></div>
+    <div ng-if="!vm.loading && !vm.error">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Start Date:</label>
+            <input type="date" class="form-control" ng-model="vm.startDate" ng-change="vm.loadAnalytics()">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>End Date:</label>
+            <input type="date" class="form-control" ng-model="vm.endDate" ng-change="vm.loadAnalytics()">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Category-Wise Spending</h3>
+          <spending-chart chart-type="category" chart-data="vm.analytics.categoryBreakdown"></spending-chart>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="chart-container">
+            <h4>Spending Breakdown</h4>
+            <div class="category-item" ng-repeat="cat in vm.analytics.categoryBreakdown">
+              <div class="row">
+                <div class="col-md-4"><strong>{{cat.categoryName}}</strong></div>
+                <div class="col-md-4">{{cat.totalAmount | currency}}</div>
+                <div class="col-md-4">{{cat.percentage}}%</div>
+              </div>
+              <div class="category-bar" ng-style="{width: cat.percentage + '%', backgroundColor: getColor(cat.categoryId)}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Monthly Spend Trend (12 Months)</h3>
+          <spending-chart chart-type="trend" chart-data="vm.analytics.monthlyTrend"></spending-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

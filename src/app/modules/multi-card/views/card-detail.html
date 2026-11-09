@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Card Details</h2>
+    <div ng-if="vm.loading" class="text-center"><p>Loading card details...</p></div>
+    <div ng-if="vm.error" class="alert alert-danger alert-inline">{{vm.error}} <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button></div>
+    <div ng-if="!vm.loading && !vm.error">
+      <div class="kpi-card">
+        <div class="row">
+          <div class="col-md-6">
+            <h3 class="card-number">{{vm.card.cardNumber}}</h3>
+            <p><strong>Type:</strong> {{vm.card.cardType}}</p>
+            <p><strong>Issuer:</strong> {{vm.card.issuer}}</p>
+            <p><strong>Status:</strong> <span class="label" ng-class="{'label-success': vm.card.status === 'Active', 'label-danger': vm.card.status !== 'Active'}">{{vm.card.status}}</span></p>
+            <p><strong>Expiry Date:</strong> {{vm.card.expiryDate | date:'MM/yyyy'}}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency}}</p>
+            <p><strong>Current Balance:</strong> {{vm.card.currentBalance | currency}}</p>
+            <p><strong>Available Credit:</strong> {{vm.card.availableCredit | currency}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card" ng-if="vm.card.spendAnalysis">
+        <h4>Spending Analysis</h4>
+        <p><strong>Monthly Spend:</strong> {{vm.card.spendAnalysis.monthlySpend | currency}}</p>
+        <p><strong>Yearly Spend:</strong> {{vm.card.spendAnalysis.yearlySpend | currency}}</p>
+        <p><strong>Transaction Count:</strong> {{vm.card.spendAnalysis.transactionCount}}</p>
+        <p><strong>Average Transaction:</strong> {{vm.card.spendAnalysis.averageTransactionAmount | currency}}</p>
+        <div ng-if="vm.card.spendAnalysis.topCategories && vm.card.spendAnalysis.topCategories.length > 0">
+          <h5>Top Spending Categories</h5>
+          <ul>
+            <li ng-repeat="cat in vm.card.spendAnalysis.topCategories">{{cat.categoryName}}: {{cat.amount | currency}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <a href="#/cards" class="btn btn-default">Back to Card List</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

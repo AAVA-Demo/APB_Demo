@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Dashboard Overview</h2>
+    <div ng-if="vm.loading" class="text-center"><p>Loading KPIs...</p></div>
+    <div ng-if="vm.error" class="alert alert-danger alert-inline">{{vm.error}} <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button></div>
+    <div ng-if="!vm.loading && !vm.error">
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+          <kpi-card label="Monthly Spend" value="vm.kpiData.monthlySpend" format="currency"></kpi-card>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <kpi-card label="Total Credit Limit" value="vm.kpiData.totalCreditLimit" format="currency"></kpi-card>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <kpi-card label="Available Credit" value="vm.kpiData.availableCredit" format="currency"></kpi-card>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <kpi-card label="Outstanding Amount" value="vm.kpiData.outstandingAmount" format="currency"></kpi-card>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="kpi-card">
+            <div class="kpi-label">Credit Utilization</div>
+            <div class="kpi-value">{{vm.kpiData.utilizationPercentage}}%</div>
+            <div class="progress" style="margin-top: 10px;">
+              <div class="progress-bar" role="progressbar" ng-style="{width: vm.kpiData.utilizationPercentage + '%'}" aria-valuenow="{{vm.kpiData.utilizationPercentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-muted">Last updated: {{vm.kpiData.lastUpdated | date:'medium'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
