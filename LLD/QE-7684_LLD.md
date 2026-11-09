@@ -3,128 +3,111 @@
 
 ## a. Architecture Mapping
 
-| HLD Component | AngularJS Artifact | Mapping |
-|---------------|-------------------|----------|
-| User Dashboard UI | View + Directive | `app/dashboard/views/main-dashboard.html` + `kpiWidgetDirective` |
-| Dashboard Controller | Controller | `MainDashboardController` - orchestrates dashboard data flow |
-| Credit Card Data Service | Service | `CardService` - retrieves card balances and limits |
-| Transaction Service | Service | `TransactionService` - calculates monthly spend and outstanding amounts |
-| KPI Aggregation Engine | Service | `KPIAggregationService` - consolidates multi-card metrics |
-| Data Cache Layer | Service | `CacheService` - implements caching strategy for performance |
+- **Module:** `creditCardApp.kpiDashboard` - Root module for centralized dashboard
+- **Controller:** `KPIDashboardController` - Manages KPI display and real-time refresh logic
+- **Service:** `CreditCardDataService` - Retrieves card balances and limits
+- **Service:** `TransactionService` - Fetches transaction data for spend calculations
+- **Service:** `KPICalculationService` - Computes KPIs in real-time
+- **Directive:** `kpiWidgetDirective` - Reusable widget for displaying KPI metrics
+- **Factory:** `RealtimeRefreshFactory` - Manages periodic data refresh using $interval
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── dashboard/
-│   ├── controllers/
-│   │   └── MainDashboardController.js
-│   ├── services/
-│   │   ├── CardService.js
-│   │   ├── TransactionService.js
-│   │   ├── KPIAggregationService.js
-│   │   └── CacheService.js
-│   ├── directives/
-│   │   └── kpiWidgetDirective.js
-│   └── views/
-│       └── main-dashboard.html
+/app
+  /modules
+    /kpi-dashboard
+      kpi-dashboard.module.js
+      kpi-dashboard.controller.js
+      kpi-dashboard.html
+  /services
+    credit-card-data.service.js
+    transaction.service.js
+    kpi-calculation.service.js
+  /directives
+    kpi-widget.directive.js
+  /factories
+    realtime-refresh.factory.js
 ```
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| MainDashboardController | Controller | Initializes dashboard, manages KPI display and refresh | KPIAggregationService, CacheService, $scope, $interval |
-| CardService | Service | Fetches card data (balances, limits) from REST API | $http, $q, CacheService |
-| TransactionService | Service | Retrieves transaction data for monthly spend calculation | $http, $q, CacheService |
-| KPIAggregationService | Service | Aggregates data from card and transaction services into consolidated KPIs | CardService, TransactionService, $q |
-| CacheService | Service | Implements in-memory caching with TTL for API responses | $cacheFactory |
-| kpiWidgetDirective | Directive | Renders individual KPI widgets with real-time updates | None |
+| KPIDashboardController | Controller | Orchestrates KPI display and manages real-time refresh | KPICalculationService, RealtimeRefreshFactory, $scope |
+| CreditCardDataService | Factory | Fetches card balances and credit limits | $http, $q |
+| TransactionService | Factory | Retrieves transaction data for monthly spend and outstanding calculations | $http, $q |
+| KPICalculationService | Service | Aggregates data and computes KPIs (monthly spend, credit limit, available credit, outstanding) | CreditCardDataService, TransactionService, $q |
+| kpiWidgetDirective | Directive | Displays individual KPI with animated value updates | None |
+| RealtimeRefreshFactory | Factory | Manages $interval-based polling for real-time data refresh | $interval |
 
 ## c. Data Model
 
+**DashboardKPI Object:**
 ```javascript
-// Consolidated KPI Model
-const ConsolidatedKPI = {
+{
   monthlySpend: Number,
   totalCreditLimit: Number,
   availableCredit: Number,
   outstandingAmount: Number,
-  utilizationRate: Number,      // Calculated: (totalLimit - availableCredit) / totalLimit
-  lastUpdated: Date
-};
+  creditUtilization: Number,    // Percentage
+  timestamp: Date
+}
+```
 
-// Card Data Model
-const CardData = {
+**CardBalance Object:**
+```javascript
+{
   cardId: String,
   creditLimit: Number,
-  availableCredit: Number,
-  currentBalance: Number
-};
-
-// Transaction Data Model
-const TransactionData = {
-  monthlyTotal: Number,
-  transactionCount: Number,
-  lastTransactionDate: Date
-};
+  currentBalance: Number,
+  availableCredit: Number
+}
 ```
 
 ## d. Data Flow
 
-User accesses dashboard → MainDashboardController initializes → Controller calls KPIAggregationService.getConsolidatedKPIs() → Service checks CacheService for cached data → If cache miss, service makes parallel calls to CardService.getAllCards() and TransactionService.getMonthlyData() → CardService fetches from `/api/cards` (checks cache first), TransactionService fetches from `/api/transactions/monthly` (checks cache first) → Both services cache responses with 30-second TTL → KPIAggregationService aggregates data: sums credit limits, available credit, outstanding amounts, calculates monthly spend → ConsolidatedKPI object returned → Controller binds to $scope → kpiWidgetDirective renders four KPI widgets → Dashboard loads within 2 seconds due to caching → $interval triggers refresh every 60 seconds for real-time updates.
+User accesses dashboard → KPIDashboardController initializes and calls KPICalculationService.calculateKPIs() → Service invokes CreditCardDataService and TransactionService in parallel using $q.all → Services fetch card balances and transaction data from REST APIs → KPICalculationService aggregates data to compute monthly spend, total credit limit, available credit, and outstanding amount → Computed KPIs returned to Controller within 2 seconds → Controller updates $scope and triggers kpiWidgetDirective to render KPIs → RealtimeRefreshFactory polls for updates every 60 seconds, refreshing KPIs automatically.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant MainCtrl as MainDashboardController
-    participant KPISvc as KPIAggregationService
-    participant Cache as CacheService
-    participant CardSvc as CardService
-    participant TxnSvc as TransactionService
-    participant API as REST API
-    
-    User->>View: Access dashboard
-    View->>MainCtrl: Initialize
-    MainCtrl->>KPISvc: getConsolidatedKPIs()
-    KPISvc->>Cache: get('kpi_data')
-    Cache-->>KPISvc: null (cache miss)
-    par Parallel Calls
-        KPISvc->>CardSvc: getAllCards()
-        CardSvc->>Cache: get('cards')
-        Cache-->>CardSvc: null
-        CardSvc->>API: GET /api/cards
-        API-->>CardSvc: Card array
-        CardSvc->>Cache: put('cards', data, 30s)
-        and
-        KPISvc->>TxnSvc: getMonthlyData()
-        TxnSvc->>Cache: get('monthly_txn')
-        Cache-->>TxnSvc: null
-        TxnSvc->>API: GET /api/transactions/monthly
-        API-->>TxnSvc: Transaction data
-        TxnSvc->>Cache: put('monthly_txn', data, 30s)
+    participant KPIDashboardController
+    participant KPICalculationService
+    participant CreditCardDataService
+    participant TransactionService
+    participant API
+
+    User->>KPIDashboardController: Access dashboard
+    KPIDashboardController->>KPICalculationService: calculateKPIs(userId)
+    par Parallel Data Fetch
+        KPICalculationService->>CreditCardDataService: getCardBalances(userId)
+        KPICalculationService->>TransactionService: getMonthlyTransactions(userId)
     end
-    KPISvc->>KPISvc: Aggregate metrics
-    KPISvc->>Cache: put('kpi_data', result, 30s)
-    KPISvc-->>MainCtrl: ConsolidatedKPI
-    MainCtrl->>View: Bind to scope
-    View-->>User: Display KPIs (<2s)
+    CreditCardDataService->>API: GET /api/cards/balances?userId={userId}
+    TransactionService->>API: GET /api/transactions/current-month?userId={userId}
+    API-->>CreditCardDataService: CardBalance[]
+    API-->>TransactionService: Transaction[]
+    CreditCardDataService-->>KPICalculationService: Card balances
+    TransactionService-->>KPICalculationService: Transaction data
+    KPICalculationService->>KPICalculationService: Aggregate and compute KPIs
+    KPICalculationService-->>KPIDashboardController: DashboardKPI object
+    KPIDashboardController-->>User: Render KPI widgets with real-time data
 ```
 
 ## f. Implementation Notes
 
-- Implement CacheService using AngularJS `$cacheFactory` with 30-second TTL to meet 2-second load time NFR
-- Use `$q.all()` for parallel API calls in KPIAggregationService to minimize latency
-- Set up auto-refresh using `$interval(refreshKPIs, 60000)` for real-time data updates
-- Apply responsive design with Bootstrap grid: 4 KPI widgets in row on desktop (col-md-3), 2 per row on tablet (col-sm-6), stacked on mobile (col-xs-12)
-- Use AngularJS `$watch` in kpiWidgetDirective to animate KPI value changes for better UX
+- Use $q.all for parallel API calls to meet 2-second load time requirement
+- Implement RealtimeRefreshFactory with $interval (60s) and cleanup on $scope.$destroy
+- Apply CSS3 animations in kpiWidgetDirective for smooth value transitions
+- Use Bootstrap responsive grid for cross-device compatibility
+- REST API endpoints: `/api/cards/balances`, `/api/transactions/current-month`
 
 ## g. Error Handling
 
-HTTP interceptor captures errors; CacheService returns stale cached data if API fails; user notified via toastr with retry option.
+HTTP interceptor captures errors; fallback to cached KPI data; user notification via toast.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; all endpoints require valid JWT in Authorization header.
+Requires token-based auth via existing SSO; secure API calls with HTTPS enforced.

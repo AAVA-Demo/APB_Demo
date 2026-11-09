@@ -3,127 +3,113 @@
 
 ## a. Architecture Mapping
 
-| HLD Component | AngularJS Artifact | Mapping |
-|---------------|-------------------|----------|
-| User Interface | View + Directive | `app/cards/views/card-list.html` + `cardListDirective` for card display grid |
-| Multi-Card Controller | Controller | `CardManagementController` - orchestrates card retrieval, selection, and comparison |
-| Card Data Repository | Service/Factory | `CardDataService` - REST API wrapper for card CRUD operations |
-| User Authentication Service | Service | `AuthService` - token-based authentication and session management |
-| Spend Analysis Module | Service | `SpendAnalysisService` - calculates card-wise spending metrics |
-| Card Comparison Engine | Factory | `CardComparisonFactory` - side-by-side card comparison logic |
+- **Module:** `creditCardApp.multiCard` - Root module for multi-card management
+- **Controller:** `MultiCardController` - Manages card list, selection, and comparison UI logic
+- **Service:** `CreditCardDataService` - Retrieves and caches card records from repository
+- **Service:** `AuthService` - Validates user identity and manages secure access
+- **Service:** `CardAnalysisService` - Processes card-wise spend analysis and comparison logic
+- **Directive:** `cardMaskDirective` - Masks sensitive card information (displays last 4 digits)
+- **Filter:** `cardNumberMaskFilter` - Formats card numbers for secure display
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── cards/
-│   ├── controllers/
-│   │   └── CardManagementController.js
-│   ├── services/
-│   │   ├── CardDataService.js
-│   │   └── SpendAnalysisService.js
-│   ├── factories/
-│   │   └── CardComparisonFactory.js
-│   ├── directives/
-│   │   └── cardListDirective.js
-│   └── views/
-│       ├── card-list.html
-│       └── card-detail.html
-├── auth/
-│   └── services/
-│       └── AuthService.js
-└── shared/
-    └── interceptors/
-        └── authInterceptor.js
+/app
+  /modules
+    /multi-card
+      multi-card.module.js
+      multi-card.controller.js
+      multi-card.html
+  /services
+    credit-card-data.service.js
+    auth.service.js
+    card-analysis.service.js
+  /directives
+    card-mask.directive.js
+  /filters
+    card-number-mask.filter.js
 ```
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| CardManagementController | Controller | Manages card list display, selection, and triggers analysis/comparison | CardDataService, SpendAnalysisService, CardComparisonFactory, $scope |
-| CardDataService | Service | Fetches card data from REST API, handles card refresh | $http, $q, AuthService |
-| SpendAnalysisService | Service | Computes card-specific spending totals and trends | $http, $filter |
-| CardComparisonFactory | Factory | Provides comparison logic for multiple cards | None |
-| cardListDirective | Directive | Renders card grid with masking, handles card selection events | CardManagementController |
-| AuthService | Service | Manages authentication tokens and user session | $http, $window |
-| authInterceptor | Interceptor | Injects auth token into HTTP requests | $q, $window |
+| MultiCardController | Controller | Orchestrates card list display, selection, and comparison views | CreditCardDataService, CardAnalysisService, $scope |
+| CreditCardDataService | Factory | Fetches and caches multiple card records; handles near-real-time refresh | $http, $q, $interval |
+| AuthService | Service | Validates user authentication and authorization for card access | $http, $window |
+| CardAnalysisService | Service | Aggregates card-wise spending, utilization, and comparison metrics | $http, $q |
+| cardMaskDirective | Directive | Applies masking to card numbers in DOM (shows last 4 digits) | None |
+| cardNumberMaskFilter | Filter | Transforms full card number to masked format (e.g., **** **** **** 1234) | None |
 
 ## c. Data Model
 
+**CreditCard Object:**
 ```javascript
-// Card Model
-const Card = {
-  cardId: String,              // Unique identifier
-  userId: String,              // Owner user ID
-  cardNumber: String,          // Masked format: "**** **** **** 1234"
+{
+  cardId: String,
+  userId: String,
+  cardNumber: String,          // Full number (backend only)
+  maskedCardNumber: String,    // e.g., "**** **** **** 1234"
   cardType: String,            // e.g., "Visa", "MasterCard"
-  cardName: String,            // User-defined card name
-  creditLimit: Number,         // Total credit limit
-  availableCredit: Number,     // Remaining credit
-  outstandingAmount: Number,   // Current balance
-  lastUpdated: Date            // Last refresh timestamp
-};
+  creditLimit: Number,
+  availableCredit: Number,
+  outstandingAmount: Number,
+  lastFourDigits: String,
+  expiryDate: String,          // Format: "MM/YY"
+  isActive: Boolean
+}
+```
 
-// Spend Summary Model
-const SpendSummary = {
+**CardAnalysis Object:**
+```javascript
+{
   cardId: String,
   monthlySpend: Number,
-  categoryBreakdown: Object,   // { "Food": 500, "Fuel": 200, ... }
-  lastTransactionDate: Date
-};
-
-// Comparison Result Model
-const ComparisonResult = {
-  cards: Array,                // Array of Card objects
-  metrics: Object              // { utilization: [], spend: [], ... }
-};
+  utilizationRate: Number,     // Percentage
+  categoryBreakdown: Array     // [{category: String, amount: Number}]
+}
 ```
 
 ## d. Data Flow
 
-User logs in via AuthService which stores JWT token → User navigates to card list view → CardManagementController calls CardDataService.getAllCards() → Service makes authenticated GET request to `/api/cards` → Card data returned with masked card numbers → Controller binds cards to $scope → cardListDirective renders grid → User selects card for analysis → Controller invokes SpendAnalysisService.getCardSpending(cardId) → Service fetches from `/api/cards/{id}/spending` → Spending data displayed → User initiates comparison → CardComparisonFactory processes selected cards → Comparison view updated with side-by-side metrics.
+User logs in and navigates to multi-card view → AuthService validates session token → MultiCardController calls CreditCardDataService to fetch all user cards → Service retrieves card records from REST API and caches locally → CardAnalysisService is invoked to compute card-wise spending and utilization → Controller receives masked card data and analysis results → View renders card list with masked numbers, allowing user to select individual cards, compare metrics, or switch between cards → Near-real-time updates are achieved via $interval polling every 30 seconds.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant CardMgmtCtrl as CardManagementController
-    participant CardDataSvc as CardDataService
-    participant SpendSvc as SpendAnalysisService
-    participant API as REST API
-    
-    User->>View: Navigate to card list
-    View->>CardMgmtCtrl: Initialize controller
-    CardMgmtCtrl->>CardDataSvc: getAllCards()
-    CardDataSvc->>API: GET /api/cards
-    API-->>CardDataSvc: Card data (masked)
-    CardDataSvc-->>CardMgmtCtrl: Card array
-    CardMgmtCtrl->>View: Bind cards to scope
-    View-->>User: Display card grid
-    User->>View: Select card for analysis
-    View->>CardMgmtCtrl: onCardSelect(cardId)
-    CardMgmtCtrl->>SpendSvc: getCardSpending(cardId)
-    SpendSvc->>API: GET /api/cards/{id}/spending
-    API-->>SpendSvc: Spending data
-    SpendSvc-->>CardMgmtCtrl: SpendSummary
-    CardMgmtCtrl->>View: Update analysis view
-    View-->>User: Display card-wise spending
+    participant MultiCardController
+    participant AuthService
+    participant CreditCardDataService
+    participant CardAnalysisService
+    participant API
+
+    User->>MultiCardController: Access multi-card view
+    MultiCardController->>AuthService: Validate session
+    AuthService-->>MultiCardController: Session valid
+    MultiCardController->>CreditCardDataService: fetchAllCards(userId)
+    CreditCardDataService->>API: GET /api/cards?userId={userId}
+    API-->>CreditCardDataService: Card records (masked)
+    CreditCardDataService-->>MultiCardController: Array of CreditCard objects
+    MultiCardController->>CardAnalysisService: analyzeCards(cardIds)
+    CardAnalysisService->>API: GET /api/cards/analysis?cardIds={ids}
+    API-->>CardAnalysisService: Analysis data
+    CardAnalysisService-->>MultiCardController: CardAnalysis objects
+    MultiCardController-->>User: Display card list with analysis
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS module pattern with dependency injection: `angular.module('creditCard.cards', []).controller('CardManagementController', ['CardDataService', 'SpendAnalysisService', function(...) {}])`
-- Implement card number masking via `$filter` custom filter: `{{ card.cardNumber | maskCard }}`
-- Use `$http` interceptor (authInterceptor) to inject Bearer token into all API requests automatically
-- Leverage `$q` promises for async operations; chain service calls using `.then()` for sequential operations
-- Implement polling for near real-time refresh using `$interval` service with configurable interval (default 30s)
+- Use AngularJS dependency injection to inject services into MultiCardController
+- Implement card data caching in CreditCardDataService using $cacheFactory to minimize API calls
+- Apply cardMaskDirective to all card number fields to ensure consistent masking across views
+- Use $interval for near-real-time polling (30s intervals) with cleanup on $scope.$destroy
+- REST API endpoints follow pattern: `/api/cards`, `/api/cards/analysis`, `/api/cards/{cardId}`
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors (4xx/5xx), displays user-friendly notifications via toastr/ngToast, and logs errors to console; service-level try/catch for synchronous operations.
+HTTP interceptor captures API errors; user-friendly notifications displayed via toastr; retry logic for transient failures.
 
 ## h. Security Notes
 
-Requires JWT token-based authentication via existing SSO; all card data transmitted over HTTPS; sensitive card numbers masked client-side before display.
+Requires token-based auth via existing SSO; card numbers masked client-side; sensitive data never logged.

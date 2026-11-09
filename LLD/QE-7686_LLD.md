@@ -3,133 +3,114 @@
 
 ## a. Architecture Mapping
 
-| HLD Component | AngularJS Artifact | Mapping |
-|---------------|-------------------|----------|
-| User Interface | View + Directive | `app/analytics/views/transaction-analytics.html` + `categoryChartDirective` |
-| Analytics Controller | Controller | `TransactionAnalyticsController` - manages analytics view and interactions |
-| Transaction Service | Service | `TransactionService` - fetches categorized transaction data |
-| Analytics Engine | Service | `AnalyticsEngineService` - performs trend calculations and pattern recognition |
-| Visualization Renderer | Directive | `categoryChartDirective` - renders interactive charts using Chart.js |
-| Transaction Database | Service (Backend) | REST API endpoint `/api/transactions` |
+- **Module:** `creditCardApp.transactionAnalytics` - Root module for transaction insights
+- **Controller:** `TransactionAnalyticsController` - Manages analytics view and user interactions
+- **Service:** `TransactionService` - Retrieves categorized transaction records
+- **Service:** `AnalyticsEngine` - Performs trend calculations and pattern recognition
+- **Service:** `DataVisualizationService` - Interfaces with Chart.js for rendering charts
+- **Directive:** `categoryChartDirective` - Renders category-wise spending chart
+- **Directive:** `trendAnalysisDirective` - Renders monthly spend trend chart
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── analytics/
-│   ├── controllers/
-│   │   └── TransactionAnalyticsController.js
-│   ├── services/
-│   │   ├── TransactionService.js
-│   │   └── AnalyticsEngineService.js
-│   ├── directives/
-│   │   ├── categoryChartDirective.js
-│   │   └── trendChartDirective.js
-│   ├── views/
-│   │   └── transaction-analytics.html
-│   └── constants/
-│       └── spendingCategories.js
+/app
+  /modules
+    /transaction-analytics
+      transaction-analytics.module.js
+      transaction-analytics.controller.js
+      transaction-analytics.html
+  /services
+    transaction.service.js
+    analytics-engine.service.js
+    data-visualization.service.js
+  /directives
+    category-chart.directive.js
+    trend-analysis.directive.js
 ```
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| TransactionAnalyticsController | Controller | Manages analytics view, handles date range selection, triggers data refresh | AnalyticsEngineService, $scope, $timeout |
-| TransactionService | Service | Fetches categorized transactions from API with date and category filters | $http, $q |
-| AnalyticsEngineService | Service | Processes transaction data, calculates trends, identifies spending patterns | TransactionService, $q |
-| categoryChartDirective | Directive | Renders pie/donut chart for category-wise spending distribution | Chart.js |
-| trendChartDirective | Directive | Renders line chart for monthly spend trends over time | Chart.js |
-| SPENDING_CATEGORIES | Constant | Defines nine spending categories as immutable constant | None |
+| TransactionAnalyticsController | Controller | Manages analytics view, filters, and chart data binding | AnalyticsEngine, DataVisualizationService, $scope |
+| TransactionService | Factory | Fetches categorized transaction records (9 categories) | $http, $q |
+| AnalyticsEngine | Service | Aggregates transactions by category and calculates 12-month trends | TransactionService, $q |
+| DataVisualizationService | Service | Wraps Chart.js; provides chart configuration and rendering | Chart.js |
+| categoryChartDirective | Directive | Renders interactive category-wise spending chart (bar/pie) | DataVisualizationService |
+| trendAnalysisDirective | Directive | Renders 12-month spend trend line chart | DataVisualizationService |
 
 ## c. Data Model
 
+**TransactionRecord Object:**
 ```javascript
-// Transaction Model
-const Transaction = {
+{
   transactionId: String,
   cardId: String,
-  userId: String,
   amount: Number,
-  category: String,            // One of 9 predefined categories
-  merchant: String,
+  category: String,            // One of 9: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
   transactionDate: Date,
-  description: String
-};
+  merchantName: String
+}
+```
 
-// Category Insight Model
-const CategoryInsight = {
+**CategoryInsight Object:**
+```javascript
+{
   category: String,
-  totalAmount: Number,
-  transactionCount: Number,
-  percentage: Number,          // % of total spend
-  trend: String                // "increasing", "decreasing", "stable"
-};
-
-// Monthly Trend Model
-const MonthlyTrend = {
-  month: String,               // "2026-01"
   totalSpend: Number,
-  categoryBreakdown: Object    // { "Food & Dining": 500, "Fuel": 200, ... }
-};
+  transactionCount: Number,
+  percentageOfTotal: Number
+}
+```
 
-// Analytics Insight Model
-const AnalyticsInsight = {
-  categoryInsights: Array,     // Array of CategoryInsight (9 categories)
-  monthlyTrends: Array,        // Array of MonthlyTrend (12 months)
-  topSpendingCategory: String,
-  averageMonthlySpend: Number,
-  spendingPattern: String      // "consistent", "variable", "seasonal"
-};
+**MonthlyTrendData Object:**
+```javascript
+{
+  month: String,               // Format: "YYYY-MM"
+  totalSpend: Number,
+  categoryBreakdown: Array     // [{category: String, amount: Number}]
+}
 ```
 
 ## d. Data Flow
 
-User navigates to transaction analytics view → TransactionAnalyticsController initializes → Controller calls AnalyticsEngineService.getAnalytics(dateRange) with default 12-month range → Service calls TransactionService.getTransactions(startDate, endDate) → Service fetches from `/api/transactions?startDate=X&endDate=Y&userId=Z` → Transaction array (pre-categorized) returned → AnalyticsEngineService processes data: groups by category, calculates totals and percentages, identifies trends, groups by month → AnalyticsInsight object created → Controller binds to $scope → categoryChartDirective renders pie chart showing nine categories with percentages → trendChartDirective renders line chart showing 12-month spending trend → Visualizations render within 3 seconds → User filters by category or drills down → Controller updates data and re-renders charts in sub-second time.
+User navigates to transaction analytics view → TransactionAnalyticsController calls AnalyticsEngine.getInsights() → Engine invokes TransactionService to fetch 12 months of categorized transactions → Transactions are aggregated by category and month in AnalyticsEngine → CategoryInsight[] and MonthlyTrendData[] are computed → Results returned to Controller → Controller passes data to DataVisualizationService → categoryChartDirective and trendAnalysisDirective render interactive charts using Chart.js → User can filter by date range or drill down into specific categories, triggering re-aggregation and chart refresh.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant AnalyticsCtrl as TransactionAnalyticsController
-    participant EngSvc as AnalyticsEngineService
-    participant TxnSvc as TransactionService
-    participant API as REST API
-    
-    User->>View: Navigate to analytics
-    View->>AnalyticsCtrl: Initialize
-    AnalyticsCtrl->>EngSvc: getAnalytics(12 months)
-    EngSvc->>TxnSvc: getTransactions(startDate, endDate)
-    TxnSvc->>API: GET /api/transactions?startDate=X&endDate=Y&userId=Z
-    API-->>TxnSvc: Transaction array (categorized)
-    TxnSvc-->>EngSvc: Transactions
-    EngSvc->>EngSvc: Group by category (9 categories)
-    EngSvc->>EngSvc: Calculate totals, percentages, trends
-    EngSvc->>EngSvc: Group by month (12 months)
-    EngSvc-->>AnalyticsCtrl: AnalyticsInsight
-    AnalyticsCtrl->>View: Bind to scope
-    View->>View: Render category pie chart
-    View->>View: Render monthly trend line chart
-    View-->>User: Display visualizations (<3s)
-    User->>View: Filter by category
-    View->>AnalyticsCtrl: onCategoryFilter(category)
-    AnalyticsCtrl->>View: Update chart (<1s)
-    View-->>User: Display filtered data
+    participant TransactionAnalyticsController
+    participant AnalyticsEngine
+    participant TransactionService
+    participant DataVisualizationService
+    participant API
+
+    User->>TransactionAnalyticsController: Navigate to analytics view
+    TransactionAnalyticsController->>AnalyticsEngine: getInsights(userId, dateRange)
+    AnalyticsEngine->>TransactionService: fetchTransactions(userId, last12Months)
+    TransactionService->>API: GET /api/transactions?userId={userId}&months=12
+    API-->>TransactionService: TransactionRecord[] (12 months)
+    TransactionService-->>AnalyticsEngine: Categorized transactions
+    AnalyticsEngine->>AnalyticsEngine: Aggregate by category and month
+    AnalyticsEngine-->>TransactionAnalyticsController: {categoryInsights: [], monthlyTrends: []}
+    TransactionAnalyticsController->>DataVisualizationService: renderCharts(data)
+    DataVisualizationService-->>User: Display interactive category and trend charts
 ```
 
 ## f. Implementation Notes
 
-- Define nine categories as AngularJS constant: `angular.module('app').constant('SPENDING_CATEGORIES', ['Food & Dining', 'Fuel', 'Shopping', 'Travel', 'Entertainment', 'Utilities', 'Healthcare', 'Education', 'Miscellaneous'])`
-- Use Chart.js library (v2.9+) wrapped in AngularJS directives for responsive, interactive visualizations
-- Implement drill-down using Chart.js onClick event handler to filter transactions by selected category
-- Optimize rendering for 12 months of data using Chart.js decimation plugin for large datasets
-- Use AngularJS `$filter('currency')` for consistent amount formatting in tooltips and labels
+- Use Chart.js with responsive and interactive configurations for smooth rendering
+- Implement pagination or lazy loading for large transaction datasets (>1000 records)
+- Apply ES6 Array methods (reduce, filter, map) in AnalyticsEngine for efficient aggregation
+- Use AngularJS $watch on filter controls to trigger reactive chart updates
+- REST API endpoint: `/api/transactions` with query params for userId, date range, and months
 
 ## g. Error Handling
 
-Interceptor-based error handling with fallback message displayed if API fails; partial data rendered if some months are missing.
+HTTP interceptor-based error handling; display user-friendly messages; graceful degradation with empty state UI.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; transactions filtered by authenticated userId to ensure data privacy.
+Standard input validation and secure API calls assumed; token-based authentication enforced.

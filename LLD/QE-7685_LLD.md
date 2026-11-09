@@ -3,129 +3,116 @@
 
 ## a. Architecture Mapping
 
-| HLD Component | AngularJS Artifact | Mapping |
-|---------------|-------------------|----------|
-| User Interface | View + Directive | `app/cards/views/multi-card-view.html` + `cardGridDirective` |
-| Card Management Controller | Controller | `MultiCardController` - manages card list, selection, and comparison |
-| Credit Card Data Service | Service | `CreditCardService` - fetches card details and balances |
-| Transaction Service | Service | `TransactionService` - retrieves card-specific spending data |
-| Card Repository | Service (Backend) | REST API endpoint `/api/cards` |
-| Transaction Repository | Service (Backend) | REST API endpoint `/api/transactions` |
+- **Module:** `creditCardApp.cardManagement` - Root module for multi-card management
+- **Controller:** `CardManagementController` - Manages card list, switching, and detail views
+- **Service:** `CreditCardDataService` - Fetches card details, balances, and limits
+- **Service:** `TransactionService` - Retrieves card-specific spending data
+- **Service:** `CardComparisonService` - Performs card-wise comparison analytics
+- **Directive:** `cardSwitcherDirective` - Provides UI for fast card switching (<500ms)
+- **Directive:** `cardDetailDirective` - Displays individual card details
 
-**Recommended Folder Structure:**
+**Folder Structure:**
 ```
-app/
-├── cards/
-│   ├── controllers/
-│   │   └── MultiCardController.js
-│   ├── services/
-│   │   ├── CreditCardService.js
-│   │   └── TransactionService.js
-│   ├── directives/
-│   │   ├── cardGridDirective.js
-│   │   └── cardCompareDirective.js
-│   ├── views/
-│   │   ├── multi-card-view.html
-│   │   └── card-comparison.html
-│   └── filters/
-│       └── cardFilterPipe.js
+/app
+  /modules
+    /card-management
+      card-management.module.js
+      card-management.controller.js
+      card-management.html
+  /services
+    credit-card-data.service.js
+    transaction.service.js
+    card-comparison.service.js
+  /directives
+    card-switcher.directive.js
+    card-detail.directive.js
 ```
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
 |----------------|---------------|----------------|------------------|
-| MultiCardController | Controller | Manages card list display, filtering, selection, and comparison triggering | CreditCardService, TransactionService, $scope, $filter |
-| CreditCardService | Service | Fetches card details (balances, limits) from API | $http, $q |
-| TransactionService | Service | Retrieves card-specific transaction data for spending analysis | $http, $q |
-| cardGridDirective | Directive | Renders card grid with card details, handles card selection | MultiCardController |
-| cardCompareDirective | Directive | Displays side-by-side card comparison view | None |
-| cardFilterPipe | Filter | Filters cards by type, status, or utilization rate | None |
+| CardManagementController | Controller | Manages card list display, selection, and switching logic | CreditCardDataService, CardComparisonService, $scope |
+| CreditCardDataService | Factory | Fetches and caches up to 10 cards per user with balances and limits | $http, $q, $cacheFactory |
+| TransactionService | Factory | Retrieves card-specific transaction and spending data | $http, $q |
+| CardComparisonService | Service | Compares multiple cards on utilization, spend, and limits | CreditCardDataService, TransactionService |
+| cardSwitcherDirective | Directive | Provides dropdown/tab UI for switching between cards (<500ms) | None |
+| cardDetailDirective | Directive | Displays detailed view of selected card with spend analysis | None |
 
 ## c. Data Model
 
+**CreditCardDetail Object:**
 ```javascript
-// Credit Card Model
-const CreditCard = {
+{
   cardId: String,
   userId: String,
-  cardNumber: String,          // Last 4 digits only
-  cardType: String,            // "Visa", "MasterCard", "Amex"
-  cardName: String,
+  maskedNumber: String,
+  cardType: String,
   creditLimit: Number,
   availableCredit: Number,
   currentBalance: Number,
-  utilizationRate: Number,     // (creditLimit - availableCredit) / creditLimit * 100
-  status: String,              // "Active", "Inactive"
-  expiryDate: String           // "MM/YY"
-};
-
-// Card Spending Model
-const CardSpending = {
-  cardId: String,
+  outstandingAmount: Number,
   monthlySpend: Number,
-  yearlySpend: Number,
-  lastTransactionDate: Date,
-  topCategory: String
-};
+  utilizationRate: Number
+}
+```
 
-// Card Comparison Model
-const CardComparison = {
-  cards: Array,                // Array of CreditCard
-  spendingData: Array,         // Array of CardSpending
-  comparisonMetrics: Object    // { avgUtilization: X, totalSpend: Y, ... }
-};
+**CardComparison Object:**
+```javascript
+{
+  cardId: String,
+  cardName: String,
+  utilizationRate: Number,
+  monthlySpend: Number,
+  availableCredit: Number
+}
 ```
 
 ## d. Data Flow
 
-User navigates to multi-card view → MultiCardController initializes and calls CreditCardService.getUserCards() → Service makes GET request to `/api/cards?userId=X` → Card array returned → Controller binds to $scope.cards → cardGridDirective renders grid with up to 10 cards → User applies filter (e.g., high utilization) → cardFilterPipe filters $scope.cards → Filtered cards displayed → User selects card for details → Controller calls TransactionService.getCardSpending(cardId) → Service fetches from `/api/transactions?cardId=X` → CardSpending data returned → Controller updates $scope.selectedCardSpending → Spending details displayed → User selects multiple cards for comparison → Controller prepares CardComparison object → cardCompareDirective renders side-by-side comparison → All operations complete within 500ms due to optimized API calls.
+User accesses card management view → CardManagementController calls CreditCardDataService.getAllCards() → Service fetches all user cards (max 10) from REST API and caches locally → Controller displays card list using cardSwitcherDirective → User selects a card → Controller retrieves cached card details and invokes TransactionService for card-specific spending → cardDetailDirective renders selected card details → User can switch to another card, triggering cached data retrieval (<500ms) → CardComparisonService is invoked when user requests comparison view, aggregating data across selected cards.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant MultiCtrl as MultiCardController
-    participant CardSvc as CreditCardService
-    participant TxnSvc as TransactionService
-    participant API as REST API
-    
-    User->>View: Navigate to multi-card view
-    View->>MultiCtrl: Initialize
-    MultiCtrl->>CardSvc: getUserCards(userId)
-    CardSvc->>API: GET /api/cards?userId=X
-    API-->>CardSvc: Card array (max 10)
-    CardSvc-->>MultiCtrl: CreditCard[]
-    MultiCtrl->>View: Bind cards to scope
-    View-->>User: Display card grid
-    User->>View: Select card for spending analysis
-    View->>MultiCtrl: onCardSelect(cardId)
-    MultiCtrl->>TxnSvc: getCardSpending(cardId)
-    TxnSvc->>API: GET /api/transactions?cardId=X
-    API-->>TxnSvc: CardSpending
-    TxnSvc-->>MultiCtrl: Spending data
-    MultiCtrl->>View: Update view (<500ms)
-    View-->>User: Display card-wise spending
-    User->>View: Select cards for comparison
-    View->>MultiCtrl: compareCards([cardId1, cardId2])
-    MultiCtrl->>View: Render comparison
-    View-->>User: Display side-by-side comparison
+    participant CardManagementController
+    participant CreditCardDataService
+    participant TransactionService
+    participant CardComparisonService
+    participant API
+
+    User->>CardManagementController: Access card management view
+    CardManagementController->>CreditCardDataService: getAllCards(userId)
+    CreditCardDataService->>API: GET /api/cards?userId={userId}
+    API-->>CreditCardDataService: CreditCardDetail[] (max 10)
+    CreditCardDataService-->>CardManagementController: Cached card list
+    CardManagementController-->>User: Display card switcher
+    User->>CardManagementController: Select card
+    CardManagementController->>TransactionService: getCardSpending(cardId)
+    TransactionService->>API: GET /api/transactions/card/{cardId}
+    API-->>TransactionService: Spending data
+    TransactionService-->>CardManagementController: Card spending details
+    CardManagementController-->>User: Display card detail view
+    User->>CardManagementController: Request comparison
+    CardManagementController->>CardComparisonService: compareCards(cardIds)
+    CardComparisonService-->>CardManagementController: CardComparison[]
+    CardManagementController-->>User: Display comparison table
 ```
 
 ## f. Implementation Notes
 
-- Support up to 10 cards per user as per NFR; implement pagination or "load more" if user has >10 cards
-- Use AngularJS `$filter` service for client-side card filtering to meet <500ms switching/filtering NFR
-- Implement card selection using ng-click with $scope.selectedCards array for multi-select comparison
-- Use Bootstrap grid (col-md-4) for responsive card grid layout
-- Cache card data in CreditCardService for 60 seconds to optimize repeated access during filtering/switching
+- Use $cacheFactory in CreditCardDataService to cache card data for 500ms switching performance
+- Implement cardSwitcherDirective with ng-click and ng-repeat for fast card selection
+- Apply ES6 Promises ($q) for asynchronous data fetching and chaining
+- REST API endpoints: `/api/cards`, `/api/transactions/card/{cardId}`
+- Limit card count to 10 per user with validation in backend and frontend
 
 ## g. Error Handling
 
-Interceptor-based error handling with retry logic for transient failures; user notified via toast on persistent errors.
+HTTP interceptor-based error handling; fallback to cached data on transient failures; user notification via toast.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; card data filtered by authenticated userId to prevent unauthorized access.
+Requires token-based auth via existing SSO; card data masked client-side for security.
