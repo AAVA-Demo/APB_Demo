@@ -1,0 +1,56 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading analytics...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+    <button class="btn btn-sm btn-default" ng-click="vm.loadAnalytics()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Monthly Spend Trends (Last 12 Months)</h4></div>
+          <div class="panel-body">
+            <chart chart-type="line" chart-data="vm.analyticsData.monthlyTrends" chart-labels="month" chart-values="amount"></chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Card-Wise Spend</h4></div>
+          <div class="panel-body">
+            <chart chart-type="bar" chart-data="vm.analyticsData.cardWiseSpend" chart-labels="cardId" chart-values="amount"></chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Category-Wise Spending Breakdown</h4></div>
+          <div class="panel-body">
+            <chart chart-type="pie" chart-data="vm.analyticsData.categoryWiseSpend" chart-labels="category" chart-values="amount"></chart>
+            <table class="table table-condensed" style="margin-top:20px;">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.analyticsData.categoryWiseSpend track by cat.category">
+                  <td>{{cat.category}}</td>
+                  <td>${{cat.amount | number:2}}</td>
+                  <td>{{(cat.amount / vm.analyticsData.categoryWiseSpend.reduce(function(sum, c) { return sum + c.amount; }, 0) * 100).toFixed(2)}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

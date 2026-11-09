@@ -1,0 +1,89 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> Loading dashboard...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    <strong>Error:</strong> {{vm.error}}
+    <button class="btn btn-sm btn-default" ng-click="vm.loadDashboard()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Monthly Spend</div>
+          <div class="panel-body">
+            <h3>${{vm.kpis.monthlySpend | number:2}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="panel panel-success">
+          <div class="panel-heading">Total Credit Limit</div>
+          <div class="panel-body">
+            <h3>${{vm.kpis.totalCreditLimit | number:2}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">Available Credit</div>
+          <div class="panel-body">
+            <h3>${{vm.kpis.totalAvailableCredit | number:2}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Outstanding Amount</div>
+          <div class="panel-body">
+            <h3>${{vm.kpis.totalOutstanding | number:2}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Credit Utilization: {{vm.kpis.creditUtilization}}%</h4>
+          </div>
+          <div class="panel-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" ng-style="{'width': vm.kpis.creditUtilization + '%'}" ng-class="{'progress-bar-success': vm.kpis.creditUtilization < 30, 'progress-bar-warning': vm.kpis.creditUtilization >= 30 && vm.kpis.creditUtilization < 70, 'progress-bar-danger': vm.kpis.creditUtilization >= 70}">
+                {{vm.kpis.creditUtilization}}%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Credit Card Portfolio</h3>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Card Number</th>
+              <th>Card Type</th>
+              <th>Credit Limit</th>
+              <th>Outstanding</th>
+              <th>Available Credit</th>
+              <th>Utilization</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="card in vm.cards track by card.cardId">
+              <td>{{card.cardNumber}}</td>
+              <td>{{card.cardType}}</td>
+              <td>${{card.creditLimit | number:2}}</td>
+              <td>${{card.outstandingAmount | number:2}}</td>
+              <td>${{card.availableCredit | number:2}}</td>
+              <td>{{(card.outstandingAmount / card.creditLimit * 100).toFixed(2)}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
