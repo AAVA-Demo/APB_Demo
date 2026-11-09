@@ -1,0 +1,12 @@
+.card-management-container { padding: 20px; }
+.card-item { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 20px; }
+.card-item:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.card-item .panel-heading { background-color: #337ab7; color: white; }
+.card-item.panel-success .panel-heading { background-color: #5cb85c; }
+.card-item.panel-warning .panel-heading { background-color: #f0ad4e; }
+.card-item.panel-danger .panel-heading { background-color: #d9534f; }
+.card-number { font-size: 18px; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+.card-number-large { font-size: 24px; letter-spacing: 3px; font-family: 'Courier New', monospace; text-align: center; margin: 20px 0; }
+.modal.show { display: block; }
+.modal-backdrop.fade.in { opacity: 0.5; }
+@media (max-width: 768px) { .card-item { margin-bottom: 15px; } }
