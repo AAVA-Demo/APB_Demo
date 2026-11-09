@@ -1,34 +1,36 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers comprehensive spending analytics with interactive visualizations and category-based analysis across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). The system processes transaction data, automatically categorizes expenses, and generates monthly spend trends through visual charts and graphs.
+- **Summary:** This epic delivers comprehensive spending analytics with interactive visualizations and category-based analysis across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). The system presents monthly spend trends through visual charts, automatically categorizes expenses, and generates meaningful insights to help users understand spending patterns and optimize financial habits.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["User Interface"]
-    B["Analytics Processing Engine"]
-    C["Transaction Data Service"]
-    D["Category Classification Engine"]
+    B["Transaction Data Service"]
+    C["Category Classification Engine"]
+    D["Analytics Processing Engine"]
     E["Data Visualization Library"]
     A --> B
     B --> C
-    B --> D
-    B --> E
+    C --> D
+    D --> E
+    E --> A
 ```
 
 - **Integration Points:**
   - **Upstream:** Transaction Data Service (detailed transaction records)
-  - **Downstream:** Category Classification Engine (automatic expense categorization), Data Visualization Library (chart/graph rendering), Analytics Processing Engine (trend calculation and pattern detection)
+  - **Internal:** Category Classification Engine (automatic expense categorization), Analytics Processing Engine (trend calculation and pattern detection), Data Visualization Library (chart/graph rendering)
+  - **Downstream:** User Interface (interactive analytics presentation)
 
-- **Key Assumptions:** 
-  - Category classification uses a combination of merchant codes, transaction descriptions, and potentially machine learning models.
-  - Monthly spend trends are calculated for configurable time periods (default assumed to be last 12 months).
+- **Key Assumptions:**
+  - Category classification is performed automatically using rule-based or ML-based algorithms with periodic model updates to maintain accuracy.
+  - Analytics processing supports multiple time periods (daily, weekly, monthly, yearly) with pre-aggregated data for common queries to meet 3-second response time.
 
-- **NFR Highlights:** Analytics processing handles up to 10,000 transactions per user; visualization rendering completes within 3 seconds; high category classification accuracy; supports data aggregation for multiple time periods without performance impact.
+- **NFR Highlights:** Analytics processing must handle up to 10,000 transactions per user; visualization rendering must complete within 3 seconds; category classification accuracy must be maintained at high levels; system must support data aggregation for multiple time periods without performance impact.
 
-- **Data Flow:** User requests spending analytics → Analytics Processing Engine retrieves transaction history from Transaction Data Service → Category Classification Engine maps each transaction to one of 9 predefined categories → Engine aggregates spending by category and time period, calculates monthly trends → Data Visualization Library generates interactive charts/graphs → UI displays category breakdowns, trend analysis, and spending patterns to user.
+- **Data Flow:** User requests spending analytics → Transaction Data Service retrieves detailed transaction records → Category Classification Engine automatically categorizes each transaction into one of 9 predefined categories → Analytics Processing Engine aggregates spending by category and time period, calculates trends, and detects patterns → Data Visualization Library generates interactive charts and graphs → User Interface displays category breakdown reports, monthly spend trends, historical comparisons, and actionable insights with drill-down capabilities.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design comprehensively covers all epic requirements: category-wise visualization (9 categories), monthly spend trend analysis, interactive visualizations, transaction categorization and aggregation, spending pattern identification, historical comparison, and category breakdown reports. The architecture supports all stated NFRs (10,000 transactions, 3-second rendering, high classification accuracy, multi-period aggregation). The clear separation of analytics processing, classification, and visualization ensures maintainability and allows for future enhancements like predictive analytics.
+- **Requirements Coverage:** The design comprehensively covers all stated requirements including category-wise spending visualization across 9 predefined categories, monthly spend trend analysis and charts, interactive data visualizations and graphs, transaction categorization and aggregation, spending pattern identification, historical spending comparison, and category breakdown reports. All NFRs (10,000 transactions per user, 3-second visualization rendering, high category classification accuracy, multi-period aggregation without performance impact) are addressed through appropriate architectural components. Dependencies on transaction data service, category classification engine, data visualization library, and analytics processing engine are clearly defined. Out-of-scope items (real bank integration, card payments, fund transfers, loans, payment gateway integration, predictive analytics, budget creation and alerts) are excluded as specified.
