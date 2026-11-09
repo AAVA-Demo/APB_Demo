@@ -1,13 +1,13 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic provides comprehensive transaction management capabilities allowing users to view, search, and filter credit card transactions across all their cards. Users can access detailed transaction information, verify charges, and maintain transparency into their spending history through a clear, organized interface supporting multiple credit cards.
+- **Summary:** This epic delivers comprehensive transaction management capabilities allowing users to view, search, and filter credit card transactions across all cards. It provides detailed transaction information with support for multi-card views, enabling users to track spending history and verify charges with complete transparency.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart TD
     A["User Interface"]
-    B["Transaction Management Service"]
+    B["Transaction Management Module"]
     C["Transaction Data Service"]
     D["Credit Card Service"]
     E["Categorization Service"]
@@ -21,16 +21,16 @@ flowchart TD
 ```
 
 - **Integration Points:** 
-  - **Upstream:** Transaction data service for retrieving transaction history
-  - **Upstream:** Credit card service for associating transactions with specific cards
-  - **Upstream:** Categorization service for assigning categories to transactions
+  - **Upstream:** Transaction data service (for retrieving transaction history)
+  - **Upstream:** Credit card service (for associating transactions with specific cards)
+  - **Upstream:** Categorization service (for assigning categories to transactions)
 
 - **Key Assumptions:** 
-  - Pagination is implemented with a default page size optimized for performance and user experience
-  - Search and filter operations are indexed for efficient query execution on large datasets
+  - Transaction records are stored with card identifiers for multi-card association
+  - Search and filter criteria include date range, amount, category, and card selection
 
-- **NFR Highlights:** Transaction list must support pagination for large datasets; Search and filter operations must execute within acceptable response times; System must handle high volume of transaction records efficiently
+- **NFR Highlights:** Transaction list must support pagination for large datasets; search and filter operations must execute within acceptable response times; system must handle high volume of transaction records efficiently
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design addresses all scope elements including transaction listing, search and filtering, multi-card view, transaction details, and responsive interface. The architecture supports the NFRs for pagination, performance, and high-volume handling through proper service decomposition and integration with backend data services.
+- **Requirements Coverage:** The design addresses all core requirements including transaction listing, search/filtering, multi-card view, and transaction details. The component flow integrates with necessary upstream services for data retrieval, card association, and categorization. Pagination and performance considerations align with NFR requirements for handling large datasets.

@@ -1,33 +1,34 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a modern, responsive dashboard providing users with a consolidated view of their credit card portfolio and key performance indicators. Users can monitor essential financial metrics including monthly spend, total credit limit, available credit, and outstanding amounts across all credit cards from a unified interface serving as the central hub for credit card financial management.
+- **Summary:** This epic delivers a modern, responsive dashboard serving as the central hub for credit card financial management. It provides a consolidated view of the credit card portfolio with essential financial metrics (monthly spend, total credit limit, available credit, outstanding amounts) across all credit cards, enabling users to quickly assess overall credit health and spending status.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart TD
-    A["Dashboard UI"]
-    B["KPI Management Service"]
-    C["Credit Card Data Service"]
-    D["Transaction Data Service"]
-    E["Calculation Engine"]
+    A["User Web/Mobile Client"]
+    B["Dashboard Controller"]
+    C["KPI Aggregation Service"]
+    D["Credit Card Data Service"]
+    E["Transaction Data Service"]
     A --> B
     B --> C
-    B --> D
-    B --> E
-    E --> B
+    C --> D
+    C --> E
+    D --> C
+    E --> C
 ```
 
 - **Integration Points:** 
-  - **Upstream:** Internal credit card data service for retrieving card details and balances
-  - **Upstream:** Transaction data service for monthly spend calculations
+  - **Upstream:** Internal credit card data service (for retrieving card details and balances)
+  - **Upstream:** Transaction data service (for monthly spend calculations)
 
 - **Key Assumptions:** 
-  - Real-time calculations are cached or optimized to meet dashboard load time requirements
-  - Multi-card consolidated view aggregates data across all user-owned cards without filtering
+  - Dashboard displays aggregated KPIs across all user's credit cards with drill-down capability to individual cards
+  - Real-time calculation refers to on-demand computation at dashboard load, not continuous streaming updates
 
-- **NFR Highlights:** System must support responsive design across desktop, tablet, and mobile devices; Dashboard load time must be optimized for quick access to financial data; Real-time calculation accuracy for credit limits and available credit
+- **NFR Highlights:** System must support responsive design across desktop, tablet, and mobile devices; dashboard load time must be optimized for quick access to financial data; real-time calculation accuracy for credit limits and available credit
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design addresses all scope items including dashboard interface, all four KPI displays, responsive layout, and multi-card consolidated view. The component architecture supports the NFRs for responsive design, optimized load times, and real-time calculation accuracy through proper service integration and calculation engine implementation.
+- **Requirements Coverage:** The design comprehensively addresses all requirements including dashboard interface, all four KPIs, responsive layout, and multi-card consolidated view. The architecture supports real-time calculation accuracy and optimized load times through dedicated KPI aggregation service. Integration with credit card and transaction services enables complete portfolio visibility as specified.

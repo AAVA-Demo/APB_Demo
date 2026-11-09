@@ -1,35 +1,33 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers interactive analytics and visualization capabilities for credit card spending patterns. Users can view spending breakdowns across nine predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous), analyze monthly spend trends, and perform card-wise spend analysis to identify spending habits and make data-driven financial decisions.
+- **Summary:** This epic provides interactive analytics and visualization capabilities for users to understand spending patterns through category-wise analysis across nine predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). It includes monthly spend trends and card-wise spend analysis to enable data-driven financial decisions.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart TD
     A["User Interface"]
-    B["Analytics Service"]
+    B["Analytics Engine"]
     C["Transaction Data Service"]
-    D["Categorization Engine"]
-    E["Visualization Component"]
+    D["Categorization Service"]
+    E["Visualization Renderer"]
     A --> B
     B --> C
     B --> D
-    C --> D
     B --> E
     E --> A
 ```
 
 - **Integration Points:** 
-  - **Upstream:** Transaction data service for retrieving and categorizing transactions
-  - **Upstream:** Analytics engine for calculating category-wise and card-wise spending patterns
-  - **Internal:** Visualization component for rendering charts and graphs
+  - **Upstream:** Transaction data service (for retrieving and categorizing transactions)
+  - **Upstream:** Analytics engine (for calculating category-wise and card-wise spending patterns)
 
 - **Key Assumptions:** 
-  - Transaction categorization is performed automatically by the categorization engine with predefined rules
-  - Monthly spend trends are calculated based on transaction timestamps and aggregated on a calendar month basis
+  - Transaction categorization is performed by an existing categorization service with predefined rules
+  - Monthly spend trends are calculated based on transaction timestamp and aggregated on a monthly basis
 
-- **NFR Highlights:** Visualizations must render efficiently with large transaction datasets; Analytics calculations must be accurate and real-time; Charts must be responsive and interactive across all device types
+- **NFR Highlights:** Visualizations must render efficiently with large transaction datasets; analytics calculations must be accurate and real-time; charts must be responsive and interactive across all device types
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design covers all stated scope items including category-wise visualization, monthly trends, card-wise analysis, and interactive charts across nine spending categories. The component flow addresses the need for transaction data retrieval, categorization, analytics processing, and visualization rendering while meeting the NFRs for performance, accuracy, and responsiveness.
+- **Requirements Coverage:** The design covers all stated scope including category-wise visualization, monthly trends, card-wise analysis, and interactive charts. The component flow addresses data retrieval, categorization, analytics computation, and visualization rendering. Integration points with transaction and analytics services are clearly identified to support the epic's requirements.
