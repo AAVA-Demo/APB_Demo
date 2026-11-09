@@ -1,0 +1,6 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading transaction details...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <a href="#/transactions" class="btn btn-default">&larr; Back to Transactions</a>
+  <transaction-detail transaction="vm.selectedTransaction"></transaction-detail>
+</div>

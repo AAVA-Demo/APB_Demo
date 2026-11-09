@@ -1,0 +1,42 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading analytics...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error && vm.spendingData">
+  <h2>Spending Analytics & Insights</h2>
+  <div class="filter-panel">
+    <div class="row">
+      <div class="col-sm-4">
+        <label>Date From</label>
+        <input type="date" class="form-control" ng-model="vm.filters.dateRange.from">
+      </div>
+      <div class="col-sm-4">
+        <label>Date To</label>
+        <input type="date" class="form-control" ng-model="vm.filters.dateRange.to">
+      </div>
+      <div class="col-sm-4" style="padding-top: 25px;">
+        <button class="btn btn-primary" ng-click="vm.applyFilters()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Category-Wise Spending</h4>
+        <canvas class="chart chart-pie" chart-data="vm.categoryData" chart-labels="vm.categoryLabels" chart-options="vm.categoryOptions" style="height: 300px;"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Card-Wise Spending</h4>
+        <canvas class="chart chart-doughnut" chart-data="vm.cardData" chart-labels="vm.cardLabels" chart-options="vm.cardOptions" style="height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="chart-container">
+        <h4>Monthly Spend Trends</h4>
+        <canvas class="chart chart-line" chart-data="vm.monthlyData" chart-labels="vm.monthlyLabels" chart-series="vm.monthlySeries" chart-options="vm.monthlyOptions" style="height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
