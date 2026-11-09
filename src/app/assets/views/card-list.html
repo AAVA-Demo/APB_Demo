@@ -1,0 +1,52 @@
+<div class="card-list-container">
+  <div class="page-header">
+    <h1>My Credit Cards</h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading cards...
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <p><strong>Total Cards:</strong> {{vm.cardList.totalCards}}</p>
+            <p><strong>Total Credit Limit:</strong> {{vm.cardList.totalCreditLimit | currency}}</p>
+            <p><strong>Total Available Credit:</strong> {{vm.cardList.totalAvailableCredit | currency}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4" ng-repeat="card in vm.cardList.cards track by card.cardId">
+        <card-list-item card="card" on-select="vm.selectCard(card)"></card-list-item>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.selectedCard" class="modal" style="display: block; background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="vm.closeDetails()">&times;</button>
+          <h4 class="modal-title">Card Details</h4>
+        </div>
+        <div class="modal-body">
+          <p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+          <p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+          <p><strong>Card Holder:</strong> {{vm.selectedCard.cardHolderName}}</p>
+          <p><strong>Expiry Date:</strong> {{vm.selectedCard.expiryDate}}</p>
+          <p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit | currency}}</p>
+          <p><strong>Available Credit:</strong> {{vm.selectedCard.availableCredit | currency}}</p>
+          <p><strong>Outstanding Amount:</strong> {{vm.selectedCard.outstandingAmount | currency}}</p>
+          <p><strong>Last Transaction:</strong> {{vm.selectedCard.lastTransactionDate | date:'short'}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="vm.closeDetails()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
