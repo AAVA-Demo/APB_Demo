@@ -1,23 +1,27 @@
 const { defineConfig, devices } = require('@playwright/test');
+const config = require('./src/data/config.json');
 
 module.exports = defineConfig({
   testDir: './src/automationScripts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: config.retries,
+  workers: process.env.CI ? 1 : config.workers,
   reporter: [
-    ['html'],
+    ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['json', { outputFile: 'test-results/results.json' }],
-    ['junit', { outputFile: 'test-results/junit.xml' }]
+    ['junit', { outputFile: 'test-results/junit.xml' }],
+    ['list']
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: config.baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 10000,
-    navigationTimeout: 30000
+    headless: config.browser.headless,
+    viewport: config.browser.viewport,
+    actionTimeout: config.timeout.default,
+    navigationTimeout: config.timeout.navigation
   },
   projects: [
     {
@@ -44,5 +48,7 @@ module.exports = defineConfig({
       name: 'tablet',
       use: { ...devices['iPad Pro'] }
     }
-  ]
+  ],
+  outputDir: 'test-results/',
+  timeout: config.timeout.default
 });

@@ -1,0 +1,51 @@
+{
+  "users": {
+    "validUser": {
+      "username": "testuser@example.com",
+      "password": "Test@123"
+    },
+    "noCardsUser": {
+      "username": "nocards@example.com",
+      "password": "NoCards@123"
+    },
+    "noTransactionsUser": {
+      "username": "notransactions@example.com",
+      "password": "NoTrans@123"
+    },
+    "limitedHistoryUser": {
+      "username": "limited@example.com",
+      "password": "Limited@123"
+    }
+  },
+  "cards": {
+    "visa": {
+      "cardType": "Visa",
+      "creditLimit": 10000,
+      "availableCredit": 7500,
+      "outstandingBalance": 2500
+    },
+    "mastercard": {
+      "cardType": "MasterCard",
+      "creditLimit": 15000,
+      "availableCredit": 12000,
+      "outstandingBalance": 3000
+    },
+    "amex": {
+      "cardType": "Amex",
+      "creditLimit": 20000,
+      "availableCredit": 18000,
+      "outstandingBalance": 2000
+    }
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ]
+}

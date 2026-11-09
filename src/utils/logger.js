@@ -9,22 +9,29 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json()
   ),
-  defaultMeta: { service: 'credit-card-dashboard-automation' },
+  defaultMeta: { service: 'creditcard-automation' },
   transports: [
     new winston.transports.File({ 
       filename: path.join('logs', 'error.log'), 
-      level: 'error' 
+      level: 'error',
+      maxsize: 5242880,
+      maxFiles: 5
     }),
     new winston.transports.File({ 
-      filename: path.join('logs', 'combined.log') 
-    }),
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
+      filename: path.join('logs', 'combined.log'),
+      maxsize: 5242880,
+      maxFiles: 5
     })
   ]
 });
 
-module.exports = { logger };
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple()
+    )
+  }));
+}
+
+module.exports = logger;

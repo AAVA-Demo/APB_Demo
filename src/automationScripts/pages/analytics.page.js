@@ -1,163 +1,156 @@
 const { expect } = require('@playwright/test');
-const { logger } = require('../../utils/logger');
+const { BasePage } = require('./base.page');
 
-exports.AnalyticsPage = class AnalyticsPage {
+exports.AnalyticsPage = class AnalyticsPage extends BasePage {
   constructor(page) {
+    super(page);
     this.page = page;
     
-    this.categoryPieChart = page.locator('[data-testid="category-pie-chart"]');
-    this.emptyChartMessage = page.locator('[data-testid="empty-chart-message"]');
-    this.categoryDetailModal = page.locator('[data-testid="category-detail-modal"]');
-    this.noTransactionsMessage = page.locator('[data-testid="no-transactions-message"]');
-    this.categoryTooltip = page.locator('[data-testid="category-tooltip"]');
+    // Analytics Page Locators
+    this.analyticsContainer = page.locator('[data-testid="analytics-container"]');
+    this.categoryChart = page.locator('[data-testid="category-chart"]');
+    this.trendChart = page.locator('[data-testid="trend-chart"]');
+    this.emptyState = page.locator('[data-testid="empty-state"]');
+    this.emptyStateMessage = page.locator('[data-testid="empty-state-message"]');
     
-    this.comparisonTable = page.locator('[data-testid="comparison-table"]');
-    this.errorMessage = page.locator('[data-testid="error-message"]');
-    this.warningMessage = page.locator('[data-testid="warning-message"]');
+    // Category Chart Locators
+    this.categorySegment = page.locator('[data-testid="category-segment"]');
+    this.categoryLabel = page.locator('[data-testid="category-label"]');
+    this.categoryAmount = page.locator('[data-testid="category-amount"]');
+    this.categoryPercentage = page.locator('[data-testid="category-percentage"]');
+    this.categoryDetail = page.locator('[data-testid="category-detail"]');
     
-    this.trendLineChart = page.locator('[data-testid="trend-line-chart"]');
-    this.monthDetailModal = page.locator('[data-testid="month-detail-modal"]');
+    // Trend Chart Locators
+    this.trendDataPoint = page.locator('[data-testid="trend-data-point"]');
+    this.trendMonthLabel = page.locator('[data-testid="trend-month-label"]');
+    this.drillDownView = page.locator('[data-testid="drill-down-view"]');
+    this.insufficientDataWarning = page.locator('[data-testid="insufficient-data-warning"]');
     
-    this.categoryItems = page.locator('[data-testid="category-item"]');
-    this.transactionItems = page.locator('[data-testid="transaction-item"]');
+    // Tooltip Locators
+    this.tooltip = page.locator('[data-testid="chart-tooltip"]');
+    this.tooltipContent = page.locator('[data-testid="tooltip-content"]');
+    
+    // Navigation Locators
+    this.trendAnalysisTab = page.locator('[data-testid="trend-analysis-tab"]');
+    this.categoryAnalysisTab = page.locator('[data-testid="category-analysis-tab"]');
   }
 
-  async navigate() {
-    logger.info('Navigating to analytics page');
+  async navigateToAnalytics() {
     await this.page.goto('/analytics');
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForAnalyticsLoad();
   }
 
-  async getCategoryBreakdown() {
-    await this.categoryItems.first().waitFor({ state: 'visible', timeout: 10000 });
-    const count = await this.categoryItems.count();
-    const categories = [];
+  async waitForAnalyticsLoad() {
+    await expect(this.analyticsContainer).toBeVisible({ timeout: 10000 });
+    await Promise.race([
+      expect(this.categoryChart).toBeVisible({ timeout: 5000 }),
+      expect(this.emptyState).toBeVisible({ timeout: 5000 })
+    ]).catch(() => {});
+  }
+
+  async isCategoryChartVisible() {
+    return await this.categoryChart.isVisible();
+  }
+
+  async getAllCategories() {
+    await expect(this.categoryLabel.first()).toBeVisible();
+    return await this.categoryLabel.allTextContents();
+  }
+
+  async getCategorySpendingData() {
+    const categories = await this.categoryLabel.allTextContents();
+    const amounts = await this.categoryAmount.allTextContents();
+    const percentages = await this.categoryPercentage.allTextContents();
     
-    for (let i = 0; i < count; i++) {
-      const item = this.categoryItems.nth(i);
-      const name = await item.locator('[data-testid="category-name"]').textContent();
-      const amount = await item.locator('[data-testid="category-amount"]').textContent();
-      const percentage = await item.locator('[data-testid="category-percentage"]').textContent();
-      
-      categories.push({
-        name: name.trim(),
-        amount: amount.trim(),
-        percentage: percentage.trim()
-      });
+    return categories.map((category, index) => ({
+      category: category,
+      amount: amounts[index],
+      percentage: percentages[index]
+    }));
+  }
+
+  async clickCategorySegment(categoryName) {
+    const segments = await this.categorySegment.all();
+    for (const segment of segments) {
+      const label = await segment.locator('[data-testid="category-label"]').textContent();
+      if (label.includes(categoryName)) {
+        await segment.click();
+        return;
+      }
     }
-    
-    return categories;
+    throw new Error(`Category ${categoryName} not found`);
   }
 
-  async clickCategory(categoryName) {
-    logger.info(`Clicking category: ${categoryName}`);
-    const category = this.page.locator(`[data-testid="category-item"][data-category="${categoryName}"]`);
-    await category.click();
-    await this.page.waitForTimeout(500);
-  }
-
-  async getCategoryTransactions() {
-    await this.transactionItems.first().waitFor({ state: 'visible', timeout: 10000 });
-    const count = await this.transactionItems.count();
-    const transactions = [];
-    
-    for (let i = 0; i < count; i++) {
-      const item = this.transactionItems.nth(i);
-      const merchantName = await item.locator('[data-testid="merchant-name"]').textContent();
-      const date = await item.locator('[data-testid="transaction-date"]').textContent();
-      const amount = await item.locator('[data-testid="transaction-amount"]').textContent();
-      
-      transactions.push({
-        merchantName: merchantName.trim(),
-        date: date.trim(),
-        amount: amount.trim()
-      });
-    }
-    
-    return transactions;
+  async isCategoryDetailVisible() {
+    return await this.categoryDetail.isVisible();
   }
 
   async hoverOverCategory(categoryName) {
-    logger.info(`Hovering over category: ${categoryName}`);
-    const category = this.page.locator(`[data-testid="category-item"][data-category="${categoryName}"]`);
-    await category.hover();
-    await this.page.waitForTimeout(500);
-  }
-
-  async navigateToHistoricalComparison() {
-    logger.info('Navigating to historical comparison view');
-    await this.page.locator('[data-testid="historical-comparison-tab"]').click();
-    await this.page.waitForLoadState('networkidle');
-  }
-
-  async getComparisonData() {
-    await this.comparisonTable.waitFor({ state: 'visible', timeout: 10000 });
-    const rows = this.comparisonTable.locator('tbody tr');
-    const count = await rows.count();
-    const data = [];
-    
-    for (let i = 0; i < count; i++) {
-      const row = rows.nth(i);
-      const category = await row.locator('td').nth(0).textContent();
-      const currentMonth = await row.locator('td').nth(1).textContent();
-      const previousMonth = await row.locator('td').nth(2).textContent();
-      const percentageChange = await row.locator('td').nth(3).textContent();
-      
-      data.push({
-        category: category.trim(),
-        currentMonth: currentMonth.trim(),
-        previousMonth: previousMonth.trim(),
-        percentageChange: percentageChange.trim()
-      });
+    const segments = await this.categorySegment.all();
+    for (const segment of segments) {
+      const label = await segment.locator('[data-testid="category-label"]').textContent();
+      if (label.includes(categoryName)) {
+        await segment.hover();
+        return;
+      }
     }
-    
-    return data;
+    throw new Error(`Category ${categoryName} not found`);
   }
 
+  async isTooltipVisible() {
+    return await this.tooltip.isVisible({ timeout: 2000 });
+  }
+
+  async getTooltipContent() {
+    await expect(this.tooltipContent).toBeVisible();
+    return await this.tooltipContent.textContent();
+  }
+
+  async isEmptyStateVisible() {
+    return await this.emptyState.isVisible();
+  }
+
+  async getEmptyStateMessage() {
+    await expect(this.emptyStateMessage).toBeVisible();
+    return await this.emptyStateMessage.textContent();
+  }
+
+  // Trend Analysis Methods
   async navigateToTrendAnalysis() {
-    logger.info('Navigating to trend analysis view');
-    await this.page.locator('[data-testid="trend-analysis-tab"]').click();
-    await this.page.waitForLoadState('networkidle');
+    await this.trendAnalysisTab.click();
+    await expect(this.trendChart).toBeVisible({ timeout: 5000 });
   }
 
-  async getTrendDataPoints() {
-    await this.trendLineChart.waitFor({ state: 'visible', timeout: 10000 });
-    const dataPoints = this.page.locator('[data-testid="trend-data-point"]');
-    const count = await dataPoints.count();
-    const points = [];
-    
-    for (let i = 0; i < count; i++) {
-      const point = dataPoints.nth(i);
-      const month = await point.getAttribute('data-month');
-      const amount = await point.getAttribute('data-amount');
-      
-      points.push({
-        month: month,
-        amount: amount
-      });
+  async isTrendChartVisible() {
+    return await this.trendChart.isVisible();
+  }
+
+  async getTrendChartMonthCount() {
+    const months = await this.trendMonthLabel.all();
+    return months.length;
+  }
+
+  async hoverOverTrendDataPoint(index) {
+    const dataPoints = await this.trendDataPoint.all();
+    if (index >= dataPoints.length) {
+      throw new Error(`Data point index ${index} out of bounds`);
     }
-    
-    return points;
+    await dataPoints[index].hover();
   }
 
-  async clickTrendDataPoint(month) {
-    logger.info(`Clicking trend data point for month: ${month}`);
-    const dataPoint = this.page.locator(`[data-testid="trend-data-point"][data-month="${month}"]`);
-    await dataPoint.click();
-    await this.page.waitForTimeout(500);
+  async clickTrendDataPoint(index) {
+    const dataPoints = await this.trendDataPoint.all();
+    if (index >= dataPoints.length) {
+      throw new Error(`Data point index ${index} out of bounds`);
+    }
+    await dataPoints[index].click();
   }
 
-  async getMonthDetails() {
-    await this.monthDetailModal.waitFor({ state: 'visible', timeout: 10000 });
-    
-    const categoryBreakdown = await this.monthDetailModal.locator('[data-testid="month-category-breakdown"]').textContent();
-    const topMerchants = await this.monthDetailModal.locator('[data-testid="month-top-merchants"]').textContent();
-    const transactionCount = await this.monthDetailModal.locator('[data-testid="month-transaction-count"]').textContent();
-    
-    return {
-      categoryBreakdown: categoryBreakdown.trim(),
-      topMerchants: topMerchants.trim(),
-      transactionCount: transactionCount.trim()
-    };
+  async isDrillDownViewVisible() {
+    return await this.drillDownView.isVisible({ timeout: 3000 });
+  }
+
+  async isInsufficientDataWarningVisible() {
+    return await this.insufficientDataWarning.isVisible();
   }
 };

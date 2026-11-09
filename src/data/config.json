@@ -1,0 +1,24 @@
+{
+  "baseURL": "https://creditcard-dashboard.example.com",
+  "apiBaseURL": "https://api.creditcard-dashboard.example.com",
+  "timeout": {
+    "default": 30000,
+    "navigation": 60000,
+    "api": 10000
+  },
+  "browser": {
+    "headless": false,
+    "slowMo": 50,
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "environments": {
+    "dev": "https://dev.creditcard-dashboard.example.com",
+    "staging": "https://staging.creditcard-dashboard.example.com",
+    "production": "https://creditcard-dashboard.example.com"
+  },
+  "retries": 2,
+  "workers": 4
+}
