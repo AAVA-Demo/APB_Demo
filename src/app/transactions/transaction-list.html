@@ -1,0 +1,40 @@
+<div class="transactions-container">
+<div class="row">
+<div class="col-xs-12">
+<h2>Transaction Management</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading transactions...</div>
+<div ng-if="vm.error" class="alert alert-warning">{{vm.error}}</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<transaction-filter on-filter="vm.applyFilters(filters)" on-reset="vm.resetFilters()"></transaction-filter>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>All Transactions</h3>
+<div ng-if="vm.transactions.length===0" class="alert alert-info">No transactions found.</div>
+<div ng-repeat="txn in vm.transactions" class="transaction-row">
+<div class="row">
+<div class="col-xs-12 col-sm-6">
+<strong>{{txn.merchantName}}</strong><br>
+<small>{{txn.transactionDate|date:'MMM dd, yyyy'}}</small>
+</div>
+<div class="col-xs-6 col-sm-3">
+<small>Amount:</small><br><strong>${{txn.amount|number:2}}</strong>
+</div>
+<div class="col-xs-6 col-sm-3">
+<small>Category:</small><br><span class="label label-primary">{{txn.category}}</span>
+</div>
+</div>
+<div class="row" style="margin-top:8px">
+<div class="col-xs-12">
+<small>{{txn.description}}</small>
+<a href="#/transactions/{{txn.transactionId}}" class="btn btn-xs btn-info pull-right">View Details</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

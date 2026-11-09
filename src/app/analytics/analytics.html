@@ -1,0 +1,37 @@
+<div class="analytics-container">
+<div class="row">
+<div class="col-xs-12">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="alert alert-info">Loading analytics data...</div>
+<div ng-if="vm.error" class="alert alert-warning">{{vm.error}}</div>
+</div>
+</div>
+<div class="row" ng-if="vm.analyticsData">
+<div class="col-xs-12 col-md-6">
+<div class="chart-container">
+<h3>Category-wise Spending</h3>
+<category-chart analytics-data="vm.analyticsData" on-category-click="vm.onCategoryClick(category)"></category-chart>
+</div>
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<trend-chart analytics-data="vm.analyticsData"></trend-chart>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.drillDownData">
+<div class="col-xs-12">
+<div class="panel panel-info">
+<div class="panel-heading">
+<h3 class="panel-title">{{vm.drillDownData.category}} Transactions</h3>
+</div>
+<div class="panel-body">
+<div ng-repeat="txn in vm.drillDownData.transactions" class="transaction-row">
+<strong>{{txn.merchantName}}</strong> - ${{txn.amount|number:2}} on {{txn.transactionDate|date:'shortDate'}}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
