@@ -1,0 +1,40 @@
+<div ng-controller="MultiCardController as vm">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center"><h4>Loading cards...</h4></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.cardPortfolio">
+    <p>Total Cards: {{vm.cardPortfolio.totalCards}}</p>
+    <card-list cards="vm.cardPortfolio.cards" on-select="vm.toggleCardSelection(card)" on-detail="vm.viewCardDetail(card)"></card-list>
+    <div ng-if="vm.selectedCards.length >= 2" style="margin-top: 20px;">
+      <button class="btn btn-success" ng-click="vm.compareSelected()">Compare Selected Cards ({{vm.selectedCards.length}})</button>
+    </div>
+    <div ng-if="vm.comparisonResult" class="chart-container" style="margin-top: 20px;">
+      <h4>Comparison Results</h4>
+      <p><strong>Average Utilization:</strong> {{vm.comparisonResult.avgUtilization}}%</p>
+      <p><strong>Total Monthly Spend:</strong> ₹{{vm.comparisonResult.totalSpend | number}}</p>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th>Credit Limit</th>
+            <th>Outstanding</th>
+            <th>Available</th>
+            <th>Utilization</th>
+            <th>Monthly Spend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="c in vm.comparisonResult.cards">
+            <td>{{c.cardNumber}}</td>
+            <td>₹{{c.creditLimit | number}}</td>
+            <td>₹{{c.outstandingBalance | number}}</td>
+            <td>₹{{c.availableCredit | number}}</td>
+            <td>{{c.utilizationRate}}%</td>
+            <td>₹{{c.monthlySpend | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <card-detail ng-if="vm.selectedCardDetail" card="vm.selectedCardDetail" on-close="vm.closeDetail()"></card-detail>
+</div>

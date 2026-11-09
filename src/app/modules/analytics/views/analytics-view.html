@@ -1,0 +1,40 @@
+<div ng-controller="AnalyticsController as vm">
+  <h2>Transaction Analytics</h2>
+  <div ng-if="vm.loading" class="text-center"><h4>Loading analytics...</h4></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.analyticsData">
+    <analytics-filter date-range="vm.dateRange" on-apply="vm.init()"></analytics-filter>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Category-Wise Spending</h4>
+          <category-chart data="vm.analyticsData.categorySpending" on-click="vm.onCategoryClick(category)"></category-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Monthly Spend Trends</h4>
+          <trend-chart data="vm.analyticsData.monthlyTrends"></trend-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <div ng-repeat="cat in vm.analyticsData.categorySpending" class="category-item" ng-click="vm.onCategoryClick(cat)">
+            {{cat.category}}
+            <span class="amount-badge">₹{{cat.totalAmount | number}} ({{cat.percentage}}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.selectedCategory" class="chart-container">
+      <h4>Selected Category: {{vm.selectedCategory.category}}</h4>
+      <p><strong>Total Amount:</strong> ₹{{vm.selectedCategory.totalAmount | number}}</p>
+      <p><strong>Transaction Count:</strong> {{vm.selectedCategory.transactionCount}}</p>
+      <p><strong>Percentage of Total:</strong> {{vm.selectedCategory.percentage}}%</p>
+      <button class="btn btn-default" ng-click="vm.clearSelection()">Clear Selection</button>
+    </div>
+  </div>
+</div>

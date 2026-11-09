@@ -1,0 +1,33 @@
+<div ng-controller="DashboardController as vm">
+  <h2>Dashboard Overview</h2>
+  <div ng-if="vm.loading" class="text-center"><h4>Loading dashboard...</h4></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.kpis" dashboard-layout>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget label="Monthly Spend" value="vm.kpis.monthlySpend" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget label="Available Credit" value="vm.kpis.availableCredit" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget label="Outstanding Amount" value="vm.kpis.outstandingAmount" format="currency"></kpi-widget>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.kpis" class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="kpi-card">
+        <h4>Credit Utilization</h4>
+        <div class="utilization-bar">
+          <div class="utilization-fill" ng-style="{width: vm.kpis.utilizationPercentage + '%'}"></div>
+        </div>
+        <p style="margin-top: 10px;">{{vm.kpis.utilizationPercentage}}% utilized</p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading" class="text-center" style="margin-top: 20px;">
+    <button class="btn btn-primary" ng-click="vm.refresh()">Refresh Dashboard</button>
+  </div>
+</div>
