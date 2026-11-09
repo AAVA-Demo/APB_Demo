@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.transactions',[]);})();
+(function(){'use strict';angular.module('app.transactions',['ui.bootstrap'])})();

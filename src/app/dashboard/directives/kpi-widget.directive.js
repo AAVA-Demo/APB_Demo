@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.dashboard').directive('kpiWidget',function(){return{restrict:'E',scope:{title:'@',value:'=',icon:'@'},template:'<div class="kpi-card"><h3>{{title}}</h3><div class="value">{{value|currency:"₹":0}}</div></div>'}})})();

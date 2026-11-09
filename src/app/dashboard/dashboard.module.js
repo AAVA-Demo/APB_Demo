@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.dashboard',[]);})();
+(function(){'use strict';angular.module('app.dashboard',[])})();

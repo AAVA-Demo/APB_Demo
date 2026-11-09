@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.kpiDashboard',[]);})();
+(function(){'use strict';angular.module('app.kpiDashboard',[])})();

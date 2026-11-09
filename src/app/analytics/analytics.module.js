@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.analytics',['chart.js']);})();
+(function(){'use strict';angular.module('app.analytics',['chart.js'])})();

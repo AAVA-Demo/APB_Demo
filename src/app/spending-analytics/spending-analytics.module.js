@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.spendingAnalytics',['chart.js']);})();
+(function(){'use strict';angular.module('app.spendingAnalytics',['chart.js'])})();

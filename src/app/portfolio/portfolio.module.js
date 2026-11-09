@@ -1,1 +1,1 @@
-(function(){'use strict';angular.module('app.portfolio',[]);})();
+(function(){'use strict';angular.module('app.portfolio',[])})();
