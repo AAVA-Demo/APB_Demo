@@ -1,0 +1,36 @@
+<div>
+  <h2>Dashboard</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="!vm.loading">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <div class="kpi-label">Monthly Spend</div>
+          <div class="kpi-value">${{vm.kpis.monthlySpend | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Credit Limit</div>
+          <div class="kpi-value">${{vm.kpis.totalCreditLimit | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <div class="kpi-label">Available Credit</div>
+          <div class="kpi-value">${{vm.kpis.availableCredit | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <div class="kpi-label">Outstanding Amount</div>
+          <div class="kpi-value">${{vm.kpis.outstandingAmount | number:0}}</div>
+        </div>
+      </div>
+    </div>
+    <p class="text-muted text-right"><small>Last updated: {{vm.kpis.lastUpdated | date:'short'}}</small></p>
+  </div>
+</div>

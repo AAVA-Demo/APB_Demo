@@ -1,0 +1,56 @@
+<div>
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="!vm.loading">
+    <div class="row">
+      <div class="col-md-4">
+        <h4>Card Portfolio</h4>
+        <div ng-repeat="card in vm.cards track by card.cardId" class="card-item" ng-click="vm.selectCard(card)" ng-class="{'panel-primary': vm.selectedCard.cardId === card.cardId}">
+          <div class="card-number">{{card.cardNumber}}</div>
+          <div><strong>{{card.cardType}}</strong></div>
+          <div>Balance: ${{card.outstandingAmount | number:0}}</div>
+          <div>Limit: ${{card.creditLimit | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-8" ng-if="vm.selectedCard">
+        <h4>Card Details - {{vm.selectedCard.cardNumber}}</h4>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+                <p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:0}}</p>
+                <p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:0}}</p>
+              </div>
+              <div class="col-sm-6">
+                <p><strong>Outstanding:</strong> ${{vm.selectedCard.outstandingAmount | number:0}}</p>
+                <p><strong>Monthly Spend:</strong> ${{vm.selectedCard.monthlySpend | number:0}}</p>
+                <p><strong>Utilization:</strong> {{vm.selectedCard.utilization}}%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h4>Monthly Spend Trends</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Total Spend</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="trend in vm.monthlyTrends">
+              <td>{{trend.month}}</td>
+              <td>${{trend.totalSpend | number:0}}</td>
+              <td>{{trend.transactionCount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
