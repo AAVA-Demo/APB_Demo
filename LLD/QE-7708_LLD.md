@@ -2,137 +2,131 @@
 
 ## a. Architecture Mapping
 
-**AngularJS Artifacts:**
-- **Module:** `spendingAnalyticsModule` - Root module for analytics feature
-- **Controller:** `SpendingAnalyticsController` - Manages analytics view state and user interactions
-- **Service:** `TransactionDataService` - Retrieves transaction records via REST API
-- **Service:** `CategoryClassificationService` - Categorizes transactions into 9 predefined categories
-- **Service:** `AnalyticsProcessingService` - Aggregates spending data by category and time period
-- **Directive:** `categoryChartDirective` - Renders interactive category-wise spending charts
-- **Directive:** `trendChartDirective` - Renders monthly spend trend visualizations
-- **Factory:** `ChartConfigFactory` - Provides chart configuration objects for visualization library
+- **AngularJS Module**: `spendingAnalyticsModule` - Main module for analytics features
+- **Controller**: `AnalyticsController` - Manages analytics view state and user interactions
+- **Service**: `TransactionDataService` - Fetches transaction history via REST API
+- **Service**: `CategoryClassificationService` - Maps transactions to 9 predefined categories
+- **Service**: `AnalyticsProcessingService` - Aggregates spending by category and time period
+- **Directive**: `spendingChart` - Renders interactive charts using visualization library
+- **Factory**: `AnalyticsCache` - Caches processed analytics data for performance
 
 **Folder Structure:**
 ```
-app/
-├── modules/
-│   └── spending-analytics/
-│       ├── controllers/
-│       │   └── spending-analytics.controller.js
-│       ├── services/
-│       │   ├── transaction-data.service.js
-│       │   ├── category-classification.service.js
-│       │   └── analytics-processing.service.js
-│       ├── directives/
-│       │   ├── category-chart.directive.js
-│       │   └── trend-chart.directive.js
-│       ├── factories/
-│       │   └── chart-config.factory.js
-│       ├── views/
-│       │   └── spending-analytics.html
-│       └── spending-analytics.module.js
+/app
+  /modules
+    /analytics
+      /controllers
+        - analytics.controller.js
+      /services
+        - transaction-data.service.js
+        - category-classification.service.js
+        - analytics-processing.service.js
+      /directives
+        - spending-chart.directive.js
+      /factories
+        - analytics-cache.factory.js
+      /views
+        - analytics.html
+      - analytics.module.js
 ```
 
 ## b. Component Specifications
 
-| Component Name | Artifact Type | Responsibility | Key Dependencies |
-|----------------|---------------|----------------|------------------|
-| spendingAnalyticsModule | Module | Registers all analytics components and configures routing | angular, ngRoute, chart.js |
-| SpendingAnalyticsController | Controller | Manages view state, handles user interactions, coordinates data retrieval and chart rendering | TransactionDataService, CategoryClassificationService, AnalyticsProcessingService, ChartConfigFactory |
-| TransactionDataService | Service | Fetches historical transaction data from REST API endpoint `/api/transactions` | $http, $q |
-| CategoryClassificationService | Service | Maps transactions to 9 predefined categories using classification rules | None |
-| AnalyticsProcessingService | Service | Aggregates spending by category and time period, calculates trends | None |
-| categoryChartDirective | Directive | Renders interactive pie/bar chart for category-wise spending breakdown | ChartConfigFactory, Chart.js |
-| trendChartDirective | Directive | Renders line chart for monthly spend trends over time | ChartConfigFactory, Chart.js |
-| ChartConfigFactory | Factory | Provides reusable chart configuration objects (colors, labels, options) | None |
+| Name | Artifact Type | Responsibility | Key Dependencies |
+|------|---------------|----------------|------------------|
+| spendingAnalyticsModule | Module | Registers all analytics components and configures routing | angular, ui.router |
+| AnalyticsController | Controller | Manages analytics view state, handles user interactions, orchestrates data flow | AnalyticsProcessingService, AnalyticsCache, $scope |
+| TransactionDataService | Service | Fetches transaction history from REST API endpoint | $http, $q |
+| CategoryClassificationService | Service | Maps transactions to 9 categories using merchant codes and descriptions | None |
+| AnalyticsProcessingService | Service | Aggregates spending by category/time, calculates trends | TransactionDataService, CategoryClassificationService |
+| spendingChart | Directive | Renders interactive charts (bar, pie, line) using Chart.js or D3 | Visualization library (Chart.js/D3) |
+| AnalyticsCache | Factory | Caches processed analytics data with TTL for performance | $cacheFactory |
 
 ## c. Data Model
 
-**Transaction Model:**
+**Transaction Object:**
 ```javascript
 {
-  transactionId: String,
+  id: String,
   userId: String,
   cardId: String,
   amount: Number,
   currency: String,
-  merchant: String,
-  category: String, // One of: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
+  merchantName: String,
+  merchantCode: String,
+  description: String,
+  category: String, // One of 9 predefined categories
   transactionDate: Date,
-  description: String
+  timestamp: Number
 }
 ```
 
-**CategorySpending Model:**
+**CategorySpending Object:**
 ```javascript
 {
-  category: String,
+  category: String, // Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
   totalAmount: Number,
   transactionCount: Number,
   percentage: Number
 }
 ```
 
-**MonthlyTrend Model:**
+**MonthlyTrend Object:**
 ```javascript
 {
-  month: String, // YYYY-MM format
-  totalSpend: Number,
+  month: String, // YYYY-MM
+  totalSpending: Number,
   categoryBreakdown: Array<CategorySpending>
 }
 ```
 
 ## d. Data Flow
 
-User navigates to spending analytics view → SpendingAnalyticsController initializes and calls TransactionDataService to fetch historical transactions via GET `/api/transactions?userId={userId}&period={period}` → Retrieved transactions are passed to CategoryClassificationService which assigns each transaction to one of 9 predefined categories → Classified data is sent to AnalyticsProcessingService which aggregates spending by category and calculates monthly trends → Aggregated data (CategorySpending and MonthlyTrend arrays) is bound to scope → categoryChartDirective and trendChartDirective watch scope data and render interactive charts using Chart.js → User interacts with charts (hover, click) to drill down into specific categories or time periods, triggering controller methods that update scope and re-render visualizations.
+User navigates to analytics view → AnalyticsController initializes and checks AnalyticsCache → If cache miss, controller calls AnalyticsProcessingService → Service fetches transactions via TransactionDataService REST API call → CategoryClassificationService categorizes each transaction into one of 9 categories → AnalyticsProcessingService aggregates spending by category and month, calculates trends → Processed data is cached in AnalyticsCache and returned to controller → Controller updates $scope with category breakdowns and monthly trends → spendingChart directive renders interactive visualizations → User interacts with charts to explore spending patterns.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant Controller as SpendingAnalyticsController
-    participant TxnService as TransactionDataService
-    participant CategoryService as CategoryClassificationService
-    participant AnalyticsService as AnalyticsProcessingService
-    participant API as REST API
-    participant ChartDirective as categoryChartDirective
-
-    User->>View: Navigate to analytics page
-    View->>Controller: Initialize controller
-    Controller->>TxnService: getTransactions(userId, period)
-    TxnService->>API: GET /api/transactions?userId=X&period=12M
-    API-->>TxnService: Return transaction array
-    TxnService-->>Controller: Return transactions
-    Controller->>CategoryService: classifyTransactions(transactions)
-    CategoryService-->>Controller: Return classified transactions
-    Controller->>AnalyticsService: aggregateByCategory(classifiedTxns)
-    AnalyticsService-->>Controller: Return CategorySpending array
-    Controller->>AnalyticsService: calculateMonthlyTrends(classifiedTxns)
-    AnalyticsService-->>Controller: Return MonthlyTrend array
-    Controller->>View: Update $scope with aggregated data
-    View->>ChartDirective: Render category chart
-    ChartDirective-->>User: Display interactive spending breakdown
-    User->>ChartDirective: Click on category
-    ChartDirective->>Controller: onCategoryClick(category)
-    Controller->>View: Update $scope with filtered data
-    View->>ChartDirective: Re-render with drill-down view
-    ChartDirective-->>User: Display category details
+    participant AnalyticsController
+    participant AnalyticsCache
+    participant AnalyticsProcessingService
+    participant TransactionDataService
+    participant CategoryClassificationService
+    participant SpendingChartDirective
+    
+    User->>AnalyticsController: Navigate to analytics view
+    AnalyticsController->>AnalyticsCache: Check cached data
+    alt Cache Miss
+        AnalyticsController->>AnalyticsProcessingService: Request analytics data
+        AnalyticsProcessingService->>TransactionDataService: GET /api/transactions?userId={id}
+        TransactionDataService-->>AnalyticsProcessingService: Return transaction list
+        AnalyticsProcessingService->>CategoryClassificationService: Classify transactions
+        CategoryClassificationService-->>AnalyticsProcessingService: Return categorized transactions
+        AnalyticsProcessingService->>AnalyticsProcessingService: Aggregate by category and month
+        AnalyticsProcessingService-->>AnalyticsController: Return processed analytics
+        AnalyticsController->>AnalyticsCache: Store processed data
+    else Cache Hit
+        AnalyticsCache-->>AnalyticsController: Return cached analytics
+    end
+    AnalyticsController->>SpendingChartDirective: Pass analytics data
+    SpendingChartDirective->>SpendingChartDirective: Render interactive charts
+    SpendingChartDirective-->>User: Display category breakdowns and trends
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS dependency injection to inject services into controller; register all components in spendingAnalyticsModule
-- Leverage ES6 arrow functions and const/let for cleaner service implementations; use Promises ($q) for async operations
-- Integrate Chart.js library via directive link function; bind chart updates to $scope.$watch for reactive rendering
-- Implement REST API calls using $http service with interceptor for auth token injection and error handling
-- Use AngularJS filters for date formatting and currency display in views; leverage ng-repeat for rendering category lists
+- Use AngularJS dependency injection to inject services into controllers and directives for testability
+- Implement TransactionDataService using $http with promise-based API calls; handle pagination for large transaction sets
+- CategoryClassificationService uses rule-based mapping (merchant code → category) with fallback to keyword matching in descriptions
+- AnalyticsProcessingService uses ES6 array methods (map, filter, reduce) for efficient aggregation
+- spendingChart directive isolates scope and uses two-way binding for interactive chart updates
 
 ## g. Error Handling
 
-HTTP interceptor captures API errors and displays user-friendly notifications via toastr; controller wraps service calls in try/catch with fallback to cached data when available.
+HTTP interceptor captures API errors; controller displays user-friendly error messages via toast notifications; try/catch blocks wrap aggregation logic.
 
 ## h. Security Notes
 
-Requires token-based authentication via existing SSO; userId is validated server-side and never exposed in client-side logic beyond API calls.
+Requires token-based auth via existing SSO; API endpoints validate user ownership of transaction data before returning results.

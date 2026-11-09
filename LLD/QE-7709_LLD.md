@@ -2,147 +2,137 @@
 
 ## a. Architecture Mapping
 
-**AngularJS Artifacts:**
-- **Module:** `multiCardModule` - Root module for multi-card management feature
-- **Controller:** `MultiCardController` - Manages card list view state and user interactions
-- **Service:** `UserProfileService` - Retrieves user profile and associated card list
-- **Service:** `CreditCardDataService` - Fetches card details (type, limit, balance, utilization) via REST API
-- **Service:** `SpendingCalculationService` - Computes card-wise spending analysis and comparisons
-- **Service:** `DataAggregationService` - Consolidates multi-card data for unified view
-- **Directive:** `cardListDirective` - Renders list of credit cards with details
-- **Directive:** `cardComparisonDirective` - Displays card-wise spending comparison charts
-- **Filter:** `cardMaskFilter` - Masks sensitive card numbers (shows last 4 digits only)
+- **AngularJS Module**: `cardManagementModule` - Main module for multi-card features
+- **Controller**: `CardListController` - Manages card list view and user interactions
+- **Controller**: `CardDetailController` - Manages individual card detail view
+- **Service**: `CardDataService` - Fetches card information via REST API
+- **Service**: `SpendingCalculationService` - Computes card-wise spending and utilization
+- **Service**: `DataAggregationService` - Consolidates multi-card data
+- **Directive**: `cardTile` - Renders individual card tile with key metrics
+- **Factory**: `UserProfileFactory` - Manages user profile and card associations
 
 **Folder Structure:**
 ```
-app/
-├── modules/
-│   └── multi-card/
-│       ├── controllers/
-│       │   └── multi-card.controller.js
-│       ├── services/
-│       │   ├── user-profile.service.js
-│       │   ├── credit-card-data.service.js
-│       │   ├── spending-calculation.service.js
-│       │   └── data-aggregation.service.js
-│       ├── directives/
-│       │   ├── card-list.directive.js
-│       │   └── card-comparison.directive.js
-│       ├── filters/
-│       │   └── card-mask.filter.js
-│       ├── views/
-│       │   └── multi-card.html
-│       └── multi-card.module.js
+/app
+  /modules
+    /card-management
+      /controllers
+        - card-list.controller.js
+        - card-detail.controller.js
+      /services
+        - card-data.service.js
+        - spending-calculation.service.js
+        - data-aggregation.service.js
+      /directives
+        - card-tile.directive.js
+      /factories
+        - user-profile.factory.js
+      /views
+        - card-list.html
+        - card-detail.html
+      - card-management.module.js
 ```
 
 ## b. Component Specifications
 
-| Component Name | Artifact Type | Responsibility | Key Dependencies |
-|----------------|---------------|----------------|------------------|
-| multiCardModule | Module | Registers all multi-card components and configures routing | angular, ngRoute |
-| MultiCardController | Controller | Manages card list state, handles add/organize actions, coordinates data retrieval | UserProfileService, CreditCardDataService, SpendingCalculationService, DataAggregationService |
-| UserProfileService | Service | Fetches user profile and associated card IDs from `/api/user/profile` | $http, $q |
-| CreditCardDataService | Service | Retrieves card details (type, limit, balance, utilization) from `/api/cards/{cardId}` | $http, $q |
-| SpendingCalculationService | Service | Computes card-wise spending totals and comparison metrics | None |
-| DataAggregationService | Service | Consolidates data from multiple cards into unified view model | None |
-| cardListDirective | Directive | Renders scrollable list of cards with type, limit, balance, utilization | cardMaskFilter |
-| cardComparisonDirective | Directive | Displays bar chart comparing spending across cards | Chart.js |
-| cardMaskFilter | Filter | Masks card numbers to show only last 4 digits (e.g., **** **** **** 1234) | None |
+| Name | Artifact Type | Responsibility | Key Dependencies |
+|------|---------------|----------------|------------------|
+| cardManagementModule | Module | Registers all card management components and routing | angular, ui.router |
+| CardListController | Controller | Manages card list view, orchestrates multi-card data display | DataAggregationService, UserProfileFactory, $scope |
+| CardDetailController | Controller | Manages individual card detail view with spending analysis | CardDataService, SpendingCalculationService, $stateParams |
+| CardDataService | Service | Fetches card details from REST API endpoint | $http, $q |
+| SpendingCalculationService | Service | Computes card-wise spending, utilization percentage, trends | CardDataService |
+| DataAggregationService | Service | Consolidates data from multiple cards for comparison views | CardDataService, SpendingCalculationService |
+| cardTile | Directive | Renders card tile with type, limit, balance, utilization | None |
+| UserProfileFactory | Factory | Manages user profile data and card-user associations | $http |
 
 ## c. Data Model
 
-**CreditCard Model:**
+**CreditCard Object:**
 ```javascript
 {
   cardId: String,
   userId: String,
-  cardType: String, // e.g., Visa, Mastercard, Amex
-  cardNumber: String, // Masked: **** **** **** 1234
-  cardholderName: String,
+  cardType: String, // Visa, MasterCard, Amex, etc.
+  cardNumber: String, // Masked (e.g., ****1234)
+  issuer: String,
   creditLimit: Number,
   currentBalance: Number,
   availableCredit: Number,
   utilizationPercentage: Number,
-  expiryDate: String, // MM/YY
-  status: String // Active, Inactive
+  status: String, // Active, Inactive, Blocked
+  expiryDate: String
 }
 ```
 
-**CardSpending Model:**
+**CardSpending Object:**
 ```javascript
 {
   cardId: String,
-  cardType: String,
   monthlySpend: Number,
   yearlySpend: Number,
-  lastTransactionDate: Date
+  lastTransactionDate: Date,
+  transactionCount: Number
 }
 ```
 
-**AggregatedCardView Model:**
+**CardComparison Object:**
 ```javascript
 {
-  totalCards: Number,
+  cards: Array<CreditCard>,
   totalCreditLimit: Number,
   totalAvailableCredit: Number,
-  totalUtilization: Number,
-  cards: Array<CreditCard>,
-  spendingComparison: Array<CardSpending>
+  totalOutstanding: Number,
+  averageUtilization: Number
 }
 ```
 
 ## d. Data Flow
 
-User navigates to multi-card management view → MultiCardController initializes and calls UserProfileService to fetch user profile via GET `/api/user/profile` → Service returns list of associated cardIds → Controller iterates through cardIds and calls CreditCardDataService for each card via GET `/api/cards/{cardId}` → Retrieved card details are passed to SpendingCalculationService which computes card-wise spending metrics → All card data is sent to DataAggregationService which consolidates into AggregatedCardView model → Aggregated data is bound to $scope → cardListDirective renders card list with masked card numbers using cardMaskFilter → cardComparisonDirective renders spending comparison chart → User can click on individual cards to view details, organize cards via drag-and-drop, or add new cards triggering controller methods that update scope and persist changes via POST `/api/cards`.
+User accesses multi-card view → CardListController initializes and calls UserProfileFactory to get user ID → Controller invokes DataAggregationService → Service calls CardDataService to fetch all cards via REST API → For each card, SpendingCalculationService computes spending and utilization percentage (currentBalance / creditLimit * 100) → DataAggregationService consolidates multi-card data into comparison view → Controller updates $scope with card list and aggregated metrics → cardTile directive renders each card with type, limit, balance, utilization → User clicks card tile to navigate to CardDetailController for detailed analysis.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant View
-    participant Controller as MultiCardController
-    participant ProfileService as UserProfileService
-    participant CardService as CreditCardDataService
-    participant SpendingService as SpendingCalculationService
-    participant AggService as DataAggregationService
-    participant API as REST API
-
-    User->>View: Navigate to multi-card page
-    View->>Controller: Initialize controller
-    Controller->>ProfileService: getUserProfile(userId)
-    ProfileService->>API: GET /api/user/profile
-    API-->>ProfileService: Return profile with cardIds array
-    ProfileService-->>Controller: Return cardIds
-    loop For each cardId
-        Controller->>CardService: getCardDetails(cardId)
-        CardService->>API: GET /api/cards/{cardId}
-        API-->>CardService: Return card details
-        CardService-->>Controller: Return CreditCard object
+    participant CardListController
+    participant UserProfileFactory
+    participant DataAggregationService
+    participant CardDataService
+    participant SpendingCalculationService
+    participant CardTileDirective
+    
+    User->>CardListController: Access multi-card view
+    CardListController->>UserProfileFactory: Get user ID
+    UserProfileFactory-->>CardListController: Return user ID
+    CardListController->>DataAggregationService: Request aggregated card data
+    DataAggregationService->>CardDataService: GET /api/cards?userId={id}
+    CardDataService-->>DataAggregationService: Return card list
+    loop For each card
+        DataAggregationService->>SpendingCalculationService: Calculate spending and utilization
+        SpendingCalculationService-->>DataAggregationService: Return card metrics
     end
-    Controller->>SpendingService: calculateCardSpending(cards)
-    SpendingService-->>Controller: Return CardSpending array
-    Controller->>AggService: aggregateCardData(cards, spending)
-    AggService-->>Controller: Return AggregatedCardView
-    Controller->>View: Update $scope with aggregated data
-    View-->>User: Display card list and comparison chart
-    User->>View: Click on card to view details
-    View->>Controller: onCardClick(cardId)
-    Controller->>View: Navigate to card detail view
+    DataAggregationService->>DataAggregationService: Consolidate multi-card data
+    DataAggregationService-->>CardListController: Return aggregated data
+    CardListController->>CardTileDirective: Pass card data
+    CardTileDirective-->>User: Display card tiles with metrics
+    User->>CardListController: Click card tile
+    CardListController->>CardDetailController: Navigate with cardId
 ```
 
 ## f. Implementation Notes
 
-- Use AngularJS dependency injection for all services; register components in multiCardModule with proper lifecycle management
-- Implement parallel API calls using $q.all() to fetch multiple card details simultaneously for performance
-- Apply cardMaskFilter in view templates using pipe syntax: {{card.cardNumber | cardMask}}
-- Use ng-repeat with track by cardId for efficient card list rendering; implement drag-and-drop using angular-ui-sortable
-- Store card organization preferences in localStorage and sync with backend via PUT `/api/user/preferences`
+- Use AngularJS $http service with interceptors for authentication token injection on all API calls
+- SpendingCalculationService caches utilization calculations to avoid redundant computation
+- cardTile directive uses isolate scope with two-way binding for card data; emits events for user interactions
+- DataAggregationService uses ES6 Promise.all for parallel card data fetching to meet 1.5-second NFR
+- Implement card number masking in CardDataService before exposing to UI layer
 
 ## g. Error Handling
 
-HTTP interceptor handles API errors with retry logic for transient failures; controller displays error notifications using toastr and falls back to cached card data when available.
+HTTP interceptor handles API failures; controller displays error messages via modal dialogs; retry logic for transient network errors.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; card numbers are masked client-side and never stored in full; all API calls use HTTPS with encrypted payloads.
+Requires token-based auth via existing SSO; card numbers are masked server-side before transmission; sensitive data encrypted in transit (HTTPS).
