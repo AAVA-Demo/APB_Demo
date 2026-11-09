@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Card Details</h2>
+    <a href="#/cards" class="btn btn-default">Back to Cards</a>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading">
+  <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i></div>
+  <p>Loading card details...</p>
+</div>
+<div ng-if="!vm.loading && vm.card" class="row" style="margin-top:20px;">
+  <div class="col-md-6">
+    <div class="kpi-card">
+      <h4>{{vm.card.issuer}} - {{vm.card.cardNumber}}</h4>
+      <p><strong>Type:</strong> {{vm.card.cardType}}</p>
+      <p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency:'₹':0}}</p>
+      <p><strong>Available Credit:</strong> {{vm.card.availableCredit | currency:'₹':0}}</p>
+      <p><strong>Outstanding Balance:</strong> {{vm.card.outstandingBalance | currency:'₹':0}}</p>
+    </div>
+  </div>
+  <div class="col-md-6" ng-if="vm.analysis">
+    <div class="kpi-card">
+      <h4>Spend Analysis</h4>
+      <p><strong>Monthly Spend:</strong> {{vm.analysis.monthlySpend | currency:'₹':0}}</p>
+      <h5>Trend</h5>
+      <table class="table table-sm">
+        <tr ng-repeat="t in vm.analysis.trendData"><td>{{t.month}}</td><td>{{t.amount | currency:'₹':0}}</td></tr>
+      </table>
+    </div>
+  </div>
+</div>

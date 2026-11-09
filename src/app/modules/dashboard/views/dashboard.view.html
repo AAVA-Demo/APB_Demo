@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Financial Overview Dashboard</h2>
+    <p class="text-muted" ng-if="vm.lastRefreshed">Last refreshed: {{vm.lastRefreshed | date:'medium'}}</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading">
+  <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i></div>
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && vm.kpis" class="row">
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Monthly Spend" value="vm.kpis.monthlySpend"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Total Credit Limit" value="vm.kpis.totalCreditLimit"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Available Credit" value="vm.kpis.availableCredit"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Outstanding Amount" value="vm.kpis.outstandingAmount"></kpi-card>
+  </div>
+</div>
+<div ng-if="!vm.loading && vm.kpis" class="row" style="margin-top:30px;">
+  <div class="col-md-12">
+    <div class="kpi-card">
+      <h4>Quick Actions</h4>
+      <a href="#/cards" class="btn btn-primary">Manage Cards</a>
+      <a href="#/analytics" class="btn btn-info">View Analytics</a>
+    </div>
+  </div>
+</div>

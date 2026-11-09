@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Category-wise Spending Analytics</h2>
+    <p class="text-muted">Analyze your spending patterns across categories</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading">
+  <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i></div>
+  <p>Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading" class="row">
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Spending by Category</h4>
+      <chart-directive data="vm.categoryBreakdown" on-category-click="vm.filterByCategory(category)"></chart-directive>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="kpi-card">
+      <h4>Category Breakdown</h4>
+      <p><strong>Total Spend:</strong> {{vm.totalSpend | currency:'₹':0}}</p>
+      <table class="table table-striped">
+        <thead><tr><th>Category</th><th>Amount</th><th>%</th><th>Transactions</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="cat in vm.categoryBreakdown" class="category-item" ng-click="vm.filterByCategory(cat.category)" style="cursor:pointer;">
+            <td>{{cat.category}}</td>
+            <td>{{cat.totalSpend | currency:'₹':0}}</td>
+            <td>{{cat.percentage}}%</td>
+            <td>{{cat.transactionCount}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.selectedCategory" class="row" style="margin-top:20px;">
+  <div class="col-md-12">
+    <div class="kpi-card">
+      <h4>Transactions in {{vm.selectedCategory}}</h4>
+      <table class="table">
+        <thead><tr><th>Date</th><th>Merchant</th><th>Amount</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="txn in vm.filteredTransactions">
+            <td>{{txn.transactionDate | date:'short'}}</td>
+            <td>{{txn.merchantName}}</td>
+            <td>{{txn.amount | currency:'₹':0}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

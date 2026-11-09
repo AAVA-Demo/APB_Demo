@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <p class="text-muted">Manage your credit card portfolio</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading">
+  <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i></div>
+  <p>Loading cards...</p>
+</div>
+<div ng-if="!vm.loading && vm.portfolio" class="row">
+  <div class="col-md-12">
+    <div class="kpi-card">
+      <h4>Portfolio Summary</h4>
+      <div class="row">
+        <div class="col-sm-4">
+          <strong>Total Credit Limit:</strong> {{vm.portfolio.totalCreditLimit | currency:'₹':0}}
+        </div>
+        <div class="col-sm-4">
+          <strong>Available Credit:</strong> {{vm.portfolio.totalAvailableCredit | currency:'₹':0}}
+        </div>
+        <div class="col-sm-4">
+          <strong>Total Outstanding:</strong> {{vm.portfolio.totalOutstanding | currency:'₹':0}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading" class="row" style="margin-top:20px;">
+  <div class="col-md-4">
+    <h4>Select a Card</h4>
+    <card-switcher cards="vm.cards" on-select="vm.selectCard(card)"></card-switcher>
+  </div>
+  <div class="col-md-8" ng-if="vm.selectedCard">
+    <div class="kpi-card">
+      <h4>Card Details</h4>
+      <table class="table">
+        <tr><td><strong>Issuer:</strong></td><td>{{vm.selectedCard.issuer}}</td></tr>
+        <tr><td><strong>Card Number:</strong></td><td>{{vm.selectedCard.cardNumber}}</td></tr>
+        <tr><td><strong>Card Type:</strong></td><td>{{vm.selectedCard.cardType}}</td></tr>
+        <tr><td><strong>Credit Limit:</strong></td><td>{{vm.selectedCard.creditLimit | currency:'₹':0}}</td></tr>
+        <tr><td><strong>Available Credit:</strong></td><td>{{vm.selectedCard.availableCredit | currency:'₹':0}}</td></tr>
+        <tr><td><strong>Outstanding:</strong></td><td>{{vm.selectedCard.outstandingBalance | currency:'₹':0}}</td></tr>
+      </table>
+      <div ng-if="vm.selectedCard.analysis">
+        <h5>Monthly Spend Trend</h5>
+        <table class="table table-striped">
+          <thead><tr><th>Month</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr ng-repeat="trend in vm.selectedCard.analysis.trendData">
+              <td>{{trend.month}}</td>
+              <td>{{trend.amount | currency:'₹':0}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
