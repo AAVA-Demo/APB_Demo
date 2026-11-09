@@ -1,0 +1,50 @@
+<div class="card-detail-container">
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading card details...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.selectedCard">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{vm.selectedCard.issuer}} - {{vm.selectedCard.maskedCardNumber}}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Cardholder Name:</strong> {{vm.selectedCard.cardHolderName}}</p>
+            <p><strong>Credit Limit:</strong> ₹{{vm.selectedCard.creditLimit | number:0}}</p>
+            <p><strong>Outstanding Balance:</strong> ₹{{vm.selectedCard.outstandingBalance | number:0}}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Available Credit:</strong> ₹{{vm.selectedCard.availableCredit | number:0}}</p>
+            <p><strong>Expiry Date:</strong> {{vm.selectedCard.expiryDate}}</p>
+            <p><strong>Card ID:</strong> {{vm.selectedCard.cardId}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-info" ng-if="vm.spendAnalysis">
+      <div class="panel-heading">
+        <h3 class="panel-title">Card-Wise Spend Analysis</h3>
+      </div>
+      <div class="panel-body">
+        <p><strong>Total Monthly Spend:</strong> ₹{{vm.spendAnalysis.monthlySpend | number:2}}</p>
+        <h4>Category Breakdown:</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.spendAnalysis.categoryBreakdown">
+              <td>{{cat.category}}</td>
+              <td>₹{{cat.amount | number:2}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <a href="#!/cards" class="btn btn-default">Back to Card List</a>
+  </div>
+</div>

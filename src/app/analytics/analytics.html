@@ -1,0 +1,80 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading analytics...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Monthly Spend Trend (Last 12 Months)</div>
+          <div class="panel-body">
+            <canvas id="trendChart" chart-directive chart-type="line" chart-data="vm.trendData"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Category-Wise Spending</div>
+          <div class="panel-body">
+            <canvas id="categoryChart" chart-directive chart-type="pie" chart-data="vm.categoryData" on-click="vm.drillDown"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Category Breakdown</div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.categoryData">
+                  <td>{{cat.category}}</td>
+                  <td>₹{{cat.amount | number:2}}</td>
+                  <td><button class="btn btn-xs btn-info" ng-click="vm.drillDown(cat.category)">View Transactions</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.selectedCategory">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Transactions for {{vm.selectedCategory}}
+            <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearDrillDown()">Clear</button>
+          </div>
+          <div class="panel-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Merchant</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="txn in vm.filteredTransactions">
+                  <td>{{txn.transactionDate | date:'short'}}</td>
+                  <td>{{txn.merchantName}}</td>
+                  <td>{{txn.description}}</td>
+                  <td>₹{{txn.amount | number:2}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

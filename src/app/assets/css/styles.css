@@ -1,0 +1,36 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+  padding-top: 20px;
+}
+.navbar {
+  margin-bottom: 20px;
+}
+.dashboard-container, .card-list-container, .card-detail-container, .analytics-container {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.panel {
+  margin-bottom: 20px;
+}
+.panel-body h3 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+.list-group-item:hover {
+  background-color: #f0f0f0;
+}
+canvas {
+  max-height: 400px;
+}
+@media (max-width: 768px) {
+  .panel-body h3 {
+    font-size: 22px;
+  }
+  canvas {
+    max-height: 300px;
+  }
+}

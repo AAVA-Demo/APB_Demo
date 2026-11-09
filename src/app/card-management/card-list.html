@@ -1,0 +1,20 @@
+<div class="card-list-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading cards...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="list-group">
+    <a ng-repeat="card in vm.cards" ng-click="vm.selectCard(card.cardId)" class="list-group-item" style="cursor:pointer;">
+      <h4 class="list-group-item-heading">{{card.issuer}} - {{card.maskedCardNumber}}</h4>
+      <p class="list-group-item-text">
+        <strong>Cardholder:</strong> {{card.cardHolderName}}<br>
+        <strong>Credit Limit:</strong> ₹{{card.creditLimit | number:0}}<br>
+        <strong>Outstanding Balance:</strong> ₹{{card.outstandingBalance | number:0}}<br>
+        <strong>Available Credit:</strong> ₹{{card.availableCredit | number:0}}<br>
+        <strong>Expiry:</strong> {{card.expiryDate}}
+      </p>
+    </a>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length === 0" class="alert alert-warning">
+    No credit cards found.
+  </div>
+</div>
