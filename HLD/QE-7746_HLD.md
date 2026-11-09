@@ -1,34 +1,35 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers a consolidated dashboard that displays key performance indicators (KPIs) for the user's credit card portfolio, including monthly spend, total credit limit, available credit, and outstanding amounts. The dashboard provides real-time visibility into overall credit card health, enabling users to make informed financial decisions.
+- **Summary:** This epic enables users to view a consolidated dashboard with real-time KPIs for their credit card portfolio, including monthly spend, total credit limit, available credit, and outstanding amounts. The dashboard provides unified visibility into overall credit card financial health.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart LR
-    A["User Interface"]
-    B["Dashboard Service"]
-    C["Credit Card Data Service"]
-    D["Calculation Engine"]
-    E["Data Store"]
+    A["User"]
+    B["Dashboard Interface"]
+    C["KPI Calculation Engine"]
+    D["Credit Card Data Service"]
+    E["Transaction Data Service"]
+    F["Database"]
     A --> B
     B --> C
-    B --> D
+    C --> D
     C --> E
-    D --> E
+    D --> F
+    E --> F
 ```
 
 - **Integration Points:**
-  - **Upstream:** Credit Card Data Service (for retrieving card balances and transaction data)
-  - **Upstream:** Calculation Engine (for aggregating KPIs across multiple cards)
-  - **Data Store:** Database containing credit card and transaction information
+  - **Upstream:** Credit Card Data Service (card balances and limits), Transaction Data Service (transaction data for monthly spend), Calculation Engine (aggregates KPIs across multiple cards)
+  - **Downstream:** Responsive Dashboard Interface (displays real-time KPIs)
 
-- **Key Assumptions:**
-  - KPI calculations are performed server-side with cached results updated at regular intervals (e.g., every 5 minutes) to support "real-time" refresh.
-  - Available credit is calculated as (Total Credit Limit - Outstanding Amount) without considering pending transactions.
+- **Key Assumptions:** 
+  - KPI refresh is triggered on dashboard load and uses cached data with periodic background updates (e.g., every 30 seconds) to balance real-time requirements with system load.
+  - Monthly spend KPI reflects the current calendar month's transactions.
 
-- **NFR Highlights:** Dashboard must be responsive across desktop, tablet, and mobile devices; KPI data must refresh in real-time; System must support concurrent viewing by multiple users.
+- **NFR Highlights:** Dashboard must be responsive across desktop, tablet, and mobile devices; KPI data must refresh in real-time; system must support concurrent viewing by multiple users.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design covers all stated requirements including monthly spend display, total credit limit tracking, available credit calculation, outstanding amount monitoring, responsive dashboard layout, and KPI visualization. The component flow demonstrates integration with the credit card data service and calculation engine as specified in dependencies. The architecture supports real-time data refresh and multi-device responsiveness as required by NFRs.
+- **Requirements Coverage:** The design addresses all scope items including monthly spend display, total credit limit tracking, available credit calculation, outstanding amount monitoring, responsive layout, and KPI visualization. The architecture supports real-time data refresh and concurrent user access through efficient caching and scalable service design. All stated dependencies are incorporated.
