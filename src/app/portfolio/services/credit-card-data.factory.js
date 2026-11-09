@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.portfolio').factory('CreditCardDataFactory',['$http','$q','AuthService',function($http,$q,AuthService){return{getCardsByUserId:function(userId){return $http.get('/api/users/'+userId+'/cards').then(function(response){return response.data;}).catch(function(error){return $q.reject(error);});}};}]);})();

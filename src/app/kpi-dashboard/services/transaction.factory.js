@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.kpiDashboard').factory('TransactionFactory',['$http','$q',function($http,$q){return{getMonthlySpend:function(){return $http.get('/api/transactions/monthly-summary').then(function(response){return response.data;}).catch(function(error){return $q.reject(error);});}};}]);})();

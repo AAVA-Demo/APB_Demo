@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.transactions').service('CreditCardService',['$http','$q',function($http,$q){var self=this;self.getCardList=function(){return $http.get('/api/cards').then(function(response){return response.data;}).catch(function(error){return $q.reject(error);});};}]);})();

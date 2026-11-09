@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.dashboard').directive('dashboardOverview',['KpiService',function(KpiService){return{restrict:'E',scope:{},templateUrl:'src/app/dashboard/views/dashboard-overview-widget.html',link:function(scope,element,attrs){scope.kpis={};KpiService.getKPIs().then(function(data){scope.kpis=data;});}};}]);})();

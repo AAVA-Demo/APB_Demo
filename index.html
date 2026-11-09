@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Management</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.min.css">
+<style>
+.kpi-card{padding:20px;margin-bottom:20px;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);background:#fff;min-height:120px}
+.kpi-card h3{margin:0 0 10px;font-size:14px;color:#666;text-transform:uppercase}
+.kpi-card .value{font-size:28px;font-weight:bold;color:#333}
+.card-item{border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:15px;background:#f9f9f9}
+.card-number{font-size:18px;letter-spacing:2px;margin:10px 0}
+.transaction-table{margin-top:20px}
+.filter-panel{background:#f5f5f5;padding:15px;border-radius:5px;margin-bottom:20px}
+.chart-container{position:relative;height:300px;margin:20px 0}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/portfolio">Portfolio</a></li>
+<li><a href="#/transactions">Transactions</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+<li><a href="#/spending-analytics">Spending Insights</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.tpls.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/auth.service.js"></script>
+<script src="src/app/services/http-interceptor.service.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/controllers/dashboard-overview.controller.js"></script>
+<script src="src/app/dashboard/services/kpi.service.js"></script>
+<script src="src/app/dashboard/services/credit-card-data.factory.js"></script>
+<script src="src/app/dashboard/directives/dashboard-overview.directive.js"></script>
+<script src="src/app/portfolio/portfolio.module.js"></script>
+<script src="src/app/portfolio/controllers/portfolio.controller.js"></script>
+<script src="src/app/portfolio/services/portfolio.service.js"></script>
+<script src="src/app/portfolio/services/credit-card-data.factory.js"></script>
+<script src="src/app/portfolio/directives/credit-card.directive.js"></script>
+<script src="src/app/transactions/transactions.module.js"></script>
+<script src="src/app/transactions/controllers/transaction-viewer.controller.js"></script>
+<script src="src/app/transactions/services/transaction-management.service.js"></script>
+<script src="src/app/transactions/services/transaction-data.factory.js"></script>
+<script src="src/app/transactions/services/credit-card.service.js"></script>
+<script src="src/app/transactions/directives/transaction-list.directive.js"></script>
+<script src="src/app/analytics/analytics.module.js"></script>
+<script src="src/app/analytics/controllers/analytics-insights.controller.js"></script>
+<script src="src/app/analytics/services/analytics-engine.service.js"></script>
+<script src="src/app/analytics/services/transaction-categorization.service.js"></script>
+<script src="src/app/analytics/services/dashboard.factory.js"></script>
+<script src="src/app/analytics/directives/spending-chart.directive.js"></script>
+<script src="src/app/spending-analytics/spending-analytics.module.js"></script>
+<script src="src/app/spending-analytics/controllers/spending-analytics.controller.js"></script>
+<script src="src/app/spending-analytics/services/analytics.service.js"></script>
+<script src="src/app/spending-analytics/services/transaction.factory.js"></script>
+<script src="src/app/spending-analytics/services/categorization.service.js"></script>
+<script src="src/app/spending-analytics/directives/category-chart.directive.js"></script>
+<script src="src/app/kpi-dashboard/kpi-dashboard.module.js"></script>
+<script src="src/app/kpi-dashboard/controllers/kpi-dashboard.controller.js"></script>
+<script src="src/app/kpi-dashboard/services/kpi-aggregation.service.js"></script>
+<script src="src/app/kpi-dashboard/services/credit-card-data.factory.js"></script>
+<script src="src/app/kpi-dashboard/services/transaction.factory.js"></script>
+<script src="src/app/kpi-dashboard/directives/kpi-widget.directive.js"></script>
+</body>
+</html>

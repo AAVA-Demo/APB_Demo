@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.portfolio').directive('creditCard',[function(){return{restrict:'E',scope:{card:'='},templateUrl:'src/app/portfolio/views/credit-card-item.html',link:function(scope,element,attrs){scope.getCardTypeClass=function(){return'card-'+scope.card.cardType.toLowerCase();};}};}]);})();
