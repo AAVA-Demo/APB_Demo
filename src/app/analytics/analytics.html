@@ -1,0 +1,87 @@
+<div ng-controller="analyticsController as vm">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<h3>Loading Analytics...</h3>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-xs-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-xs-12">
+<h2>Transaction Analytics & Spending Insights</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 col-md-6">
+<div class="analytics-panel">
+<h3>Current Month Spend</h3>
+<p class="analytics-value">${{vm.analyticsSummary.currentMonthSpend|number:2}}</p>
+</div>
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="analytics-panel">
+<h3>Top Spending Category</h3>
+<p class="analytics-value">{{vm.analyticsSummary.topCategory}}</p>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>Category-Wise Spending</h3>
+<spending-chart data="vm.analyticsSummary.categorySpending" chart-type="pie"></spending-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Amount</th>
+<th>Transactions</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsSummary.categorySpending">
+<td>{{cat.category}}</td>
+<td>${{cat.totalAmount|number:2}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentage|number:1}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>Monthly Spend Trends</h3>
+<spending-chart data="vm.analyticsSummary.monthlyTrends" chart-type="line"></spending-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h3>Monthly Trend Details</h3>
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Month</th>
+<th>Total Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="trend in vm.analyticsSummary.monthlyTrends">
+<td>{{trend.month}}</td>
+<td>${{trend.totalSpend|number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>

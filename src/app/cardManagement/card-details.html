@@ -1,0 +1,52 @@
+<div ng-controller="cardManagementController as vm">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<h3>Loading Card Details...</h3>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-xs-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div ng-if="!vm.loading&&!vm.error&&vm.selectedCard">
+<div class="row">
+<div class="col-xs-12">
+<button class="btn btn-default" ng-click="vm.backToPortfolio()">Back to Portfolio</button>
+<h2>Card Details</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 col-md-6">
+<div class="card-detail-panel">
+<h3>Card Information</h3>
+<p><strong>Card Type:</strong> {{vm.selectedCard.card.cardType}}</p>
+<p><strong>Card Number:</strong> {{vm.selectedCard.card.cardNumber}}</p>
+<p><strong>Card Holder:</strong> {{vm.selectedCard.card.cardHolderName}}</p>
+<p><strong>Expiry Date:</strong> {{vm.selectedCard.card.expiryDate}}</p>
+<p><strong>Status:</strong> <span class="label label-success">{{vm.selectedCard.card.status}}</span></p>
+</div>
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="card-detail-panel">
+<h3>Financial Summary</h3>
+<p><strong>Credit Limit:</strong> ${{vm.selectedCard.card.creditLimit|number:2}}</p>
+<p><strong>Current Balance:</strong> ${{vm.selectedCard.card.currentBalance|number:2}}</p>
+<p><strong>Available Credit:</strong> ${{vm.selectedCard.card.availableCredit|number:2}}</p>
+<p><strong>Outstanding Amount:</strong> ${{vm.selectedCard.card.outstandingAmount|number:2}}</p>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<div class="card-detail-panel">
+<h3>Spending Analysis</h3>
+<p><strong>Current Month Spend:</strong> ${{vm.selectedCard.spending.currentMonthSpend|number:2}}</p>
+<p><strong>Last Month Spend:</strong> ${{vm.selectedCard.spending.lastMonthSpend|number:2}}</p>
+<p><strong>Year-to-Date Spend:</strong> ${{vm.selectedCard.spending.yearToDateSpend|number:2}}</p>
+<p><strong>Transaction Count:</strong> {{vm.selectedCard.spending.transactionCount}}</p>
+</div>
+</div>
+</div>
+</div>
+</div>

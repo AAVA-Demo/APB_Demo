@@ -1,0 +1,7 @@
+.kpi-row{margin-top:20px;margin-bottom:20px;}
+.kpi-card{background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;margin-bottom:15px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+.kpi-card h4{margin:0 0 10px 0;font-size:16px;color:#555;}
+.kpi-value{font-size:28px;font-weight:bold;color:#333;margin:0;}
+.card-summary{background:#fff;border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:15px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+.card-summary h4{margin-top:0;color:#007bff;}
+.card-summary p{margin:5px 0;}

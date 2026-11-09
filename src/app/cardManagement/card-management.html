@@ -1,0 +1,38 @@
+<div ng-controller="cardManagementController as vm">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<h3>Loading Cards...</h3>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-xs-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-xs-12">
+<h2>My Credit Cards</h2>
+<p>Total Cards: {{vm.cardPortfolio.totalCards}}</p>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cardPortfolio.cards">
+<div class="card-item" ng-click="vm.showCardDetails(card.id)">
+<h4>{{card.cardType}} {{card.cardNumber}}</h4>
+<p><strong>Holder:</strong> {{card.cardHolderName}}</p>
+<p><strong>Expiry:</strong> {{card.expiryDate}}</p>
+<p><strong>Credit Limit:</strong> ${{card.creditLimit|number:2}}</p>
+<p><strong>Available Credit:</strong> ${{card.availableCredit|number:2}}</p>
+<p><strong>Outstanding:</strong> ${{card.outstandingAmount|number:2}}</p>
+<div ng-if="vm.cardPortfolio.cardSpending.get(card.id)">
+<p><strong>Current Month Spend:</strong> ${{vm.cardPortfolio.cardSpending.get(card.id).currentMonthSpend|number:2}}</p>
+<p><strong>YTD Spend:</strong> ${{vm.cardPortfolio.cardSpending.get(card.id).yearToDateSpend|number:2}}</p>
+</div>
+<p><strong>Status:</strong> <span class="label label-success">{{card.status}}</span></p>
+<button class="btn btn-primary btn-sm">View Details</button>
+</div>
+</div>
+</div>
+</div>
+</div>

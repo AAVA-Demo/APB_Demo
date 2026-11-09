@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Analysis Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="src/app/assets/css/dashboard.css">
+<link rel="stylesheet" href="src/app/assets/css/card-management.css">
+<link rel="stylesheet" href="src/app/assets/css/analytics.css">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/cards">My Cards</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container-fluid">
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/creditCardDataFactory.js"></script>
+<script src="src/app/services/transactionDataFactory.js"></script>
+<script src="src/app/dashboard/dashboardController.js"></script>
+<script src="src/app/dashboard/kpiAggregationService.js"></script>
+<script src="src/app/dashboard/calculationService.js"></script>
+<script src="src/app/cardManagement/cardManagementController.js"></script>
+<script src="src/app/cardManagement/cardManagementService.js"></script>
+<script src="src/app/cardManagement/displayFormattingService.js"></script>
+<script src="src/app/analytics/analyticsController.js"></script>
+<script src="src/app/analytics/analyticsService.js"></script>
+<script src="src/app/analytics/categoryClassificationService.js"></script>
+<script src="src/app/analytics/dataAggregationService.js"></script>
+<script src="src/app/analytics/chartDirective.js"></script>
+</body>
+</html>
