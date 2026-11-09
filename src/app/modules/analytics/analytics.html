@@ -1,0 +1,55 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics & Insights</h2>
+      <p class="text-muted">Analyze your spending patterns across categories and time</p>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="!vm.loading">
+    <div ng-if="vm.selectedCategory" class="alert alert-info">
+      Filtered by: <strong>{{vm.selectedCategory}}</strong>
+      <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearFilter()">Clear Filter</button>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <spending-chart category-summaries="vm.categorySummaries" on-category-click="vm.filterByCategory(category)"></spending-chart>
+      </div>
+      <div class="col-md-6">
+        <trend-graph monthly-trends="vm.monthlyTrends"></trend-graph>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Category Breakdown</h4></div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Total Amount</th>
+                  <th>Transactions</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="summary in vm.categorySummaries">
+                  <td><a href="javascript:void(0)" ng-click="vm.filterByCategory(summary.categoryName)">{{summary.categoryName}}</a></td>
+                  <td>₹{{summary.totalAmount | number:0}}</td>
+                  <td>{{summary.transactionCount}}</td>
+                  <td>{{summary.percentage | number:1}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

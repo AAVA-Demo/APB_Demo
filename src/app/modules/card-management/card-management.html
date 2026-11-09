@@ -1,0 +1,27 @@
+<div class="card-management-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>My Credit Cards</h2>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="!vm.loading && !vm.showComparison">
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-primary" ng-click="vm.compareCards()" ng-disabled="vm.selectedCards.length < 2">
+          Compare Selected Cards ({{vm.selectedCards.length}})
+        </button>
+      </div>
+    </div>
+    <card-list cards="vm.cards" on-select="vm.toggleCardSelection(card)" on-view="vm.viewCardDetails(cardId)" selected-cards="vm.selectedCards"></card-list>
+  </div>
+  <div ng-if="vm.showComparison">
+    <button class="btn btn-default" ng-click="vm.cancelComparison()">Back to Card List</button>
+    <card-comparison-view comparison-data="vm.comparisonData"></card-comparison-view>
+  </div>
+</div>

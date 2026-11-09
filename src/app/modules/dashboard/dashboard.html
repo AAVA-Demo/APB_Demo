@@ -1,0 +1,49 @@
+<div class="dashboard-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Financial Overview Dashboard
+        <button class="btn btn-sm btn-default pull-right" ng-click="vm.refreshKPIs()" ng-disabled="vm.loading">
+          <span class="glyphicon glyphicon-refresh" ng-class="{'glyphicon-refresh-animate': vm.loading}"></span> Refresh
+        </button>
+      </h2>
+      <p class="text-muted" ng-if="vm.lastUpdated">Last updated: {{vm.lastUpdated | date:'medium'}}</p>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.loading && !vm.kpiData" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <financial-summary ng-if="vm.kpiData" kpi-data="vm.kpiData"></financial-summary>
+  <div class="row" ng-if="vm.kpiData">
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="'Monthly Spend'" value="vm.kpiData.monthlySpend" type="'currency'" icon="'glyphicon-credit-card'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" type="'currency'" icon="'glyphicon-stats'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="'Available Credit'" value="vm.kpiData.availableCredit" type="'currency'" icon="'glyphicon-ok-circle'" trend="'positive'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="'Outstanding Amount'" value="vm.kpiData.outstandingAmount" type="'currency'" icon="'glyphicon-exclamation-sign'" trend="'negative'"></kpi-widget>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.kpiData">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h4>Credit Utilization</h4>
+          <div class="progress" style="height: 30px;">
+            <div class="progress-bar" role="progressbar" 
+                 ng-class="{'progress-bar-success': vm.kpiData.creditUtilization < 30, 'progress-bar-warning': vm.kpiData.creditUtilization >= 30 && vm.kpiData.creditUtilization < 70, 'progress-bar-danger': vm.kpiData.creditUtilization >= 70}"
+                 ng-style="{width: vm.kpiData.creditUtilization + '%'}">
+              {{vm.kpiData.creditUtilization | number:1}}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
