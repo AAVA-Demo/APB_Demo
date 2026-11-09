@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Credit Card Management Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+body{font-family:Arial,sans-serif;background:#f4f4f4;padding:20px}
+.kpi-card{background:#fff;border-radius:8px;padding:20px;margin:10px 0;box-shadow:0 2px 4px rgba(0,0,0,0.1);text-align:center}
+.kpi-card h3{margin:0;color:#333;font-size:24px}
+.kpi-card p{margin:5px 0 0;color:#666;font-size:14px}
+.card-item{background:#fff;border-radius:8px;padding:15px;margin:10px 0;box-shadow:0 2px 4px rgba(0,0,0,0.1);cursor:pointer;transition:transform 0.2s}
+.card-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.15)}
+.card-visa{border-left:4px solid #1434CB}
+.card-mastercard{border-left:4px solid #EB001B}
+.card-amex{border-left:4px solid #006FCF}
+.chart-container{background:#fff;border-radius:8px;padding:20px;margin:10px 0;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+canvas{max-width:100%;height:auto}
+.loading{text-align:center;padding:40px;color:#666}
+.error{background:#f8d7da;color:#721c24;padding:15px;border-radius:4px;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Credit Card Management Dashboard</h1>
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/services/user-auth.service.js"></script>
+<script src="src/app/services/credit-card-data.service.js"></script>
+<script src="src/app/services/transaction-data.service.js"></script>
+<script src="src/app/services/kpi-calculation-engine.service.js"></script>
+<script src="src/app/services/card-data.service.js"></script>
+<script src="src/app/services/transaction.service.js"></script>
+<script src="src/app/services/user-profile.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/services/category-classification.service.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/dashboard.service.js"></script>
+<script src="src/app/dashboard/dashboard.controller.js"></script>
+<script src="src/app/dashboard/directives/kpi-card.directive.js"></script>
+<script src="src/app/card-management/card-management.module.js"></script>
+<script src="src/app/card-management/card-management.service.js"></script>
+<script src="src/app/card-management/card-list.controller.js"></script>
+<script src="src/app/card-management/card-detail.controller.js"></script>
+<script src="src/app/card-management/directives/card-item.directive.js"></script>
+<script src="src/app/analytics/analytics.module.js"></script>
+<script src="src/app/analytics/analytics.service.js"></script>
+<script src="src/app/analytics/analytics.controller.js"></script>
+<script src="src/app/analytics/directives/chart.directive.js"></script>
+<script src="src/app/analytics/filters/spending-category.filter.js"></script>
+</body>
+</html>

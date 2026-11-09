@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('UserAuthService',['$window','$q',function($window,$q){const mockUser={userId:'user123',name:'John Doe',email:'john@example.com'};return{getUserContext:function(){return mockUser;},isAuthenticated:function(){return true;},getAuthToken:function(){return'mock-jwt-token-12345';}};}]);})();

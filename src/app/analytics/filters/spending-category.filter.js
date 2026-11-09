@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('analyticsModule').filter('spendingCategory',['$filter',function($filter){return function(input,category){if(!category)return input;return input.filter(function(item){return item.category===category;});};}]);})();
