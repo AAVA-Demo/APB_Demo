@@ -1,0 +1,27 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<h2>Spending Analytics & Insights</h2>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h4>Monthly Spend Trends</h4>
+<spending-chart chart-config="vm.monthlyChart" chart-id="'monthlyChart'"></spending-chart>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Card-wise Spend Analysis</h4>
+<spending-chart chart-config="vm.cardChart" chart-id="'cardChart'"></spending-chart>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Category-wise Spending</h4>
+<spending-chart chart-config="vm.categoryChart" chart-id="'categoryChart'"></spending-chart>
+</div>
+</div>
+</div>
+</div>

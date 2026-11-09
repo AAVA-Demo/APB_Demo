@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+.kpi-card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:20px;margin-bottom:20px;text-align:center}
+.kpi-card h3{margin:0 0 10px;font-size:32px;font-weight:700;color:#333}
+.kpi-card p{margin:0;font-size:14px;color:#777;text-transform:uppercase}
+.card-item{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:15px;margin-bottom:15px}
+.card-item h4{margin:0 0 10px;font-size:18px;font-weight:600}
+.card-item .card-number{font-family:monospace;font-size:16px;letter-spacing:2px;margin-bottom:10px}
+.card-detail{display:flex;justify-content:space-between;margin-top:10px}
+.card-detail span{font-size:14px}
+.transaction-table{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:20px}
+.filter-section{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px}
+.chart-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:20px;margin-bottom:20px;height:400px}
+canvas{max-height:350px}
+.navbar{margin-bottom:30px}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#/dashboard">Credit Card Dashboard</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/transactions">Transactions</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container-fluid">
+<div ui-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/modules/dashboard/dashboard.module.js"></script>
+<script src="src/app/modules/dashboard/dashboard.controller.js"></script>
+<script src="src/app/modules/transactions/transactions.module.js"></script>
+<script src="src/app/modules/transactions/transactions.controller.js"></script>
+<script src="src/app/modules/analytics/analytics.module.js"></script>
+<script src="src/app/modules/analytics/analytics.controller.js"></script>
+<script src="src/app/services/kpi.service.js"></script>
+<script src="src/app/services/refresh.service.js"></script>
+<script src="src/app/services/transaction.service.js"></script>
+<script src="src/app/services/search-filter.service.js"></script>
+<script src="src/app/services/pagination.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/services/categorization.service.js"></script>
+<script src="src/app/services/aggregation.service.js"></script>
+<script src="src/app/factories/card-data.factory.js"></script>
+<script src="src/app/factories/chart.factory.js"></script>
+<script src="src/app/directives/kpi-card.directive.js"></script>
+<script src="src/app/directives/transaction-list.directive.js"></script>
+<script src="src/app/directives/spending-chart.directive.js"></script>
+</body>
+</html>
