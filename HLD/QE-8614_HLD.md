@@ -1,44 +1,36 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers comprehensive analytics and visualization capabilities that transform raw transaction data into actionable financial insights. It provides interactive visualizations for monthly spend trends, card-wise spend analysis, and category-wise spending breakdowns across nine predefined categories, enabling users to identify spending patterns and make data-driven financial decisions.
+- **Summary**: This epic transforms raw transaction data into actionable financial insights through comprehensive analytics and visualization capabilities. Users access interactive visualizations showing monthly spend trends, card-wise spend analysis, and category-wise breakdowns across nine categories. The analytics engine processes up to 10,000 transactions within 3 seconds, identifying spending patterns and trends to enable data-driven financial decisions.
 
-- **Component Flow:**
+- **Component Flow**:
 
 ```mermaid
-flowchart TD
-    A["User Browser"]
-    B["Analytics UI"]
-    C["API Gateway"]
-    D["Analytics Engine"]
-    E["Transaction Categorization Service"]
-    F["Visualization Service"]
-    G["Historical Transaction Data Store"]
-    H["Chart Rendering Library"]
+flowchart LR
+    A["User Dashboard"]
+    B["Analytics Engine"]
+    C["Transaction Categorization Service"]
+    D["Historical Transaction Data Store"]
+    E["Visualization Library"]
     A --> B
     B --> C
+    B --> D
     C --> D
-    D --> E
-    D --> G
-    D --> F
-    E --> G
-    F --> H
-    H --> B
+    B --> E
+    E --> A
 ```
 
-- **Integration Points:**
-  - **Upstream:** Historical Transaction Data Store for accessing transaction records with category metadata
-  - **Downstream:** Transaction Categorization Service for classifying expenses into nine categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous)
-  - **Downstream:** Visualization Library for rendering interactive charts and graphs
-  - **Downstream:** Analytics Engine for data processing, aggregation, and trend analysis
+- **Integration Points**: 
+  - **Upstream**: Transaction categorization service (for classifying expenses), Historical transaction data store (for retrieving transaction records)
+  - **Downstream**: Analytics engine (for data processing and aggregation), Visualization library (for rendering charts and graphs)
 
-- **Key Assumptions:** 
-  - Transactions are pre-categorized or categorized in near real-time to meet the 3-second calculation requirement
-  - Analytics calculations leverage pre-aggregated summary tables or materialized views for performance optimization
+- **Key Assumptions**: 
+  - Transaction categorization service provides accurate automated classification into the nine predefined categories with minimal manual intervention required.
+  - Historical transaction data is stored in a format optimized for fast aggregation and analytics queries.
 
-- **NFR Highlights:** Analytics calculations must complete within 3 seconds for datasets up to 10,000 transactions; visualizations must render smoothly on all supported devices; system must support real-time or near real-time data aggregation for analytics
+- **NFR Highlights**: Analytics calculations must complete within 3 seconds for datasets up to 10,000 transactions; visualizations must render smoothly on all supported devices; system must support real-time or near real-time data aggregation for analytics.
 
-- **Data Flow:** User accesses analytics dashboard → Analytics UI requests spending insights via API Gateway → Analytics Engine queries Historical Transaction Data Store for transaction records → Transaction Categorization Service ensures all transactions are classified into one of nine categories → Analytics Engine performs aggregations for monthly trends, card-wise spend, and category-wise breakdowns → Processed data is sent to Visualization Service → Chart Rendering Library generates interactive charts and graphs → Rendered visualizations are displayed in Analytics UI with smooth performance across devices
+- **Data Flow**: User requests spending insights → Analytics Engine retrieves transactions from Historical Transaction Data Store → Transaction Categorization Service classifies expenses into nine categories → Analytics Engine aggregates data by month, card, and category → Processed insights are formatted for visualization → Visualization Library renders interactive charts (monthly trends, card-wise analysis, category breakdowns) → User views and interacts with spending patterns and trends.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully addresses the epic's scope including monthly spend trend visualization, card-wise spend analysis, category-wise spending breakdown across all nine specified categories, interactive charts and graphs, spending pattern identification, and time-based trend analysis. All NFRs are met through architectural decisions: pre-aggregation and optimized queries for 3-second calculation time, responsive visualization library for smooth rendering across devices, and near real-time data aggregation through the Analytics Engine. All dependencies (Transaction Categorization Service, Analytics Engine, Visualization Library, Historical Transaction Data Store) are incorporated with clear data processing and rendering pipelines. The design explicitly excludes out-of-scope items (predictive analytics, budget recommendations) as specified.
+- **Requirements Coverage**: The design fully addresses monthly spend trend visualization, card-wise spend analysis, category-wise spending breakdown, interactive charts and graphs, spending pattern identification across all nine categories, and time-based trend analysis. All NFRs (3-second calculation time for 10K transactions, smooth rendering, real-time aggregation) are incorporated into the component design.

@@ -1,42 +1,37 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic enables users to manage multiple credit cards and view detailed transaction histories within the dashboard. It provides card-centric views allowing users to drill down into specific card performance, transaction records, and card details, supporting granular financial tracking and reconciliation across up to 50 credit cards with multi-year transaction histories.
+- **Summary**: This epic enables users to manage multiple credit cards and view detailed transaction histories within the dashboard. Users can add, view, and monitor individual cards with specific details, limits, and transaction records. The system provides card-centric views with drill-down capabilities for detailed financial tracking and reconciliation, supporting up to 50 credit cards per user with paginated transaction display.
 
-- **Component Flow:**
+- **Component Flow**:
 
 ```mermaid
 flowchart TD
-    A["User Browser"]
-    B["Card Management UI"]
-    C["API Gateway"]
-    D["Card Management Service"]
-    E["Transaction Data Service"]
-    F["User Profile Service"]
-    G["Card Database"]
-    H["Transaction Database"]
+    A["User Interface"]
+    B["Card Management Module"]
+    C["Transaction Data Service"]
+    D["Credit Card Information Service"]
+    E["User Profile Service"]
+    F["Transaction History Store"]
     A --> B
     B --> C
-    C --> D
-    C --> E
+    B --> D
+    B --> E
+    C --> F
     D --> F
-    D --> G
-    E --> H
-    F --> G
 ```
 
-- **Integration Points:**
-  - **Upstream:** User Profile Service for card ownership validation and user-card association
-  - **Downstream:** Transaction Data Service for retrieving card-specific transactions with pagination support
-  - **Downstream:** Credit Card Information Service for card details, metadata, limits, and status
+- **Integration Points**: 
+  - **Upstream**: Transaction data service (for retrieving card transactions), Credit card information service (for card details and metadata), User profile service (for card ownership validation)
+  - **Downstream**: Card Management Module (for orchestrating card and transaction display)
 
-- **Key Assumptions:** 
-  - Transaction data is stored with indexed card identifiers to enable efficient card-wise filtering
-  - Pagination is implemented with default page size of 50 transactions to handle large datasets efficiently
+- **Key Assumptions**: 
+  - Transaction data is available with sufficient metadata (date, amount, merchant, category) for meaningful display and filtering.
+  - Pagination is implemented at the service layer to handle large transaction datasets efficiently.
 
-- **NFR Highlights:** System must handle display of transactions for users with up to 50 credit cards; transaction retrieval must support pagination for large datasets; interface must maintain performance with transaction histories spanning multiple years
+- **NFR Highlights**: System must handle display of transactions for users with up to 50 credit cards; transaction retrieval must support pagination for large datasets; interface must maintain performance with transaction histories spanning multiple years.
 
-- **Data Flow:** User selects a credit card from the dashboard → Card Management UI requests card details via API Gateway → Card Management Service validates ownership through User Profile Service and retrieves card metadata from Card Database → User requests transaction history → Transaction Data Service queries Transaction Database with card identifier and pagination parameters → Paginated transaction records are returned and displayed → User can filter by card, view individual card details, and navigate through transaction history pages
+- **Data Flow**: User selects card management view → Card Management Module queries User Profile Service to validate ownership → Module retrieves card details from Credit Card Information Service → User selects specific card for drill-down → Transaction Data Service fetches paginated transaction history from Transaction History Store → Transactions are displayed with filtering and sorting capabilities → User views detailed card-specific transaction records for tracking and reconciliation.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design comprehensively covers the epic's scope including multiple credit card display and management, individual card detail views, transaction listing and display, card-wise filtering capabilities, transaction history tracking, and card information management. All NFRs are addressed through architectural patterns: pagination support for large datasets, indexed database queries for multi-year transaction histories, and scalable service architecture for up to 50 cards per user. All dependencies (Transaction Data Service, Credit Card Information Service, User Profile Service) are integrated into the component flow with clear ownership validation and data retrieval patterns.
+- **Requirements Coverage**: The design covers all scope elements including multiple credit card display and management, individual card detail views, transaction listing and display, card-wise filtering capabilities, transaction history tracking, and card information management. All NFRs (50 cards support, pagination for large datasets, multi-year performance) are addressed through the modular architecture and service integration.
