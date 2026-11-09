@@ -1,0 +1,1 @@
+angular.module('creditCardApp').factory('CardOverviewFactory', ['$http', '$q', 'API_CONFIG', function($http, $q, API_CONFIG) {return {getCards: function() {return $http.get(API_CONFIG.baseUrl + '/cards').then(function(response) {return response.data;}, function(error) {console.error('Card fetch error:', error); return $q.reject(error);});}};}]);

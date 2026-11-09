@@ -1,0 +1,1 @@
+angular.module('transactionModule').config(['$routeProvider', function($routeProvider) {}]);

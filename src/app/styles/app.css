@@ -1,0 +1,9 @@
+body { padding-top: 20px; background-color: #f5f5f5; }
+.kpi-widget { background: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.kpi-widget h3 { margin-top: 0; color: #333; font-size: 16px; }
+.kpi-widget .value { font-size: 28px; font-weight: bold; color: #007bff; }
+.card-overview { background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; border-left: 4px solid #007bff; }
+.transaction-list { background: white; padding: 20px; border-radius: 5px; }
+.transaction-filter { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+.chart-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; min-height: 400px; }
+.loading-spinner { text-align: center; padding: 50px; }

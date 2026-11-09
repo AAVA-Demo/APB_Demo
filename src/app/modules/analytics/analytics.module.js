@@ -1,0 +1,1 @@
+angular.module('analyticsModule', ['ngRoute', 'chart.js']);

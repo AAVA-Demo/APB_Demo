@@ -1,0 +1,1 @@
+angular.module('creditCardApp').constant('API_CONFIG', {baseUrl: '/api'}).config(['$httpProvider', function($httpProvider) {$httpProvider.interceptors.push('AuthInterceptor');}]);

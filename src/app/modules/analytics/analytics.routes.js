@@ -1,0 +1,1 @@
+angular.module('analyticsModule').config(['$routeProvider', function($routeProvider) {}]);

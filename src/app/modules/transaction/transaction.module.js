@@ -1,0 +1,1 @@
+angular.module('transactionModule', ['ngRoute', 'ui.bootstrap']);

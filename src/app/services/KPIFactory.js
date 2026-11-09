@@ -1,0 +1,1 @@
+angular.module('creditCardApp').factory('KPIFactory', ['$http', '$q', 'API_CONFIG', function($http, $q, API_CONFIG) {return {getKPISummary: function() {return $http.get(API_CONFIG.baseUrl + '/dashboard/kpis').then(function(response) {return response.data;}, function(error) {console.error('KPI fetch error:', error); return $q.reject(error);});}};}]);

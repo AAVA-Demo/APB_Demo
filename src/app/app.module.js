@@ -1,0 +1,1 @@
+angular.module('creditCardApp', ['ngRoute', 'ui.bootstrap', 'chart.js', 'dashboardModule', 'transactionModule', 'analyticsModule']);

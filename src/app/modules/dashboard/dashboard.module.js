@@ -1,0 +1,1 @@
+angular.module('dashboardModule', ['ngRoute', 'ui.bootstrap']);

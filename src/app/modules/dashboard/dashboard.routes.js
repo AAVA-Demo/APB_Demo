@@ -1,0 +1,1 @@
+angular.module('dashboardModule').config(['$routeProvider', function($routeProvider) {}]);
