@@ -1,127 +1,149 @@
-# Low-Level Design: QE-8613 - Credit Card Management and Transactions
+# Low-Level Design: Credit Card Management and Transactions
+**Epic ID:** QE-8613  
+**Feature:** Multi-card management with transaction history and drill-down
+
+---
 
 ## a. Architecture Mapping
 
-- **Card Management Module** → AngularJS Module (`app.cardManagement`)
-- **Card Management UI** → AngularJS Controller (`CardManagementController`)
-- **Transaction Data Service** → AngularJS Service (`TransactionService`)
-- **Card Management Service** → AngularJS Service (`CardService`)
-- **User Profile Service** → AngularJS Service (`UserProfileService`)
-- **Pagination Component** → AngularJS Directive (`paginationDirective`)
+| HLD Component | AngularJS Artifact | Mapping |
+|---------------|-------------------|----------|
+| User Interface | Module: `app.cardManagement` | Card management feature module |
+| Card Management Module | Controller: `CardManagementController` | Orchestrates card and transaction views |
+| Transaction Data Service | Service: `TransactionDataService` | Fetches paginated transactions via REST |
+| Credit Card Information Service | Service: `CardInfoService` | Retrieves card metadata |
+| User Profile Service | Service: `UserProfileService` | Validates card ownership |
+| Transaction History Store | REST API Endpoint | Backend data source |
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /card-management
-      card-management.module.js
-      card-management.controller.js
-      card-detail.controller.js
-      card-management.html
-      card-detail.html
-  /services
-    card.service.js
-    transaction.service.js
-    user-profile.service.js
-  /directives
-    pagination.directive.js
-  /models
-    transaction.model.js
+app/
+├── modules/
+│   └── card-management/
+│       ├── card-management.module.js
+│       ├── card-management.controller.js
+│       ├── card-list.html
+│       ├── card-detail.html
+│       └── transaction-list.component.js
+├── services/
+│   ├── transaction-data.service.js
+│   ├── card-info.service.js
+│   └── user-profile.service.js
+└── app.js
 ```
+
+---
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|---------------|----------------|------------------|
-| CardManagementModule | Module | Root module for card and transaction management | ngRoute, ui.bootstrap |
-| CardManagementController | Controller | Manages card list view and filtering | CardService, $scope |
-| CardDetailController | Controller | Manages individual card detail and transaction view | TransactionService, CardService, $routeParams |
-| CardService | Service | Fetches card details and validates ownership | ApiFactory, UserProfileService |
-| TransactionService | Service | Retrieves paginated transaction history | ApiFactory, $http |
-| UserProfileService | Service | Validates user-card ownership | ApiFactory, $http |
-| PaginationDirective | Directive | Reusable pagination control for transactions | None |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| `app.cardManagement` | Module | Card management feature module | `ngRoute`, `ui.bootstrap` (pagination) |
+| `CardManagementController` | Controller | Manages card list, selection, and transaction display | `CardInfoService`, `TransactionDataService`, `$scope`, `$routeParams` |
+| `TransactionDataService` | Service | Fetches paginated transaction history from API | `$http`, `API_ENDPOINTS` |
+| `CardInfoService` | Service | Retrieves card details and metadata | `$http`, `API_ENDPOINTS` |
+| `UserProfileService` | Service | Validates user ownership of cards | `$http`, `AuthService` |
+| `TransactionListComponent` | Component | Reusable component for displaying transactions with filters | `TransactionDataService` |
+| `card-list.html` | View | Displays all user cards in grid layout | Bootstrap, AngularJS directives |
+| `card-detail.html` | View | Shows individual card details with transaction history | Bootstrap table, pagination directive |
+
+---
 
 ## c. Data Model
 
-**Transaction Object:**
 ```javascript
-{
-  transactionId: String,
+// CreditCard Model
+const CreditCard = {
   cardId: String,
-  amount: Number,
-  merchantName: String,
-  category: String,
-  transactionDate: Date,
-  description: String,
-  status: String
-}
-```
-
-**Card Object:**
-```javascript
-{
-  cardId: String,
-  cardNumber: String,
+  cardNumber: String,        // Masked: "****1234"
   cardType: String,
+  cardHolderName: String,
   creditLimit: Number,
   availableCredit: Number,
   outstandingAmount: Number,
-  status: String
-}
+  expiryDate: String,
+  status: String             // "Active", "Blocked", etc.
+};
+
+// Transaction Model
+const Transaction = {
+  transactionId: String,
+  cardId: String,
+  date: Date,
+  merchant: String,
+  category: String,          // "Food & Dining", "Fuel", etc.
+  amount: Number,
+  type: String,              // "Debit", "Credit"
+  status: String             // "Posted", "Pending"
+};
+
+// PaginatedTransactionResponse
+const PaginatedResponse = {
+  transactions: Array<Transaction>,
+  totalCount: Number,
+  pageNumber: Number,
+  pageSize: Number
+};
 ```
 
-**PaginatedTransactions Object:**
-```javascript
-{
-  transactions: Array<Transaction>,
-  currentPage: Number,
-  totalPages: Number,
-  pageSize: Number,
-  totalCount: Number
-}
-```
+---
 
 ## d. Data Flow
 
-User selects a credit card from dashboard → CardDetailController loads with cardId from $routeParams → Controller calls CardService.getCardDetails(cardId) to fetch card metadata → UserProfileService validates ownership → CardService returns card details → Controller calls TransactionService.getTransactions(cardId, page, pageSize) → Service invokes API with pagination params → API returns paginated transaction list → Controller updates $scope.transactions and $scope.card → View renders card details and transaction table with pagination controls → User navigates pages or filters by card.
+User navigates to card management → `CardManagementController` calls `UserProfileService.validateOwnership()` → Service confirms user access → Controller invokes `CardInfoService.getAllCards()` which makes GET to `/api/cards` → Card list displayed → User selects specific card → Controller calls `TransactionDataService.getTransactions(cardId, page, pageSize)` → Service makes GET to `/api/cards/{cardId}/transactions?page=1&size=20` → Paginated transactions returned → `TransactionListComponent` renders table with sorting/filtering → User interacts with pagination controls → New page fetched and displayed.
+
+---
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant CardDetailView
-    participant CardDetailController
-    participant CardService
-    participant TransactionService
-    participant APIGateway
-    
-    User->>CardDetailView: Select Card
-    CardDetailView->>CardDetailController: Initialize with cardId
-    CardDetailController->>CardService: getCardDetails(cardId)
-    CardService->>APIGateway: GET /api/cards/{cardId}
-    APIGateway-->>CardService: Card Details
-    CardService-->>CardDetailController: Card Object
-    CardDetailController->>TransactionService: getTransactions(cardId, page=1, size=50)
-    TransactionService->>APIGateway: GET /api/transactions?cardId={cardId}&page=1&size=50
-    APIGateway-->>TransactionService: Paginated Transactions
-    TransactionService-->>CardDetailController: PaginatedTransactions Object
-    CardDetailController->>CardDetailView: Update $scope
-    CardDetailView-->>User: Display Card & Transactions
+    participant CardListView
+    participant CardManagementController
+    participant CardInfoService
+    participant TransactionDataService
+    participant API
+
+    User->>CardListView: View Cards
+    CardListView->>CardManagementController: Initialize
+    CardManagementController->>CardInfoService: getAllCards()
+    CardInfoService->>API: GET /api/cards
+    API-->>CardInfoService: Card Array
+    CardInfoService-->>CardManagementController: Cards
+    CardManagementController->>CardListView: Display Cards
+    User->>CardListView: Select Card
+    CardListView->>CardManagementController: selectCard(cardId)
+    CardManagementController->>TransactionDataService: getTransactions(cardId, 1, 20)
+    TransactionDataService->>API: GET /api/cards/{cardId}/transactions?page=1&size=20
+    API-->>TransactionDataService: PaginatedResponse
+    TransactionDataService-->>CardManagementController: Transactions
+    CardManagementController->>CardListView: Display Transactions
+    CardListView-->>User: Show Transaction Table
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Use AngularJS $routeParams to extract cardId from URL for deep linking to card details.
-- Implement pagination directive with isolated scope for reusability across transaction and other list views.
-- Apply ES6 template literals for constructing API URLs with query parameters; use $httpParamSerializer for complex filters.
-- Cache card details using $cacheFactory with 5-minute TTL to reduce redundant API calls during navigation.
-- Use ng-repeat with track by transactionId for efficient DOM rendering of large transaction lists.
+- Use `ui-router` for nested views (card list → card detail with transactions)
+- Implement `ui.bootstrap.pagination` directive for transaction pagination
+- Apply client-side filtering using AngularJS `filter` for transaction search by merchant/category
+- Use `$q` promises for chaining service calls (card validation → card fetch → transaction fetch)
+- Cache card list in service to avoid redundant API calls during navigation
+
+---
 
 ## g. Error Handling
 
-HTTP interceptor with try/catch blocks in services; display user-friendly error messages via toastr notifications for failed card or transaction loads.
+HTTP interceptor with try/catch in controllers; display Bootstrap modal for critical errors and inline alerts for validation failures.
+
+---
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; UserProfileService validates card ownership server-side before returning data.
+Requires token-based auth via existing SSO; validate card ownership server-side before returning transactions.
+
+---
+
+**End of Document**

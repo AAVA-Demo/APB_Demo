@@ -1,60 +1,94 @@
-# Low-Level Design: QE-8614 - Spending Analytics and Insights
+# Low-Level Design: Spending Analytics and Insights
+**Epic ID:** QE-8614  
+**Feature:** Interactive spending analytics with category-wise visualization
+
+---
 
 ## a. Architecture Mapping
 
-- **Analytics Module** → AngularJS Module (`app.analytics`)
-- **Analytics UI** → AngularJS Controller (`AnalyticsController`)
-- **Analytics Engine** → AngularJS Service (`AnalyticsService`)
-- **Transaction Categorization Service** → AngularJS Service (`CategoryService`)
-- **Visualization Service** → AngularJS Directive (`chartDirective`)
-- **Chart Rendering Library** → Third-party (Chart.js via angular-chart.js)
+| HLD Component | AngularJS Artifact | Mapping |
+|---------------|-------------------|----------|
+| User Dashboard | Module: `app.analytics` | Analytics feature module |
+| Analytics Engine | Service: `AnalyticsEngineService` | Processes and aggregates transaction data |
+| Transaction Categorization Service | Service: `CategorizationService` | Classifies transactions into 9 categories |
+| Historical Transaction Data Store | REST API Endpoint | Backend transaction repository |
+| Visualization Library | Directive: `chartDirective` (using Chart.js) | Renders interactive charts |
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /analytics
-      analytics.module.js
-      analytics.controller.js
-      analytics.html
-  /services
-    analytics.service.js
-    category.service.js
-  /directives
-    chart.directive.js
-  /models
-    spending-insight.model.js
+app/
+├── modules/
+│   └── analytics/
+│       ├── analytics.module.js
+│       ├── analytics.controller.js
+│       ├── analytics.html
+│       └── analytics.css
+├── services/
+│   ├── analytics-engine.service.js
+│   └── categorization.service.js
+├── directives/
+│   └── chart.directive.js
+└── app.js
 ```
+
+---
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|---------------|----------------|------------------|
-| AnalyticsModule | Module | Root module for analytics and insights | ngRoute, chart.js, angular-chart.js |
-| AnalyticsController | Controller | Manages analytics view and chart interactions | AnalyticsService, $scope |
-| AnalyticsService | Service | Fetches and processes spending insights | ApiFactory, CategoryService, $http |
-| CategoryService | Service | Provides category metadata and validation | None |
-| ChartDirective | Directive | Wraps Chart.js for rendering interactive charts | chart.js |
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| `app.analytics` | Module | Analytics feature module | `ngRoute`, `chart.js` |
+| `AnalyticsController` | Controller | Manages analytics view state and user interactions | `AnalyticsEngineService`, `$scope`, `$filter` |
+| `AnalyticsEngineService` | Service | Aggregates transactions by month, card, and category | `$http`, `CategorizationService`, `API_ENDPOINTS` |
+| `CategorizationService` | Service | Maps transactions to 9 predefined categories | None (rule-based logic) |
+| `chartDirective` | Directive | Wraps Chart.js for rendering line/bar/pie charts | `Chart.js` library |
+| `analytics.html` | View | Displays trend charts and category breakdowns | Bootstrap grid, chart directives |
+
+---
 
 ## c. Data Model
 
-**SpendingInsight Object:**
 ```javascript
-{
-  monthlyTrends: Array<{month: String, amount: Number}>,
-  cardWiseSpend: Array<{cardId: String, cardName: String, amount: Number}>,
-  categoryWiseSpend: Array<{category: String, amount: Number, percentage: Number}>
-}
+// Transaction Model (input)
+const Transaction = {
+  transactionId: String,
+  cardId: String,
+  date: Date,
+  merchant: String,
+  amount: Number,
+  category: String           // Auto-assigned or pre-categorized
+};
+
+// MonthlySpendTrend Model
+const MonthlySpendTrend = {
+  month: String,             // "2024-01"
+  totalSpend: Number,
+  transactionCount: Number
+};
+
+// CategorySpend Model
+const CategorySpend = {
+  category: String,          // "Food & Dining", "Fuel", etc.
+  totalAmount: Number,
+  percentage: Number,
+  transactionCount: Number
+};
+
+// AnalyticsData Model (output)
+const AnalyticsData = {
+  monthlyTrends: Array<MonthlySpendTrend>,
+  categoryBreakdown: Array<CategorySpend>,
+  cardWiseSpend: Object      // { cardId: totalSpend }
+};
 ```
 
-**Category Enum:**
-```javascript
-['Food & Dining', 'Fuel', 'Shopping', 'Travel', 'Entertainment', 'Utilities', 'Healthcare', 'Education', 'Miscellaneous']
-```
+---
 
 ## d. Data Flow
 
-User navigates to analytics dashboard → AnalyticsController initializes and calls AnalyticsService.getSpendingInsights() → Service invokes ApiFactory.get('/api/analytics/spending') → API Gateway queries Historical Transaction Data Store and returns pre-aggregated insights → Service transforms response into SpendingInsight model with monthly trends, card-wise spend, and category-wise breakdowns → Controller updates $scope.insights → ChartDirective renders three interactive charts (line chart for monthly trends, bar chart for card-wise spend, pie chart for category-wise spend) using Chart.js → User interacts with charts to drill down into specific periods or categories.
+User accesses analytics dashboard → `AnalyticsController` calls `AnalyticsEngineService.getSpendingInsights(startDate, endDate)` → Service makes GET to `/api/transactions?from=2023-01-01&to=2024-01-01` → Transactions retrieved → `CategorizationService` classifies each transaction into one of 9 categories → `AnalyticsEngineService` aggregates by month (for trends) and by category (for breakdown) → Service returns `AnalyticsData` object → Controller binds to `$scope.analytics` → `chartDirective` renders monthly trend line chart and category pie chart → User interacts with charts for drill-down (e.g., click category to see transactions).
+
+---
 
 ## e. Primary Sequence Diagram
 
@@ -63,35 +97,46 @@ sequenceDiagram
     participant User
     participant AnalyticsView
     participant AnalyticsController
-    participant AnalyticsService
-    participant ApiFactory
-    participant APIGateway
-    
-    User->>AnalyticsView: Navigate to Analytics
+    participant AnalyticsEngineService
+    participant CategorizationService
+    participant API
+
+    User->>AnalyticsView: Access Analytics
     AnalyticsView->>AnalyticsController: Initialize
-    AnalyticsController->>AnalyticsService: getSpendingInsights()
-    AnalyticsService->>ApiFactory: get('/api/analytics/spending')
-    ApiFactory->>APIGateway: GET /api/analytics/spending
-    APIGateway-->>ApiFactory: Aggregated Insights (JSON)
-    ApiFactory-->>AnalyticsService: Parsed Response
-    AnalyticsService-->>AnalyticsController: SpendingInsight Object
-    AnalyticsController->>AnalyticsView: Update $scope.insights
-    AnalyticsView->>ChartDirective: Render Charts
-    ChartDirective-->>User: Display Interactive Visualizations
+    AnalyticsController->>AnalyticsEngineService: getSpendingInsights(startDate, endDate)
+    AnalyticsEngineService->>API: GET /api/transactions?from=X&to=Y
+    API-->>AnalyticsEngineService: Transaction Array
+    AnalyticsEngineService->>CategorizationService: categorize(transactions)
+    CategorizationService-->>AnalyticsEngineService: Categorized Transactions
+    AnalyticsEngineService->>AnalyticsEngineService: Aggregate by month & category
+    AnalyticsEngineService-->>AnalyticsController: AnalyticsData
+    AnalyticsController->>AnalyticsView: Bind $scope.analytics
+    AnalyticsView->>AnalyticsView: Render Charts (Chart.js)
+    AnalyticsView-->>User: Display Interactive Charts
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Integrate angular-chart.js wrapper for Chart.js to leverage AngularJS data binding with reactive chart updates.
-- Use ES6 Array.map() and Array.reduce() in AnalyticsService for client-side data transformation if needed for chart formatting.
-- Apply responsive chart options (maintainAspectRatio: false) to ensure smooth rendering across desktop, tablet, and mobile devices.
-- Cache analytics data for 60 seconds using $cacheFactory to minimize redundant API calls during user interactions.
-- Use AngularJS $filter for formatting currency and percentages in chart tooltips and labels.
+- Use Chart.js 2.x wrapped in AngularJS directive for responsive charts (line for trends, pie/doughnut for categories)
+- Implement client-side aggregation using ES6 `reduce()` and `Map` for performance with up to 10K transactions
+- Use AngularJS `$filter('date')` for formatting month labels
+- Apply debouncing on date range filters to avoid excessive API calls
+- Store categorization rules in `CategorizationService` as constant mapping (merchant patterns → category)
+
+---
 
 ## g. Error Handling
 
-HTTP interceptor captures analytics API errors; fallback to empty state with user notification via Bootstrap alert and retry button.
+HTTP interceptor with fallback to cached data if API fails; display warning banner if data is stale.
+
+---
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; analytics endpoints require authenticated user session with valid JWT token.
+Standard input validation and secure API calls assumed; ensure date range parameters are sanitized.
+
+---
+
+**End of Document**
