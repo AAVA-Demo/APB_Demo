@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCard.dashboard').factory('CreditCardDataFactory',['$http','$q',function($http,$q){return{fetchAllCards:function(userId){return $http.get('/api/cards',{params:{userId:userId}}).then(function(response){return response.data;}).catch(function(err){return $q.reject(err);});}};}]);})();
