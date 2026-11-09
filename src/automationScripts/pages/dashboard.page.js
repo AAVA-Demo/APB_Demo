@@ -1,85 +1,62 @@
 const { expect } = require('@playwright/test');
-const logger = require('../../utils/logger');
+const config = require('../../data/config.json');
 
 exports.DashboardPage = class DashboardPage {
   constructor(page) {
     this.page = page;
+    
+    // KPI Locators
     this.monthlySpendKPI = page.locator('[data-testid="kpi-monthly-spend"]');
-    this.totalCreditLimitKPI = page.locator('[data-testid="kpi-total-limit"]');
+    this.totalCreditLimitKPI = page.locator('[data-testid="kpi-total-credit-limit"]');
     this.availableCreditKPI = page.locator('[data-testid="kpi-available-credit"]');
-    this.outstandingAmountKPI = page.locator('[data-testid="kpi-outstanding"]');
-    this.loadingIndicator = page.locator('[data-testid="loading-spinner"]');
-    this.availableCreditErrorPlaceholder = page.locator('[data-testid="error-available-credit"]');
+    this.outstandingAmountKPI = page.locator('[data-testid="kpi-outstanding-amount"]');
+    
+    // Loading and Error States
+    this.loadingSpinner = page.locator('[data-testid="loading-spinner"]');
+    this.availableCreditError = page.locator('[data-testid="error-available-credit"]');
     this.retryButton = page.locator('[data-testid="retry-button"]');
-    this.lastUpdatedTimestamp = page.locator('[data-testid="last-updated"]');
-    this.warningMessage = page.locator('[data-testid="warning-message"]');
-    this.utilizationDisplay = page.locator('[data-testid="utilization-rate"]');
+    
+    // Layout
+    this.kpiContainer = page.locator('[data-testid="kpi-container"]');
+    this.lastUpdatedTimestamp = page.locator('[data-testid="last-updated-timestamp"]');
+  }
+
+  async navigate() {
+    await this.page.goto(config.baseUrl + '/dashboard');
   }
 
   async waitForDashboardLoad() {
-    logger.info('Waiting for dashboard to load');
-    await this.page.waitForLoadState('networkidle');
-    await expect(this.monthlySpendKPI).toBeVisible({ timeout: 10000 });
-    logger.info('Dashboard loaded successfully');
+    await expect(this.monthlySpendKPI).toBeVisible({ timeout: 5000 });
+    await expect(this.totalCreditLimitKPI).toBeVisible({ timeout: 5000 });
+    await expect(this.availableCreditKPI).toBeVisible({ timeout: 5000 });
+    await expect(this.outstandingAmountKPI).toBeVisible({ timeout: 5000 });
   }
 
-  async waitForKPILoad(kpiName) {
-    logger.info(`Waiting for KPI: ${kpiName} to load`);
-    const kpiLocator = this.page.locator(`[data-testid="kpi-${kpiName}"]`);
-    await expect(kpiLocator).toBeVisible({ timeout: 15000 });
+  async waitForKPIsToLoad() {
+    await this.page.waitForLoadState('networkidle');
+    await expect(this.loadingSpinner).toBeHidden({ timeout: 10000 });
   }
 
   async getMonthlySpendValue() {
     await expect(this.monthlySpendKPI).toBeVisible();
     const text = await this.monthlySpendKPI.textContent();
-    const value = parseFloat(text.replace(/[^0-9.]/g, ''));
-    logger.info(`Monthly spend value: ${value}`);
-    return value;
+    const match = text.match(/₹([\d,]+)/);
+    return match ? parseInt(match[1].replace(/,/g, '')) : 0;
   }
 
-  async getTotalCreditLimitValue() {
-    await expect(this.totalCreditLimitKPI).toBeVisible();
-    const text = await this.totalCreditLimitKPI.textContent();
-    const value = parseFloat(text.replace(/[^0-9.]/g, ''));
-    logger.info(`Total credit limit: ${value}`);
-    return value;
+  async getAllKPIs() {
+    return await this.page.locator('[data-testid^="kpi-"]').all();
   }
 
-  async getAvailableCreditValue() {
-    await expect(this.availableCreditKPI).toBeVisible();
-    const text = await this.availableCreditKPI.textContent();
-    const value = parseFloat(text.replace(/[^0-9.]/g, ''));
-    logger.info(`Available credit: ${value}`);
-    return value;
-  }
-
-  async getOutstandingAmountValue() {
-    await expect(this.outstandingAmountKPI).toBeVisible();
-    const text = await this.outstandingAmountKPI.textContent();
-    const value = parseFloat(text.replace(/[^0-9.]/g, ''));
-    logger.info(`Outstanding amount: ${value}`);
-    return value;
-  }
-
-  async clickRetryButton() {
-    await expect(this.retryButton).toBeVisible();
-    await this.retryButton.click();
-    logger.info('Retry button clicked');
+  async waitForKPIUpdate() {
+    await this.page.waitForResponse(response => 
+      response.url().includes('/api/kpi') && response.status() === 200
+    );
+    await this.page.waitForTimeout(1000);
   }
 
   async getLastUpdatedTimestamp() {
     await expect(this.lastUpdatedTimestamp).toBeVisible();
-    const timestamp = await this.lastUpdatedTimestamp.textContent();
-    return timestamp;
-  }
-
-  async getWarningMessageText() {
-    await expect(this.warningMessage).toBeVisible();
-    return await this.warningMessage.textContent();
-  }
-
-  async getUtilizationText() {
-    await expect(this.utilizationDisplay).toBeVisible();
-    return await this.utilizationDisplay.textContent();
+    return await this.lastUpdatedTimestamp.textContent();
   }
 };

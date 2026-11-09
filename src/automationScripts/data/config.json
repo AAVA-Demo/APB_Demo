@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://creditcard.app.com",
+  "timeout": 30000,
+  "retryAttempts": 3,
+  "waitForNetworkIdle": true
+}

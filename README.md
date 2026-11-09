@@ -1,115 +1,185 @@
-# Credit Card Analysis Dashboard - Playwright Automation Framework
+# Credit Card Dashboard - Playwright Automation Framework
 
 ## Overview
-Production-ready Playwright automation framework for the Credit Card Analysis Dashboard application, implementing Page Object Model (POM) design pattern with comprehensive test coverage.
+Production-ready Playwright JavaScript automation framework for Credit Card Dashboard application covering 63 test cases across Dashboard, Card Management, and Transaction Analytics features.
 
-## Framework Structure
+## Project Structure
 ```
-src/
-├── automationScripts/
-│   ├── dashboard.spec.js          # Dashboard KPI tests (10 test cases)
-│   ├── analytics.spec.js          # Analytics and visualization tests (14 test cases)
-│   ├── cardManagement.spec.js     # Card management tests (11 test cases)
-│   ├── responsive.spec.js         # Responsive design tests (3 test cases)
-│   └── pages/
-│       ├── dashboard.page.js      # Dashboard Page Object
-│       ├── analytics.page.js      # Analytics Page Object
-│       ├── cardManagement.page.js # Card Management Page Object
-│       └── login.page.js          # Login Page Object (shared)
-└── utils/
-    └── logger.js                  # Winston logger utility
+├── src/
+│   ├── automationScripts/
+│   │   ├── dashboard.spec.js
+│   │   ├── cardManagement.spec.js
+│   │   ├── transactionAnalytics.spec.js
+│   │   └── pages/
+│   │       ├── dashboard.page.js
+│   │       ├── cardManagement.page.js
+│   │       ├── transactionAnalytics.page.js
+│   │       └── login.page.js
+│   └── data/
+│       ├── testData.json
+│       └── config.json
+├── playwright.config.js
+├── package.json
+└── README.md
 ```
 
 ## Test Coverage
-- **Total Test Cases:** 38 Playwright tests
-- **TestRail Test Cases Covered:** 36
-- **Features Covered:**
-  - Dashboard KPI Management
-  - Real-time Data Refresh
-  - Multi-Card KPI Consolidation
-  - Category-wise Spending Visualization
-  - Spending Pattern Analysis
-  - Monthly Trend Analysis
-  - Multi-Card Management
-  - Card Comparison
-  - Card Details and Analysis
-  - Responsive Design (Mobile, Tablet, Desktop)
+
+### Dashboard Tests (8 test cases)
+- QE-8167: KPI dashboard load time and accuracy
+- QE-8165: Responsive layout (mobile, tablet)
+- QE-8161: Real-time data refresh and caching
+
+### Card Management Tests (9 test cases)
+- QE-8162: Multi-card display and error handling
+- QE-8166: Card-specific analysis and performance
+- QE-8157: Individual card detail views
+- QE-8158: Card comparison capabilities
+
+### Transaction Analytics Tests (10 test cases)
+- QE-8169: Interactive category drill-down
+- QE-8164: Category-wise spending visualization
+- QE-8163: 12-month trend analysis
+- QE-8168: Pattern analysis and anomaly detection
 
 ## Installation
+
 ```bash
 npm install
 npx playwright install
 ```
 
 ## Running Tests
+
+### Run all tests
 ```bash
-# Run all tests
 npm test
+```
 
-# Run tests in headed mode
-npm run test:headed
-
-# Run tests in debug mode
-npm run test:debug
-
-# Run specific test suites
+### Run specific test suite
+```bash
 npm run test:dashboard
-npm run test:analytics
 npm run test:cards
-npm run test:responsive
+npm run test:analytics
+```
 
-# View HTML report
+### Run tests in headed mode
+```bash
+npm run test:headed
+```
+
+### Debug tests
+```bash
+npm run test:debug
+```
+
+### View test report
+```bash
 npm run report
 ```
 
 ## Configuration
-- **Base URL:** Configured in `playwright.config.js` (default: https://creditcard.app.com)
-- **Browsers:** Chromium, Firefox, WebKit, Mobile Chrome, Mobile Safari
-- **Parallel Execution:** Enabled
-- **Retries:** 2 retries in CI, 0 locally
-- **Reporters:** HTML, JSON, JUnit
+
+### Base URL
+Update `src/automationScripts/data/config.json`:
+```json
+{
+  "baseUrl": "https://creditcard.app.com"
+}
+```
+
+### Test Data
+Update `src/automationScripts/data/testData.json` with valid credentials and test data.
+
+### Playwright Configuration
+Modify `playwright.config.js` for:
+- Browser selection
+- Parallel execution
+- Retry logic
+- Screenshot/video capture
+- Timeout settings
 
 ## Page Object Model
-All page interactions are encapsulated in Page Objects located in `src/automationScripts/pages/`:
-- **DashboardPage:** KPI interactions, dashboard navigation
-- **AnalyticsPage:** Chart interactions, pattern analysis, trend analysis
-- **CardManagementPage:** Card selection, comparison, details
-- **LoginPage:** Authentication (shared across all tests)
 
-## Logging
-All test executions are logged using Winston logger:
-- Console output for real-time monitoring
-- File output in `test-execution.log`
+All test scripts follow strict Page Object Model:
+- **Locators**: Defined in Page Object classes
+- **Methods**: Reusable actions in Page Objects
+- **Test Specs**: Only test logic, no locators
 
-## Test Results
-Test results are generated in multiple formats:
-- **HTML Report:** `test-results/html-report/`
-- **JSON Report:** `test-results/results.json`
-- **JUnit XML:** `test-results/junit.xml`
+### Example Page Object
+```javascript
+exports.DashboardPage = class DashboardPage {
+  constructor(page) {
+    this.monthlySpendKPI = page.locator('[data-testid="kpi-monthly-spend"]');
+  }
+  
+  async getMonthlySpendValue() {
+    await expect(this.monthlySpendKPI).toBeVisible();
+    return await this.monthlySpendKPI.textContent();
+  }
+};
+```
+
+## Best Practices
+
+✅ **Playwright native waits** - Auto-waiting with `expect().toBeVisible()`
+✅ **No explicit waits** - Avoid `waitForTimeout()` except for specific scenarios
+✅ **Page Object Model** - All locators in Page Objects
+✅ **Reusable methods** - Shared logic across tests
+✅ **Externalized data** - Test data and config in JSON files
+✅ **Error handling** - Proper try-catch where needed
+✅ **Assertions** - Playwright expect only
+
+## Test Data Requirements
+
+### Valid User Credentials
+- Username: testuser
+- Password: Pass@123
+
+### Test Users
+- `testuser_multicard`: User with multiple credit cards
+- `testuser_12months`: User with 12 months transaction history
+- `testuser_3months`: User with 3 months transaction history
+- `testuser_large_data`: User with 1000+ transactions
 
 ## CI/CD Integration
-Framework is CI/CD ready with:
-- Environment variable support for BASE_URL
-- Retry mechanism for flaky tests
-- Multiple report formats for integration
-- Video and screenshot capture on failure
 
-## Best Practices Implemented
-✅ Page Object Model (POM) design pattern
-✅ No locators in test files
-✅ Reusable methods across page objects
-✅ Playwright native waits (no arbitrary timeouts)
-✅ Comprehensive logging
-✅ State assertions before interactions
-✅ Error handling and retry mechanisms
-✅ Cross-browser testing
-✅ Responsive design testing
+The framework is CI/CD ready with:
+- Configurable retry logic
+- Parallel execution support
+- HTML reporting
+- Screenshot/video on failure
+- Environment-based configuration
 
-## Test Case Traceability
-Each test case is mapped to TestRail:
-- Test case IDs in test names (e.g., QE-8167-TS001-TC001)
-- Full coverage of 36 TestRail test cases
-- Organized by feature/functionality
+## Troubleshooting
+
+### Tests failing due to timeout
+- Increase timeout in `playwright.config.js`
+- Check network connectivity
+- Verify base URL is correct
+
+### Locators not found
+- Verify `data-testid` attributes exist in application
+- Check if application is loaded properly
+- Review Page Object locators
+
+### Authentication issues
+- Verify credentials in `testData.json`
+- Check if login page URL is correct
+- Review login flow in `login.page.js`
 
 ## Support
-For issues or questions, contact the QE Team.
+
+For issues or questions:
+- Review test execution logs
+- Check Playwright HTML report
+- Verify application state during test execution
+
+## Version History
+
+### v1.0.0 (Initial Release)
+- 63 test cases automated
+- Page Object Model implementation
+- Multi-browser support
+- Responsive testing support
+- CI/CD ready configuration

@@ -1,0 +1,33 @@
+{
+  "validUser": {
+    "username": "testuser",
+    "password": "Pass@123"
+  },
+  "userWithMultipleCards": {
+    "username": "testuser_multicard",
+    "password": "Test@123"
+  },
+  "userWith12MonthsHistory": {
+    "username": "testuser_12months",
+    "password": "Test@123"
+  },
+  "userWith3MonthsHistory": {
+    "username": "testuser_3months",
+    "password": "Test@123"
+  },
+  "userWithLargeData": {
+    "username": "testuser_large_data",
+    "password": "Test@123"
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ]
+}

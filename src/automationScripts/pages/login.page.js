@@ -1,5 +1,5 @@
 const { expect } = require('@playwright/test');
-const logger = require('../../utils/logger');
+const config = require('../../data/config.json');
 
 exports.LoginPage = class LoginPage {
   constructor(page) {
@@ -7,12 +7,12 @@ exports.LoginPage = class LoginPage {
     this.usernameInput = page.locator('[data-testid="username-input"]');
     this.passwordInput = page.locator('[data-testid="password-input"]');
     this.loginButton = page.locator('[data-testid="login-button"]');
-    this.logoutButton = page.locator('[data-testid="logout-button"]');
+    this.errorMessage = page.locator('[data-testid="login-error"]');
   }
 
   async navigate() {
-    await this.page.goto('/');
-    logger.info('Navigated to login page');
+    await this.page.goto(config.baseUrl + '/login');
+    await expect(this.usernameInput).toBeVisible({ timeout: 5000 });
   }
 
   async login(username, password) {
@@ -21,13 +21,5 @@ exports.LoginPage = class LoginPage {
     await this.passwordInput.fill(password);
     await this.loginButton.click();
     await this.page.waitForLoadState('networkidle');
-    logger.info(`Logged in as: ${username}`);
-  }
-
-  async logout() {
-    await expect(this.logoutButton).toBeVisible();
-    await this.logoutButton.click();
-    await this.page.waitForLoadState('networkidle');
-    logger.info('Logged out successfully');
   }
 };
