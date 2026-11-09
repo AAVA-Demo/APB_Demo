@@ -1,0 +1,10 @@
+<div class="card-detail-container">
+  <a href="#/cards" class="btn btn-default">Back to Cards</a>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.selectedCard" card-detail card="vm.selectedCard" transactions="vm.filteredTransactions" filters="vm.filters" on-filter="vm.filterTransactions" on-sort="vm.sortTransactions" sort-field="vm.sortField" sort-reverse="vm.sortReverse"></div>
+</div>

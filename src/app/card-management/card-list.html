@@ -1,0 +1,10 @@
+<div class="card-management-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" card-list cards="vm.cards" on-select="vm.selectCard"></div>
+</div>
