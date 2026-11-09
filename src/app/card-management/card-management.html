@@ -1,0 +1,53 @@
+<div class="row">
+<div class="col-md-12">
+<h2>My Credit Cards</h2>
+<p class="text-muted">Manage and analyze your credit card portfolio</p>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+<i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i>
+<p>Loading cards...</p>
+</div>
+<div ng-if="!vm.loading" class="row">
+<div class="col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Card List <button class="btn btn-sm btn-primary pull-right" ng-click="vm.compareSelected()">Compare Selected</button></h4>
+</div>
+<div class="panel-body" style="max-height:600px;overflow-y:auto;">
+<card-switcher-directive cards="vm.cards" selected-card="vm.selectedCard" on-select="vm.selectCard(card)" on-toggle-comparison="vm.toggleComparison(card)" selected-for-comparison="vm.selectedForComparison"></card-switcher-directive>
+</div>
+</div>
+</div>
+<div class="col-md-8">
+<div ng-if="!vm.comparisonMode && vm.selectedCard">
+<card-detail-directive card="vm.selectedCard" spending="vm.cardSpending"></card-detail-directive>
+</div>
+<div ng-if="vm.comparisonMode" class="panel panel-default">
+<div class="panel-heading">
+<h4>Card Comparison <button class="btn btn-sm btn-default pull-right" ng-click="vm.comparisonMode=false">Back to Details</button></h4>
+</div>
+<div class="panel-body">
+<table class="comparison-table table table-striped">
+<thead>
+<tr>
+<th>Card</th>
+<th>Utilization Rate</th>
+<th>Monthly Spend</th>
+<th>Available Credit</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="result in vm.comparisonResults">
+<td>{{result.cardName}}</td>
+<td>{{result.utilizationRate}}%</td>
+<td>{{result.monthlySpend | currency:'₹'}}</td>
+<td>{{result.availableCredit | currency:'₹'}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

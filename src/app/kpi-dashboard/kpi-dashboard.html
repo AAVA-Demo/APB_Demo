@@ -1,0 +1,45 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Credit Card Dashboard</h2>
+<p class="text-muted">Consolidated view of all your credit cards</p>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+<i class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></i>
+<p>Loading dashboard...</p>
+</div>
+<div ng-if="!vm.loading" class="row" responsive-grid-directive>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget-directive label="Monthly Spend" value="{{vm.kpis.monthlySpend | currency:'₹'}}" icon="glyphicon-shopping-cart"></kpi-widget-directive>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget-directive label="Total Credit Limit" value="{{vm.kpis.totalCreditLimit | currency:'₹'}}" icon="glyphicon-credit-card"></kpi-widget-directive>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget-directive label="Available Credit" value="{{vm.kpis.availableCredit | currency:'₹'}}" icon="glyphicon-ok-circle"></kpi-widget-directive>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<kpi-widget-directive label="Outstanding Amount" value="{{vm.kpis.outstandingAmount | currency:'₹'}}" icon="glyphicon-exclamation-sign"></kpi-widget-directive>
+</div>
+</div>
+<div ng-if="!vm.loading" class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Credit Utilization: {{vm.kpis.creditUtilization}}%</h4>
+</div>
+<div class="panel-body">
+<div class="progress">
+<div class="progress-bar" role="progressbar" ng-style="{'width': vm.kpis.creditUtilization + '%'}" aria-valuenow="{{vm.kpis.creditUtilization}}" aria-valuemin="0" aria-valuemax="100">
+{{vm.kpis.creditUtilization}}%
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="!vm.loading" class="row" style="margin-top:10px;">
+<div class="col-md-12">
+<p class="text-muted"><small>Last updated: {{vm.kpis.timestamp | date:'medium'}}</small></p>
+</div>
+</div>
