@@ -1,0 +1,6 @@
+.transactions-container { padding: 20px; }
+.transaction-list { margin-bottom: 20px; }
+.transaction-detail { position: sticky; top: 20px; }
+.transaction-detail .panel-heading h4 { margin: 0; display: flex; justify-content: space-between; align-items: center; }
+.transaction-detail .close { font-size: 24px; }
+@media (max-width: 768px) { .transaction-detail { position: static; margin-top: 20px; } }

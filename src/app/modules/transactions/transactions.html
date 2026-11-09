@@ -1,0 +1,21 @@
+<div class="transactions-container">
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading transactions...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Transactions <span ng-if="vm.cardId">(Card: {{vm.cardId}})</span></h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-sm-12">
+        <cc-transaction-list transactions="vm.transactions" on-select="vm.selectTransaction(transaction)"></cc-transaction-list>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <cc-transaction-detail transaction="vm.selectedTransaction" on-close="vm.clearSelection()"></cc-transaction-detail>
+      </div>
+    </div>
+  </div>
+</div>

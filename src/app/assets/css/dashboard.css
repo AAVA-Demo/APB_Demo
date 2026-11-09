@@ -1,0 +1,12 @@
+.dashboard-container { padding: 20px; }
+.kpi-row { margin-bottom: 30px; }
+.kpi-card { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 15px; }
+.kpi-card h4 { margin: 0 0 10px 0; font-size: 16px; color: #6c757d; }
+.kpi-value { font-size: 28px; font-weight: bold; color: #007bff; margin: 0; }
+.card-list { display: flex; flex-wrap: wrap; gap: 20px; }
+.card-item { flex: 1 1 calc(50% - 20px); min-width: 300px; background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.card-header h4 { margin: 0 0 5px 0; font-size: 18px; }
+.card-number { color: #6c757d; font-size: 14px; margin: 0; }
+.card-body { margin-top: 15px; }
+.card-body .row { margin-bottom: 10px; }
+@media (max-width: 768px) { .card-item { flex: 1 1 100%; } }
