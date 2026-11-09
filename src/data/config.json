@@ -1,0 +1,10 @@
+{
+  "apiBaseURL": "https://api.creditcard.demo",
+  "environments": {
+    "dev": "https://api.dev.creditcard.demo",
+    "staging": "https://api.staging.creditcard.demo",
+    "production": "https://api.creditcard.demo"
+  },
+  "timeout": 30000,
+  "retryAttempts": 3
+}
