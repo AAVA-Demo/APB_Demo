@@ -1,0 +1,32 @@
+<div class="row" ng-if="vm.loading"><div class="col-xs-12 text-center"><h3>Loading Dashboard...</h3></div></div>
+<div class="row" ng-if="vm.error"><div class="col-xs-12"><div class="alert alert-danger">{{vm.error}}</div></div></div>
+<div class="row" ng-if="!vm.loading&&vm.kpis">
+<div class="col-xs-12"><h2>Credit Card Dashboard <button class="btn btn-sm btn-primary pull-right" ng-click="vm.refreshKpis()">Refresh</button></h2><hr></div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="kpi-card">
+<h3>Monthly Spend</h3>
+<div class="value">${{vm.kpis.monthlySpend | number:2}}</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="kpi-card">
+<h3>Total Credit Limit</h3>
+<div class="value">${{vm.kpis.totalCreditLimit | number:2}}</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="kpi-card">
+<h3>Available Credit</h3>
+<div class="value">${{vm.kpis.availableCredit | number:2}}</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="kpi-card">
+<h3>Outstanding Amount</h3>
+<div class="value">${{vm.kpis.outstandingAmount | number:2}}</div>
+</div>
+</div>
+<div class="col-xs-12">
+<p class="text-muted"><small>Last updated: {{vm.kpis.lastUpdated | date:'medium'}}</small></p>
+</div>
+</div>

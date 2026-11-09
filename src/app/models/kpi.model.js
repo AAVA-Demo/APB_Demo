@@ -1,0 +1,2 @@
+(function(){'use strict';angular.module('creditCardApp').factory('KpiModel',KpiModel);function KpiModel(){class Kpi{constructor(data){this.monthlySpend=data.monthlySpend||0;this.totalCreditLimit=data.totalCreditLimit||0;this.availableCredit=data.availableCredit||0;this.outstandingAmount=data.outstandingAmount||0;this.lastUpdated=data.lastUpdated||new Date();this.userId=data.userId||'';}
+validate(){return this.totalCreditLimit>=0&&this.availableCredit>=0&&this.outstandingAmount>=0;}}return Kpi;}})();

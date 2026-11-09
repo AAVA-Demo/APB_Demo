@@ -1,0 +1,31 @@
+<div class="row" ng-if="vm.loading"><div class="col-xs-12 text-center"><h3>Loading Analytics...</h3></div></div>
+<div class="row" ng-if="vm.error"><div class="col-xs-12"><div class="alert alert-danger">{{vm.error}}</div></div></div>
+<div class="row" ng-if="!vm.loading&&vm.spendingData">
+<div class="col-xs-12"><h2>Spending Analytics & Insights</h2><hr></div>
+<div class="col-xs-12 col-md-6">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<canvas id="categoryChart" class="chart chart-pie" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels" chart-options="{responsive:true,maintainAspectRatio:true}"></canvas>
+</div>
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="chart-container">
+<h3>Monthly Spend Trends (12 Months)</h3>
+<canvas id="monthlyChart" class="chart chart-line" chart-data="vm.monthlyChartData" chart-labels="vm.monthlyChartLabels" chart-options="{responsive:true,maintainAspectRatio:true}"></canvas>
+</div>
+</div>
+<div class="col-xs-12">
+<div class="chart-container">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead><tr><th>Category</th><th class="text-right">Amount</th></tr></thead>
+<tbody>
+<tr ng-repeat="(category,amount) in vm.spendingData.categoryBreakdown">
+<td>{{category}}</td>
+<td class="text-right">${{amount | number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>

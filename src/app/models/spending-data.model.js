@@ -1,0 +1,2 @@
+(function(){'use strict';angular.module('creditCardApp').factory('SpendingDataModel',SpendingDataModel);function SpendingDataModel(){class SpendingData{constructor(data){this.userId=data.userId||'';this.transactions=data.transactions||[];this.categoryBreakdown=data.categoryBreakdown||{};this.monthlyTrends=data.monthlyTrends||[];}
+validate(){return this.userId&&Array.isArray(this.transactions);}}return SpendingData;}})();

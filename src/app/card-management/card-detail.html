@@ -1,0 +1,34 @@
+<div class="row" ng-if="vm.loading"><div class="col-xs-12 text-center"><h3>Loading Card Details...</h3></div></div>
+<div class="row" ng-if="vm.error"><div class="col-xs-12"><div class="alert alert-danger">{{vm.error}}</div><button class="btn btn-default" ng-click="vm.goBack()">Back to Cards</button></div></div>
+<div class="row" ng-if="!vm.loading&&vm.card">
+<div class="col-xs-12"><button class="btn btn-default" ng-click="vm.goBack()">← Back to Cards</button><h2>Card Details</h2><hr></div>
+<div class="col-xs-12 col-md-6">
+<div class="kpi-card">
+<h3>{{vm.card.cardType}}</h3>
+<p class="card-number">{{vm.card.cardNumber | cardMask}}</p>
+<p><small class="text-muted">Expires: {{vm.card.expiryDate}}</small></p>
+<p><span class="label label-success" ng-if="vm.card.isActive">Active</span><span class="label label-default" ng-if="!vm.card.isActive">Inactive</span></p>
+</div>
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="kpi-card">
+<h3>Financial Summary</h3>
+<table class="table table-condensed">
+<tr><td>Credit Limit:</td><td class="text-right"><strong>${{vm.card.creditLimit | number:2}}</strong></td></tr>
+<tr><td>Outstanding Balance:</td><td class="text-right"><strong>${{vm.card.outstandingBalance | number:2}}</strong></td></tr>
+<tr><td>Available Credit:</td><td class="text-right"><strong>${{vm.card.availableCredit | number:2}}</strong></td></tr>
+</table>
+</div>
+</div>
+<div class="col-xs-12" ng-if="vm.spendAnalysis">
+<div class="kpi-card">
+<h3>Spending Analysis</h3>
+<table class="table table-condensed">
+<tr><td>Monthly Spend:</td><td class="text-right"><strong>${{vm.spendAnalysis.monthlySpend | number:2}}</strong></td></tr>
+<tr><td>Yearly Spend:</td><td class="text-right"><strong>${{vm.spendAnalysis.yearlySpend | number:2}}</strong></td></tr>
+<tr><td>Transaction Count:</td><td class="text-right"><strong>{{vm.spendAnalysis.transactionCount}}</strong></td></tr>
+<tr><td>Last Transaction:</td><td class="text-right"><strong>{{vm.spendAnalysis.lastTransactionDate | date:'short'}}</strong></td></tr>
+</table>
+</div>
+</div>
+</div>

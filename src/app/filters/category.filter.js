@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').filter('categoryFilter',categoryFilter);function categoryFilter(){return function(transactions,selectedCategory){if(!selectedCategory||selectedCategory==='All')return transactions;return transactions.filter(t=>t.category===selectedCategory);};}})();
