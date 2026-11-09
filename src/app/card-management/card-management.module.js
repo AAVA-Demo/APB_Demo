@@ -1,4 +1,4 @@
-(function(){
-'use strict';
-angular.module('creditCardApp.cardManagement',[]);
+(function() {
+  'use strict';
+  angular.module('creditCardApp.cardManagement', []);
 })();

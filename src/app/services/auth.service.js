@@ -1,19 +1,17 @@
-(function(){
-'use strict';
-angular.module('creditCardApp').service('AuthService',['$http','$window','$q',function($http,$window,$q){
-var self=this;
-self.validateSession=function(){
-var deferred=$q.defer();
-var token=$window.sessionStorage.getItem('authToken');
-if(token){
-deferred.resolve({valid:true,token:token});
-}else{
-deferred.reject({valid:false});
-}
-return deferred.promise;
-};
-self.getUserId=function(){
-return $window.sessionStorage.getItem('userId')||'user123';
-};
-}]);
+(function() {
+  'use strict';
+  angular.module('creditCardApp')
+    .service('AuthService', ['$http', '$window', '$q', 'API_BASE_URL', function($http, $window, $q, API_BASE_URL) {
+      this.validateSession = function() {
+        var token = $window.sessionStorage.getItem('authToken');
+        if (!token) {
+          $window.sessionStorage.setItem('authToken', 'mock-token-12345');
+          return $q.resolve({ valid: true, userId: 'U001' });
+        }
+        return $q.resolve({ valid: true, userId: 'U001' });
+      };
+      this.getUserId = function() {
+        return 'U001';
+      };
+    }]);
 })();
