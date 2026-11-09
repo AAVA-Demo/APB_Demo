@@ -1,13 +1,19 @@
 # Low-Level Design: Dashboard and KPI Management
-**Epic ID:** QE-7729
+**Epic ID:** QE-7729  
+**Epic Title:** PERFTEST20261109161800-Dashboard and KPI Management
+
+---
 
 ## a. Architecture Mapping
 
-- **Dashboard UI Component** → AngularJS Module (`app.dashboard`) with Controller (`DashboardController`)
-- **KPI Service** → AngularJS Service (`KPIService`) for aggregating KPI data
-- **Credit Card Data Service** → AngularJS Factory (`CreditCardFactory`) for REST API calls
-- **Transaction Service** → AngularJS Service (`TransactionService`) for transaction data retrieval
-- **Responsive Layout** → HTML5 templates with Bootstrap grid system and CSS3 media queries
+| HLD Component | AngularJS Artifact | Responsibility |
+|---------------|-------------------|----------------|
+| Responsive Dashboard UI | Module: `dashboardModule` | Root module for dashboard feature |
+| Dashboard UI | Controller: `DashboardController` | Orchestrates KPI display and user interactions |
+| KPI Service | Service: `KPIService` | Fetches and aggregates KPI data from backend APIs |
+| Credit Card Data Service | Service: `CreditCardService` | Retrieves card balances and limits |
+| Transaction Service | Service: `TransactionService` | Retrieves monthly spend and outstanding amounts |
+| KPI Display Components | Directive: `kpiCard` | Reusable UI component for individual KPI display |
 
 **Recommended Folder Structure:**
 ```
@@ -15,56 +21,71 @@ app/
 ├── modules/
 │   └── dashboard/
 │       ├── dashboard.module.js
-│       ├── dashboard.controller.js
-│       ├── dashboard.html
-│       └── dashboard.css
-├── services/
-│   ├── kpi.service.js
-│   ├── transaction.service.js
-│   └── creditcard.factory.js
-└── assets/
-    └── styles/
-        └── responsive.css
+│       ├── controllers/
+│       │   └── dashboard.controller.js
+│       ├── services/
+│       │   ├── kpi.service.js
+│       │   ├── credit-card.service.js
+│       │   └── transaction.service.js
+│       ├── directives/
+│       │   └── kpi-card.directive.js
+│       └── views/
+│           └── dashboard.html
 ```
+
+---
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
-|---|---|---|---|
-| DashboardModule | Module | Root module for dashboard feature | angular, ui.router |
-| DashboardController | Controller | Manages dashboard state, fetches and displays KPIs | KPIService, $scope |
-| KPIService | Service | Aggregates monthly spend, credit limit, available credit, outstanding amount from backend | CreditCardFactory, TransactionService, $http, $q |
-| CreditCardFactory | Factory | Fetches credit card balances and limits via REST API | $http |
-| TransactionService | Service | Retrieves transaction data for monthly spend and outstanding calculations | $http |
-| DashboardView | HTML Template | Renders KPI cards in responsive grid layout | Bootstrap grid, ng-repeat |
+|----------------|---------------|----------------|------------------|
+| `dashboardModule` | Module | Encapsulates all dashboard-related components | `ngRoute`, `ui.bootstrap` |
+| `DashboardController` | Controller | Manages dashboard state, triggers KPI loading, handles refresh | `KPIService`, `$scope`, `$timeout` |
+| `KPIService` | Service | Aggregates KPI data from CreditCardService and TransactionService | `CreditCardService`, `TransactionService`, `$http`, `$q` |
+| `CreditCardService` | Service | Calls REST API to fetch card balances and limits | `$http`, `API_CONFIG` |
+| `TransactionService` | Service | Calls REST API to fetch monthly spend and outstanding amounts | `$http`, `API_CONFIG` |
+| `kpiCard` | Directive | Renders individual KPI with icon, label, and value | None |
+
+---
 
 ## c. Data Model
 
-**KPI Model:**
+**KPI Model (`KPIModel`):**
 ```javascript
 {
-  monthlySpend: Number,
-  totalCreditLimit: Number,
-  availableCredit: Number,
-  outstandingAmount: Number,
-  lastUpdated: Date
+  monthlySpend: Number,        // Total spend for current month
+  totalCreditLimit: Number,    // Sum of all card limits
+  availableCredit: Number,     // Total available credit across cards
+  outstandingAmount: Number    // Total outstanding balance
 }
 ```
 
-**CreditCard Model:**
+**Credit Card Model (`CreditCard`):**
 ```javascript
 {
   cardId: String,
   cardNumber: String,
-  balance: Number,
   creditLimit: Number,
+  currentBalance: Number,
   availableCredit: Number
 }
 ```
 
+**Transaction Summary Model (`TransactionSummary`):**
+```javascript
+{
+  monthlySpend: Number,
+  outstandingAmount: Number
+}
+```
+
+---
+
 ## d. Data Flow
 
-User navigates to dashboard → DashboardController initializes and calls KPIService.getKPIs() → KPIService makes parallel REST API calls via CreditCardFactory (for card limits/balances) and TransactionService (for monthly spend/outstanding) → Services return JSON data → KPIService aggregates data into KPI model → Controller updates $scope with KPI data → View renders KPI cards using Bootstrap responsive grid → User sees monthly spend, total credit limit, available credit, and outstanding amount in real-time.
+User loads the dashboard → `DashboardController` initializes and calls `KPIService.getKPIs()` → `KPIService` concurrently invokes `CreditCardService.getAllCards()` and `TransactionService.getSummary()` → Both services make REST API calls to backend endpoints → Services return promises resolved with card data and transaction summary → `KPIService` aggregates data into `KPIModel` → Controller updates `$scope.kpis` → `kpiCard` directives render each KPI in the view with responsive layout.
+
+---
 
 ## e. Primary Sequence Diagram
 
@@ -73,36 +94,44 @@ sequenceDiagram
     participant User
     participant DashboardController
     participant KPIService
-    participant CreditCardFactory
+    participant CreditCardService
     participant TransactionService
     participant API
 
-    User->>DashboardController: Navigate to Dashboard
+    User->>DashboardController: Load Dashboard
     DashboardController->>KPIService: getKPIs()
-    KPIService->>CreditCardFactory: fetchAllCards()
-    CreditCardFactory->>API: GET /api/creditcards
-    API-->>CreditCardFactory: Card data
-    KPIService->>TransactionService: getMonthlyTransactions()
-    TransactionService->>API: GET /api/transactions?month=current
-    API-->>TransactionService: Transaction data
-    KPIService->>KPIService: Aggregate KPIs
-    KPIService-->>DashboardController: KPI object
-    DashboardController->>DashboardController: Update $scope.kpis
-    DashboardController-->>User: Render KPI Dashboard
+    KPIService->>CreditCardService: getAllCards()
+    CreditCardService->>API: GET /api/cards
+    API-->>CreditCardService: Card Data
+    KPIService->>TransactionService: getSummary()
+    TransactionService->>API: GET /api/transactions/summary
+    API-->>TransactionService: Transaction Summary
+    KPIService-->>DashboardController: Aggregated KPI Data
+    DashboardController->>User: Render KPIs on Dashboard
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Use AngularJS dependency injection to inject KPIService, CreditCardFactory, and TransactionService into DashboardController
-- Leverage $q.all() for parallel API calls to CreditCard and Transaction endpoints to meet 2-second load requirement
-- Implement Bootstrap responsive grid (col-xs, col-sm, col-md, col-lg) for mobile, tablet, desktop viewports
-- Use $http interceptor for centralized API error handling and loading state management
-- Apply ES6 arrow functions and const/let for cleaner service implementations
+- Use AngularJS Dependency Injection to inject services into controller and services into each other
+- Implement `$q.all()` in `KPIService` to parallelize API calls for faster load time
+- Use Bootstrap grid system for responsive layout (col-xs, col-sm, col-md, col-lg)
+- Cache KPI data in service with TTL-based invalidation to reduce redundant API calls
+- Implement `$timeout` for periodic auto-refresh of KPIs (e.g., every 60 seconds)
+
+---
 
 ## g. Error Handling
 
-$http interceptor captures API errors; user-friendly notifications displayed via toastr or Bootstrap alerts on KPI fetch failure.
+HTTP interceptor captures API errors; user-friendly error messages displayed via Bootstrap alert directive; retry logic on transient failures.
+
+---
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; token-based authentication via existing SSO for API requests.
+Standard input validation and secure API calls assumed; token-based authentication via existing SSO required for API access.
+
+---
+
+**End of LLD for QE-7729**

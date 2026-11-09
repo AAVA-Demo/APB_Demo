@@ -1,14 +1,21 @@
 # Low-Level Design: Credit Card Portfolio Management
-**Epic ID:** QE-7731
+**Epic ID:** QE-7731  
+**Epic Title:** PERFTEST20261109161800-Credit Card Portfolio Management
+
+---
 
 ## a. Architecture Mapping
 
-- **Portfolio Management UI** → AngularJS Module (`app.portfolio`) with Controller (`PortfolioController`)
-- **Authentication Service** → AngularJS Service (`AuthService`) for user authentication and card ownership verification
-- **Credit Card Data Service** → AngularJS Factory (`CreditCardFactory`) for card information retrieval
-- **Transaction Service** → AngularJS Service (`TransactionService`) for card-specific spending data
-- **Comparison Engine** → AngularJS Service (`ComparisonService`) for client-side card comparison logic
-- **Card List View** → AngularJS Directive (`cardListDirective`) for rendering multiple cards
+| HLD Component | AngularJS Artifact | Responsibility |
+|---------------|-------------------|----------------|
+| Portfolio Management UI | Module: `portfolioModule` | Root module for portfolio feature |
+| Portfolio UI | Controller: `PortfolioController` | Manages card list display and comparison logic |
+| Authentication Service | Service: `AuthService` | Validates user identity and card ownership |
+| Credit Card Data Service | Service: `CreditCardService` | Retrieves card details for authenticated user |
+| Transaction Service | Service: `TransactionService` | Retrieves card-specific spending data |
+| Comparison Engine | Service: `ComparisonService` | Computes comparison metrics across cards |
+| Card List Display | Directive: `cardList` | Renders list of user's credit cards |
+| Card Details View | Directive: `cardDetails` | Displays detailed view of selected card |
 
 **Recommended Folder Structure:**
 ```
@@ -16,65 +23,77 @@ app/
 ├── modules/
 │   └── portfolio/
 │       ├── portfolio.module.js
-│       ├── portfolio.controller.js
-│       ├── portfolio.html
-│       └── portfolio.css
-├── services/
-│   ├── auth.service.js
-│   ├── creditcard.factory.js
-│   ├── transaction.service.js
-│   └── comparison.service.js
-├── directives/
-│   └── card-list.directive.js
-└── components/
-    └── card-detail/
-        ├── card-detail.component.js
-        └── card-detail.html
+│       ├── controllers/
+│       │   └── portfolio.controller.js
+│       ├── services/
+│       │   ├── auth.service.js
+│       │   ├── credit-card.service.js
+│       │   ├── transaction.service.js
+│       │   └── comparison.service.js
+│       ├── directives/
+│       │   ├── card-list.directive.js
+│       │   └── card-details.directive.js
+│       └── views/
+│           └── portfolio.html
 ```
+
+---
 
 ## b. Component Specifications
 
 | Component Name | Artifact Type | Responsibility | Key Dependencies |
-|---|---|---|---|
-| PortfolioModule | Module | Root module for portfolio management | angular, ui.router |
-| PortfolioController | Controller | Manages portfolio state, fetches all user cards, handles card selection | CreditCardFactory, TransactionService, ComparisonService, AuthService, $scope |
-| AuthService | Service | Validates user authentication and card ownership | $http, $window |
-| CreditCardFactory | Factory | Retrieves all credit cards for authenticated user via REST API | $http, AuthService |
-| TransactionService | Service | Fetches card-specific spending data for each card | $http |
-| ComparisonService | Service | Compares cards by utilization, spend, available credit | None |
-| CardListDirective | Directive | Renders list of credit cards with individual card details | ng-repeat |
-| CardDetailComponent | Component | Displays detailed view of selected card (limit, balance, available credit, spending) | None |
+|----------------|---------------|----------------|------------------|
+| `portfolioModule` | Module | Encapsulates portfolio management components | `ngRoute`, `ui.bootstrap` |
+| `PortfolioController` | Controller | Manages card selection, triggers data load, handles comparison | `CreditCardService`, `TransactionService`, `ComparisonService`, `$scope` |
+| `AuthService` | Service | Validates user authentication and retrieves user ID | `$http`, `$window` (for token storage) |
+| `CreditCardService` | Service | Fetches all cards for authenticated user | `$http`, `API_CONFIG`, `AuthService` |
+| `TransactionService` | Service | Fetches card-specific transaction summary | `$http`, `API_CONFIG` |
+| `ComparisonService` | Service | Computes comparison metrics (utilization rate, spend ranking) | None |
+| `cardList` | Directive | Renders scrollable list of cards with summary info | None |
+| `cardDetails` | Directive | Displays detailed card info including limit, balance, spend | None |
+
+---
 
 ## c. Data Model
 
-**CreditCard Model:**
+**Credit Card Model (`CreditCard`):**
 ```javascript
 {
   cardId: String,
-  cardNumber: String,
-  cardHolderName: String,
-  issuer: String,
+  cardNumber: String,          // Masked, e.g., "**** 1234"
+  cardType: String,            // e.g., "Visa", "Mastercard"
   creditLimit: Number,
   currentBalance: Number,
   availableCredit: Number,
-  utilizationPercentage: Number,
-  monthlySpend: Number
+  issuer: String
 }
 ```
 
-**CardComparison Model:**
+**Card Spending Model (`CardSpending`):**
 ```javascript
 {
   cardId: String,
-  utilizationRank: Number,
-  spendRank: Number,
-  availableCreditRank: Number
+  monthlySpend: Number,
+  outstandingAmount: Number
 }
 ```
 
+**Comparison Metrics Model (`ComparisonMetrics`):**
+```javascript
+{
+  cardId: String,
+  utilizationRate: Number,     // (currentBalance / creditLimit) * 100
+  spendRank: Number            // Rank by monthly spend
+}
+```
+
+---
+
 ## d. Data Flow
 
-User navigates to portfolio page → PortfolioController calls AuthService.verifyUser() → AuthService validates token → PortfolioController calls CreditCardFactory.getAllCards() → CreditCardFactory fetches all cards via GET /api/creditcards → For each card, PortfolioController calls TransactionService.getCardSpending(cardId) → TransactionService returns monthly spend per card → ComparisonService.compareCards() ranks cards by utilization and spend → Controller updates $scope.cards with enriched card data → CardListDirective renders all cards in responsive grid → User selects card → CardDetailComponent displays detailed card view.
+User accesses portfolio page → `PortfolioController` calls `AuthService.getUserId()` to validate session → Controller invokes `CreditCardService.getCardsByUser(userId)` → Service calls REST API `/api/cards?userId=X` → API returns list of cards → Controller iterates over cards and calls `TransactionService.getCardSpending(cardId)` for each → Services return card and spending data → `ComparisonService.computeMetrics(cards, spending)` calculates comparison metrics → Controller updates `$scope.cards` and `$scope.metrics` → `cardList` directive renders card list → User selects card → `cardDetails` directive displays detailed view.
+
+---
 
 ## e. Primary Sequence Diagram
 
@@ -83,39 +102,48 @@ sequenceDiagram
     participant User
     participant PortfolioController
     participant AuthService
-    participant CreditCardFactory
+    participant CreditCardService
     participant TransactionService
     participant API
-    participant CardListDirective
 
-    User->>PortfolioController: Navigate to Portfolio
-    PortfolioController->>AuthService: verifyUser()
-    AuthService-->>PortfolioController: User authenticated
-    PortfolioController->>CreditCardFactory: getAllCards()
-    CreditCardFactory->>API: GET /api/creditcards
-    API-->>CreditCardFactory: Array of cards
+    User->>PortfolioController: Access Portfolio
+    PortfolioController->>AuthService: getUserId()
+    AuthService-->>PortfolioController: userId
+    PortfolioController->>CreditCardService: getCardsByUser(userId)
+    CreditCardService->>API: GET /api/cards?userId=X
+    API-->>CreditCardService: Card List
+    CreditCardService-->>PortfolioController: Cards
     loop For each card
         PortfolioController->>TransactionService: getCardSpending(cardId)
-        TransactionService->>API: GET /api/transactions?cardId=...
-        API-->>TransactionService: Spending data
+        TransactionService->>API: GET /api/transactions/summary?cardId=Y
+        API-->>TransactionService: Spending Data
+        TransactionService-->>PortfolioController: Card Spending
     end
-    PortfolioController->>PortfolioController: Enrich cards with spending
-    PortfolioController->>CardListDirective: Render cards
-    CardListDirective-->>User: Display portfolio
+    PortfolioController->>User: Render Card List with Spending
 ```
+
+---
 
 ## f. Implementation Notes
 
-- Use AngularJS DI to inject AuthService, CreditCardFactory, TransactionService, and ComparisonService into PortfolioController
-- Implement $q.all() for parallel fetching of card-specific spending data to meet 1-second retrieval NFR
-- Use ng-repeat with track by cardId for efficient rendering of up to 10+ cards
-- Apply Bootstrap card components (card, card-body) for consistent card UI layout
-- Implement client-side sorting and filtering using AngularJS filters for card comparison
+- Use AngularJS `$q.all()` to parallelize card spending API calls for faster load
+- Implement client-side sorting and filtering in controller using `$filter('orderBy')`
+- Store selected card in controller scope; use two-way binding to sync with `cardDetails` directive
+- Use Bootstrap responsive grid for card list layout (col-md-4 for card tiles)
+- Cache card data in `CreditCardService` with session-level TTL to avoid redundant API calls
+
+---
 
 ## g. Error Handling
 
-$http interceptor handles API errors; authentication failures redirect to login; card fetch errors display user-friendly message.
+HTTP interceptor captures API errors; display error message if card data unavailable; retry logic for transient failures.
+
+---
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; card ownership verified by AuthService before displaying portfolio.
+Requires token-based auth via existing SSO; validate card ownership server-side before returning data.
+
+---
+
+**End of LLD for QE-7731**
