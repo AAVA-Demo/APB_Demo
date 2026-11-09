@@ -1,0 +1,49 @@
+{
+  "environments": {
+    "dev": {
+      "baseUrl": "https://dev.creditcard.demo",
+      "apiUrl": "https://api-dev.creditcard.demo"
+    },
+    "staging": {
+      "baseUrl": "https://staging.creditcard.demo",
+      "apiUrl": "https://api-staging.creditcard.demo"
+    },
+    "production": {
+      "baseUrl": "https://app.creditcard.demo",
+      "apiUrl": "https://api.creditcard.demo"
+    }
+  },
+  "testData": {
+    "validUser": {
+      "username": "testuser@demo.com",
+      "password": "Test@1234"
+    },
+    "newUser": {
+      "username": "newuser@demo.com",
+      "password": "Test@1234"
+    },
+    "expectedKpis": {
+      "monthlySpend": 2500,
+      "totalCreditLimit": 50000,
+      "availableCredit": 35000,
+      "outstandingAmount": 15000
+    },
+    "categories": [
+      "Food & Dining",
+      "Fuel",
+      "Shopping",
+      "Travel",
+      "Entertainment",
+      "Utilities",
+      "Healthcare",
+      "Education",
+      "Miscellaneous"
+    ],
+    "viewports": {
+      "mobile": { "width": 375, "height": 667 },
+      "mobileSmall": { "width": 320, "height": 568 },
+      "tablet": { "width": 768, "height": 1024 },
+      "desktop": { "width": 1920, "height": 1080 }
+    }
+  }
+}
