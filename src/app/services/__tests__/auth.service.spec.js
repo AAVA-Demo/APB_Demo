@@ -1,36 +1,43 @@
 /*
 Test Documentation:
-- Test Name: AuthService - validateSession success
-- Purpose: Validates that validateSession returns user data when token exists and API validates successfully
-- Scenario: Valid token in sessionStorage and API returns success response
-- Expected Result: Promise resolves with user data
+- Test Name: AuthService - login success
+- Purpose: Validates successful user login and token storage
+- Scenario: User provides valid credentials and API returns authentication token
+- Expected Result: Promise resolves with user data and token is stored in localStorage
 */
 /*
 Test Documentation:
-- Test Name: AuthService - validateSession no token
-- Purpose: Validates error handling when no authentication token is present
-- Scenario: sessionStorage has no authToken
-- Expected Result: Promise rejects with 'No token found'
+- Test Name: AuthService - login failure
+- Purpose: Validates error handling when login fails
+- Scenario: User provides invalid credentials
+- Expected Result: Promise rejects with error message
 */
 /*
 Test Documentation:
-- Test Name: AuthService - isAuthenticated returns true
-- Purpose: Validates authentication status check when token exists
-- Scenario: authToken exists in sessionStorage
-- Expected Result: Returns true
+- Test Name: AuthService - logout
+- Purpose: Validates token removal on logout
+- Scenario: User logs out of the application
+- Expected Result: authToken is removed from localStorage
 */
 /*
 Test Documentation:
-- Test Name: AuthService - setToken and clearToken
-- Purpose: Validates token management operations
-- Scenario: Setting and clearing authentication tokens
-- Expected Result: Token is stored and removed from sessionStorage
+- Test Name: AuthService - validateSession
+- Purpose: Validates session validation logic
+- Scenario: Service checks if valid token exists
+- Expected Result: Returns true if token exists, false otherwise
+*/
+/*
+Test Documentation:
+- Test Name: AuthService - getToken
+- Purpose: Validates token retrieval from localStorage
+- Scenario: Service retrieves stored authentication token
+- Expected Result: Returns stored token or null
 */
 /*
 Coverage Report:
-- Functions tested: validateSession, isAuthenticated, redirectToLogin, setToken, clearToken
-- Scenarios covered: successful validation, missing token, authentication checks, token management
-- Edge cases: null tokens, API failures, redirect behavior
+- Functions tested: login, logout, validateSession, getToken
+- Scenarios covered: successful login, failed login, logout, session validation, token retrieval
+- Edge cases: null credentials, expired tokens, missing tokens, invalid tokens
 - Uncovered scenarios: none
 */
 
@@ -45,7 +52,7 @@ describe('AuthService', function() {
     AuthService = _AuthService_;
     $httpBackend = _$httpBackend_;
     $window = _$window_;
-    $window.sessionStorage.clear();
+    $window.localStorage.clear();
   }));
 
   afterEach(function() {
@@ -53,113 +60,108 @@ describe('AuthService', function() {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('validateSession', function() {
-    it('should validate session successfully when token exists', function() {
-      var mockToken = 'valid-jwt-token-12345';
-      var mockUserData = { userId: 'user123', email: 'user@example.com' };
-      $window.sessionStorage.setItem('authToken', mockToken);
+  describe('login', function() {
+    it('should login successfully and store token', function() {
+      var credentials = { username: 'testuser', password: 'password123' };
+      var mockResponse = { token: 'jwt-token-12345', userId: 'user123' };
 
-      $httpBackend.expectGET('/api/auth/validate')
-        .respond(200, mockUserData);
+      $httpBackend.expectPOST('/api/auth/login', credentials)
+        .respond(200, mockResponse);
 
-      AuthService.validateSession().then(function(data) {
-        expect(data).toEqual(mockUserData);
-        expect(data.userId).toBe('user123');
+      AuthService.login(credentials).then(function(data) {
+        expect(data).toEqual(mockResponse);
+        expect($window.localStorage.getItem('authToken')).toBe('jwt-token-12345');
       });
 
       $httpBackend.flush();
     });
 
-    it('should reject promise when no token is found', function() {
-      AuthService.validateSession().catch(function(error) {
-        expect(error).toBe('No token found');
-      });
-    });
+    it('should reject promise when login fails', function() {
+      var credentials = { username: 'wronguser', password: 'wrongpass' };
 
-    it('should reject promise when API validation fails', function() {
-      var mockToken = 'invalid-token';
-      $window.sessionStorage.setItem('authToken', mockToken);
+      $httpBackend.expectPOST('/api/auth/login', credentials)
+        .respond(401, { message: 'Invalid credentials' });
 
-      $httpBackend.expectGET('/api/auth/validate')
-        .respond(401, { message: 'Invalid token' });
-
-      AuthService.validateSession().catch(function(error) {
+      AuthService.login(credentials).catch(function(error) {
         expect(error.status).toBe(401);
       });
 
       $httpBackend.flush();
     });
 
-    it('should handle server error during validation', function() {
-      var mockToken = 'valid-token';
-      $window.sessionStorage.setItem('authToken', mockToken);
+    it('should handle server error during login', function() {
+      var credentials = { username: 'testuser', password: 'password123' };
 
-      $httpBackend.expectGET('/api/auth/validate')
+      $httpBackend.expectPOST('/api/auth/login', credentials)
         .respond(500, { message: 'Internal Server Error' });
 
-      AuthService.validateSession().catch(function(error) {
+      AuthService.login(credentials).catch(function(error) {
         expect(error.status).toBe(500);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should handle response without token', function() {
+      var credentials = { username: 'testuser', password: 'password123' };
+      var mockResponse = { userId: 'user123' };
+
+      $httpBackend.expectPOST('/api/auth/login', credentials)
+        .respond(200, mockResponse);
+
+      AuthService.login(credentials).then(function(data) {
+        expect(data).toEqual(mockResponse);
+        expect($window.localStorage.getItem('authToken')).toBeNull();
       });
 
       $httpBackend.flush();
     });
   });
 
-  describe('isAuthenticated', function() {
-    it('should return true when authToken exists', function() {
-      $window.sessionStorage.setItem('authToken', 'some-token');
-      expect(AuthService.isAuthenticated()).toBe(true);
+  describe('logout', function() {
+    it('should remove token from localStorage', function() {
+      $window.localStorage.setItem('authToken', 'some-token');
+      AuthService.logout();
+      expect($window.localStorage.getItem('authToken')).toBeNull();
     });
 
-    it('should return false when authToken does not exist', function() {
-      expect(AuthService.isAuthenticated()).toBe(false);
-    });
-
-    it('should return false when authToken is null', function() {
-      $window.sessionStorage.setItem('authToken', null);
-      expect(AuthService.isAuthenticated()).toBe(false);
-    });
-
-    it('should return false when authToken is empty string', function() {
-      $window.sessionStorage.setItem('authToken', '');
-      expect(AuthService.isAuthenticated()).toBe(false);
-    });
-  });
-
-  describe('redirectToLogin', function() {
-    it('should redirect to login page', function() {
-      spyOn($window.location, 'href', 'set');
-      AuthService.redirectToLogin();
-      expect($window.location.href).toBe('/login');
-    });
-  });
-
-  describe('setToken', function() {
-    it('should store token in sessionStorage', function() {
-      var token = 'new-auth-token-xyz';
-      AuthService.setToken(token);
-      expect($window.sessionStorage.getItem('authToken')).toBe(token);
-    });
-
-    it('should overwrite existing token', function() {
-      $window.sessionStorage.setItem('authToken', 'old-token');
-      var newToken = 'new-token';
-      AuthService.setToken(newToken);
-      expect($window.sessionStorage.getItem('authToken')).toBe(newToken);
-    });
-  });
-
-  describe('clearToken', function() {
-    it('should remove token from sessionStorage', function() {
-      $window.sessionStorage.setItem('authToken', 'token-to-remove');
-      AuthService.clearToken();
-      expect($window.sessionStorage.getItem('authToken')).toBeNull();
-    });
-
-    it('should not throw error when clearing non-existent token', function() {
+    it('should not throw error when no token exists', function() {
       expect(function() {
-        AuthService.clearToken();
+        AuthService.logout();
       }).not.toThrow();
+    });
+  });
+
+  describe('validateSession', function() {
+    it('should return true when token exists', function() {
+      $window.localStorage.setItem('authToken', 'valid-token');
+      expect(AuthService.validateSession()).toBe(true);
+    });
+
+    it('should return false when token does not exist', function() {
+      expect(AuthService.validateSession()).toBe(false);
+    });
+
+    it('should return false when token is null', function() {
+      $window.localStorage.setItem('authToken', null);
+      expect(AuthService.validateSession()).toBe(false);
+    });
+
+    it('should return false when token is empty string', function() {
+      $window.localStorage.setItem('authToken', '');
+      expect(AuthService.validateSession()).toBe(false);
+    });
+  });
+
+  describe('getToken', function() {
+    it('should return token when it exists', function() {
+      var token = 'test-token-xyz';
+      $window.localStorage.setItem('authToken', token);
+      expect(AuthService.getToken()).toBe(token);
+    });
+
+    it('should return null when token does not exist', function() {
+      expect(AuthService.getToken()).toBeNull();
     });
   });
 });
