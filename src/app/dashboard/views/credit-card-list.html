@@ -1,0 +1,26 @@
+<div class="credit-card-list">
+  <div ng-if="cards.length === 0" class="no-data-message">
+    <p>No credit cards found.</p>
+  </div>
+  
+  <div ng-repeat="card in cards track by card.cardId" class="credit-card-item">
+    <div class="card-info">
+      <h4>{{card.cardName}}</h4>
+      <p>{{card.cardType}} •••• {{card.lastFourDigits}}</p>
+    </div>
+    <div class="card-metrics">
+      <div class="metric-item">
+        <span class="metric-label">Available:</span>
+        <span class="metric-value">${{card.availableCredit | number:2}}</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Outstanding:</span>
+        <span class="metric-value">${{card.outstandingAmount | number:2}}</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Limit:</span>
+        <span class="metric-value">${{card.creditLimit | number:2}}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="analytics-view">
+  <h2>Spending Analytics</h2>
+  
+  <div class="view-selector">
+    <button class="btn" ng-class="{'btn-primary': vm.currentView === 'monthly', 'btn-default': vm.currentView !== 'monthly'}" ng-click="vm.switchView('monthly')">Monthly Trends</button>
+    <button class="btn" ng-class="{'btn-primary': vm.currentView === 'card', 'btn-default': vm.currentView !== 'card'}" ng-click="vm.switchView('card')">Card-wise Spending</button>
+    <button class="btn" ng-class="{'btn-primary': vm.currentView === 'category', 'btn-default': vm.currentView !== 'category'}" ng-click="vm.switchView('category')">Category Breakdown</button>
+  </div>
+  
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+  </div>
+  
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  
+  <div ng-if="!vm.loading && !vm.error">
+    <div ng-if="!vm.chartData" class="no-data-message">
+      <p>No data available for the selected view.</p>
+    </div>
+    
+    <spending-chart ng-if="vm.chartData" chart-data="vm.chartData" chart-type="{{vm.chartType}}"></spending-chart>
+  </div>
+</div>

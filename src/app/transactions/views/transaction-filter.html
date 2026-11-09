@@ -1,0 +1,43 @@
+<div class="filter-panel">
+  <h4>Filter Transactions</h4>
+  <form name="filterForm">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" class="form-control" ng-model="filterCriteria.startDate" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" class="form-control" ng-model="filterCriteria.endDate" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Credit Card</label>
+          <select class="form-control" ng-model="filterCriteria.cardId">
+            <option value="">All Cards</option>
+            <option ng-repeat="card in cards" value="{{card.cardId}}">{{card.cardName}} (••••{{card.lastFourDigits}})</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Category</label>
+          <select class="form-control" ng-model="filterCriteria.category">
+            <option value="">All Categories</option>
+            <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary" ng-click="onApply()">Apply Filter</button>
+        <button type="button" class="btn btn-default" ng-click="onReset()">Reset</button>
+      </div>
+    </div>
+  </form>
+</div>

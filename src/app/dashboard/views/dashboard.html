@@ -1,0 +1,41 @@
+<div class="dashboard-view">
+  <h2>Credit Card Dashboard</h2>
+  
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading dashboard...
+  </div>
+  
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Monthly Spend" value="vm.kpis.monthlySpend" prefix="$"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Total Credit Limit" value="vm.kpis.totalCreditLimit" prefix="$"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Available Credit" value="vm.kpis.totalAvailableCredit" prefix="$"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="Outstanding Amount" value="vm.kpis.totalOutstanding" prefix="$"></kpi-card>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Your Credit Cards</h3>
+        <credit-card-list cards="vm.cards"></credit-card-list>
+      </div>
+    </div>
+    
+    <div class="row" ng-if="vm.lastUpdated">
+      <div class="col-md-12">
+        <p class="text-muted text-right"><small>Last updated: {{vm.lastUpdated | date:'medium'}}</small></p>
+      </div>
+    </div>
+  </div>
+</div>
