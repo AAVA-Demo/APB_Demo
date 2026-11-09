@@ -1,38 +1,35 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic provides interactive data visualizations and analytics for understanding spending patterns across predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous). It includes monthly trend analysis, card-wise spend breakdowns, and time-period comparisons to enable financial optimization insights.
+- **Summary:** This epic delivers interactive data visualizations and analytics capabilities for understanding spending patterns across predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous), including monthly spend trend analysis and card-wise spend breakdowns for financial optimization.
 
 - **Component Flow:**
 
 ```mermaid
-flowchart LR
-    A["User Interface"]
-    B["Analytics Service"]
+flowchart TD
+    A["Analytics Insights UI"]
+    B["Analytics Engine"]
     C["Transaction Categorization Service"]
-    D["Analytics Engine"]
-    E["Dashboard Service"]
-    F["Transaction Data Store"]
+    D["Dashboard Service"]
+    E["Database"]
     A --> B
     B --> C
     B --> D
-    B --> E
-    C --> F
-    D --> F
+    C --> E
+    D --> E
 ```
 
-- **Integration Points:**
-  - **Upstream:** Transaction categorization service for automatic category assignment to transactions
-  - **Upstream:** Analytics engine for data aggregation, trend calculation, and pattern identification
-  - **Upstream:** Dashboard service for rendering interactive visualizations and charts
+- **Integration Points:** 
+  - **Upstream:** Transaction Categorization Service (for category assignment), Analytics Engine (for data aggregation and trend calculation), Dashboard Service (for visualization rendering)
+  - **Downstream:** Database (for transaction and categorization data)
 
-- **Key Assumptions:**
-  - Transactions are automatically categorized into the 9 predefined categories using rule-based or ML-based categorization logic
-  - Analytics data is pre-aggregated at daily/monthly intervals to ensure sub-3-second visualization load times
+- **Key Assumptions:** 
+  - Category assignment is automated and consistent across all transactions.
+  - Spend comparison across time periods uses standardized time intervals (e.g., monthly, quarterly).
 
-- **NFR Highlights:** Analytics visualizations must load within 3 seconds; interactive filtering and drill-down capabilities required; charts must be responsive and mobile-friendly
+- **NFR Highlights:** Analytics visualizations must load within 3 seconds; system must support interactive filtering and drill-down capabilities; charts must be responsive and mobile-friendly.
 
-- **Data Flow:** User accesses analytics dashboard → Analytics Service retrieves categorized transaction data from Transaction Categorization Service → Analytics Engine processes and aggregates data by category, time period, and card → Aggregated insights are passed to Dashboard Service → Interactive charts (category breakdown, monthly trends, card-wise analysis) are rendered in UI → User interacts with visualizations through filtering and drill-down capabilities
+- **Data Flow:** User accesses analytics insights → Analytics Engine requests categorized transaction data from Transaction Categorization Service → Analytics Engine aggregates data by category, time period, and card → Dashboard Service generates interactive visualizations → Analytics Insights UI renders responsive charts within 3-second load time with filtering and drill-down capabilities.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design comprehensively addresses all scope elements including category-wise visualization, monthly trend analysis, card-wise analysis, interactive charts, pattern identification, multi-category breakdown, and time-period comparison. All NFRs (3-second load time, interactive filtering, responsive charts) are supported through pre-aggregation and optimized rendering. Integration dependencies (categorization service, analytics engine, dashboard service) are properly incorporated. Out-of-scope items (predictive forecasts, budget alerts, external integrations, tax reporting) are excluded as specified.
+- **Requirements Coverage:** The design comprehensively covers category-wise spending visualization, monthly spend trend analysis, card-wise spend analysis, interactive charts and graphs, spending pattern identification, multi-category breakdown, and spend comparison across time periods. The architecture meets NFR requirements for 3-second load time, interactive filtering/drill-down, and responsive mobile-friendly charts. All dependencies (Transaction Categorization Service, Analytics Engine, Dashboard Service) are integrated.

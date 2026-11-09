@@ -1,16 +1,16 @@
 #### 1. High-Level Design
 
-- **Summary:** This epic delivers comprehensive transaction viewing capabilities enabling users to access, search, and monitor detailed transaction history across all their credit cards for up to 12 months. The feature supports multi-card transaction aggregation with pagination for performance optimization and responsive display across devices.
+- **Summary:** This epic provides comprehensive transaction viewing capabilities across all credit cards, enabling users to access detailed transaction history, view transaction details, and monitor spending activity at a granular level for improved financial awareness and fraud detection.
 
 - **Component Flow:**
 
 ```mermaid
 flowchart TD
-    A["User Interface"]
+    A["Transaction Viewer UI"]
     B["Transaction Management Service"]
     C["Transaction Data Service"]
     D["Credit Card Service"]
-    E["Transaction Database"]
+    E["Database"]
     A --> B
     B --> C
     B --> D
@@ -19,18 +19,17 @@ flowchart TD
 ```
 
 - **Integration Points:** 
-  - **Upstream:** Transaction data service for retrieving transaction records
-  - **Upstream:** Credit card service for card-specific transaction filtering
-  - **Downstream:** Transaction Database for historical transaction storage
+  - **Upstream:** Transaction Data Service (for retrieving transaction records), Credit Card Service (for card-specific transaction filtering)
+  - **Downstream:** Database (for transaction history storage and retrieval)
 
 - **Key Assumptions:** 
-  - Transaction data is pre-categorized and stored in a queryable format with indexed fields for efficient search and filtering
-  - User authentication and authorization are handled by an external authentication service before accessing transaction data
+  - Transaction data is stored with sufficient metadata (timestamp, merchant, amount, card ID) to enable search and filtering.
+  - Pagination is implemented to handle large transaction volumes efficiently.
 
-- **NFR Highlights:** System must handle 12 months of transaction history with pagination support; responsive format required for all device types; performance-optimized rendering for large transaction lists
+- **NFR Highlights:** System must handle transaction history for up to 12 months; transaction list rendering must support pagination for performance; data must be displayed in a responsive format.
 
-- **Data Flow:** User requests transaction data through UI → Transaction Management Service authenticates request → Service queries Transaction Data Service and Credit Card Service to retrieve and filter transactions → Data is aggregated, paginated, and returned to UI → User views transaction list with detail drill-down capability, search, and filtering options
+- **Data Flow:** User requests transaction history → Transaction Management Service queries Transaction Data Service for transaction records → Credit Card Service provides card-specific filtering context → Database returns paginated transaction data for up to 12 months → Transaction Viewer UI renders transaction list with search/filter capabilities in responsive format.
 
 #### 2. Validation Report
 
-- **Requirements Coverage:** The design fully covers the epic's stated scope including transaction listing, detail view, multi-card aggregation, search/filtering, and history access. All NFRs (12-month history, pagination, responsive format) are addressed through the architecture. Integration dependencies with Transaction Data Service and Credit Card Service are incorporated. Out-of-scope items (real bank integration, payments, transfers, disputes) are explicitly excluded from the design.
+- **Requirements Coverage:** The design fully addresses transaction listing, transaction detail view, multi-card transaction aggregation, transaction search and filtering, and transaction history access. The architecture supports NFR requirements for 12-month history, pagination for performance, and responsive display. Dependencies on Transaction Data Service and Credit Card Service are properly integrated.
