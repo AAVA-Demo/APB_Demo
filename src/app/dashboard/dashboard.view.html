@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Financial Dashboard <small class="text-muted" ng-if="vm.lastUpdated">Last updated: {{vm.lastUpdated | date:'short'}}</small></h2>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refresh()" ng-disabled="vm.loading"><i class="fa fa-refresh" ng-class="{'fa-spin': vm.loading}"></i> Refresh</button>
+    <div ng-if="vm.error" class="alert alert-danger" style="margin-top:15px;">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="'Monthly Spend'" value="vm.kpiData.monthlySpend" icon="'fa-credit-card'" color="'#3498db'"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" icon="'fa-money'" color="'#2ecc71'"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="'Available Credit'" value="vm.kpiData.availableCredit" icon="'fa-check-circle'" color="'#f39c12'"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="'Outstanding Amount'" value="vm.kpiData.outstandingAmount" icon="'fa-exclamation-triangle'" color="'#e74c3c'"></kpi-card>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading dashboard...</p>
+</div>

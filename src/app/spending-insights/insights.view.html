@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Insights</h2>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+    <div class="btn-group" role="group">
+      <button class="btn btn-default" ng-class="{active: vm.selectedPeriod === '3months'}" ng-click="vm.changePeriod('3months')">3 Months</button>
+      <button class="btn btn-default" ng-class="{active: vm.selectedPeriod === '6months'}" ng-click="vm.changePeriod('6months')">6 Months</button>
+      <button class="btn btn-default" ng-class="{active: vm.selectedPeriod === '12months'}" ng-click="vm.changePeriod('12months')">12 Months</button>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Category Breakdown</h4>
+      <category-pie-chart chart-data="vm.categoryInsights"></category-pie-chart>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Spend Trends</h4>
+      <trend-chart chart-data="vm.monthlyTrends"></trend-chart>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <h4>Category Insights</h4>
+    <div class="category-item" ng-repeat="insight in vm.categoryInsights">
+      <strong>{{insight.category}}:</strong> {{insight.totalSpend | currency}} ({{insight.percentageOfTotal}}%) - {{insight.transactionCount}} transactions
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>

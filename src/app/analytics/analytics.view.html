@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics</h2>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Category Breakdown</h4>
+      <spending-chart chart-data="vm.categoryData" chart-type="'pie'"></spending-chart>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Trends</h4>
+      <spending-chart chart-data="vm.monthlyTrends" chart-type="'line'"></spending-chart>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <h4>Category Details</h4>
+    <div class="category-item" ng-repeat="cat in vm.categoryData">
+      <strong>{{cat.category}}:</strong> {{cat.totalAmount | currency}} ({{cat.percentage}}%)
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>

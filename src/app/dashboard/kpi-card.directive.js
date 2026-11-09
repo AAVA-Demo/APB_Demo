@@ -1,1 +1,16 @@
-(function(){'use strict';angular.module('dashboardModule').directive('kpiCard',[kpiCard]);function kpiCard(){return{restrict:'E',scope:{data:'='},template:'<div class="kpi-card"><div><i class="fa {{data.icon}} fa-2x" style="color:#4caf50"></i></div><div class="kpi-value">${{data.value|number:0}}</div><div class="kpi-label">{{data.label}}<span ng-if="data.trend" class="trend-indicator" ng-class="{\"trend-up\":data.trend===\"up\",\"trend-down\":data.trend===\"down\"}"><i class="fa" ng-class="{\"fa-arrow-up\":data.trend===\"up\",\"fa-arrow-down\":data.trend===\"down\",\"fa-minus\":data.trend===\"stable\"}"></i></span></div></div>'};}})();
+(function() {
+  'use strict';
+  angular.module('dashboardModule')
+    .directive('kpiCard', function() {
+      return {
+        restrict: 'E',
+        scope: {
+          label: '=',
+          value: '=',
+          icon: '=',
+          color: '='
+        },
+        template: '<div class="kpi-card"><div><i class="fa {{icon}} fa-2x" style="color:{{color}};"></i></div><div class="kpi-value">{{value | currency}}</div><div class="kpi-label">{{label}}</div></div>'
+      };
+    });
+})();

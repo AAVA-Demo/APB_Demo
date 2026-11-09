@@ -1,1 +1,34 @@
-(function(){'use strict';angular.module('dashboardModule').controller('DashboardController',['$scope','$interval','KPIAggregationService','KPICalculationService','CreditCardDataService','DashboardRefreshFactory',DashboardController]);function DashboardController($scope,$interval,KPIAggregationService,KPICalculationService,CreditCardDataService,DashboardRefreshFactory){var vm=this;vm.kpis=[];vm.cards=[];vm.loading=true;vm.viewCard=viewCard;init();function init(){loadDashboardData();DashboardRefreshFactory.startRefresh(loadDashboardData,300000);}function loadDashboardData(){vm.loading=true;KPIAggregationService.getKPIData().then(function(kpiData){vm.kpis=[{label:'Monthly Spend',value:kpiData.monthlySpend,icon:'fa-credit-card',trend:'up'},{label:'Total Credit Limit',value:kpiData.totalCreditLimit,icon:'fa-money'},{label:'Available Credit',value:kpiData.availableCredit,icon:'fa-check-circle',trend:'stable'},{label:'Outstanding Amount',value:kpiData.outstandingAmount,icon:'fa-exclamation-triangle',trend:'down'}];return CreditCardDataService.getCards();}).then(function(cards){vm.cards=cards.map(function(card){card.utilizationPercentage=Math.round((card.currentBalance/card.creditLimit)*100);return card;});vm.loading=false;}).catch(function(error){vm.loading=false;$scope.$parent.main.error='Failed to load dashboard data';});}function viewCard(cardId){console.log('View card:',cardId);}$scope.$on('$destroy',function(){DashboardRefreshFactory.stopRefresh();});}})();
+(function() {
+  'use strict';
+  angular.module('dashboardModule')
+    .controller('DashboardController', ['$scope', '$interval', 'KPIAggregationService', 'DashboardRefreshFactory', 'UserService', function($scope, $interval, KPIAggregationService, DashboardRefreshFactory, UserService) {
+      var vm = this;
+      vm.kpiData = {};
+      vm.loading = true;
+      vm.error = null;
+      vm.lastUpdated = null;
+      function loadKPIData() {
+        vm.loading = true;
+        vm.error = null;
+        UserService.getUserId();
+        KPIAggregationService.getAggregatedKPIs().then(function(data) {
+          vm.kpiData = data;
+          vm.lastUpdated = new Date();
+          vm.loading = false;
+        }).catch(function(err) {
+          vm.error = 'Failed to load KPI data. Please try again.';
+          vm.loading = false;
+        });
+      }
+      vm.refresh = function() {
+        loadKPIData();
+      };
+      loadKPIData();
+      DashboardRefreshFactory.startAutoRefresh(function() {
+        loadKPIData();
+      }, 300000);
+      $scope.$on('$destroy', function() {
+        DashboardRefreshFactory.stopAutoRefresh();
+      });
+    }]);
+})();

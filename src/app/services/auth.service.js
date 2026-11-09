@@ -1,1 +1,40 @@
-(function(){'use strict';angular.module('creditCardApp').service('AuthService',['$window',AuthService]);function AuthService($window){var service={init:init,getToken:getToken,setToken:setToken,isAuthenticated:isAuthenticated};return service;function init(){var token=$window.sessionStorage.getItem('authToken');if(!token){var mockToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyMTIzIiwiaWF0IjoxNjAwMDAwMDAwfQ.mock';setToken(mockToken);}}function getToken(){return $window.sessionStorage.getItem('authToken');}function setToken(token){$window.sessionStorage.setItem('authToken',token);}function isAuthenticated(){return!!getToken();}}})();
+(function() {
+  'use strict';
+  angular.module('creditCardApp')
+    .factory('AuthService', ['$window', '$http', function($window, $http) {
+      var token = $window.sessionStorage.getItem('authToken') || 'mock-jwt-token-12345';
+      return {
+        authenticate: function() {
+          if (!token) {
+            token = 'mock-jwt-token-12345';
+            $window.sessionStorage.setItem('authToken', token);
+          }
+          return token;
+        },
+        isAuthenticated: function() {
+          return !!token;
+        },
+        getToken: function() {
+          return token;
+        },
+        logout: function() {
+          token = null;
+          $window.sessionStorage.removeItem('authToken');
+        }
+      };
+    }])
+    .factory('AuthInterceptor', ['$window', 'AuthService', function($window, AuthService) {
+      return {
+        request: function(config) {
+          var token = AuthService.getToken();
+          if (token) {
+            config.headers.Authorization = 'Bearer ' + token;
+          }
+          return config;
+        }
+      };
+    }])
+    .config(['$httpProvider', function($httpProvider) {
+      $httpProvider.interceptors.push('AuthInterceptor');
+    }]);
+})();

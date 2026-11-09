@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Card Details</h2>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Card Information</div>
+      <div class="panel-body">
+        <p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+        <p><strong>Issuer:</strong> {{vm.card.issuer}}</p>
+        <p><strong>Card Number:</strong> {{vm.card.cardNumber}}</p>
+        <p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency}}</p>
+        <p><strong>Current Balance:</strong> {{vm.card.currentBalance | currency}}</p>
+        <p><strong>Available Credit:</strong> {{vm.card.availableCredit | currency}}</p>
+        <p><strong>Utilization:</strong> {{vm.card.utilizationPercentage}}%</p>
+        <div class="utilization-bar"><div class="utilization-fill" ng-style="{width: vm.card.utilizationPercentage + '%', background: vm.card.utilizationPercentage > 70 ? '#e74c3c' : '#2ecc71'}"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">Spending Analysis</div>
+      <div class="panel-body">
+        <p><strong>Monthly Spend:</strong> {{vm.spending.monthlySpend | currency}}</p>
+        <p><strong>Yearly Spend:</strong> {{vm.spending.yearlySpend | currency}}</p>
+        <p><strong>Last Transaction:</strong> {{vm.spending.lastTransactionDate | date}}</p>
+        <p><strong>Transaction Count:</strong> {{vm.spending.transactionCount}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>

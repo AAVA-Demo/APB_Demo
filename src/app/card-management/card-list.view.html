@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="panel panel-info">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4"><strong>Total Credit Limit:</strong> {{vm.aggregatedData.totalCreditLimit | currency}}</div>
+          <div class="col-md-4"><strong>Total Available:</strong> {{vm.aggregatedData.totalAvailableCredit | currency}}</div>
+          <div class="col-md-4"><strong>Avg Utilization:</strong> {{vm.aggregatedData.averageUtilization}}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-4" ng-repeat="card in vm.cards">
+    <card-tile card="card" on-click="vm.viewCardDetail(card.cardId)"></card-tile>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>

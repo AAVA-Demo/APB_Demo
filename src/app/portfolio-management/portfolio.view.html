@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Credit Card Portfolio</h2>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3"><strong>Total Cards:</strong> {{vm.portfolioSummary.totalCards}}</div>
+          <div class="col-md-3"><strong>Total Credit Limit:</strong> {{vm.portfolioSummary.totalCreditLimit | currency}}</div>
+          <div class="col-md-3"><strong>Available Credit:</strong> {{vm.portfolioSummary.totalAvailableCredit | currency}}</div>
+          <div class="col-md-3"><strong>Avg Utilization:</strong> {{vm.portfolioSummary.averageUtilization}}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-4" ng-repeat="card in vm.cards">
+    <portfolio-card card="card" on-select="vm.selectCard(card)"></portfolio-card>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="padding:50px;">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>
