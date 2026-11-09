@@ -1,0 +1,33 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Card Details</h2>
+<div ng-if="vm.loading" class="loading-spinner">
+<i class="glyphicon glyphicon-refresh spinning"></i> Loading card details...
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error && vm.card">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title">{{vm.card.cardType}} - {{vm.card.cardNumber}}</h3>
+</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-md-6">
+<p><strong>Card Holder:</strong> {{vm.card.cardHolderName}}</p>
+<p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+<p><strong>Expiry Date:</strong> {{vm.card.expiryDate}}</p>
+<p><strong>Status:</strong> <span ng-if="vm.card.isActive" class="label label-success">Active</span><span ng-if="!vm.card.isActive" class="label label-default">Inactive</span></p>
+</div>
+<div class="col-md-6">
+<p><strong>Credit Limit:</strong> ${{vm.card.creditLimit | number:2}}</p>
+<p><strong>Available Credit:</strong> ${{vm.card.availableCredit | number:2}}</p>
+<p><strong>Outstanding Amount:</strong> ${{vm.card.outstandingAmount | number:2}}</p>
+<p><strong>Monthly Spend:</strong> ${{vm.card.monthlySpend | number:2}}</p>
+</div>
+</div>
+</div>
+</div>
+<a href="#/cards" class="btn btn-default">Back to Cards</a>
+</div>
+</div>
+</div>

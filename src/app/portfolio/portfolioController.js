@@ -1,0 +1,21 @@
+(function(){
+'use strict';
+angular.module('portfolioModule').controller('portfolioController',['dataAggregationService',function(dataAggregationService){
+var vm=this;
+vm.kpis={};
+vm.cards=[];
+vm.loading=true;
+vm.error=null;
+function init(){
+dataAggregationService.getAggregatedData().then(function(data){
+vm.cards=data.cards;
+vm.kpis=data.kpis;
+vm.loading=false;
+},function(error){
+vm.error='Failed to load portfolio data';
+vm.loading=false;
+});
+}
+init();
+}]);
+})();

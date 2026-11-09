@@ -1,1 +1,4 @@
-(function(){'use strict';angular.module('creditCardApp',['ngRoute','dashboardModule','portfolioModule','cardManagementModule','transactionModule','analyticsModule','insightsModule']);})();
+(function(){
+'use strict';
+angular.module('creditCardApp',['ngRoute','cardManagementModule','dashboardModule','portfolioModule','transactionModule','analyticsModule','insightsModule']);
+})();

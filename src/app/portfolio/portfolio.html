@@ -1,0 +1,60 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Credit Card Portfolio</h2>
+<div ng-if="vm.loading" class="loading-spinner">
+<i class="glyphicon glyphicon-refresh spinning"></i> Loading portfolio...
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-3">
+<kpi-display label="Monthly Spend" value="vm.kpis.monthlySpend" icon="credit-card" format="currency"></kpi-display>
+</div>
+<div class="col-md-3">
+<kpi-display label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="stats" format="currency"></kpi-display>
+</div>
+<div class="col-md-3">
+<kpi-display label="Available Credit" value="vm.kpis.totalAvailableCredit" icon="ok-circle" format="currency"></kpi-display>
+</div>
+<div class="col-md-3">
+<kpi-display label="Outstanding Amount" value="vm.kpis.totalOutstandingAmount" icon="exclamation-sign" format="currency"></kpi-display>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="kpi-card">
+<h3>Credit Utilization</h3>
+<div class="value">{{vm.kpis.creditUtilization | number:1}}%</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>All Cards ({{vm.kpis.cardCount}})</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Card Type</th>
+<th>Card Number</th>
+<th>Credit Limit</th>
+<th>Available</th>
+<th>Outstanding</th>
+<th>Monthly Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.cards track by card.cardId">
+<td>{{card.cardType}}</td>
+<td>{{card.cardNumber}}</td>
+<td>${{card.creditLimit | number:2}}</td>
+<td>${{card.availableCredit | number:2}}</td>
+<td>${{card.outstandingAmount | number:2}}</td>
+<td>${{card.monthlySpend | number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

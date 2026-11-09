@@ -1,0 +1,39 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Transactions</h2>
+<div ng-if="vm.loading" class="loading-spinner">
+<i class="glyphicon glyphicon-refresh spinning"></i> Loading transactions...
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="filter-panel">
+<h4>Filter Transactions</h4>
+<div class="row">
+<div class="col-md-3">
+<label>Date From</label>
+<input type="date" class="form-control" ng-model="vm.filter.dateFrom">
+</div>
+<div class="col-md-3">
+<label>Date To</label>
+<input type="date" class="form-control" ng-model="vm.filter.dateTo">
+</div>
+<div class="col-md-3">
+<label>Merchant</label>
+<input type="text" class="form-control" ng-model="vm.filter.merchant" placeholder="Search merchant">
+</div>
+<div class="col-md-3">
+<label>&nbsp;</label>
+<button class="btn btn-primary btn-block" ng-click="vm.applyFilter()">Apply Filter</button>
+</div>
+</div>
+</div>
+<p>Showing {{vm.filteredTransactions.length}} transactions</p>
+<transaction-table transactions="vm.getPageTransactions()" on-select="vm.viewTransaction(transactionId)"></transaction-table>
+<div class="text-center">
+<button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.currentPage===1">Previous</button>
+<span> Page {{vm.currentPage}} of {{vm.getTotalPages()}} </span>
+<button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="vm.currentPage===vm.getTotalPages()">Next</button>
+</div>
+</div>
+</div>
+</div>
