@@ -1,51 +1,42 @@
 # Low-Level Design: Transaction Management and Viewing
-**Epic ID:** QE-8581  
-**Tech Stack:** AngularJS 1.x, JavaScript ES6, HTML5, CSS3, Bootstrap, REST APIs, MVC Architecture
-
----
+**Epic ID:** QE-8581
 
 ## a. Architecture Mapping
 
-- **Transaction Module** → AngularJS Module (`app.transactions`)
-- **Transaction Controller** → AngularJS Controller (`TransactionController`)
-- **Transaction Service** → AngularJS Service (`TransactionService`)
-- **Pagination Directive** → AngularJS Directive (`pagination`)
-- **Search Filter** → AngularJS Filter (`transactionSearch`)
+- **Transaction Viewer UI** → AngularJS Module: `app.transactions`, Controller: `TransactionViewerController`, View: `transaction-viewer.html`
+- **Transaction Management Service** → AngularJS Service: `TransactionManagementService` (orchestrates transaction retrieval and filtering)
+- **Transaction Data Service** → AngularJS Factory: `TransactionDataFactory` (REST API integration for transaction records)
+- **Credit Card Service** → AngularJS Service: `CreditCardService` (provides card-specific filtering context)
+- **Transaction List Directive** → AngularJS Directive: `transactionListDirective` (renders paginated transaction list)
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /transactions
-      transaction.module.js
-      transaction.controller.js
-      transaction-list.html
-      transaction-detail.html
-  /services
-    transaction.service.js
-  /directives
-    pagination.directive.js
-  /filters
-    transaction-search.filter.js
-  /models
-    transaction.model.js
+app/
+├── modules/
+│   └── transactions/
+│       ├── controllers/
+│       │   └── transaction-viewer.controller.js
+│       ├── services/
+│       │   ├── transaction-management.service.js
+│       │   ├── transaction-data.factory.js
+│       │   └── credit-card.service.js
+│       ├── directives/
+│       │   └── transaction-list.directive.js
+│       ├── views/
+│       │   └── transaction-viewer.html
+│       └── transactions.module.js
+└── app.js
 ```
-
----
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|---------------|----------------|------------------|
-| TransactionModule | Module | Register transaction feature module and configure routing | angular, ui-router |
-| TransactionController | Controller | Manage transaction list state, handle pagination, search, and detail view navigation | TransactionService, $scope, $stateParams |
-| TransactionService | Service | Retrieve paginated transaction data and detail via REST API | $http, AuthInterceptor |
-| PaginationDirective | Directive | Render pagination controls and emit page change events | Bootstrap pagination CSS |
-| TransactionSearchFilter | Filter | Filter transactions by amount, merchant, date, or category | None |
-| TransactionListView | HTML Template | Display paginated transaction table with search and filter controls | Bootstrap table, pagination directive |
-| TransactionDetailView | HTML Template | Display detailed transaction information in modal or separate view | Bootstrap modal |
-
----
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| TransactionViewerController | Controller | Manages transaction view, handles search/filter interactions, pagination control | TransactionManagementService, CreditCardService, $scope |
+| TransactionManagementService | Service | Orchestrates transaction retrieval, applies filters, manages pagination state | TransactionDataFactory, $q |
+| TransactionDataFactory | Factory | Provides REST API integration for fetching paginated transaction records | $http, $q |
+| CreditCardService | Service | Provides card list for filtering, validates card-specific access | $http |
+| transactionListDirective | Directive | Renders paginated transaction table with search/filter UI and responsive layout | TransactionManagementService |
 
 ## c. Data Model
 
@@ -54,17 +45,31 @@
 {
   transactionId: String,
   cardId: String,
+  cardName: String,
   merchantName: String,
   amount: Number,
   currency: String,
-  transactionDate: Date,
   category: String,
-  status: String,
+  transactionDate: Date,
+  status: String, // Posted, Pending
   description: String
 }
 ```
 
-**PaginationMeta Model:**
+**TransactionFilter Model:**
+```javascript
+{
+  cardIds: Array<String>,
+  dateFrom: Date,
+  dateTo: Date,
+  searchTerm: String,
+  categories: Array<String>,
+  minAmount: Number,
+  maxAmount: Number
+}
+```
+
+**PaginationState Model:**
 ```javascript
 {
   currentPage: Number,
@@ -74,61 +79,58 @@
 }
 ```
 
----
-
 ## d. Data Flow
 
-User navigates to transaction list → TransactionController calls TransactionService.getTransactions(page, pageSize, filters) → Service makes GET request to `/api/transactions?page=1&size=20&cardId=xyz` → Backend returns paginated transaction array with metadata → Controller updates $scope.transactions and $scope.pagination → View renders transaction table using Bootstrap responsive table and pagination directive → User clicks transaction row → Controller navigates to detail view using $state.go() with transactionId → Detail view fetches full transaction via TransactionService.getTransactionDetail(id) → Modal displays complete transaction information.
-
----
+User navigates to transaction viewer → TransactionViewerController initializes and calls TransactionManagementService.getTransactions(filters, pagination) → Service requests transaction data via TransactionDataFactory.fetchTransactions() with pagination parameters → Factory makes REST API call to /api/transactions?page=1&size=20&cardId=xxx&dateFrom=yyy → API queries database for paginated transaction records (up to 12 months) → Database returns transaction page with total count → Factory resolves transaction list and pagination metadata → Service updates pagination state → Controller binds transaction list to $scope → transactionListDirective renders responsive table with search/filter controls; user applies filter or navigates pages triggering controller to refresh data.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant TransactionListView
-    participant TransactionController
-    participant TransactionService
+    participant TransactionUI
+    participant Controller
+    participant ManagementService
+    participant DataFactory
     participant API
-    participant TransactionDetailView
+    participant Database
 
-    User->>TransactionListView: Navigate to Transactions
-    TransactionListView->>TransactionController: Initialize (page=1)
-    TransactionController->>TransactionService: getTransactions(page, pageSize, filters)
-    TransactionService->>API: GET /api/transactions?page=1&size=20
-    API-->>TransactionService: {transactions: [], pagination: {}}
-    TransactionService-->>TransactionController: Transaction List + Metadata
-    TransactionController->>TransactionListView: Update $scope
-    TransactionListView-->>User: Display Transaction Table
-    User->>TransactionListView: Click Transaction Row
-    TransactionListView->>TransactionController: selectTransaction(transactionId)
-    TransactionController->>TransactionService: getTransactionDetail(transactionId)
-    TransactionService->>API: GET /api/transactions/{id}
-    API-->>TransactionService: Transaction Detail
-    TransactionService-->>TransactionController: Full Transaction Data
-    TransactionController->>TransactionDetailView: Open Modal with Data
-    TransactionDetailView-->>User: Display Transaction Detail
+    User->>TransactionUI: Access Transaction Viewer
+    TransactionUI->>Controller: Initialize TransactionViewerController
+    Controller->>ManagementService: getTransactions(filters, pagination)
+    ManagementService->>DataFactory: fetchTransactions(page=1, size=20, filters)
+    DataFactory->>API: GET /api/transactions?page=1&size=20&cardId=xxx
+    API->>Database: Query paginated transactions (12 months)
+    Database-->>API: Return transaction page + total count
+    API-->>DataFactory: Transaction list with pagination metadata
+    DataFactory-->>ManagementService: Resolved transaction data
+    ManagementService->>ManagementService: Update pagination state
+    ManagementService-->>Controller: Transaction list + pagination
+    Controller->>TransactionUI: Bind to $scope
+    TransactionUI-->>User: Render paginated transaction table
+    User->>TransactionUI: Apply search/filter or navigate page
+    TransactionUI->>Controller: Update filters/pagination
+    Controller->>ManagementService: getTransactions(updatedFilters, newPage)
+    ManagementService->>DataFactory: fetchTransactions(updated params)
+    DataFactory->>API: GET /api/transactions (with new params)
+    API-->>DataFactory: Updated transaction page
+    DataFactory-->>ManagementService: Resolved data
+    ManagementService-->>Controller: Updated transaction list
+    Controller->>TransactionUI: Refresh view
 ```
-
----
 
 ## f. Implementation Notes
 
-- Use AngularJS ui-router for state management between list and detail views
-- Implement server-side pagination via query parameters; store current page state in controller scope
-- Apply AngularJS ng-repeat with track by transactionId for efficient list rendering
-- Use Bootstrap table-responsive class for mobile-friendly transaction table display
-- Implement debounced search using $timeout to reduce API calls during user typing (300ms delay)
-
----
+- Use AngularJS Dependency Injection for all components; register transactions module using `angular.module('app.transactions', ['ui.bootstrap'])`.
+- Implement pagination using ui-bootstrap's uib-pagination directive with server-side pagination (page size: 20 transactions).
+- Use ng-table or custom directive for responsive transaction table with column sorting and inline search/filter controls.
+- Implement debounced search using $timeout to avoid excessive API calls on every keystroke (300ms delay).
+- Cache current filter state in service to preserve filters when user navigates away and returns to transaction view.
 
 ## g. Error Handling
 
-HTTP interceptor captures API failures and displays Bootstrap alert; empty state handling in view when no transactions found.
-
----
+HTTP interceptor-based error handling with retry logic for transient failures; display user-friendly error messages via Angular Toastr.
 
 ## h. Security Notes
 
-Requires token-based auth via existing SSO; API enforces user-level transaction access control.
+Requires token-based auth via existing SSO; API enforces user-specific transaction access control based on JWT claims.

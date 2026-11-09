@@ -1,132 +1,123 @@
 # Low-Level Design: Spending Analytics and Insights
-**Epic ID:** QE-8580  
-**Tech Stack:** AngularJS 1.x, JavaScript ES6, HTML5, CSS3, Bootstrap, REST APIs, MVC Architecture
-
----
+**Epic ID:** QE-8580
 
 ## a. Architecture Mapping
 
-- **Analytics Module** → AngularJS Module (`app.analytics`)
-- **Analytics Controller** → AngularJS Controller (`AnalyticsController`)
-- **Analytics Service** → AngularJS Service (`AnalyticsService`)
-- **Chart Directive** → AngularJS Directive (`chartWidget`)
-- **Category Filter** → AngularJS Filter (`categoryFilter`)
+- **Analytics Insights UI** → AngularJS Module: `app.analytics`, Controller: `AnalyticsInsightsController`, View: `analytics-insights.html`
+- **Analytics Engine** → AngularJS Service: `AnalyticsEngineService` (handles data aggregation and trend calculation)
+- **Transaction Categorization Service** → AngularJS Service: `TransactionCategorizationService` (manages category assignment logic)
+- **Dashboard Service** → AngularJS Factory: `DashboardFactory` (REST API integration for visualization data)
+- **Chart Rendering** → AngularJS Directive: `spendingChartDirective` (encapsulates Chart.js integration)
 
-**Folder Structure:**
+**Recommended Folder Structure:**
 ```
-/app
-  /modules
-    /analytics
-      analytics.module.js
-      analytics.controller.js
-      analytics.html
-  /services
-    analytics.service.js
-  /directives
-    chart-widget.directive.js
-  /filters
-    category.filter.js
-  /models
-    spending.model.js
+app/
+├── modules/
+│   └── analytics/
+│       ├── controllers/
+│       │   └── analytics-insights.controller.js
+│       ├── services/
+│       │   ├── analytics-engine.service.js
+│       │   ├── transaction-categorization.service.js
+│       │   └── dashboard.factory.js
+│       ├── directives/
+│       │   └── spending-chart.directive.js
+│       ├── views/
+│       │   └── analytics-insights.html
+│       └── analytics.module.js
+└── app.js
 ```
-
----
 
 ## b. Component Specifications
 
-| Name | Artifact Type | Responsibility | Key Dependencies |
-|------|---------------|----------------|------------------|
-| AnalyticsModule | Module | Register analytics feature module and configure routing | angular, ui-router, chart.js |
-| AnalyticsController | Controller | Manage analytics state, fetch spending data, handle filter interactions | AnalyticsService, $scope, $filter |
-| AnalyticsService | Service | Retrieve categorized spending data and trends via REST API | $http, AuthInterceptor |
-| ChartWidgetDirective | Directive | Render interactive charts (pie, bar, line) using Chart.js library | chart.js, $timeout |
-| CategoryFilter | Filter | Filter spending data by selected categories | None |
-| AnalyticsView | HTML Template | Display category breakdown, monthly trends, and card-wise charts | Bootstrap, chartWidget directive |
-
----
+| Component Name | Artifact Type | Responsibility | Key Dependencies |
+|----------------|---------------|----------------|------------------|
+| AnalyticsInsightsController | Controller | Manages analytics view, handles filter interactions, coordinates data fetching | AnalyticsEngineService, DashboardFactory, $scope |
+| AnalyticsEngineService | Service | Aggregates transaction data by category, time period, and card; calculates trends | TransactionCategorizationService, $http, $q |
+| TransactionCategorizationService | Service | Assigns transactions to 9 predefined categories; provides category metadata | $http |
+| DashboardFactory | Factory | Provides REST API integration for fetching categorized transaction data | $http, $q |
+| spendingChartDirective | Directive | Renders interactive charts using Chart.js with drill-down and filtering capabilities | Chart.js library, $timeout |
 
 ## c. Data Model
 
-**SpendingData Model:**
+**SpendingCategory Model:**
 ```javascript
 {
-  userId: String,
-  month: String (YYYY-MM),
-  categories: [
-    {
-      categoryName: String,
-      amount: Number,
-      transactionCount: Number
-    }
-  ],
-  cardWiseSpend: [
-    {
-      cardId: String,
-      cardType: String,
-      totalSpend: Number
-    }
-  ],
-  monthlyTrend: [
-    {
-      month: String,
-      totalSpend: Number
-    }
-  ]
+  categoryId: String,
+  categoryName: String, // Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous
+  totalAmount: Number,
+  transactionCount: Number,
+  percentageOfTotal: Number
 }
 ```
 
----
+**MonthlyTrend Model:**
+```javascript
+{
+  month: String, // YYYY-MM format
+  totalSpend: Number,
+  categoryBreakdown: Array<SpendingCategory>
+}
+```
+
+**CardWiseSpend Model:**
+```javascript
+{
+  cardId: String,
+  cardName: String,
+  totalSpend: Number,
+  categoryBreakdown: Array<SpendingCategory>
+}
+```
 
 ## d. Data Flow
 
-User accesses analytics page → AnalyticsController calls AnalyticsService.getSpendingInsights() → Service makes GET request to `/api/analytics/spending` with date range parameters → Backend returns pre-aggregated spending data by category, card, and month → Controller processes data and passes to ChartWidgetDirective → Directive renders three charts (category pie chart, monthly trend line chart, card-wise bar chart) using Chart.js → User applies category filter → CategoryFilter updates chart data dynamically → View re-renders filtered charts.
-
----
+User navigates to analytics insights view → AnalyticsInsightsController initializes and calls AnalyticsEngineService.getSpendingAnalytics(filters) → AnalyticsEngineService requests categorized transaction data via DashboardFactory.getCategorizedTransactions() → Factory makes REST API call to /api/transactions/categorized with date range and card filters → TransactionCategorizationService ensures category consistency → API returns categorized transaction data → AnalyticsEngineService aggregates by category, time period, and card → Controller receives analytics data and binds to $scope → spendingChartDirective renders interactive Chart.js visualizations with filtering and drill-down capabilities within 3-second load time.
 
 ## e. Primary Sequence Diagram
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant AnalyticsView
-    participant AnalyticsController
-    participant AnalyticsService
+    participant AnalyticsUI
+    participant Controller
+    participant AnalyticsEngine
+    participant DashboardFactory
     participant API
-    participant ChartWidgetDirective
+    participant Database
 
-    User->>AnalyticsView: Access Analytics Page
-    AnalyticsView->>AnalyticsController: Initialize
-    AnalyticsController->>AnalyticsService: getSpendingInsights(dateRange)
-    AnalyticsService->>API: GET /api/analytics/spending
-    API-->>AnalyticsService: SpendingData JSON
-    AnalyticsService-->>AnalyticsController: Parsed Spending Data
-    AnalyticsController->>ChartWidgetDirective: Render Charts (category, trend, card)
-    ChartWidgetDirective-->>AnalyticsView: Display Interactive Charts
-    AnalyticsView-->>User: Show Analytics Dashboard
-    User->>AnalyticsView: Apply Category Filter
-    AnalyticsView->>AnalyticsController: Update Filter
-    AnalyticsController->>ChartWidgetDirective: Re-render with Filtered Data
-    ChartWidgetDirective-->>User: Updated Charts
+    User->>AnalyticsUI: Access Analytics Insights
+    AnalyticsUI->>Controller: Initialize AnalyticsInsightsController
+    Controller->>AnalyticsEngine: getSpendingAnalytics(filters)
+    AnalyticsEngine->>DashboardFactory: getCategorizedTransactions(dateRange, cardIds)
+    DashboardFactory->>API: GET /api/transactions/categorized
+    API->>Database: Query categorized transactions (12 months)
+    Database-->>API: Return transaction data with categories
+    API-->>DashboardFactory: Categorized transaction list
+    DashboardFactory-->>AnalyticsEngine: Resolved transaction data
+    AnalyticsEngine->>AnalyticsEngine: Aggregate by category, time, card
+    AnalyticsEngine-->>Controller: Analytics data (trends, breakdowns)
+    Controller->>AnalyticsUI: Bind data to $scope
+    AnalyticsUI->>AnalyticsUI: Render Chart.js visualizations (<3s)
+    User->>AnalyticsUI: Apply filter/drill-down
+    AnalyticsUI->>Controller: Update filter parameters
+    Controller->>AnalyticsEngine: getSpendingAnalytics(updatedFilters)
+    AnalyticsEngine-->>Controller: Filtered analytics data
+    Controller->>AnalyticsUI: Update charts
 ```
-
----
 
 ## f. Implementation Notes
 
-- Use Chart.js library integrated via AngularJS directive for rendering responsive charts
-- Implement ES6 arrow functions and destructuring in AnalyticsService for clean API response handling
-- Apply AngularJS two-way data binding for filter interactions with ng-model on category checkboxes
-- Pre-aggregate data on backend to ensure sub-3-second load time; use $timeout in directive to defer chart rendering after DOM ready
-- Implement drill-down using Chart.js onClick event handlers that update controller scope
-
----
+- Use AngularJS Dependency Injection for all components; register analytics module using `angular.module('app.analytics', ['chart.js'])`.
+- Integrate Chart.js via angular-chart.js wrapper for responsive pie, bar, and line charts with drill-down using chart click events.
+- Implement filter panel using ng-model for date range pickers and card selection dropdowns; trigger analytics refresh on filter change.
+- Use $q.all() to fetch category-wise, monthly trend, and card-wise data in parallel for optimal performance under 3-second load time.
+- Cache analytics data in service using simple object cache with TTL to reduce redundant API calls during filter interactions.
 
 ## g. Error Handling
 
-HTTP interceptor-based error handling with user notification via Bootstrap toast; chart rendering failures caught in directive with fallback message display.
-
----
+HTTP interceptor-based error handling with fallback to cached data if available; display user-friendly error messages via Angular Toastr.
 
 ## h. Security Notes
 
-Standard input validation and secure API calls assumed; token-based authentication via existing SSO.
+Standard input validation and secure API calls assumed; all API requests include authentication token via HTTP interceptor.
