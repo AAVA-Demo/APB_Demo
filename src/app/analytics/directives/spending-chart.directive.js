@@ -1,0 +1,3 @@
+(function(){'use strict';angular.module('analyticsModule').directive('spendingChart',function(){return{restrict:'E',scope:{chartConfig:'='},template:'<div style="height:400px;position:relative;">'+
+'<canvas id="spendingChart" class="chart chart-pie" chart-data="chartConfig.data.datasets[0].data" chart-labels="chartConfig.data.labels" chart-options="chartConfig.options" chart-colors="chartConfig.data.datasets[0].backgroundColor"></canvas>'+
+'</div>',link:function(scope,element,attrs){scope.$watch('chartConfig',function(newVal){if(newVal){var canvas=element.find('canvas')[0];if(canvas&&canvas.getContext){var ctx=canvas.getContext('2d');}}});}};});})();

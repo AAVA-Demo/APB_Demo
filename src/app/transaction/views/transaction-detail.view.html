@@ -1,0 +1,33 @@
+<div class="transaction-detail-container">
+<h2>Transaction Details</h2>
+<div ng-if="vm.loading" class="text-center">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading transaction details...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="panel panel-default">
+<div class="panel-heading">
+<h4>Transaction ID: {{vm.transaction.transactionId}}</h4>
+</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-md-6">
+<p><strong>Merchant:</strong> {{vm.transaction.merchantName}}</p>
+<p><strong>Category:</strong> {{vm.transaction.category}}</p>
+<p><strong>Amount:</strong> {{vm.transaction.currency}} {{vm.transaction.amount | number:2}}</p>
+<p><strong>Status:</strong> <span class="label" ng-class="{'label-success':vm.transaction.status==='posted','label-warning':vm.transaction.status==='pending'}">{{vm.transaction.status | uppercase}}</span></p>
+</div>
+<div class="col-md-6">
+<p><strong>Card:</strong> ****{{vm.transaction.cardLastFour}}</p>
+<p><strong>Transaction Date:</strong> {{vm.transaction.transactionDate | date:'full'}}</p>
+<p><strong>Description:</strong> {{vm.transaction.description}}</p>
+</div>
+</div>
+</div>
+<div class="panel-footer">
+<a href="#!/transactions" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back to Transactions</a>
+</div>
+</div>
+</div>

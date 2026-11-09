@@ -1,0 +1,51 @@
+<div class="transaction-container">
+<h2>Transaction Management</h2>
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-primary" ng-click="vm.toggleFilters()">
+<i class="fa fa-filter"></i> {{vm.showFilters ? 'Hide Filters' : 'Show Filters'}}
+</button>
+</div>
+</div>
+<div ng-if="vm.showFilters" class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<transaction-filter filters="vm.filters" cards="vm.cards" on-apply="vm.applyFilters()" on-clear="vm.clearFilters()"></transaction-filter>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center" style="margin-top:20px;">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading transactions...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger" style="margin-top:20px;">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="transaction-table" style="margin-top:20px;">
+<h4>Transaction List</h4>
+<table class="table table-hover">
+<thead>
+<tr>
+<th>Date</th>
+<th>Merchant</th>
+<th>Card</th>
+<th>Category</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.transactions">
+<td>{{txn.transactionDate | date:'short'}}</td>
+<td>{{txn.merchantName}}</td>
+<td>{{txn.cardName}} (****{{txn.cardLastFour}})</td>
+<td>{{txn.category}}</td>
+<td ng-class="{'amount-negative':txn.amount<0,'amount-positive':txn.amount>=0}">{{txn.currency}} {{txn.amount | number:2}}</td>
+<td><span class="label" ng-class="{'label-success':txn.status==='posted','label-warning':txn.status==='pending'}">{{txn.status | uppercase}}</span></td>
+<td><a href="#!/transactions/{{txn.transactionId}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> View</a></td>
+</tr>
+</tbody>
+</table>
+<div ng-if="vm.transactions.length===0" class="alert alert-info">No transactions found.</div>
+<transaction-pagination pagination="vm.pagination" on-page-change="vm.goToPage(page)"></transaction-pagination>
+</div>
+</div>

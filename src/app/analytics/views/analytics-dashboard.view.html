@@ -1,0 +1,59 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-3">
+<div class="filter-panel">
+<h4>Filters</h4>
+<category-filter categories="vm.availableCategories" selected-categories="vm.filters.categories" on-change="vm.updateFilter()"></category-filter>
+<card-filter cards="vm.cards" selected-cards="vm.filters.cardIds" on-change="vm.updateFilter()"></card-filter>
+<div class="form-group">
+<label>Chart Type</label>
+<select class="form-control" ng-model="vm.chartType" ng-change="vm.changeChartType(vm.chartType)">
+<option value="pie">Pie Chart</option>
+<option value="bar">Bar Chart</option>
+<option value="line">Line Chart</option>
+</select>
+</div>
+</div>
+</div>
+<div class="col-md-9">
+<div class="chart-container">
+<h4>Category-Wise Spending</h4>
+<spending-chart chart-config="vm.chartConfig"></spending-chart>
+<div class="text-center" style="margin-top:20px;">
+<h5>Total Spend: <strong>${{vm.analyticsData.totalSpend | number:2}}</strong></h5>
+</div>
+</div>
+<div class="chart-container" style="margin-top:20px;">
+<h4>Category Breakdown</h4>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+<th>Transactions</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.categories">
+<td>{{cat.categoryName}}</td>
+<td>${{cat.amount | number:2}}</td>
+<td>{{cat.percentage | number:1}}%</td>
+<td>{{cat.transactionCount}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
