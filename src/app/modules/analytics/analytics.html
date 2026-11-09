@@ -1,0 +1,36 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics</h2>
+      <hr>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.analytics">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" ng-class="{'btn-primary': vm.selectedView === 'category'}" ng-click="vm.setView('category')">Category Breakdown</button>
+          <button type="button" class="btn btn-default" ng-class="{'btn-primary': vm.selectedView === 'monthly'}" ng-click="vm.setView('monthly')">Monthly Trends</button>
+          <button type="button" class="btn btn-default" ng-class="{'btn-primary': vm.selectedView === 'card'}" ng-click="vm.setView('card')">Card-wise Analysis</button>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div ng-if="vm.selectedView === 'category'">
+          <chart-directive chart-type="'pie'" chart-data="vm.analytics.categoryBreakdown" chart-title="'Category-wise Spending'"></chart-directive>
+        </div>
+        <div ng-if="vm.selectedView === 'monthly'">
+          <chart-directive chart-type="'line'" chart-data="vm.analytics.monthlyTrends" chart-title="'Monthly Spend Trends'"></chart-directive>
+        </div>
+        <div ng-if="vm.selectedView === 'card'">
+          <chart-directive chart-type="'bar'" chart-data="vm.analytics.cardWiseSpend" chart-title="'Card-wise Spend Analysis'"></chart-directive>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

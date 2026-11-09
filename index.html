@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Card Analysis Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/styles/app.css">
+</head>
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#!/dashboard">Credit Card Dashboard</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/transactions">Transactions</a></li>
+        <li><a href="#!/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.module.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/modules/transactions/transaction.module.js"></script>
+  <script src="src/app/modules/transactions/transaction.controller.js"></script>
+  <script src="src/app/modules/analytics/analytics.module.js"></script>
+  <script src="src/app/modules/analytics/analytics.controller.js"></script>
+  <script src="src/app/services/kpi.service.js"></script>
+  <script src="src/app/services/credit-card-data.service.js"></script>
+  <script src="src/app/services/transaction-data.service.js"></script>
+  <script src="src/app/services/transaction.service.js"></script>
+  <script src="src/app/services/credit-card.service.js"></script>
+  <script src="src/app/services/analytics.service.js"></script>
+  <script src="src/app/services/category-classification.service.js"></script>
+  <script src="src/app/directives/kpi-card.directive.js"></script>
+  <script src="src/app/directives/transaction-filter.directive.js"></script>
+  <script src="src/app/directives/chart.directive.js"></script>
+</body>
+</html>

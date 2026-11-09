@@ -1,0 +1,42 @@
+<div class="transactions-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Transaction History</h2>
+      <hr>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading transactions...</p>
+  </div>
+  <div ng-if="!vm.loading">
+    <transaction-filter filters="vm.filters" cards="vm.cards" on-filter="vm.applyFilters()"></transaction-filter>
+    <div class="row">
+      <div class="col-md-12">
+        <p><strong>{{vm.filteredTransactions.length}}</strong> transactions found</p>
+        <div class="transaction-row" ng-repeat="txn in vm.filteredTransactions" ng-click="vm.viewDetail(txn.id)">
+          <div class="row">
+            <div class="col-sm-3">
+              <strong>{{txn.date | date:'MMM dd, yyyy'}}</strong>
+            </div>
+            <div class="col-sm-3">
+              {{txn.merchant}}
+            </div>
+            <div class="col-sm-2">
+              {{txn.category}}
+            </div>
+            <div class="col-sm-2">
+              {{txn.cardName}} ****{{txn.cardLastFourDigits}}
+            </div>
+            <div class="col-sm-2 text-right">
+              <strong>{{txn.amount | currency}}</strong>
+            </div>
+          </div>
+        </div>
+        <div ng-if="vm.filteredTransactions.length === 0" class="text-center">
+          <p>No transactions found matching your filters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
