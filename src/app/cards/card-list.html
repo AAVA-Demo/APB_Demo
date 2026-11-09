@@ -1,0 +1,38 @@
+<div class="card-management-view">
+<div class="row">
+<div class="col-md-12">
+<h2>My Credit Cards</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">Loading cards...</div>
+<div ng-if="vm.error" class="error-msg">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-4">
+<card-selector cards="vm.cards" selected-card="vm.selectedCard" on-select="vm.selectCard(card)"></card-selector>
+</div>
+<div class="col-md-8">
+<div ng-if="vm.selectedCard" class="card-item active">
+<h3>{{vm.selectedCard.bankName}} {{vm.selectedCard.cardType}}</h3>
+<p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+<p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</p>
+<p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:2}}</p>
+<p><strong>Outstanding:</strong> ${{vm.selectedCard.outstandingAmount | number:2}}</p>
+<p><strong>Status:</strong> {{vm.selectedCard.status}}</p>
+<div ng-if="vm.selectedCard.spendSummary">
+<h4>Spending Summary</h4>
+<p><strong>Monthly Spend:</strong> ${{vm.selectedCard.spendSummary.monthlySpend | number:2}}</p>
+<p><strong>Yearly Spend:</strong> ${{vm.selectedCard.spendSummary.yearlySpend | number:2}}</p>
+<p><strong>Total Transactions:</strong> {{vm.selectedCard.spendSummary.transactionCount}}</p>
+<div ng-if="vm.selectedCard.spendSummary.topCategories.length>0">
+<h5>Top Categories</h5>
+<ul>
+<li ng-repeat="cat in vm.selectedCard.spendSummary.topCategories">{{cat.category}}: ${{cat.amount | number:2}}</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,52 @@
+<div class="transaction-view">
+<div class="row">
+<div class="col-md-12">
+<h2>Transactions</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">Loading transactions...</div>
+<div ng-if="vm.error" class="error-msg">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="filter-panel">
+<h4>Filter Transactions</h4>
+<div class="row">
+<div class="col-md-3">
+<label>Card</label>
+<select class="form-control" ng-model="vm.filterCriteria.cardId">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.bankName}} {{card.cardNumber}}</option>
+</select>
+</div>
+<div class="col-md-2">
+<label>From Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateFrom">
+</div>
+<div class="col-md-2">
+<label>To Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateTo">
+</div>
+<div class="col-md-2">
+<label>Merchant</label>
+<input type="text" class="form-control" ng-model="vm.filterCriteria.merchant" placeholder="Search merchant">
+</div>
+<div class="col-md-3">
+<label>&nbsp;</label><br>
+<button class="btn btn-primary" ng-click="vm.applyFilters()">Apply</button>
+<button class="btn btn-default" ng-click="vm.clearFilters()">Clear</button>
+</div>
+</div>
+</div>
+<transaction-list transactions="vm.filteredTransactions" on-select="vm.viewDetails(transaction)"></transaction-list>
+<div ng-if="vm.selectedTransaction" class="card-item" style="margin-top:20px">
+<h4>Transaction Details</h4>
+<p><strong>ID:</strong> {{vm.selectedTransaction.transactionId}}</p>
+<p><strong>Date:</strong> {{vm.selectedTransaction.date | date:'medium'}}</p>
+<p><strong>Merchant:</strong> {{vm.selectedTransaction.merchant}}</p>
+<p><strong>Amount:</strong> ${{vm.selectedTransaction.amount | number:2}}</p>
+<p><strong>Category:</strong> {{vm.selectedTransaction.category}}</p>
+<p><strong>Card:</strong> {{vm.selectedTransaction.cardNumber}}</p>
+<p><strong>Status:</strong> {{vm.selectedTransaction.status}}</p>
+<p><strong>Description:</strong> {{vm.selectedTransaction.description}}</p>
+</div>
+</div>
+</div>

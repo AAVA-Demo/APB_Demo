@@ -1,0 +1,29 @@
+<div class="spending-analytics-view">
+<div class="row">
+<div class="col-md-12">
+<h2>Spending Analytics & Insights</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">Loading analytics...</div>
+<div ng-if="vm.error" class="error-msg">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-12">
+<category-chart chart-data="vm.analytics.categorySpending" on-click="vm.drillDownCategory(category)"></category-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<trend-chart chart-data="vm.analytics.monthlyTrends"></trend-chart>
+</div>
+</div>
+<div ng-if="vm.selectedCategory" class="row">
+<div class="col-md-12">
+<div class="card-item">
+<h4>Category Details: {{vm.selectedCategory}}</h4>
+<p>Filtered view for {{vm.selectedCategory}}</p>
+</div>
+</div>
+</div>
+</div>
+</div>

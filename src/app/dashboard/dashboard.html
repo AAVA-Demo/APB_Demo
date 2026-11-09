@@ -1,0 +1,35 @@
+<div class="dashboard-view">
+<div class="row">
+<div class="col-md-12">
+<h2>Credit Card Dashboard
+<button class="btn btn-primary btn-sm btn-refresh" ng-click="vm.refreshKPIs()">Refresh</button>
+</h2>
+</div>
+</div>
+<div ng-if="vm.loading" class="loading">Loading dashboard...</div>
+<div ng-if="vm.error" class="error-msg">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+<kpi-card label="Monthly Spend" value="vm.kpis.monthlySpend" icon="💳" format="currency"></kpi-card>
+</div>
+<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+<kpi-card label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="💰" format="currency"></kpi-card>
+</div>
+<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+<kpi-card label="Available Credit" value="vm.kpis.totalAvailableCredit" icon="✓" format="currency"></kpi-card>
+</div>
+<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+<kpi-card label="Outstanding Amount" value="vm.kpis.totalOutstanding" icon="⚠" format="currency"></kpi-card>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="kpi-card">
+<p><strong>Total Cards:</strong> {{vm.kpis.cardCount}}</p>
+<p><small>Last Updated: {{vm.kpis.lastUpdated | date:'short'}}</small></p>
+</div>
+</div>
+</div>
+</div>
+</div>
