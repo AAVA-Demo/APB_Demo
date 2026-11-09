@@ -1,0 +1,79 @@
+{
+  "users": {
+    "testuser": {
+      "username": "testuser",
+      "password": "Pass@123"
+    },
+    "multicard_user": {
+      "username": "multicard_user",
+      "password": "Pass@123"
+    },
+    "singlecard_user": {
+      "username": "singlecard_user",
+      "password": "Pass@123"
+    },
+    "high_volume_user": {
+      "username": "high_volume_user",
+      "password": "Pass@123"
+    },
+    "category_user": {
+      "username": "category_user",
+      "password": "Pass@123"
+    },
+    "historical_user": {
+      "username": "historical_user",
+      "password": "Pass@123"
+    },
+    "new_user": {
+      "username": "new_user",
+      "password": "Pass@123"
+    },
+    "new_user_no_txn": {
+      "username": "new_user_no_txn",
+      "password": "Pass@123"
+    },
+    "uncategorized_user": {
+      "username": "uncategorized_user",
+      "password": "Pass@123"
+    }
+  },
+  "dateRanges": {
+    "january2024": {
+      "startDate": "2024-01-01",
+      "endDate": "2024-01-31"
+    },
+    "invalidRange": {
+      "startDate": "2024-01-31",
+      "endDate": "2024-01-01"
+    },
+    "futureRange": {
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-30"
+    }
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "expectedKPIs": {
+    "multicard": {
+      "monthlySpend": "$15,700",
+      "creditLimit": "$100,000",
+      "availableCredit": "$72,000",
+      "outstandingAmount": "$28,000"
+    },
+    "singlecard": {
+      "monthlySpend": "$8,500",
+      "creditLimit": "$50,000",
+      "availableCredit": "$35,000",
+      "outstandingAmount": "$15,000"
+    }
+  }
+}

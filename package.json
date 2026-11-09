@@ -1,0 +1,23 @@
+{
+  "name": "creditcard-automation",
+  "version": "1.0.0",
+  "description": "Playwright automation for Credit Card Management Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:dashboard": "playwright test dashboard.spec.js",
+    "test:transactions": "playwright test transactions.spec.js",
+    "test:analytics": "playwright test analytics.spec.js",
+    "report": "playwright show-report"
+  },
+  "keywords": ["playwright", "automation", "testing", "credit-card"],
+  "author": "DevOps Team",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "winston": "^3.11.0"
+  }
+}

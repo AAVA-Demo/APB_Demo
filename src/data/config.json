@@ -1,0 +1,14 @@
+{
+  "baseUrl": "https://app.creditcard.demo",
+  "apiBaseUrl": "https://api.creditcard.demo/v1",
+  "timeout": 30000,
+  "retryAttempts": 2,
+  "headless": true,
+  "slowMo": 0,
+  "viewportSizes": {
+    "mobile": { "width": 375, "height": 667 },
+    "tablet": { "width": 768, "height": 1024 },
+    "narrowScreen": { "width": 320, "height": 568 },
+    "desktop": { "width": 1920, "height": 1080 }
+  }
+}
