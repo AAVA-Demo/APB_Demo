@@ -1,0 +1,20 @@
+<div ng-controller="TransactionDetailController as vm">
+  <h2>Transaction Details</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></span>
+    <p>Loading transaction details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.transaction" class="panel panel-default">
+    <div class="panel-body">
+      <h4>{{vm.transaction.merchantName}}</h4>
+      <p><strong>Amount:</strong> ${{vm.transaction.amount | number:2}}</p>
+      <p><strong>Date:</strong> {{vm.transaction.transactionDate | date:'MMM dd, yyyy hh:mm a'}}</p>
+      <p><strong>Category:</strong> {{vm.transaction.category}}</p>
+      <p><strong>Card:</strong> {{vm.transaction.cardName}}</p>
+      <p><strong>Status:</strong> {{vm.transaction.status}}</p>
+      <p><strong>Transaction ID:</strong> {{vm.transaction.transactionId}}</p>
+    </div>
+  </div>
+  <a href="#/transactions" class="btn btn-primary">Back to Transactions</a>
+</div>

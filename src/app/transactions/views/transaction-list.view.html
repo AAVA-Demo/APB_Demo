@@ -1,0 +1,24 @@
+<div ng-controller="TransactionListController as vm">
+  <h2>Transactions</h2>
+  <div class="filter-panel">
+    <div class="row">
+      <div class="col-md-4">
+        <label>Filter by Card:</label>
+        <select class="form-control" ng-model="vm.selectedCardId" ng-change="vm.filterByCard()">
+          <option value="">All Cards</option>
+          <option ng-repeat="card in vm.cards track by card.cardId" value="{{card.cardId}}">{{card.cardName}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></span>
+    <p>Loading transactions...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div ng-if="vm.transactions.length === 0" class="alert alert-info">No transactions found.</div>
+    <transaction-card ng-repeat="transaction in vm.transactions track by transaction.transactionId" transaction="transaction"></transaction-card>
+    <pagination current-page="vm.currentPage" total-count="vm.totalCount" page-size="vm.pageSize" on-next="vm.nextPage()" on-prev="vm.prevPage()"></pagination>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+body { background-color: #f5f5f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.navbar { margin-bottom: 20px; border-radius: 0; }
+.kpi-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.kpi-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.kpi-card .kpi-value { font-size: 32px; font-weight: bold; color: #333; margin: 10px 0; }
+.kpi-card .kpi-label { font-size: 14px; color: #777; text-transform: uppercase; }
+.kpi-card .kpi-icon { font-size: 40px; color: #5cb85c; }
+.credit-card-tile { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.credit-card-tile .card-name { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+.credit-card-tile .card-limit { font-size: 14px; opacity: 0.9; }
+.credit-card-tile .utilization-bar { background: rgba(255,255,255,0.3); height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.credit-card-tile .utilization-fill { background: #fff; height: 100%; transition: width 0.3s; }
+.transaction-item { background: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+.transaction-item .merchant { font-weight: bold; color: #333; }
+.transaction-item .amount { font-size: 18px; font-weight: bold; color: #d9534f; }
+.transaction-item .date { font-size: 12px; color: #999; }
+.transaction-item .category-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; background: #5bc0de; color: white; }
+.chart-container { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.chart-container canvas { max-height: 400px; }
+.filter-panel { background: white; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.loading-spinner { text-align: center; padding: 50px; }
+.pagination-controls { text-align: center; margin-top: 20px; }
+.pagination-controls button { margin: 0 5px; }

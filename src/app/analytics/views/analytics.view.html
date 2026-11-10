@@ -1,0 +1,35 @@
+<div ng-controller="AnalyticsController as vm">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size:48px;"></span>
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#trends">Monthly Trends</a></li>
+      <li><a data-toggle="tab" href="#categories">Category Breakdown</a></li>
+      <li><a data-toggle="tab" href="#cards">Card-wise Spend</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="trends" class="tab-pane fade in active">
+        <div class="chart-container">
+          <h3>Monthly Spend Trends</h3>
+          <monthly-trend-chart chart-data="vm.monthlyTrendsData"></monthly-trend-chart>
+        </div>
+      </div>
+      <div id="categories" class="tab-pane fade">
+        <div class="chart-container">
+          <h3>Category-wise Spending</h3>
+          <category-breakdown-chart chart-data="vm.categoryBreakdownData"></category-breakdown-chart>
+        </div>
+      </div>
+      <div id="cards" class="tab-pane fade">
+        <div class="chart-container">
+          <h3>Card-wise Spend Analysis</h3>
+          <card-wise-chart chart-data="vm.cardWiseSpendData"></card-wise-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
