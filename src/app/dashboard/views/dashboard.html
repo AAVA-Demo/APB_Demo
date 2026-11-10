@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="page-header">
+      <h2>Credit Card Dashboard <button class="btn btn-primary btn-sm pull-right" ng-click="vm.manualRefresh()" ng-disabled="vm.loading"><i class="fa fa-refresh" ng-class="{'fa-spin': vm.loading}"></i> Refresh</button></h2>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="!vm.loading && vm.kpis">
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalMonthlySpend | number:0}}</div>
+        <div class="kpi-label"><i class="fa fa-calendar"></i> Monthly Spend</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalCreditLimit | number:0}}</div>
+        <div class="kpi-label"><i class="fa fa-credit-card"></i> Total Credit Limit</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalAvailableCredit | number:0}}</div>
+        <div class="kpi-label"><i class="fa fa-check-circle"></i> Available Credit</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="kpi-card">
+        <div class="kpi-value">₹{{vm.kpis.totalOutstanding | number:0}}</div>
+        <div class="kpi-label"><i class="fa fa-exclamation-triangle"></i> Outstanding Amount</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Your Credit Cards</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4" ng-repeat="card in vm.kpis.cards">
+      <div class="card-item">
+        <h4><i class="fa fa-credit-card"></i> {{card.cardType}} {{card.cardNumber}}</h4>
+        <table class="table table-condensed">
+          <tr><td><strong>Credit Limit:</strong></td><td>₹{{card.creditLimit | number:0}}</td></tr>
+          <tr><td><strong>Available:</strong></td><td>₹{{card.availableCredit | number:0}}</td></tr>
+          <tr><td><strong>Outstanding:</strong></td><td>₹{{card.outstandingAmount | number:0}}</td></tr>
+          <tr><td><strong>Monthly Spend:</strong></td><td>₹{{card.monthlySpend | number:0}}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

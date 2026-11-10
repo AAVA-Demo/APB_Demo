@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="page-header">
+      <h2>Transaction History</h2>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading transactions...</p>
+</div>
+<div ng-if="!vm.loading">
+  <div class="row">
+    <div class="col-md-8">
+      <div ng-repeat="txn in vm.transactions" class="transaction-row" ng-click="vm.selectTransaction(txn)">
+        <div class="row">
+          <div class="col-xs-8">
+            <strong>{{txn.merchantName}}</strong>
+            <span class="category-badge" ng-style="{'background-color': vm.getCategoryColor(txn.category), 'color': 'white'}">{{txn.category}}</span>
+            <br>
+            <small class="text-muted">{{txn.transactionDate | date:'dd MMM yyyy'}} | {{txn.cardDetails.cardType}} {{txn.cardDetails.cardNumber}}</small>
+          </div>
+          <div class="col-xs-4 text-right">
+            <h4 style="margin: 0;">₹{{txn.amount | number:2}}</h4>
+            <small class="text-success">{{txn.status}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" ng-if="vm.selectedTransaction">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h4 class="panel-title">Transaction Details <button type="button" class="close" ng-click="vm.closeDetails()">&times;</button></h4>
+        </div>
+        <div class="panel-body">
+          <table class="table table-condensed">
+            <tr><td><strong>Transaction ID:</strong></td><td>{{vm.selectedTransaction.transactionId}}</td></tr>
+            <tr><td><strong>Merchant:</strong></td><td>{{vm.selectedTransaction.merchantName}}</td></tr>
+            <tr><td><strong>Amount:</strong></td><td>₹{{vm.selectedTransaction.amount | number:2}}</td></tr>
+            <tr><td><strong>Date:</strong></td><td>{{vm.selectedTransaction.transactionDate | date:'dd MMM yyyy, hh:mm a'}}</td></tr>
+            <tr><td><strong>Category:</strong></td><td><span class="category-badge" ng-style="{'background-color': vm.getCategoryColor(vm.selectedTransaction.category), 'color': 'white'}">{{vm.selectedTransaction.category}}</span></td></tr>
+            <tr><td><strong>Card:</strong></td><td>{{vm.selectedTransaction.cardDetails.cardType}} {{vm.selectedTransaction.cardDetails.cardNumber}}</td></tr>
+            <tr><td><strong>Status:</strong></td><td><span class="label label-success">{{vm.selectedTransaction.status}}</span></td></tr>
+            <tr><td><strong>Description:</strong></td><td>{{vm.selectedTransaction.description}}</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
