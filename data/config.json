@@ -1,0 +1,94 @@
+{
+  "baseUrl": "https://creditcard.example.com",
+  "environments": {
+    "dev": {
+      "url": "https://dev.creditcard.example.com",
+      "apiUrl": "https://dev-api.creditcard.example.com"
+    },
+    "staging": {
+      "url": "https://staging.creditcard.example.com",
+      "apiUrl": "https://staging-api.creditcard.example.com"
+    },
+    "production": {
+      "url": "https://creditcard.example.com",
+      "apiUrl": "https://api.creditcard.example.com"
+    }
+  },
+  "timeouts": {
+    "default": 30000,
+    "navigation": 60000,
+    "api": 10000
+  },
+  "testData": {
+    "users": {
+      "user_with_5_cards": {
+        "username": "user_with_5_cards",
+        "password": "Pass@123"
+      },
+      "user_with_15_cards": {
+        "username": "user_with_15_cards",
+        "password": "Pass@123"
+      },
+      "user_with_no_cards": {
+        "username": "user_with_no_cards",
+        "password": "Pass@123"
+      },
+      "user_multi_cards": {
+        "username": "user_multi_cards",
+        "password": "Pass@123"
+      },
+      "user_no_txn_card": {
+        "username": "user_no_txn_card",
+        "password": "Pass@123"
+      },
+      "user_deactivated_card": {
+        "username": "user_deactivated_card",
+        "password": "Pass@123"
+      },
+      "user_single_card": {
+        "username": "user_single_card",
+        "password": "Pass@123"
+      },
+      "user_no_cards": {
+        "username": "user_no_cards",
+        "password": "Pass@123"
+      },
+      "user_all_categories": {
+        "username": "user_all_categories",
+        "password": "Pass@123"
+      },
+      "user_three_categories": {
+        "username": "user_three_categories",
+        "password": "Pass@123"
+      },
+      "user_no_transactions": {
+        "username": "user_no_transactions",
+        "password": "Pass@123"
+      },
+      "user_current_month_txn": {
+        "username": "user_current_month_txn",
+        "password": "Pass@123"
+      },
+      "user_previous_month_only": {
+        "username": "user_previous_month_only",
+        "password": "Pass@123"
+      },
+      "user_sparse_txn": {
+        "username": "user_sparse_txn",
+        "password": "Pass@123"
+      },
+      "user_active": {
+        "username": "user_active",
+        "password": "Pass@123"
+      },
+      "user_new_month": {
+        "username": "user_new_month",
+        "password": "Pass@123"
+      },
+      "user_service_down": {
+        "username": "user_service_down",
+        "password": "Pass@123"
+      }
+    }
+  }
+}
