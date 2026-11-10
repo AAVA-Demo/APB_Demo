@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Credit Card Dashboard</h2>
+    <p class="text-muted">Last updated: {{vm.lastUpdated | date:'short'}}</p>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refreshData()" ng-disabled="vm.loading">
+      <i class="glyphicon glyphicon-refresh" ng-class="{'glyphicon-refresh-animate': vm.loading}"></i> Refresh
+    </button>
+    <hr>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.kpis">
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card value="vm.kpis.monthlySpend" label="Monthly Spend" icon="credit-card"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card value="vm.kpis.totalCreditLimit" label="Total Credit Limit" icon="stats"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card value="vm.kpis.availableCredit" label="Available Credit" icon="ok-circle"></kpi-card>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-card value="vm.kpis.outstandingAmount" label="Outstanding Amount" icon="exclamation-sign"></kpi-card>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <div style="padding: 50px;">
+      <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 48px;"></i>
+      <p>Loading dashboard...</p>
+    </div>
+  </div>
+</div>

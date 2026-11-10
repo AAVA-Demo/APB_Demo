@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Management</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.min.css">
+  <style>
+    body { padding-top: 20px; background: #f5f5f5; }
+    .kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s; }
+    .kpi-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; }
+    .kpi-label { font-size: 14px; color: #7f8c8d; margin-top: 8px; }
+    .card-item { background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #3498db; cursor: pointer; transition: all 0.2s; }
+    .card-item:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .chart-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .nav-tabs { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#!/">Credit Card Manager</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#!/">Dashboard</a></li>
+        <li><a href="#!/portfolio">Portfolio</a></li>
+        <li><a href="#!/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container" style="margin-top: 70px;">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.tpls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/auth.service.js"></script>
+  <script src="src/app/services/http-interceptor.service.js"></script>
+  <script src="src/app/dashboard/dashboard.module.js"></script>
+  <script src="src/app/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/dashboard/dashboard.service.js"></script>
+  <script src="src/app/dashboard/kpi-calculation.service.js"></script>
+  <script src="src/app/dashboard/factories/dashboard-data.factory.js"></script>
+  <script src="src/app/dashboard/directives/kpi-card.directive.js"></script>
+  <script src="src/app/portfolio/portfolio.module.js"></script>
+  <script src="src/app/portfolio/portfolio.controller.js"></script>
+  <script src="src/app/portfolio/card-detail.controller.js"></script>
+  <script src="src/app/portfolio/card-management.service.js"></script>
+  <script src="src/app/portfolio/card-metrics.service.js"></script>
+  <script src="src/app/portfolio/factories/card-data.factory.js"></script>
+  <script src="src/app/portfolio/directives/card-list-item.directive.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/analytics.controller.js"></script>
+  <script src="src/app/analytics/analytics.service.js"></script>
+  <script src="src/app/analytics/transaction-categorization.service.js"></script>
+  <script src="src/app/analytics/factories/analytics-data.factory.js"></script>
+  <script src="src/app/analytics/directives/spending-chart.directive.js"></script>
+</body>
+</html>

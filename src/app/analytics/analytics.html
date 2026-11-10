@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics & Insights</h2>
+    <p class="text-muted">Analyze your spending patterns and trends</p>
+    <hr>
+  </div>
+</div>
+<div ng-if="!vm.loading && vm.spendingData">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#category-view">Category Breakdown</a></li>
+        <li><a data-toggle="tab" href="#trend-view">Monthly Trends</a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="category-view" class="tab-pane fade in active">
+          <div class="chart-container" style="margin-top: 20px;">
+            <h4>Spending by Category</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <spending-chart chart-data="vm.categoryChartData" chart-type="pie"></spending-chart>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Amount</th>
+                      <th>Percentage</th>
+                      <th>Transactions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="cat in vm.spendingData.categoryBreakdown">
+                      <td>{{cat.category}}</td>
+                      <td>{{cat.amount | currency}}</td>
+                      <td>{{cat.percentage}}%</td>
+                      <td>{{cat.transactionCount}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="trend-view" class="tab-pane fade">
+          <div class="chart-container" style="margin-top: 20px;">
+            <h4>Monthly Spending Trends</h4>
+            <div ng-if="vm.selectedCategory" class="alert alert-info">
+              Showing trends for: <strong>{{vm.selectedCategory}}</strong>
+              <button class="btn btn-xs btn-default pull-right" ng-click="vm.resetFilter()">Reset</button>
+            </div>
+            <spending-chart chart-data="vm.trendChartData" chart-type="line"></spending-chart>
+            <div style="margin-top: 20px;">
+              <h5>Filter by Category:</h5>
+              <button ng-repeat="cat in vm.spendingData.categoryBreakdown" class="btn btn-sm btn-default" style="margin: 5px;" ng-click="vm.filterByCategory(cat.category)">{{cat.category}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <div style="padding: 50px;">
+      <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 48px;"></i>
+      <p>Loading analytics...</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Credit Card Portfolio</h2>
+    <p class="text-muted">Manage all your credit cards in one place</p>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refreshCards()" ng-disabled="vm.loading">
+      <i class="glyphicon glyphicon-refresh"></i> Refresh
+    </button>
+    <hr>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div ng-if="vm.cards.length === 0" class="alert alert-info">
+      No credit cards found. Add a card to get started.
+    </div>
+    <card-list-item ng-repeat="card in vm.cards track by card.cardId" card="card" on-select="vm.viewCardDetail(cardId)"></card-list-item>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <div style="padding: 50px;">
+      <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 48px;"></i>
+      <p>Loading portfolio...</p>
+    </div>
+  </div>
+</div>
