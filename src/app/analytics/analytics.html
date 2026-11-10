@@ -1,0 +1,35 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading analytics...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Category-wise Spending</h4></div>
+          <div class="panel-body">
+            <category-chart chart-data="vm.categoryData" chart-config="vm.categoryChartConfig"></category-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Monthly Spend Trends</h4></div>
+          <div class="panel-body">
+            <trend-chart chart-data="vm.trendData" chart-config="vm.trendChartConfig"></trend-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Card-wise Spend Comparison</h4></div>
+          <div class="panel-body">
+            <card-comparison chart-data="vm.cardComparisonData" chart-config="vm.cardChartConfig"></card-comparison>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

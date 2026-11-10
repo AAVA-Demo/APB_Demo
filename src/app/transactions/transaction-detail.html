@@ -1,0 +1,25 @@
+<div class="transaction-detail-container">
+  <h2>Transaction Details</h2>
+  <button class="btn btn-default" ng-click="vm.goBack()">Back to List</button>
+  <div ng-if="vm.loading" class="alert alert-info">Loading transaction details...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.transaction" class="panel panel-default" style="margin-top:20px;">
+    <div class="panel-heading"><h4>Transaction ID: {{vm.transaction.transactionId}}</h4></div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Card Number:</strong> {{vm.transaction.cardNumber}}</p>
+          <p><strong>Date:</strong> {{vm.transaction.date | date:'medium'}}</p>
+          <p><strong>Merchant:</strong> {{vm.transaction.merchant}}</p>
+          <p><strong>Category:</strong> {{vm.transaction.category}}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Amount:</strong> {{vm.transaction.amount | currency}}</p>
+          <p><strong>Currency:</strong> {{vm.transaction.currency}}</p>
+          <p><strong>Status:</strong> <span class="label" ng-class="{'label-success': vm.transaction.status === 'posted', 'label-warning': vm.transaction.status === 'pending'}">{{vm.transaction.status | uppercase}}</span></p>
+          <p><strong>Description:</strong> {{vm.transaction.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

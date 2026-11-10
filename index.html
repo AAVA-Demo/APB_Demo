@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/assets/css/dashboard.css">
+  <link rel="stylesheet" href="src/app/assets/css/transactions.css">
+  <link rel="stylesheet" href="src/app/assets/css/analytics.css">
+</head>
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#!/dashboard">Credit Card Manager</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/transactions">Transactions</a></li>
+        <li><a href="#!/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/shared/auth.service.js"></script>
+  <script src="src/app/dashboard/dashboard.module.js"></script>
+  <script src="src/app/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/services/credit-card.service.js"></script>
+  <script src="src/app/services/transaction.service.js"></script>
+  <script src="src/app/services/kpi-calculator.service.js"></script>
+  <script src="src/app/dashboard/directives/dashboard-kpi.directive.js"></script>
+  <script src="src/app/transactions/transactions.module.js"></script>
+  <script src="src/app/transactions/transaction-list.controller.js"></script>
+  <script src="src/app/transactions/transaction-detail.controller.js"></script>
+  <script src="src/app/services/transaction-filter.service.js"></script>
+  <script src="src/app/transactions/directives/transaction-list.directive.js"></script>
+  <script src="src/app/transactions/directives/transaction-search.directive.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/analytics.controller.js"></script>
+  <script src="src/app/services/analytics.service.js"></script>
+  <script src="src/app/services/category.service.js"></script>
+  <script src="src/app/services/chart-config.service.js"></script>
+  <script src="src/app/analytics/directives/category-chart.directive.js"></script>
+  <script src="src/app/analytics/directives/trend-chart.directive.js"></script>
+  <script src="src/app/analytics/directives/card-comparison.directive.js"></script>
+</body>
+</html>

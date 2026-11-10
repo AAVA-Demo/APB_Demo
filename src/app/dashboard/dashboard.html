@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading dashboard...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <dashboard-kpi label="'Monthly Spend'" value="vm.kpiData.monthlySpend" format="'currency'"></dashboard-kpi>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <dashboard-kpi label="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" format="'currency'"></dashboard-kpi>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <dashboard-kpi label="'Available Credit'" value="vm.kpiData.totalAvailableCredit" format="'currency'"></dashboard-kpi>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <dashboard-kpi label="'Total Outstanding'" value="vm.kpiData.totalOutstanding" format="'currency'"></dashboard-kpi>
+      </div>
+    </div>
+    <div class="row" style="margin-top:30px;">
+      <div class="col-md-12">
+        <h3>Your Credit Cards ({{vm.cards.length}})</h3>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Card Number</th>
+                <th>Card Type</th>
+                <th>Credit Limit</th>
+                <th>Outstanding</th>
+                <th>Available Credit</th>
+                <th>Utilization</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="card in vm.cards track by card.cardId">
+                <td>{{card.cardNumber}}</td>
+                <td>{{card.cardType}}</td>
+                <td>{{card.creditLimit | currency}}</td>
+                <td>{{card.outstandingAmount | currency}}</td>
+                <td>{{card.availableCredit | currency}}</td>
+                <td>{{((card.outstandingAmount / card.creditLimit) * 100).toFixed(1)}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

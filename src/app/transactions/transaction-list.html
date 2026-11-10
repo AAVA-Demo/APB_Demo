@@ -1,0 +1,17 @@
+<div class="transaction-list-container">
+  <h2>Transaction History</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading transactions...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <transaction-search filter="vm.filter" on-search="vm.applyFilter()"></transaction-search>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-md-12">
+        <transaction-list transactions="vm.filteredTransactions" on-select="vm.viewDetail(transactionId)"></transaction-list>
+      </div>
+    </div>
+  </div>
+</div>
