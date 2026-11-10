@@ -1,0 +1,65 @@
+<div class="card-container">
+  <h2>Financial Overview Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-box">
+          <div class="kpi-value">${{vm.kpis.monthlySpend | number:0}}</div>
+          <div class="kpi-label">Monthly Spend</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-box">
+          <div class="kpi-value">${{vm.kpis.totalCreditLimit | number:0}}</div>
+          <div class="kpi-label">Total Credit Limit</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-box">
+          <div class="kpi-value">${{vm.kpis.totalAvailableCredit | number:0}}</div>
+          <div class="kpi-label">Available Credit</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-box">
+          <div class="kpi-value">${{vm.kpis.totalOutstanding | number:0}}</div>
+          <div class="kpi-label">Outstanding Amount</div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="card-container">
+          <h4>Credit Utilization: {{vm.kpis.creditUtilization}}%</h4>
+          <div class="utilization-bar">
+            <div class="utilization-fill" ng-class="vm.getUtilizationClass(vm.kpis.creditUtilization)" ng-style="{width: vm.kpis.creditUtilization + '%'}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <h3>Credit Card Portfolio ({{vm.cards.length}} cards)</h3>
+        <div ng-repeat="card in vm.cards" class="credit-card">
+          <div class="row">
+            <div class="col-md-6">
+              <h4>{{card.issuer}} {{card.cardType}}</h4>
+              <div class="card-number">{{card.cardNumber}}</div>
+              <p>Expires: {{card.expiryDate | date:'MM/yyyy'}}</p>
+            </div>
+            <div class="col-md-6 text-right">
+              <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:0}}</p>
+              <p><strong>Available:</strong> ${{card.availableCredit | number:0}}</p>
+              <p><strong>Outstanding:</strong> ${{card.outstandingAmount | number:0}}</p>
+              <p><strong>Utilization:</strong> {{(card.outstandingAmount / card.creditLimit * 100).toFixed(1)}}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Management</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    body { padding-top: 20px; background-color: #f5f5f5; }
+    .card-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .kpi-box { text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; margin-bottom: 15px; }
+    .kpi-value { font-size: 32px; font-weight: bold; }
+    .kpi-label { font-size: 14px; margin-top: 5px; }
+    .credit-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; }
+    .card-number { font-size: 18px; letter-spacing: 2px; margin: 10px 0; }
+    .utilization-bar { height: 20px; background: #e0e0e0; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .utilization-fill { height: 100%; background: #4caf50; transition: width 0.3s; }
+    .utilization-fill.warning { background: #ff9800; }
+    .utilization-fill.danger { background: #f44336; }
+    .chart-container { height: 400px; margin: 20px 0; }
+    .category-item { padding: 10px; border-bottom: 1px solid #eee; }
+    .category-bar { height: 30px; background: #e0e0e0; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+    .category-fill { height: 100%; background: #2196F3; }
+    .comparison-table { margin-top: 20px; }
+    .selected-card { border: 3px solid #4caf50; }
+    nav { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#/">Credit Card Manager</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#/dashboard">Dashboard</a></li>
+        <li><a href="#/cards">My Cards</a></li>
+        <li><a href="#/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container" style="margin-top: 70px;">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/creditCard.service.js"></script>
+  <script src="src/app/services/transaction.service.js"></script>
+  <script src="src/app/services/card.service.js"></script>
+  <script src="src/app/services/spendingAnalysis.service.js"></script>
+  <script src="src/app/services/category.service.js"></script>
+  <script src="src/app/factories/kpiCalculator.factory.js"></script>
+  <script src="src/app/factories/analyticsProcessor.factory.js"></script>
+  <script src="src/app/factories/cardComparator.factory.js"></script>
+  <script src="src/app/interceptors/auth.interceptor.js"></script>
+  <script src="src/app/dashboard/dashboard.module.js"></script>
+  <script src="src/app/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/cardManagement/cardManagement.module.js"></script>
+  <script src="src/app/cardManagement/cardManagement.controller.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/analytics.controller.js"></script>
+  <script src="src/app/directives/cardDetail.directive.js"></script>
+  <script src="src/app/directives/chartVisualization.directive.js"></script>
+</body>
+</html>

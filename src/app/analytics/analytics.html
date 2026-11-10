@@ -1,0 +1,57 @@
+<div class="card-container">
+  <h2>Transaction Analytics & Spending Insights</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card-container">
+          <h3>Category-wise Spending</h3>
+          <div chart-visualization chart-type="pie" chart-labels="vm.chartData.categoryLabels" chart-data="vm.chartData.categoryValues" chart-title="Spending by Category"></div>
+          <div style="margin-top: 20px;">
+            <div ng-repeat="cat in vm.categorySpending" class="category-item" ng-click="vm.selectCategory(cat.category)" style="cursor: pointer;">
+              <div class="row">
+                <div class="col-md-6">
+                  <strong>{{cat.category}}</strong>
+                </div>
+                <div class="col-md-6 text-right">
+                  ${{cat.totalSpend | number:0}} ({{cat.percentage}}%)
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-fill" ng-style="vm.getCategoryPercentageWidth(cat.percentage)"></div>
+              </div>
+              <div ng-if="vm.selectedCategory === cat.category">
+                <p><small>Transactions: {{cat.transactionCount}}</small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card-container">
+          <h3>Monthly Spend Trends</h3>
+          <div chart-visualization chart-type="line" chart-labels="vm.chartData.monthLabels" chart-data="vm.chartData.monthValues" chart-title="Monthly Spending Trend"></div>
+          <div style="margin-top: 20px;">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Total Spend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="month in vm.monthlyTrends | limitTo:6">
+                  <td>{{month.month}}</td>
+                  <td>${{month.totalSpend | number:0}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

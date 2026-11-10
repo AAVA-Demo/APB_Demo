@@ -1,0 +1,68 @@
+<div class="card-container">
+  <h2>Credit Card Management</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-primary" ng-click="vm.compareSelectedCards()" ng-disabled="vm.selectedCards.length < 2">Compare Selected Cards ({{vm.selectedCards.length}})</button>
+        <button class="btn btn-default" ng-click="vm.clearComparison()" ng-if="vm.showComparison">Clear Comparison</button>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;" ng-if="!vm.showComparison">
+      <div class="col-md-12">
+        <h3>My Credit Cards ({{vm.rankedCards.length}} cards)</h3>
+        <div ng-repeat="card in vm.rankedCards" class="credit-card" ng-class="{'selected-card': vm.isCardSelected(card)}" ng-click="vm.toggleCardSelection(card)" style="cursor: pointer;">
+          <div class="row">
+            <div class="col-md-1">
+              <input type="checkbox" ng-checked="vm.isCardSelected(card)" ng-click="$event.stopPropagation()">
+            </div>
+            <div class="col-md-5">
+              <h4>Rank #{{card.rank}} - {{card.issuer}}</h4>
+              <div class="card-number">{{card.cardNumber}}</div>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Monthly Spend:</strong> ${{card.monthlySpend | number:0}}</p>
+              <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:0}}</p>
+              <p><strong>Available:</strong> ${{card.availableCredit | number:0}}</p>
+              <p><strong>Utilization:</strong> {{card.utilization}}%</p>
+              <div class="utilization-bar">
+                <div class="utilization-fill" ng-class="vm.getUtilizationClass(card.utilization)" ng-style="{width: card.utilization + '%'}"></div>
+              </div>
+            </div>
+          </div>
+          <div card-detail card="card"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;" ng-if="vm.showComparison">
+      <div class="col-md-12">
+        <h3>Card Comparison</h3>
+        <table class="table table-bordered comparison-table">
+          <thead>
+            <tr>
+              <th>Card</th>
+              <th>Monthly Spend</th>
+              <th>Credit Limit</th>
+              <th>Available Credit</th>
+              <th>Outstanding</th>
+              <th>Utilization</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="card in vm.comparisonData">
+              <td>{{card.cardName}}</td>
+              <td>${{card.monthlySpend | number:0}}</td>
+              <td>${{card.creditLimit | number:0}}</td>
+              <td>${{card.availableCredit | number:0}}</td>
+              <td>${{card.outstandingAmount | number:0}}</td>
+              <td>{{card.utilization}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
