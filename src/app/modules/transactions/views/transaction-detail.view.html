@@ -1,0 +1,31 @@
+<div ng-controller="TransactionDetailController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Transaction Detail</h2>
+<button class="btn btn-default" ng-click="vm.goBack()">Back to List</button>
+</div>
+</div>
+<div ng-if="vm.loading">
+<p>Loading transaction details...</p>
+</div>
+<div ng-if="!vm.loading && vm.transaction" class="transaction-detail">
+<div class="row">
+<div class="col-md-6">
+<h4>Transaction Information</h4>
+<p><strong>Transaction ID:</strong> {{vm.transaction.transactionId}}</p>
+<p><strong>Date:</strong> {{vm.transaction.date|date:'MMM dd, yyyy HH:mm'}}</p>
+<p><strong>Merchant:</strong> {{vm.transaction.merchant}}</p>
+<p><strong>Amount:</strong> {{vm.transaction.amount|currency}}</p>
+<p><strong>Currency:</strong> {{vm.transaction.currency}}</p>
+</div>
+<div class="col-md-6">
+<h4>Card & Category</h4>
+<p><strong>Card:</strong> ****{{vm.transaction.cardLast4}}</p>
+<p><strong>Card ID:</strong> {{vm.transaction.cardId}}</p>
+<p><strong>Category:</strong> {{vm.transaction.category}}</p>
+<p><strong>Status:</strong> {{vm.transaction.status}}</p>
+<p><strong>Description:</strong> {{vm.transaction.description}}</p>
+</div>
+</div>
+</div>
+</div>

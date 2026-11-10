@@ -1,0 +1,68 @@
+<div ng-controller="AnalyticsController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Spending Analytics & Insights</h2>
+</div>
+</div>
+<div ng-if="vm.loading">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading && vm.analyticsData">
+<div class="row">
+<div class="col-md-12">
+<div class="btn-group" role="group">
+<button class="btn btn-default" ng-class="{'btn-primary':vm.selectedView==='category'}" ng-click="vm.switchView('category')">Category View</button>
+<button class="btn btn-default" ng-class="{'btn-primary':vm.selectedView==='monthly'}" ng-click="vm.switchView('monthly')">Monthly Trends</button>
+<button class="btn btn-default" ng-class="{'btn-primary':vm.selectedView==='card'}" ng-click="vm.switchView('card')">Card-Wise</button>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.selectedView==='category'">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<chart-directive chart-type="pie" chart-data="{labels:vm.analyticsData.categorySpends.map(function(c){return c.category;}),datasets:[{data:vm.analyticsData.categorySpends.map(function(c){return c.amount;}),backgroundColor:['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40','#FF6384','#C9CBCF','#4BC0C0']}]}"></chart-directive>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.selectedView==='monthly'">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<chart-directive chart-type="line" chart-data="{labels:vm.analyticsData.monthlyTrends.map(function(m){return m.month+' '+m.year;}),datasets:[{label:'Total Spend',data:vm.analyticsData.monthlyTrends.map(function(m){return m.totalSpend;}),borderColor:'#36A2EB',fill:false}]}"></chart-directive>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.selectedView==='card'">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Card-Wise Spending</h3>
+<chart-directive chart-type="bar" chart-data="{labels:vm.analyticsData.cardWiseSpends.map(function(c){return 'Card ****'+c.cardLast4;}),datasets:[{label:'Total Spend',data:vm.analyticsData.cardWiseSpends.map(function(c){return c.totalSpend;}),backgroundColor:'#4BC0C0'}]}"></chart-directive>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+<th>Transactions</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.categorySpends">
+<td>{{cat.category}}</td>
+<td>{{cat.amount|currency}}</td>
+<td>{{cat.percentage|number:2}}%</td>
+<td>{{cat.transactionCount}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>

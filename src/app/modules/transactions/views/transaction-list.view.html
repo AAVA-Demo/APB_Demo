@@ -1,0 +1,36 @@
+<div ng-controller="TransactionListController as vm">
+<div class="row">
+<div class="col-md-12">
+<h2>Transaction History</h2>
+</div>
+</div>
+<div ng-if="vm.loading">
+<p>Loading transactions...</p>
+</div>
+<div ng-if="!vm.loading" class="transaction-list">
+<div class="row">
+<div class="col-md-12">
+<p>Total Transactions: {{vm.filteredTransactions.length}}</p>
+</div>
+</div>
+<div class="transaction-item" ng-repeat="txn in vm.filteredTransactions" ng-click="vm.viewDetail(txn.transactionId)">
+<div class="row">
+<div class="col-md-3">
+<strong>{{txn.date|date:'MMM dd, yyyy'}}</strong>
+</div>
+<div class="col-md-3">
+{{txn.merchant}}
+</div>
+<div class="col-md-2">
+{{txn.category}}
+</div>
+<div class="col-md-2">
+****{{txn.cardLast4}}
+</div>
+<div class="col-md-2 text-right">
+<strong>{{txn.amount|currency}}</strong>
+</div>
+</div>
+</div>
+</div>
+</div>
