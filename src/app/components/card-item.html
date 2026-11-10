@@ -1,0 +1,14 @@
+<div class="panel panel-default card-item" ng-click="$ctrl.selectCard()" style="cursor: pointer;">
+  <div class="panel-body">
+    <h4>{{$ctrl.card.cardType}}</h4>
+    <p><strong>{{$ctrl.card.cardNumber}}</strong></p>
+    <p>Credit Limit: ${{$ctrl.card.creditLimit | number:2}}</p>
+    <p>Available: ${{$ctrl.card.availableCredit | number:2}}</p>
+    <p>Utilization: {{$ctrl.card.utilizationPercentage}}%</p>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" ng-style="{width: $ctrl.card.utilizationPercentage + '%'}" ng-class="{'progress-bar-success': $ctrl.card.utilizationPercentage < 30, 'progress-bar-warning': $ctrl.card.utilizationPercentage >= 30 && $ctrl.card.utilizationPercentage < 70, 'progress-bar-danger': $ctrl.card.utilizationPercentage >= 70}">
+        {{$ctrl.card.utilizationPercentage}}%
+      </div>
+    </div>
+  </div>
+</div>

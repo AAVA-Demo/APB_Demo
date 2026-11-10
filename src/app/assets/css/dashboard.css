@@ -1,0 +1,4 @@
+.dashboard-container { padding: 20px; }
+.kpi-card { margin-bottom: 20px; text-align: center; }
+.kpi-card .panel-heading { background-color: #337ab7; color: white; }
+.kpi-card .panel-body h2 { margin: 0; font-size: 2em; font-weight: bold; }
