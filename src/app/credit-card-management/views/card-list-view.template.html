@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-4 col-sm-6" ng-repeat="card in cards">
+    <div class="panel panel-default card-item">
+      <div class="panel-body">
+        <h4>{{card.cardType}} - {{card.cardNumber}}</h4>
+        <p><strong>Holder:</strong> {{card.cardHolderName}}</p>
+        <p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p>
+        <p><strong>Available Credit:</strong> ${{card.availableCredit | number:2}}</p>
+        <p><strong>Outstanding:</strong> ${{card.outstandingBalance | number:2}}</p>
+        <p><strong>Utilization:</strong> {{card.utilizationRate | number:2}}%</p>
+        <p><strong>Status:</strong> <span class="label" ng-class="{'label-success': card.status === 'Active', 'label-danger': card.status !== 'Active'}">{{card.status}}</span></p>
+        <div class="btn-group" role="group">
+          <button class="btn btn-primary btn-sm" ng-click="onSelect({cardId: card.cardId})">View Details</button>
+          <button class="btn btn-default btn-sm" ng-click="onAddToComparison({card: card})">Add to Compare</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

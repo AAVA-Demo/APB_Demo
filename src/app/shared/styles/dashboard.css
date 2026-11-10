@@ -1,0 +1,12 @@
+.dashboard-container { padding: 20px; }
+.kpi-card { margin-bottom: 20px; transition: transform 0.2s; }
+.kpi-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.kpi-card .panel-body { display: flex; align-items: center; padding: 20px; }
+.kpi-icon { font-size: 48px; margin-right: 20px; color: #337ab7; }
+.kpi-content { flex: 1; }
+.kpi-label { margin: 0; font-size: 14px; color: #777; text-transform: uppercase; }
+.kpi-value { margin: 10px 0 0 0; font-size: 32px; font-weight: bold; color: #333; }
+.spinner { font-size: 24px; color: #337ab7; }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@media (max-width: 768px) { .kpi-card .panel-body { flex-direction: column; text-align: center; } .kpi-icon { margin-right: 0; margin-bottom: 10px; } }

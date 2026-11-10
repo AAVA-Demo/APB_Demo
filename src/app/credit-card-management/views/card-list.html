@@ -1,0 +1,19 @@
+<div class="card-management-container">
+  <div class="page-header">
+    <h1>My Credit Cards</h1>
+    <p class="text-muted">Manage and monitor all your credit cards in one place</p>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner">
+      <i class="glyphicon glyphicon-refresh spinning"></i> Loading cards...
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger" role="alert">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <card-list-view cards="vm.cards" on-select="vm.selectCard(cardId)" on-add-to-comparison="vm.addToComparison(card)" ng-if="!vm.loading && !vm.error"></card-list-view>
+  <div ng-if="vm.comparisonCards.length > 0" class="comparison-panel">
+    <h3>Selected for Comparison ({{vm.comparisonCards.length}})</h3>
+    <button class="btn btn-primary" ng-click="vm.viewComparison()">Compare Cards</button>
+  </div>
+</div>

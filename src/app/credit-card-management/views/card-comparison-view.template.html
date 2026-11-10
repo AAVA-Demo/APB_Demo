@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-md-3" ng-repeat="card in cards">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>{{card.cardType}}</h4>
+        <button class="btn btn-xs btn-danger pull-right" ng-click="onRemove({cardId: card.cardId})">Remove</button>
+      </div>
+      <div class="panel-body">
+        <p><strong>Number:</strong> {{card.cardNumber}}</p>
+        <p><strong>Holder:</strong> {{card.cardHolderName}}</p>
+        <hr>
+        <p><strong>Credit Limit:</strong><br>${{card.creditLimit | number:2}}</p>
+        <p><strong>Available:</strong><br>${{card.availableCredit | number:2}}</p>
+        <p><strong>Outstanding:</strong><br>${{card.outstandingBalance | number:2}}</p>
+        <p><strong>Utilization:</strong><br>{{card.utilizationRate | number:2}}%</p>
+        <div class="progress">
+          <div class="progress-bar" ng-class="{'progress-bar-success': card.utilizationRate < 30, 'progress-bar-warning': card.utilizationRate >= 30 && card.utilizationRate < 70, 'progress-bar-danger': card.utilizationRate >= 70}" role="progressbar" ng-style="{'width': card.utilizationRate + '%'}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

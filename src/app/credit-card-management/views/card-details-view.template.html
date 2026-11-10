@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Card Information</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <tr><th>Card Number:</th><td>{{card.cardNumber}}</td></tr>
+          <tr><th>Card Type:</th><td>{{card.cardType}}</td></tr>
+          <tr><th>Holder Name:</th><td>{{card.cardHolderName}}</td></tr>
+          <tr><th>Issuer:</th><td>{{card.issuer}}</td></tr>
+          <tr><th>Expiry Date:</th><td>{{card.expiryDate}}</td></tr>
+          <tr><th>Status:</th><td><span class="label" ng-class="{'label-success': card.status === 'Active', 'label-danger': card.status !== 'Active'}">{{card.status}}</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Financial Summary</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <tr><th>Credit Limit:</th><td>${{card.creditLimit | number:2}}</td></tr>
+          <tr><th>Available Credit:</th><td>${{card.availableCredit | number:2}}</td></tr>
+          <tr><th>Outstanding Balance:</th><td>${{card.outstandingBalance | number:2}}</td></tr>
+          <tr><th>Utilization Rate:</th><td>{{card.utilizationRate | number:2}}%</td></tr>
+        </table>
+        <div class="progress">
+          <div class="progress-bar" ng-class="{'progress-bar-success': card.utilizationRate < 30, 'progress-bar-warning': card.utilizationRate >= 30 && card.utilizationRate < 70, 'progress-bar-danger': card.utilizationRate >= 70}" role="progressbar" ng-style="{'width': card.utilizationRate + '%'}" aria-valuenow="{{card.utilizationRate}}" aria-valuemin="0" aria-valuemax="100">
+            {{card.utilizationRate | number:2}}%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="spending">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Spending Analysis</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <tr><th>Monthly Spend:</th><td>${{spending.monthlySpend | number:2}}</td></tr>
+          <tr><th>Transaction Count:</th><td>{{spending.transactionCount}}</td></tr>
+          <tr><th>Top Category:</th><td>{{spending.topCategory}}</td></tr>
+          <tr><th>Last Transaction:</th><td>{{spending.lastTransactionDate | date:'medium'}}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

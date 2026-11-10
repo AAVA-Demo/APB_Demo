@@ -1,0 +1,6 @@
+.analytics-container { padding: 20px; }
+.panel { margin-bottom: 20px; }
+canvas { max-width: 100%; height: auto !important; }
+.form-inline .form-group { margin-right: 15px; margin-bottom: 10px; }
+.form-inline label { margin-right: 5px; }
+@media (max-width: 768px) { .form-inline .form-group { display: block; margin-right: 0; } }

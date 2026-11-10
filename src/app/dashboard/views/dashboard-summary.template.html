@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <kpi-card label="Monthly Spend" value="kpiData.monthlySpend" icon="glyphicon-credit-card" format="currency"></kpi-card>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <kpi-card label="Total Credit Limit" value="kpiData.totalCreditLimit" icon="glyphicon-piggy-bank" format="currency"></kpi-card>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <kpi-card label="Available Credit" value="kpiData.availableCredit" icon="glyphicon-ok-circle" format="currency"></kpi-card>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <kpi-card label="Outstanding Amount" value="kpiData.outstandingAmount" icon="glyphicon-exclamation-sign" format="currency"></kpi-card>
+  </div>
+</div>
+<div class="row" style="margin-top: 20px;">
+  <div class="col-lg-6 col-md-12">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Credit Utilization</h3>
+      </div>
+      <div class="panel-body">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" ng-style="{'width': kpiData.utilizationRate + '%'}" aria-valuenow="{{kpiData.utilizationRate}}" aria-valuemin="0" aria-valuemax="100">
+            {{kpiData.utilizationRate | number:2}}%
+          </div>
+        </div>
+        <p class="text-muted">Last updated: {{kpiData.lastUpdated | date:'short'}}</p>
+      </div>
+    </div>
+  </div>
+</div>

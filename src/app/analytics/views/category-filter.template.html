@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form class="form-inline">
+      <div class="form-group">
+        <label>Start Date:</label>
+        <input type="month" class="form-control" ng-model="filter.startDate">
+      </div>
+      <div class="form-group">
+        <label>End Date:</label>
+        <input type="month" class="form-control" ng-model="filter.endDate">
+      </div>
+      <div class="form-group">
+        <label>Categories:</label>
+        <select class="form-control" ng-model="filter.selectedCategories" multiple>
+          <option ng-repeat="cat in categories" value="{{cat}}">{{cat}}</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="onApply()">Apply Filter</button>
+      <button type="button" class="btn btn-default" ng-click="onReset()">Reset</button>
+    </form>
+  </div>
+</div>
