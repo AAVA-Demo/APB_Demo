@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('creditCard.analytics').component('analyticsFilter',{bindings:{filter:'=',categories:'<'},template:'<div class="filter-panel panel panel-default"><div class="panel-heading"><h4>Filter Analytics</h4></div><div class="panel-body"><div class="row"><div class="col-md-4 col-sm-6"><label>Start Date</label><input type="date" class="form-control" ng-model="$ctrl.filter.startDate"></div><div class="col-md-4 col-sm-6"><label>End Date</label><input type="date" class="form-control" ng-model="$ctrl.filter.endDate"></div><div class="col-md-4 col-sm-6"><label>Categories</label><select class="form-control" ng-model="$ctrl.filter.selectedCategories" multiple><option ng-repeat="cat in $ctrl.categories" value="{{cat}}">{{cat}}</option></select></div></div></div></div>'});
+})();

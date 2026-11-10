@@ -1,0 +1,22 @@
+<div class="transactions-container">
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<p>Loading transactions...</p>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-xs-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+<button class="btn btn-primary" ng-click="vm.loadTransactions()">Retry</button>
+</div>
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-xs-12">
+<h2>Transaction Management</h2>
+</div>
+</div>
+<transaction-filter filter="vm.filter" cards="vm.cards" on-apply="vm.applyFilter()" on-clear="vm.clearFilter()" on-merchant-search="vm.onMerchantSearch()"></transaction-filter>
+<transaction-list transactions="vm.transactions" pagination="vm.pagination" on-page-change="vm.changePage(page)"></transaction-list>
+</div>
+</div>
