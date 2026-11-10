@@ -1,0 +1,42 @@
+{
+  "baseUrl": "https://app.creditcard.com",
+  "users": {
+    "testUser": {
+      "username": "testuser@example.com",
+      "password": "Test@1234"
+    },
+    "newUser": {
+      "username": "newtestuser@example.com",
+      "password": "Test@1234"
+    },
+    "user5Cards": {
+      "username": "testuser5cards@example.com",
+      "password": "Test@1234"
+    },
+    "user10Cards": {
+      "username": "testuser10cards@example.com",
+      "password": "Test@1234"
+    },
+    "user12Months": {
+      "username": "testuser12months@example.com",
+      "password": "Test@1234"
+    },
+    "user6Months": {
+      "username": "testuser6months@example.com",
+      "password": "Test@1234"
+    },
+    "userExpiredData": {
+      "username": "testuserexpireddata@example.com",
+      "password": "Test@1234"
+    }
+  },
+  "timeouts": {
+    "default": 30000,
+    "navigation": 60000,
+    "api": 10000
+  },
+  "retries": {
+    "maxRetries": 2,
+    "retryDelay": 1000
+  }
+}
