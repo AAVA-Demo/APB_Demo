@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Credit Card Dashboard</h2>
+    <p class="text-muted">Monitor your credit card portfolio at a glance</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-xs-12 text-center">
+    <p>Loading dashboard...</p>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-danger">{{ vm.error }}</div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-widget label="Monthly Spend" value="vm.kpiMetrics.monthlySpend"></kpi-widget>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-widget label="Total Credit Limit" value="vm.kpiMetrics.totalCreditLimit"></kpi-widget>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-widget label="Available Credit" value="vm.kpiMetrics.totalAvailableCredit"></kpi-widget>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <kpi-widget label="Outstanding Amount" value="vm.kpiMetrics.totalOutstanding"></kpi-widget>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="kpi-card">
+      <h4>Credit Utilization</h4>
+      <div class="progress" style="height: 30px;">
+        <div class="progress-bar" role="progressbar" 
+             ng-style="{width: vm.kpiMetrics.utilizationPercentage + '%'}" 
+             ng-class="{'progress-bar-success': vm.kpiMetrics.utilizationPercentage < 30, 'progress-bar-warning': vm.kpiMetrics.utilizationPercentage >= 30 && vm.kpiMetrics.utilizationPercentage < 70, 'progress-bar-danger': vm.kpiMetrics.utilizationPercentage >= 70}">
+          {{ vm.kpiMetrics.utilizationPercentage }}%
+        </div>
+      </div>
+      <p class="text-muted" style="margin-top: 10px;">Last updated: {{ vm.kpiMetrics.lastRefreshed | date:'short' }}</p>
+    </div>
+  </div>
+</div>

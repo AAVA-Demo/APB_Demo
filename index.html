@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    body { padding-top: 20px; background-color: #f5f5f5; }
+    .kpi-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; }
+    .kpi-label { font-size: 14px; color: #7f8c8d; margin-top: 5px; }
+    .card-item { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s; }
+    .card-item:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); transform: translateY(-2px); }
+    .masked-number { font-family: monospace; font-size: 18px; }
+    .chart-container { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .navbar { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/">Credit Card Manager</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a ui-sref="dashboard">Dashboard</a></li>
+          <li><a ui-sref="cards">My Cards</a></li>
+          <li><a ui-sref="analytics">Analytics</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container" style="margin-top: 70px;">
+    <div ui-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/services/auth.factory.js"></script>
+  <script src="src/app/services/user-profile.factory.js"></script>
+  <script src="src/app/dashboard/dashboard.module.js"></script>
+  <script src="src/app/dashboard/services/kpi.service.js"></script>
+  <script src="src/app/dashboard/controllers/dashboard.controller.js"></script>
+  <script src="src/app/dashboard/directives/kpi-widget.directive.js"></script>
+  <script src="src/app/card-management/card-management.module.js"></script>
+  <script src="src/app/card-management/services/card.service.js"></script>
+  <script src="src/app/card-management/controllers/card-management.controller.js"></script>
+  <script src="src/app/card-management/directives/card-detail.directive.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/services/transaction.service.js"></script>
+  <script src="src/app/analytics/services/analytics.service.js"></script>
+  <script src="src/app/analytics/controllers/analytics.controller.js"></script>
+  <script src="src/app/analytics/directives/spending-chart.directive.js"></script>
+</body>
+</html>

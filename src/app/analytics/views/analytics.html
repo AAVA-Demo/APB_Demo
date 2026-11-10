@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Spending Analytics</h2>
+    <p class="text-muted">Understand your spending patterns across categories</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-xs-12 text-center">
+    <p>Loading analytics...</p>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-danger">{{ vm.error }}</div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-xs-12 col-md-6">
+    <div class="chart-container">
+      <h4>Category-Wise Spending</h4>
+      <div style="height: 300px;">
+        <canvas class="chart chart-pie" 
+                chart-data="vm.pieChartData" 
+                chart-labels="vm.pieChartLabels">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Spend Trends</h4>
+      <div style="height: 300px;">
+        <canvas class="chart chart-line" 
+                chart-data="vm.lineChartData" 
+                chart-labels="vm.lineChartLabels" 
+                chart-series="vm.lineChartSeries">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row" style="margin-top: 20px;">
+  <div class="col-xs-12">
+    <div class="chart-container">
+      <h4>Category Breakdown</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Total Amount</th>
+            <th>Transactions</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in vm.categorySpending">
+            <td>{{ item.category }}</td>
+            <td>{{ item.totalAmount | currency:"₹":0 }}</td>
+            <td>{{ item.transactionCount }}</td>
+            <td>{{ item.percentage }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
