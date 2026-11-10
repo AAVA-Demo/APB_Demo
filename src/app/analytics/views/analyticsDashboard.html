@@ -1,0 +1,35 @@
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+</div>
+<div ng-if="vm.error" class="error-message">
+  <i class="glyphicon glyphicon-exclamation-sign"></i> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Transaction Analytics</h2>
+  <category-filter categories="vm.categories" selected-categories="vm.selectedCategories"></category-filter>
+  <div class="chart-container">
+    <h3>Category-wise Spending</h3>
+    <chart chart-data="vm.chartData" chart-type="pie"></chart>
+  </div>
+  <div class="chart-container">
+    <h3>Spending Summary</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Total Spend</th>
+          <th>Transactions</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in vm.aggregatedData">
+          <td>{{item.category}}</td>
+          <td>{{item.totalSpend | currency:'₹'}}</td>
+          <td>{{item.transactionCount}}</td>
+          <td>{{item.percentageOfTotal}}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
