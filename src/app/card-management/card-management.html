@@ -1,0 +1,35 @@
+<div class="card-management-container">
+  <div class="page-header">
+    <h1>My Credit Cards</h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center"><h3>Loading credit cards...</h3></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="filter-bar">
+      <button class="btn btn-sm" ng-class="{active: vm.statusFilter === 'all'}" ng-click="vm.filterByStatus('all')">All</button>
+      <button class="btn btn-sm" ng-class="{active: vm.statusFilter === 'active'}" ng-click="vm.filterByStatus('active')">Active</button>
+      <button class="btn btn-sm" ng-class="{active: vm.statusFilter === 'inactive'}" ng-click="vm.filterByStatus('inactive')">Inactive</button>
+      <button class="btn btn-sm" ng-class="{active: vm.statusFilter === 'blocked'}" ng-click="vm.filterByStatus('blocked')">Blocked</button>
+    </div>
+    <div class="row cards-grid">
+      <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.filteredCards">
+        <credit-card-tile card="card" on-select="vm.showCardDetails(card)"></credit-card-tile>
+      </div>
+    </div>
+  </div>
+  <div class="modal" ng-if="vm.selectedCard" ng-click="vm.closeDetails()">
+    <div class="modal-content" ng-click="$event.stopPropagation()">
+      <span class="close" ng-click="vm.closeDetails()">&times;</span>
+      <h2>Card Details</h2>
+      <div class="detail-row"><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</div>
+      <div class="detail-row"><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</div>
+      <div class="detail-row"><strong>Status:</strong> {{vm.selectedCard.status}}</div>
+      <div class="detail-row"><strong>Credit Limit:</strong> ₹{{vm.selectedCard.creditLimit | number:2}}</div>
+      <div class="detail-row"><strong>Available Credit:</strong> ₹{{vm.selectedCard.availableCredit | number:2}}</div>
+      <div class="detail-row"><strong>Outstanding Balance:</strong> ₹{{vm.selectedCard.outstandingBalance | number:2}}</div>
+      <div class="detail-row"><strong>Monthly Spend:</strong> ₹{{vm.selectedCard.monthlySpend | number:2}}</div>
+      <div class="detail-row"><strong>Total Transactions:</strong> {{vm.selectedCard.totalTransactions}}</div>
+      <div class="detail-row"><strong>Expiry Date:</strong> {{vm.selectedCard.expiryDate}}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="analytics-container">
+  <div class="page-header">
+    <h1>Analytics & Spending Insights <button class="btn btn-sm btn-success pull-right" ng-click="vm.exportData()" ng-disabled="vm.loading"><i class="glyphicon glyphicon-download"></i> Export CSV</button></h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center"><h3>Loading analytics...</h3></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3 class="panel-title">Monthly Spend Trends (Last 12 Months)</h3></div>
+          <div class="panel-body" style="height: 300px;">
+            <spend-trend-chart data="vm.monthlyTrends"></spend-trend-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3 class="panel-title">Category-Wise Spending</h3></div>
+          <div class="panel-body" style="height: 300px;">
+            <category-pie-chart data="vm.categoryBreakdown"></category-pie-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3 class="panel-title">Category Breakdown</h3></div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in vm.categoryBreakdown">
+                  <td>{{item.category}}</td>
+                  <td>₹{{item.amount | number:2}}</td>
+                  <td>{{item.percentage}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
