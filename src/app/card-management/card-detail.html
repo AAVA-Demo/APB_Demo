@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="#/cards" class="btn btn-default btn-sm">&larr; Back to Cards</a>
+    <h2>Card Details</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading card details...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="vm.card && !vm.loading">
+  <div class="col-md-6">
+    <div class="card-tile">
+      <h3 style="margin-top:0;">{{vm.card.cardType}} {{vm.card.cardNumber}}</h3>
+      <p><strong>Cardholder:</strong> {{vm.card.cardHolderName}}</p>
+      <p><strong>Expires:</strong> {{vm.card.expiryDate}}</p>
+      <p><strong>Status:</strong> <span class="label label-success" ng-if="vm.card.status === 'Active'">{{vm.card.status}}</span><span class="label label-danger" ng-if="vm.card.status !== 'Active'">{{vm.card.status}}</span></p>
+      <hr>
+      <div class="row">
+        <div class="col-xs-6"><p><strong>Credit Limit:</strong></p><p class="kpi-value" style="font-size:24px;">${{vm.card.creditLimit | number:2}}</p></div>
+        <div class="col-xs-6"><p><strong>Current Balance:</strong></p><p class="kpi-value" style="font-size:24px;">${{vm.card.currentBalance | number:2}}</p></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6"><p><strong>Available Credit:</strong></p><p class="kpi-value" style="font-size:24px;">${{vm.card.availableCredit | number:2}}</p></div>
+        <div class="col-xs-6"><p><strong>Utilization:</strong></p><p class="kpi-value" style="font-size:24px;">{{vm.card.utilization}}%</p></div>
+      </div>
+      <div class="utilization-bar" style="margin-top:15px;"><div class="utilization-fill" ng-class="{high: vm.card.utilization > 80}" ng-style="{width: vm.card.utilization + '%'}"></div></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Spending</h4>
+      <p class="kpi-value" style="font-size:28px;">${{vm.spending.monthlySpend | number:2}}</p>
+      <p class="text-muted">Total transactions: {{vm.spending.transactionCount}}</p>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.transactions.length > 0 && !vm.loading">
+  <div class="col-md-12">
+    <div class="chart-container">
+      <h4>Recent Transactions</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Merchant</th>
+            <th>Category</th>
+            <th class="text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="txn in vm.transactions | limitTo:10 track by txn.transactionId">
+            <td>{{txn.date | date:'short'}}</td>
+            <td>{{txn.merchant}}</td>
+            <td><span class="label label-info">{{txn.category}}</span></td>
+            <td class="text-right">${{txn.amount | number:2}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

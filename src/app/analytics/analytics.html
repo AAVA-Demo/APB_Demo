@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Analytics & Spending Insights</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading analytics data...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="filter-panel">
+      <form class="form-inline">
+        <div class="form-group">
+          <label>Period:</label>
+          <select class="form-control" ng-model="vm.periodMonths" ng-change="vm.applyFilter()">
+            <option value="3">Last 3 Months</option>
+            <option value="6">Last 6 Months</option>
+            <option value="12">Last 12 Months</option>
+            <option value="24">Last 24 Months</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-left:15px;">
+          <label>Category:</label>
+          <select class="form-control" ng-model="vm.selectedCategory">
+            <option value="">All Categories</option>
+            <option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.analyticsData && !vm.loading">
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Category-Wise Spending</h4>
+      <spending-chart data="vm.analyticsData.categorySpending"></spending-chart>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Spend Trends</h4>
+      <trend-chart data="vm.analyticsData.monthlyTrends"></trend-chart>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.analyticsData && !vm.loading">
+  <div class="col-md-12">
+    <div class="chart-container">
+      <h4>Spending Breakdown</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="text-right">Total Spend</th>
+            <th class="text-right">Transactions</th>
+            <th class="text-right">Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cat in vm.analyticsData.categorySpending | filter:{category: vm.selectedCategory} track by cat.category">
+            <td><strong>{{cat.category}}</strong></td>
+            <td class="text-right">${{cat.totalSpend | number:2}}</td>
+            <td class="text-right">{{cat.transactionCount}}</td>
+            <td class="text-right">{{cat.percentage}}%</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <th class="text-right">${{vm.analyticsData.totalSpend | number:2}}</th>
+            <th colspan="2"></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

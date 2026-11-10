@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading credit cards...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Search cards by name, type, or number..." ng-model="vm.searchText" ng-change="vm.filterCards()">
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6" ng-repeat="card in vm.filteredCards track by card.cardId">
+    <card-tile card="card" on-click="vm.viewCardDetail(cardId)"></card-tile>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.filteredCards.length === 0">
+  <div class="col-md-12">
+    <div class="alert alert-warning">No credit cards found.</div>
+  </div>
+</div>
