@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-12">
+    <button class="btn btn-default btn-sm" ng-click="vm.goBack()">
+      <span class="glyphicon glyphicon-arrow-left"></span> Back to Cards
+    </button>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-md-12 text-center">
+    <p><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading card details...</p>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-md-12">
+    <div class="alert alert-danger">{{ vm.error }}</div>
+  </div>
+</div>
+<div ng-if="vm.card" class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ vm.card.cardType }} {{ vm.card.cardNumber }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Card ID:</strong> {{ vm.card.cardId }}</p>
+            <p><strong>Expiry Date:</strong> {{ vm.card.expiryDate }}</p>
+            <p><strong>Status:</strong> <span ng-if="vm.card.isActive" class="label label-success">Active</span><span ng-if="!vm.card.isActive" class="label label-default">Inactive</span></p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Credit Limit:</strong> ${{ vm.card.creditLimit | number:2 }}</p>
+            <p><strong>Available Credit:</strong> ${{ vm.card.availableCredit | number:2 }}</p>
+            <p><strong>Outstanding Balance:</strong> ${{ vm.card.outstandingBalance | number:2 }}</p>
+            <p><strong>Monthly Spend:</strong> ${{ vm.card.monthlySpend | number:2 }}</p>
+          </div>
+        </div>
+        <hr>
+        <h4>Spending Trends</h4>
+        <div class="alert alert-info">Detailed spending analysis for this card including category breakdown and monthly trends.</div>
+      </div>
+    </div>
+  </div>
+</div>

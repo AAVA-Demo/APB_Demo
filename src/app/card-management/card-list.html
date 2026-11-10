@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refresh()" ng-disabled="vm.loading">
+      <span class="glyphicon glyphicon-refresh"></span> Refresh
+    </button>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-md-12 text-center">
+    <p><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading cards...</p>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-md-12">
+    <div class="alert alert-danger">{{ vm.error }}</div>
+  </div>
+</div>
+<div ng-if="!vm.loading && vm.cards.length === 0" class="row">
+  <div class="col-md-12">
+    <div class="alert alert-info">No credit cards found.</div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards">
+    <div class="card-item" ng-click="vm.selectCard(card.cardId)">
+      <div class="card-number">{{ card.cardType }} {{ card.cardNumber }}</div>
+      <p><strong>Credit Limit:</strong> ${{ card.creditLimit | number:2 }}</p>
+      <p><strong>Available:</strong> ${{ card.availableCredit | number:2 }}</p>
+      <p class="card-balance"><strong>Outstanding:</strong> ${{ card.outstandingBalance | number:2 }}</p>
+      <p><strong>Monthly Spend:</strong> ${{ card.monthlySpend | number:2 }}</p>
+      <p><small>Expires: {{ card.expiryDate }}</small></p>
+    </div>
+  </div>
+</div>
