@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Analytics & Spending Insights</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading analytics data...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <category-filter categories="vm.categories" selected-category="vm.selectedCategory" on-filter="vm.filterByCategory(category)" on-clear="vm.clearFilter()"></category-filter>
+  </div>
+</div>
+<div class="row" ng-if="vm.analyticsData">
+  <div class="col-md-12">
+    <div class="kpi-widget">
+      <h3>Spending Summary</h3>
+      <div class="row">
+        <div class="col-md-4">
+          <strong>Total Spend:</strong> ₹{{vm.analyticsData.totalSpend | number}}
+        </div>
+        <div class="col-md-4" ng-if="vm.analyticsData.topCategory">
+          <strong>Top Category:</strong> {{vm.analyticsData.topCategory.categoryName}}
+        </div>
+        <div class="col-md-4" ng-if="vm.analyticsData.topCategory">
+          <strong>Top Spend:</strong> ₹{{vm.analyticsData.topCategory.totalSpend | number}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.analyticsData">
+  <div class="col-md-6">
+    <spending-chart chart-data="vm.analyticsData.pieChartData" chart-type="pie"></spending-chart>
+  </div>
+  <div class="col-md-6">
+    <div class="kpi-widget">
+      <h3>Category Breakdown</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Spend</th>
+            <th>%</th>
+            <th>Transactions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cat in vm.analyticsData.categories | orderBy:'-totalSpend'">
+            <td>{{cat.categoryName}}</td>
+            <td>₹{{cat.totalSpend | number}}</td>
+            <td>{{cat.percentageOfTotal}}%</td>
+            <td>{{cat.transactionCount}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.analyticsData && vm.selectedCategory">
+  <div class="col-md-12">
+    <div class="kpi-widget">
+      <h3>Monthly Trend for {{vm.selectedCategory}}</h3>
+      <div ng-if="vm.analyticsData.categories.length > 0">
+        <div ng-repeat="cat in vm.analyticsData.categories" ng-if="cat.categoryName === vm.selectedCategory">
+          <ul class="list-inline">
+            <li ng-repeat="trend in cat.monthlyTrend">
+              <span class="category-badge">{{trend.month}}: ₹{{trend.amount | number}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

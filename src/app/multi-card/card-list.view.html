@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading cards...</div>
+    <div ng-if="vm.error" class="alert alert-warning">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="vm.filterText" placeholder="Filter cards by number, type, or name...">
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.comparison">
+  <div class="col-md-12">
+    <div class="kpi-widget">
+      <h3>Card Comparison Summary</h3>
+      <div class="row">
+        <div class="col-md-3">
+          <strong>Total Cards:</strong> {{vm.cards.length}}
+        </div>
+        <div class="col-md-3">
+          <strong>Total Spend:</strong> ₹{{vm.comparison.totalSpend | number}}
+        </div>
+        <div class="col-md-3">
+          <strong>Avg Utilization:</strong> {{vm.comparison.averageUtilization}}%
+        </div>
+        <div class="col-md-3">
+          <strong>Highest Spend:</strong> {{vm.comparison.highestSpendCard.cardNumber}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6" ng-repeat="card in vm.getFilteredCards() track by card.cardId">
+    <card-summary-card card="card" on-click="vm.navigateToCardDetail(cardId)"></card-summary-card>
+  </div>
+</div>
+<div class="row" ng-if="vm.getFilteredCards().length === 0 && !vm.loading">
+  <div class="col-md-12">
+    <div class="alert alert-info">No cards found matching your filter.</div>
+  </div>
+</div>

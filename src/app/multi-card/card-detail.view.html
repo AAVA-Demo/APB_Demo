@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="#!/cards" class="btn btn-default">&larr; Back to Cards</a>
+    <h2>Card Details</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading card details...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="vm.card">
+  <div class="col-md-6">
+    <div class="kpi-widget">
+      <h3>Card Information</h3>
+      <table class="table">
+        <tr><td><strong>Card Number:</strong></td><td>{{vm.card.cardNumber}}</td></tr>
+        <tr><td><strong>Card Type:</strong></td><td>{{vm.card.cardType}}</td></tr>
+        <tr><td><strong>Card Holder:</strong></td><td>{{vm.card.cardHolderName}}</td></tr>
+        <tr><td><strong>Credit Limit:</strong></td><td>₹{{vm.card.creditLimit | number}}</td></tr>
+        <tr><td><strong>Available Credit:</strong></td><td>₹{{vm.card.availableCredit | number}}</td></tr>
+        <tr><td><strong>Outstanding:</strong></td><td>₹{{vm.card.outstandingAmount | number}}</td></tr>
+        <tr><td><strong>Utilization:</strong></td><td>{{vm.card.utilizationRate}}%</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="kpi-widget" ng-if="vm.spendAnalysis">
+      <h3>Spend Analysis</h3>
+      <p><strong>Total Monthly Spend:</strong> ₹{{vm.spendAnalysis.totalSpend | number}}</p>
+      <h4>Category Breakdown</h4>
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="cat in vm.spendAnalysis.categories">
+          <strong>{{cat.name}}:</strong> ₹{{cat.amount | number}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Dashboard</h2>
+    <div ng-if="vm.loading" class="alert alert-info">Loading KPIs...</div>
+    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-if="vm.kpis">
+  <div class="col-md-3 col-sm-6">
+    <kpi-widget label="Monthly Spend" value="vm.kpis.monthlySpend" icon="credit-card" format="currency"></kpi-widget>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="piggy-bank" format="currency"></kpi-widget>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-widget label="Available Credit" value="vm.kpis.availableCredit" icon="ok-circle" format="currency"></kpi-widget>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-widget label="Outstanding Amount" value="vm.kpis.outstandingAmount" icon="exclamation-sign" format="currency"></kpi-widget>
+  </div>
+</div>
+<div class="row" ng-if="vm.kpis">
+  <div class="col-md-12">
+    <div class="kpi-widget">
+      <h3>Credit Utilization</h3>
+      <div class="progress">
+        <div class="progress-bar" ng-class="{'progress-bar-success': vm.kpis.utilizationRate < 30, 'progress-bar-warning': vm.kpis.utilizationRate >= 30 && vm.kpis.utilizationRate < 70, 'progress-bar-danger': vm.kpis.utilizationRate >= 70}" role="progressbar" style="width: {{vm.kpis.utilizationRate}}%">
+          {{vm.kpis.utilizationRate}}%
+        </div>
+      </div>
+      <small>Last refreshed: {{vm.kpis.lastRefreshed | date:'short'}}</small>
+    </div>
+  </div>
+</div>
