@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCard.transactions').filter('transactionDate',['$filter',function($filter){return function(timestamp){if(!timestamp)return'';return $filter('date')(timestamp,'MMM dd, yyyy hh:mm a');};}]);})();

@@ -1,0 +1,5 @@
+(function(){'use strict';angular.module('creditCard.transactions').factory('PaginationHelper',[function(){function PaginationHelper(){this.currentPage=1;this.totalPages=1;this.pageSize=20;this.totalRecords=0;}
+PaginationHelper.prototype.initialize=function(pagination){this.currentPage=pagination.currentPage||1;this.totalPages=pagination.totalPages||1;this.pageSize=pagination.pageSize||20;this.totalRecords=pagination.totalRecords||0;};PaginationHelper.prototype.nextPage=function(){if(this.currentPage<this.totalPages){this.currentPage++;return true;}
+return false;};PaginationHelper.prototype.prevPage=function(){if(this.currentPage>1){this.currentPage--;return true;}
+return false;};PaginationHelper.prototype.goToPage=function(page){if(page>=1&&page<=this.totalPages){this.currentPage=page;return true;}
+return false;};PaginationHelper.prototype.setPageSize=function(size){this.pageSize=size;this.currentPage=1;};return PaginationHelper;}]);})();
