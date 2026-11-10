@@ -1,0 +1,31 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div ng-if="vm.selectedCategory">
+<button class="btn btn-sm btn-default" ng-click="vm.resetFilter()">Show All Categories</button>
+<p><strong>Filtered by:</strong> {{vm.selectedCategory}}</p>
+</div>
+<div class="row">
+<div class="col-xs-12 col-md-6">
+<h4>Category-Wise Spending</h4>
+<chart-directive chart-data="vm.categoryChartData" chart-type="bar" chart-labels="vm.categoryLabels"></chart-directive>
+<ul class="list-group" style="margin-top:15px;">
+<li class="list-group-item" ng-repeat="(cat,amount) in vm.analytics.categorySpending" ng-click="vm.handleDrillDown(cat)" style="cursor:pointer;">
+<strong>{{cat}}:</strong> ₹{{amount | number:2}}
+</li>
+</ul>
+</div>
+<div class="col-xs-12 col-md-6">
+<h4>Monthly Spend Trends</h4>
+<chart-directive chart-data="vm.trendChartData" chart-type="line" chart-labels="vm.trendLabels"></chart-directive>
+<ul class="list-group" style="margin-top:15px;">
+<li class="list-group-item" ng-repeat="trend in vm.analytics.monthlyTrends">
+<strong>{{trend.month}}:</strong> ₹{{trend.totalSpend | number:2}}
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
