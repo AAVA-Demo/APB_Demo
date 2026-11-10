@@ -1,0 +1,61 @@
+{
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "apiBaseUrl": "/api",
+  "timeout": 30000,
+  "users": {
+    "testuser_activecards": {
+      "username": "testuser_activecards",
+      "password": "Test@123",
+      "description": "User with multiple active credit cards"
+    },
+    "testuser_nocards": {
+      "username": "testuser_nocards",
+      "password": "Test@123",
+      "description": "User with no active credit cards"
+    },
+    "testuser_zerobalances": {
+      "username": "testuser_zerobalances",
+      "password": "Test@123",
+      "description": "User with credit cards but zero balances"
+    },
+    "testuser_5cards": {
+      "username": "testuser_5cards",
+      "password": "Test@123",
+      "description": "User with 5 linked credit cards"
+    },
+    "testuser_11cards": {
+      "username": "testuser_11cards",
+      "password": "Test@123",
+      "description": "User with 11 credit cards (exceeds limit)"
+    },
+    "testuser_allcategories": {
+      "username": "testuser_allcategories",
+      "password": "Test@123",
+      "description": "User with transactions across all 9 categories"
+    },
+    "testuser_12months": {
+      "username": "testuser_12months",
+      "password": "Test@123",
+      "description": "User with 12 months of transaction history"
+    }
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "nfr": {
+    "dashboardLoadTime": 2000,
+    "cardRetrievalTime": 3000,
+    "chartRenderTime": 2000,
+    "apiTimeout": 5000,
+    "realTimeRefreshInterval": 30000,
+    "maxCardsPerUser": 10
+  }
+}
