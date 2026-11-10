@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics & Insights</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="filter-panel">
+      <h4>Filters</h4>
+      <form class="form-inline">
+        <div class="form-group">
+          <label>Start Date:</label>
+          <input type="date" class="form-control" ng-model="vm.filter.startDate">
+        </div>
+        <div class="form-group">
+          <label>End Date:</label>
+          <input type="date" class="form-control" ng-model="vm.filter.endDate">
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="vm.applyFilter()">Apply Filter</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h3>Category-Wise Spending</h3>
+      <pie-chart data="vm.pieChartData" labels="vm.pieChartLabels"></pie-chart>
+      <table class="table table-striped" style="margin-top: 20px;">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Transactions</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cat in vm.analytics.categorySpending">
+            <td>{{cat.category}}</td>
+            <td>${{cat.amount | number:2}}</td>
+            <td>{{cat.transactionCount}}</td>
+            <td>{{cat.percentage}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container">
+      <h3>Monthly Spend Trends</h3>
+      <line-chart data="vm.lineChartData" labels="vm.lineChartLabels"></line-chart>
+      <table class="table table-striped" style="margin-top: 20px;">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Total Spend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="trend in vm.analytics.monthlyTrends">
+            <td>{{trend.month}}</td>
+            <td>${{trend.totalSpend | number:2}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="vm.loading">
+  <div class="col-md-12 text-center">
+    <p>Loading analytics...</p>
+  </div>
+</div>
