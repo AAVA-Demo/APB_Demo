@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').directive('kpiWidget',kpiWidget);function kpiWidget(){return{restrict:'E',scope:{title:'=',value:'=',icon:'=',color:'='},templateUrl:'src/app/directives/kpi-widget.html'};}})();

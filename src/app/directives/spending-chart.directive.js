@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').directive('spendingChart',spendingChart);spendingChart.$inject=[];function spendingChart(){return{restrict:'E',scope:{chartData:'=',chartLabels:'=',chartType:'@'},template:'<canvas id="spending-chart" class="chart" chart-data="chartData" chart-labels="chartLabels"></canvas>'};}})();

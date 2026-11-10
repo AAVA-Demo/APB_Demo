@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.portfolio',['ui.router','ngAnimate']);})();

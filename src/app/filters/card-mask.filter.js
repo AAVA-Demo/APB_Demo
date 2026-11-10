@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').filter('cardMask',function(){return function(cardNumber){if(!cardNumber||cardNumber.length<4){return '****';}return '**** **** **** '+cardNumber.slice(-4);};});})();

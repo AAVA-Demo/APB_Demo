@@ -1,0 +1,29 @@
+<div class="portfolio-container">
+<h2>Credit Card Portfolio</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading portfolio...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.portfolio && !vm.loading">
+<div class="row">
+<div class="col-md-4">
+<input type="text" class="form-control" ng-model="vm.filterText" ng-change="vm.applyFilter()" placeholder="Filter by card type...">
+</div>
+</div>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-4" ng-repeat="card in vm.filteredCards track by card.cardId">
+<div class="panel panel-default card-panel" ng-click="vm.selectCard(card)" ng-class="{'panel-primary':vm.selectedCard.cardId===card.cardId}">
+<div class="panel-heading">
+<strong>{{card.cardType}}</strong>
+</div>
+<div class="panel-body">
+<p><strong>Card Number:</strong> {{card.maskedCardNumber}}</p>
+<p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p>
+<p><strong>Current Balance:</strong> ${{card.currentBalance | number:2}}</p>
+<p><strong>Available Credit:</strong> ${{card.availableCredit | number:2}}</p>
+<p><strong>Monthly Spend:</strong> ${{card.monthlySpend | number:2}}</p>
+<p><strong>Utilization:</strong> {{(card.currentBalance/card.creditLimit*100).toFixed(1)}}%</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
