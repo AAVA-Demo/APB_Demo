@@ -1,0 +1,50 @@
+(function(){
+'use strict';
+angular.module('app.analytics').controller('AnalyticsController',['$scope','AnalyticsService','ChartDataFactory','AuthService','CreditCardService',function($scope,AnalyticsService,ChartDataFactory,AuthService,CreditCardService){
+var vm=this;
+vm.analytics=null;
+vm.pieChartData=null;
+vm.lineChartData=null;
+vm.barChartData=null;
+vm.cards=[];
+vm.filter={cardId:null,startDate:null,endDate:null};
+vm.loading=true;
+vm.init=function(){
+if(!AuthService.validateSession()){
+toastr.error('Session validation failed');
+return;
+}
+vm.loadCards();
+vm.loadAnalytics();
+};
+vm.loadCards=function(){
+CreditCardService.getAllCards().then(function(cards){
+vm.cards=cards;
+$scope.$apply();
+});
+};
+vm.loadAnalytics=function(){
+vm.loading=true;
+AnalyticsService.getSpendingAnalytics(vm.filter).then(function(data){
+vm.analytics=data;
+vm.pieChartData=ChartDataFactory.transformToPieChart(data.categorySpending);
+vm.lineChartData=ChartDataFactory.transformToLineChart(data.monthlyTrends);
+vm.barChartData=ChartDataFactory.transformToBarChart(data.cardWiseSpending);
+vm.loading=false;
+$scope.$apply();
+}).catch(function(error){
+toastr.error('Failed to load analytics data');
+vm.loading=false;
+$scope.$apply();
+});
+};
+vm.applyFilter=function(){
+vm.loadAnalytics();
+};
+vm.clearFilter=function(){
+vm.filter={cardId:null,startDate:null,endDate:null};
+vm.loadAnalytics();
+};
+vm.init();
+}]);
+})();

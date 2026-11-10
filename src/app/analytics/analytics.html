@@ -1,0 +1,38 @@
+<div class="analytics-container">
+<h2>Spending Analytics & Insights</h2>
+<category-filter filter="vm.filter" cards="vm.cards" on-apply="vm.applyFilter()" on-clear="vm.clearFilter()"></category-filter>
+<div ng-if="vm.loading" class="text-center">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading&&vm.analytics">
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Category-wise Spending</h4></div>
+<div class="panel-body">
+<spending-chart chart-data="vm.pieChartData" chart-type="pie"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Monthly Spend Trends</h4></div>
+<div class="panel-body">
+<spending-chart chart-data="vm.lineChartData" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Card-wise Spending Comparison</h4></div>
+<div class="panel-body">
+<spending-chart chart-data="vm.barChartData" chart-type="bar"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,31 @@
+<div class="transactions-container">
+<h2>Transaction Management</h2>
+<div class="row" style="margin-bottom:20px;">
+<div class="col-md-4">
+<label>Filter by Card:</label>
+<select class="form-control" ng-model="vm.selectedCard" ng-change="vm.applyFilter(vm.selectedCard)">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.cardNumber}}</option>
+</select>
+</div>
+<div class="col-md-2">
+<label>&nbsp;</label>
+<button class="btn btn-default btn-block" ng-click="vm.clearFilter()">Clear Filter</button>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<i class="fa fa-spinner fa-spin fa-3x"></i>
+<p>Loading transactions...</p>
+</div>
+<div ng-if="!vm.loading">
+<transaction-list transactions="vm.transactions" on-select="vm.showDetail(transaction)"></transaction-list>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-12 text-center">
+<button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.pagination.currentPage===1">Previous</button>
+<span style="margin:0 15px;">Page {{vm.pagination.currentPage}} of {{Math.ceil(vm.pagination.totalRecords/vm.pagination.pageSize)||1}}</span>
+<button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="vm.pagination.currentPage*vm.pagination.pageSize>=vm.pagination.totalRecords">Next</button>
+</div>
+</div>
+</div>
+<transaction-detail transaction="vm.selectedTransaction" on-close="vm.closeDetail()"></transaction-detail>
+</div>
