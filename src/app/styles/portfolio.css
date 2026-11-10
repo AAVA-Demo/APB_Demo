@@ -1,0 +1,4 @@
+.portfolio-container { padding: 20px; }
+.card-item { cursor: pointer; transition: all 0.3s ease; }
+.card-item:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.2); transform: translateY(-5px); }
+.modal-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1040; background-color: #000; opacity: 0.5; }
