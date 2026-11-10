@@ -1,0 +1,32 @@
+<div class="card-management-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading">
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="kpi-card">
+          <h3>Portfolio Overview</h3>
+          <p><strong>Total Cards:</strong> {{ vm.portfolio.totalCards }}</p>
+          <p><strong>Consolidated Balance:</strong> ${{ vm.portfolio.consolidatedBalance | number:2 }}</p>
+          <p><strong>Consolidated Limit:</strong> ${{ vm.portfolio.consolidatedLimit | number:2 }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-6" ng-repeat="card in vm.portfolio.cards">
+        <div class="card-item" ng-click="vm.selectCard(card.cardId)">
+          <div class="card-number">{{ card.cardNumber }}</div>
+          <p><strong>{{ card.issuer }}</strong> - {{ card.cardType }}</p>
+          <div class="card-balance">${{ card.currentBalance | number:2 }}</div>
+          <p>Available: ${{ card.availableCredit | number:2 }} / ${{ card.creditLimit | number:2 }}</p>
+          <p class="text-muted">Expires: {{ card.expiryDate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

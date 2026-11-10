@@ -1,0 +1,42 @@
+<div class="dashboard-container">
+  <h2>Dashboard</h2>
+  <div ng-if="vm.dashboard.loading" class="loading">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.dashboard.error" class="error-message">
+    {{ vm.dashboard.error }}
+  </div>
+  <div ng-if="!vm.dashboard.loading && !vm.dashboard.error">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Monthly Spend</h3>
+          <div class="value">${{ vm.dashboard.kpis.monthlySpend | number:2 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Total Credit Limit</h3>
+          <div class="value">${{ vm.dashboard.kpis.totalCreditLimit | number:2 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Available Credit</h3>
+          <div class="value">${{ vm.dashboard.kpis.totalAvailableCredit | number:2 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Outstanding Amount</h3>
+          <div class="value">${{ vm.dashboard.kpis.totalOutstanding | number:2 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="text-muted">Last updated: {{ vm.dashboard.kpis.lastUpdated | date:'medium' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

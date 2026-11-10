@@ -1,0 +1,50 @@
+<div class="analytics-container">
+  <h2>Analytics & Spending Insights</h2>
+  <div ng-if="vm.loading" class="loading">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h3>Category-Wise Spending</h3>
+          <canvas chart-directive chart-data="vm.chartData.category" chart-type="pie"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h3>Monthly Spend Trend (12 Months)</h3>
+          <canvas chart-directive chart-data="vm.chartData.trend" chart-type="line"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="kpi-card">
+          <h3>Category Breakdown</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Transactions</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analytics.categorySpending">
+                <td>{{ cat.category }}</td>
+                <td>${{ cat.totalAmount | number:2 }}</td>
+                <td>{{ cat.transactionCount }}</td>
+                <td>{{ cat.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="card-detail-container">
+  <button class="btn btn-default" ng-click="vm.backToList()">← Back to Cards</button>
+  <div ng-if="vm.loading" class="loading">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Card Details</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <h3>{{ vm.cardDetail.card.issuer }} {{ vm.cardDetail.card.cardType }}</h3>
+          <div class="card-number">{{ vm.cardDetail.card.cardNumber }}</div>
+          <p><strong>Current Balance:</strong> ${{ vm.cardDetail.card.currentBalance | number:2 }}</p>
+          <p><strong>Available Credit:</strong> ${{ vm.cardDetail.card.availableCredit | number:2 }}</p>
+          <p><strong>Credit Limit:</strong> ${{ vm.cardDetail.card.creditLimit | number:2 }}</p>
+          <p><strong>Expiry:</strong> {{ vm.cardDetail.card.expiryDate }}</p>
+          <p><strong>Status:</strong> <span class="label label-success">{{ vm.cardDetail.card.status }}</span></p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <h3>Spending Analysis</h3>
+          <p><strong>Monthly Spend:</strong> ${{ vm.cardDetail.spending.monthlySpend | number:2 }}</p>
+          <p><strong>Total Transactions:</strong> {{ vm.cardDetail.spending.totalTransactions }}</p>
+          <p><strong>Last Transaction:</strong> {{ vm.cardDetail.spending.lastTransactionDate | date:'medium' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="kpi-card">
+          <h3>Recent Transactions</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="txn in vm.cardDetail.transactions">
+                <td>{{ txn.date | date:'short' }}</td>
+                <td>{{ txn.merchantName }}</td>
+                <td>${{ txn.amount | number:2 }}</td>
+              </tr>
+              <tr ng-if="vm.cardDetail.transactions.length === 0">
+                <td colspan="3" class="text-center">No transactions found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
