@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp.analytics').factory('transactionDataService',['$resource','API_CONFIG',function($resource,API_CONFIG){return $resource(API_CONFIG.baseUrl+API_CONFIG.endpoints.transactions+'/:transactionId',{transactionId:'@transactionId'},{query:{method:'GET',isArray:true,timeout:API_CONFIG.timeout}});}]);})();

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Management</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="src/app/styles/app.css">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#!/dashboard">Credit Card Manager</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a href="#!/dashboard">Dashboard</a></li>
+<li><a href="#!/cards">My Cards</a></li>
+<li><a href="#!/analytics">Analytics</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid" ng-view></div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-resource.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-animate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/app.routes.js"></script>
+<script src="src/app/services/auth.service.js"></script>
+<script src="src/app/services/api-config.constant.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/controllers/dashboard.controller.js"></script>
+<script src="src/app/dashboard/services/dashboard-api.service.js"></script>
+<script src="src/app/dashboard/services/credit-card-data.service.js"></script>
+<script src="src/app/dashboard/directives/kpi-card.directive.js"></script>
+<script src="src/app/card-management/card-management.module.js"></script>
+<script src="src/app/card-management/controllers/card-list.controller.js"></script>
+<script src="src/app/card-management/controllers/card-selector.controller.js"></script>
+<script src="src/app/card-management/services/card-management.service.js"></script>
+<script src="src/app/card-management/services/credit-card-data.service.js"></script>
+<script src="src/app/card-management/services/user-profile.service.js"></script>
+<script src="src/app/card-management/services/card-analytics.service.js"></script>
+<script src="src/app/card-management/services/card-cache.service.js"></script>
+<script src="src/app/card-management/directives/card-tile.directive.js"></script>
+<script src="src/app/analytics/analytics.module.js"></script>
+<script src="src/app/analytics/controllers/analytics.controller.js"></script>
+<script src="src/app/analytics/services/analytics-api.service.js"></script>
+<script src="src/app/analytics/services/transaction-data.service.js"></script>
+<script src="src/app/analytics/services/chart.service.js"></script>
+<script src="src/app/analytics/directives/chart.directive.js"></script>
+</body>
+</html>

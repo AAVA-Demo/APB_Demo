@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp.dashboard').factory('creditCardDataService',['$resource','API_CONFIG',function($resource,API_CONFIG){return $resource(API_CONFIG.baseUrl+API_CONFIG.endpoints.cards+'/:cardId',{cardId:'@cardId'},{query:{method:'GET',isArray:true,timeout:API_CONFIG.timeout},get:{method:'GET',timeout:API_CONFIG.timeout}});}]);})();
