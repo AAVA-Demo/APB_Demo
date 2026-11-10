@@ -1,0 +1,14 @@
+body { padding-top: 20px; background-color: #f5f5f5; }
+.kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+.kpi-card h3 { margin: 0 0 10px 0; font-size: 16px; color: #666; }
+.kpi-card .kpi-value { font-size: 32px; font-weight: bold; color: #333; }
+.card-summary { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.card-summary h4 { margin: 0 0 10px 0; font-size: 18px; }
+.card-summary .card-number { color: #666; font-size: 14px; }
+.card-summary .card-metrics { margin-top: 10px; }
+.card-summary .card-metrics span { display: inline-block; margin-right: 15px; }
+.chart-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.transaction-table { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.transaction-detail { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.filter-panel { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.pagination { margin-top: 20px; }

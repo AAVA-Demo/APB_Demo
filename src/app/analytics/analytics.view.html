@@ -1,0 +1,17 @@
+<div ng-controller="AnalyticsController as vm">
+  <div ng-if="vm.loading" class="text-center"><h3>Loading Analytics...</h3></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Spending Analytics</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <category-filter categories="vm.categories" selected-categories="vm.selectedCategories" on-filter="vm.applyFilter()"></category-filter>
+      </div>
+      <div class="col-md-9">
+        <chart-visualization chart-data="vm.categoryData" chart-type="pie" chart-title="Category-Wise Spending"></chart-visualization>
+        <chart-visualization chart-data="vm.cardData" chart-type="bar" chart-title="Card-Wise Spending"></chart-visualization>
+        <chart-visualization chart-data="vm.monthlyData" chart-type="line" chart-title="Monthly Spend Trends"></chart-visualization>
+      </div>
+    </div>
+  </div>
+</div>

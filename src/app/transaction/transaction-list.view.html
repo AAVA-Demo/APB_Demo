@@ -1,0 +1,18 @@
+<div ng-controller="TransactionListController as vm">
+  <div ng-if="vm.loading" class="text-center"><h3>Loading Transactions...</h3></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <h2>Transactions</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search transactions..." ng-model="vm.searchText" ng-change="vm.applyFilters()">
+      </div>
+    </div>
+    <transaction-list transactions="vm.filteredTransactions"></transaction-list>
+    <div class="pagination">
+      <button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.pagination.currentPage === 1">Previous</button>
+      <span> Page {{vm.pagination.currentPage}} of {{vm.pagination.totalPages}} </span>
+      <button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="vm.pagination.currentPage === vm.pagination.totalPages">Next</button>
+    </div>
+  </div>
+</div>
