@@ -1,0 +1,32 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "apiBaseUrl": "http://localhost:3000/api",
+  "timeout": 30000,
+  "retries": 2,
+  "testUsers": {
+    "testuser": {
+      "username": "testuser@example.com",
+      "password": "Test@123"
+    },
+    "newuser": {
+      "username": "newuser@example.com",
+      "password": "Test@123"
+    },
+    "nocards": {
+      "username": "nocards@example.com",
+      "password": "Test@123"
+    },
+    "usera": {
+      "username": "usera@example.com",
+      "password": "Test@123"
+    }
+  },
+  "endpoints": {
+    "login": "/auth/login",
+    "dashboard": "/dashboard",
+    "transactions": "/transactions",
+    "analytics": "/analytics",
+    "cards": "/api/cards",
+    "kpis": "/api/kpis/aggregate"
+  }
+}
