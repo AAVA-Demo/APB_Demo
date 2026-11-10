@@ -1,0 +1,70 @@
+<div class="analytics-container">
+  <div class="page-header">
+    <h2>Spending Analytics & Insights</h2>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner">Loading analytics...</div>
+  </div>
+  <div ng-if="!vm.loading && vm.analyticsData">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Category-wise Spending</h4>
+          </div>
+          <div class="panel-body">
+            <canvas id="category-chart" class="chart chart-pie" 
+                    chart-data="vm.categoryData" 
+                    chart-labels="vm.categoryLabels"
+                    chart-colors="vm.categoryColors">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Category Breakdown</h4>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.analyticsData.categorySpending track by cat.category">
+                  <td>{{cat.category | categoryName}}</td>
+                  <td>{{cat.amount | currency}}</td>
+                  <td>{{cat.percentage | number:1}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Monthly Spend Trends (Last 12 Months)</h4>
+          </div>
+          <div class="panel-body">
+            <canvas id="monthly-chart" class="chart chart-line" 
+                    chart-data="[vm.monthlyData]" 
+                    chart-labels="vm.monthlyLabels"
+                    chart-series="['Monthly Spend']">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

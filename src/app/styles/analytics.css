@@ -1,0 +1,20 @@
+.analytics-container {
+  padding: 20px;
+}
+.chart {
+  max-height: 400px;
+}
+.table {
+  margin-top: 20px;
+}
+.panel-body canvas {
+  max-height: 350px;
+}
+@media (max-width: 768px) {
+  .chart {
+    max-height: 300px;
+  }
+  .panel-body canvas {
+    max-height: 250px;
+  }
+}

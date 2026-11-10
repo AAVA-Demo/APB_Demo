@@ -1,0 +1,19 @@
+<div class="card-list-container">
+  <div class="page-header">
+    <h2>My Credit Cards</h2>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner">Loading cards...</div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="card in vm.cards track by card.cardId">
+      <card-item card="card" on-select="vm.selectCard(card.cardId)"></card-item>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.cards.length === 0" class="alert alert-info">
+    No credit cards found. Please add a card to get started.
+  </div>
+</div>

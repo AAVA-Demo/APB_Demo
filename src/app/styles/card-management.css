@@ -1,0 +1,66 @@
+.card-list-container {
+  padding: 20px;
+}
+.card-item {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  min-height: 180px;
+}
+.card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.card-item .card-brand {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #337ab7;
+}
+.card-item .card-number {
+  font-size: 16px;
+  font-family: monospace;
+  margin-bottom: 8px;
+  color: #555;
+}
+.card-item .card-type {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 15px;
+}
+.card-item .card-balance {
+  font-size: 16px;
+  font-weight: 600;
+}
+.card-item .card-balance .label {
+  font-weight: normal;
+  color: #666;
+}
+.card-item .card-balance .amount {
+  color: #5cb85c;
+}
+.card-detail-container {
+  padding: 20px;
+}
+.spend-metric {
+  text-align: center;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+.spend-metric h4 {
+  margin-top: 0;
+  color: #666;
+  font-size: 14px;
+}
+.spend-metric .amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #337ab7;
+}
+@media (max-width: 768px) {
+  .card-item {
+    min-height: 150px;
+  }
+}

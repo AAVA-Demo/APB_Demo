@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h2>Credit Card Dashboard</h2>
+    <button class="btn btn-primary btn-sm" ng-click="vm.refreshKPIs()" ng-disabled="vm.loading">
+      <span ng-if="!vm.loading">Refresh</span>
+      <span ng-if="vm.loading">Loading...</span>
+    </button>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.lastUpdated" class="text-muted small">
+    Last updated: {{vm.lastUpdated | date:'medium'}}
+  </div>
+  <div class="row kpi-row" ng-if="!vm.loading">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-card title="'Total Credit Limit'" value="vm.kpis.totalCreditLimit" format="'currency'"></kpi-card>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-card title="'Available Credit'" value="vm.kpis.availableCredit" format="'currency'"></kpi-card>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-card title="'Total Outstanding'" value="vm.kpis.totalOutstanding" format="'currency'"></kpi-card>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-card title="'Monthly Spend'" value="vm.kpis.monthlySpend" format="'currency'"></kpi-card>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Credit Utilization</h4>
+        </div>
+        <div class="panel-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" 
+                 ng-class="{'progress-bar-success': vm.kpis.utilizationRate < 30, 'progress-bar-warning': vm.kpis.utilizationRate >= 30 && vm.kpis.utilizationRate < 70, 'progress-bar-danger': vm.kpis.utilizationRate >= 70}"
+                 ng-style="{width: vm.kpis.utilizationRate + '%'}">
+              {{vm.kpis.utilizationRate | number:1}}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner">Loading dashboard...</div>
+  </div>
+</div>
