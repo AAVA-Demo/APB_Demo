@@ -1,0 +1,77 @@
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-default" ng-click="vm.backToList()">← Back to Cards</button>
+<h2 style="margin-top:20px;">{{vm.selectedCard.bankName}} - {{vm.selectedCard.cardType}}</h2>
+<p class="text-muted">{{vm.selectedCard.cardNumber}}</p>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-md-12 text-center">
+<p>Loading card details...</p>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading&&vm.selectedCard">
+<div class="col-md-4">
+<div class="kpi-card">
+<h3>Credit Limit</h3>
+<div class="kpi-value">{{vm.formatCurrency(vm.selectedCard.creditLimit)}}</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="kpi-card">
+<h3>Available Credit</h3>
+<div class="kpi-value">{{vm.formatCurrency(vm.selectedCard.availableCredit)}}</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="kpi-card">
+<h3>Outstanding</h3>
+<div class="kpi-value">{{vm.formatCurrency(vm.selectedCard.outstandingAmount)}}</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.spendAnalysis">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Spending Analysis</h3>
+<p><strong>Total Spend:</strong> {{vm.formatCurrency(vm.spendAnalysis.totalSpend)}} | <strong>Transactions:</strong> {{vm.spendAnalysis.transactionCount}}</p>
+<h4>Top Categories</h4>
+<ul>
+<li ng-repeat="cat in vm.spendAnalysis.topCategories">
+{{cat.category}}: {{vm.formatCurrency(cat.amount)}}
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Recent Transactions</h3>
+<div class="transaction-list">
+<div class="transaction-item" ng-repeat="txn in vm.transactions">
+<div class="row">
+<div class="col-xs-6">
+<strong>{{txn.merchant}}</strong>
+<span class="badge-category" style="background-color:#e0e0e0;">{{txn.category}}</span>
+</div>
+<div class="col-xs-3 text-right">
+<small>{{txn.date|date:'dd MMM yyyy'}}</small>
+</div>
+<div class="col-xs-3 text-right">
+<strong>{{vm.formatCurrency(txn.amount)}}</strong>
+</div>
+</div>
+</div>
+<div class="text-center" ng-if="vm.hasMore">
+<button class="btn btn-primary" ng-click="vm.loadMoreTransactions()">Load More</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-md-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>

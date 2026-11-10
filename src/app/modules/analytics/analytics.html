@@ -1,0 +1,59 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Analytics & Spending Insights</h2>
+<p class="text-muted">Understand your spending patterns</p>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-md-12 text-center">
+<p>Loading analytics...</p>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading&&vm.spendingSummary">
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<spending-chart chart-data="vm.chartData" chart-type="pie" on-click="vm.onCategoryClick"></spending-chart>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Monthly Spending Trends</h3>
+<p ng-if="vm.selectedCategory">
+Filtered by: <strong>{{vm.selectedCategory}}</strong>
+<button class="btn btn-sm btn-default" ng-click="vm.resetFilter()">Clear Filter</button>
+</p>
+<spending-chart chart-data="vm.trendChartData" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading&&vm.spendingSummary">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Amount</th>
+<th>Transaction Count</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.spendingSummary.categoryBreakdown">
+<td>{{cat.category}}</td>
+<td>{{vm.formatCurrency(cat.totalAmount)}}</td>
+<td>{{cat.transactionCount}}</td>
+<td><button class="btn btn-xs btn-info" ng-click="vm.onCategoryClick(cat.category)">View Trend</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-md-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
