@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Transaction Details</h2>
+    <button class="btn btn-default" ng-click="vm.goBack()">&larr; Back to Transactions</button>
+    <div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+    <div ng-if="vm.loading" class="loading-spinner">
+      <i class="glyphicon glyphicon-refresh spinning"></i> Loading...
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading && vm.transaction">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h4>Transaction #{{vm.transaction.transactionId}}</h4></div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt>Merchant:</dt><dd>{{vm.transaction.merchantName}}</dd>
+          <dt>Amount:</dt><dd>{{vm.transaction.amount | currency}}</dd>
+          <dt>Date:</dt><dd>{{vm.transaction.transactionDate | date:'fullDate'}}</dd>
+          <dt>Card:</dt><dd>{{vm.transaction.cardName}}</dd>
+          <dt>Category:</dt><dd>{{vm.transaction.category}}</dd>
+          <dt>Status:</dt><dd><span class="label" ng-class="{'label-success': vm.transaction.status === 'posted', 'label-warning': vm.transaction.status === 'pending'}">{{vm.transaction.status}}</span></dd>
+          <dt>Description:</dt><dd>{{vm.transaction.description || 'N/A'}}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

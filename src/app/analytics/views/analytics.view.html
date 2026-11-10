@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics & Insights</h2>
+    <div ng-if="vm.error" class="error-message">
+      {{vm.error}}
+      <button class="btn btn-sm btn-primary pull-right" ng-click="vm.applyFilters()">Retry</button>
+    </div>
+    <div ng-if="vm.loading" class="loading-spinner">
+      <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-12">
+    <div class="analytics-chart">
+      <h4>Monthly Spend Trends</h4>
+      <div class="chart-container">
+        <canvas id="monthlyTrendsChart" class="chart chart-line" chart-data="vm.monthlyTrends.data" chart-labels="vm.monthlyTrends.labels" chart-series="vm.monthlyTrends.series" chart-options="vm.monthlyTrends.options"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="!vm.loading">
+  <div class="col-md-6">
+    <div class="analytics-chart">
+      <h4>Category-Wise Spending</h4>
+      <div class="chart-container">
+        <canvas id="categoryChart" class="chart chart-pie" chart-data="vm.categoryWise.data" chart-labels="vm.categoryWise.labels" chart-colors="vm.categoryWise.colors" chart-options="vm.categoryWise.options"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="analytics-chart">
+      <h4>Card-Wise Spending</h4>
+      <div class="chart-container">
+        <canvas id="cardWiseChart" class="chart chart-bar" chart-data="vm.cardWise.data" chart-labels="vm.cardWise.labels" chart-series="vm.cardWise.series" chart-options="vm.cardWise.options"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

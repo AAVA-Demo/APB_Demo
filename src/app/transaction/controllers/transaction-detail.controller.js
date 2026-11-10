@@ -1,0 +1,42 @@
+(function() {
+  'use strict';
+  angular.module('creditCardApp.transaction')
+    .controller('TransactionDetailController', ['$scope', '$routeParams', '$location', 'TransactionService', TransactionDetailController]);
+
+  function TransactionDetailController($scope, $routeParams, $location, TransactionService) {
+    var vm = this;
+    vm.transaction = null;
+    vm.loading = true;
+    vm.error = null;
+    vm.goBack = goBack;
+
+    activate();
+
+    function activate() {
+      var transactionId = $routeParams.id;
+      if (!transactionId) {
+        vm.error = 'Invalid transaction ID.';
+        vm.loading = false;
+        return;
+      }
+      loadTransaction(transactionId);
+    }
+
+    function loadTransaction(id) {
+      TransactionService.getTransactionById(id)
+        .then(function(transaction) {
+          vm.transaction = transaction;
+          vm.loading = false;
+        })
+        .catch(function(error) {
+          vm.error = 'Failed to load transaction details.';
+          vm.loading = false;
+        });
+    }
+
+    function goBack() {
+      $location.path('/transactions');
+    }
+  }
+  TransactionDetailController.$inject = ['$scope', '$routeParams', '$location', 'TransactionService'];
+})();
