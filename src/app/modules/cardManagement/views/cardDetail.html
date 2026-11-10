@@ -1,0 +1,37 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Card Details</h2>
+<a ui-sref="cardPortfolio" class="btn btn-default">Back to Portfolio</a>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error && vm.selectedCard">
+<div class="card-item" style="margin-top:20px">
+<div class="card-number">{{vm.selectedCard.cardType}} {{vm.selectedCard.cardNumber}}</div>
+<div class="card-detail">
+<span><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</span>
+<span><strong>Status:</strong> <span class="label" ng-class="{'label-success':vm.selectedCard.status==='Active','label-danger':vm.selectedCard.status==='Blocked'}">{{vm.selectedCard.status}}</span></span>
+</div>
+<div class="card-detail">
+<span><strong>Available Balance:</strong> ${{vm.selectedCard.availableBalance | number:2}}</span>
+<span><strong>Outstanding Balance:</strong> ${{vm.selectedCard.outstandingBalance | number:2}}</span>
+</div>
+<div class="card-detail">
+<span><strong>Monthly Spend:</strong> ${{vm.selectedCard.monthlySpend | number:2}}</span>
+<span><strong>Total Spend:</strong> ${{vm.selectedCard.totalSpend | number:2}}</span>
+</div>
+<div class="card-detail">
+<span><strong>Utilization Rate:</strong> {{vm.selectedCard.utilizationRate | number:1}}%</span>
+</div>
+</div>
+<div class="chart-container" style="margin-top:20px">
+<h3>Spending Breakdown</h3>
+<p>Total spending for this card: ${{vm.selectedCard.totalSpend | number:2}}</p>
+<p>Monthly spending: ${{vm.selectedCard.monthlySpend | number:2}}</p>
+</div>
+</div>
+</div>
+</div>

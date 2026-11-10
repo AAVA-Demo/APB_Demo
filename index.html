@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Management</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+.kpi-card{background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:20px;margin-bottom:20px;text-align:center}
+.kpi-card h3{margin:0 0 10px;font-size:16px;color:#666}
+.kpi-card .value{font-size:32px;font-weight:bold;color:#333}
+.card-item{background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:15px;margin-bottom:15px;cursor:pointer;transition:transform 0.2s}
+.card-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.15)}
+.card-number{font-size:18px;font-weight:bold;margin-bottom:10px}
+.card-detail{display:flex;justify-content:space-between;margin-top:10px;font-size:14px}
+.chart-container{background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:20px;margin-bottom:20px}
+canvas{max-height:400px}
+.filter-section{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px}
+.navbar{margin-bottom:20px}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#">Credit Card Dashboard</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a ui-sref="dashboard">Dashboard</a></li>
+<li><a ui-sref="cardPortfolio">My Cards</a></li>
+<li><a ui-sref="analytics">Analytics</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+<div ui-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/shared/interceptors/authInterceptor.js"></script>
+<script src="src/app/shared/factories/creditCardFactory.js"></script>
+<script src="src/app/shared/factories/transactionFactory.js"></script>
+<script src="src/app/shared/factories/creditCardRepoFactory.js"></script>
+<script src="src/app/shared/factories/cardTransactionFactory.js"></script>
+<script src="src/app/shared/factories/userProfileFactory.js"></script>
+<script src="src/app/shared/factories/transactionDataFactory.js"></script>
+<script src="src/app/modules/dashboard/dashboardModule.js"></script>
+<script src="src/app/modules/dashboard/services/dashboardService.js"></script>
+<script src="src/app/modules/dashboard/controllers/dashboardController.js"></script>
+<script src="src/app/modules/cardManagement/cardManagementModule.js"></script>
+<script src="src/app/modules/cardManagement/services/cardManagementService.js"></script>
+<script src="src/app/modules/cardManagement/controllers/cardManagementController.js"></script>
+<script src="src/app/modules/cardManagement/directives/cardFilter.js"></script>
+<script src="src/app/modules/analytics/analyticsModule.js"></script>
+<script src="src/app/modules/analytics/services/analyticsService.js"></script>
+<script src="src/app/modules/analytics/controllers/analyticsController.js"></script>
+<script src="src/app/modules/analytics/directives/spendingChart.js"></script>
+<script src="src/app/modules/analytics/directives/dateRangeFilter.js"></script>
+</body>
+</html>

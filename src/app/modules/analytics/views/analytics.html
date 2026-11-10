@@ -1,0 +1,50 @@
+<div class="row">
+<div class="col-md-12">
+<h2>Analytics & Spending Insights</h2>
+<date-range-filter date-range="vm.dateRange" on-apply="vm.applyDateFilter()"></date-range-filter>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<spending-chart chart-data="vm.monthlyTrendsData" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<spending-chart chart-data="vm.categoryBreakdownData" chart-type="pie"></spending-chart>
+<div class="row" style="margin-top:20px">
+<div class="col-md-12">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="label in vm.categoryBreakdownData.labels track by $index">
+<td>{{label}}</td>
+<td>${{vm.categoryBreakdownData.datasets[0].data[$index] | number:2}}</td>
+<td>{{vm.categoryBreakdownData.percentages[$index] | number:1}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

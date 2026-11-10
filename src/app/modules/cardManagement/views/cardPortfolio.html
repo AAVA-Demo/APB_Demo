@@ -1,0 +1,38 @@
+<div class="row">
+<div class="col-md-12">
+<h2>My Credit Cards</h2>
+<card-filter filter-criteria="vm.filterCriteria" on-apply="vm.applyFilter()"></card-filter>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading cards...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row">
+<div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="card in vm.filteredCards">
+<div class="card-item" ng-click="vm.selectCard(card.cardId)">
+<div class="card-number">{{card.cardType}} {{card.cardNumber}}</div>
+<div class="card-detail">
+<span><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</span>
+</div>
+<div class="card-detail">
+<span><strong>Available:</strong> ${{card.availableBalance | number:2}}</span>
+<span><strong>Outstanding:</strong> ${{card.outstandingBalance | number:2}}</span>
+</div>
+<div class="card-detail">
+<span><strong>Monthly Spend:</strong> ${{card.monthlySpend | number:2}}</span>
+<span><strong>Utilization:</strong> {{card.utilizationRate | number:1}}%</span>
+</div>
+<div class="card-detail">
+<span><strong>Status:</strong> <span class="label" ng-class="{'label-success':card.status==='Active','label-danger':card.status==='Blocked'}">{{card.status}}</span></span>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="vm.filteredCards.length===0" class="text-center">
+<p>No cards found matching the filter criteria.</p>
+</div>
+</div>
+</div>
+</div>
