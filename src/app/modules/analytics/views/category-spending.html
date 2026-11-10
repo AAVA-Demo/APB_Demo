@@ -1,0 +1,36 @@
+<div class="analytics-container">
+  <h2>Category-wise Spending Analytics</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading analytics data...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="vm.categoryData.length > 0 && !vm.loading">
+    <div class="row">
+      <div class="col-md-6">
+        <spending-chart data="vm.categoryData" on-drill-down="vm.filterCategory(category)"></spending-chart>
+      </div>
+      <div class="col-md-6">
+        <h3>Category Breakdown</h3>
+        <div ng-if="vm.selectedCategory" class="alert alert-warning">
+          Filtered by: {{vm.selectedCategory}} <button class="btn btn-sm btn-default" ng-click="vm.clearFilter()">Clear</button>
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Transactions</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.categoryData" ng-if="!vm.selectedCategory || cat.category === vm.selectedCategory">
+              <td>{{cat.category}}</td>
+              <td>{{cat.totalAmount | currency}}</td>
+              <td>{{cat.transactionCount}}</td>
+              <td>{{cat.percentage}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

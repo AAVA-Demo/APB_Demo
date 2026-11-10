@@ -1,0 +1,30 @@
+<div class="trends-container">
+  <h2>Monthly Spend Trends and Card-wise Analysis</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading trend data...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="vm.trendData && !vm.loading">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-inline" style="margin-bottom: 20px;">
+          <label>Start Date:</label>
+          <input type="date" class="form-control" ng-model="vm.dateRange.startDate">
+          <label>End Date:</label>
+          <input type="date" class="form-control" ng-model="vm.dateRange.endDate">
+          <button class="btn btn-primary" ng-click="vm.updateDateRange()">Update</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Monthly Spend Trends</h3>
+        <trend-chart data="vm.trendData.monthlyTrends"></trend-chart>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-md-12">
+        <h3>Card-wise Spending Comparison</h3>
+        <card-comparison-chart data="vm.trendData.cardwiseData"></card-comparison-chart>
+      </div>
+    </div>
+  </div>
+</div>

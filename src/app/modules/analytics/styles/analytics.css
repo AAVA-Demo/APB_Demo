@@ -1,0 +1,5 @@
+.analytics-container { padding: 20px; }
+.analytics-container h2 { margin-bottom: 20px; }
+.analytics-container canvas { max-width: 100%; height: auto; }
+.analytics-container table { margin-top: 20px; }
+.analytics-container .alert { margin-bottom: 15px; }

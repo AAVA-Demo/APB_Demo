@@ -1,0 +1,6 @@
+.trends-container { padding: 20px; }
+.trends-container h2 { margin-bottom: 20px; }
+.trends-container canvas { max-width: 100%; height: auto; }
+.trends-container .form-inline { margin-bottom: 20px; }
+.trends-container .form-inline label { margin-right: 10px; margin-left: 15px; }
+.trends-container .form-inline input { margin-right: 10px; }
