@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-12">
+    <h2 class="mb-4"><i class="fas fa-chart-pie"></i> Analytics & Spending Insights</h2>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+  <p class="mt-3">Loading analytics...</p>
+</div>
+<div ng-if="!vm.loading && vm.filteredData">
+  <div class="row">
+    <div class="col-md-3">
+      <category-filter categories="vm.analyticsData.categories" selected-categories="vm.selectedCategories" on-filter="vm.filterByCategory(selectedCategories)"></category-filter>
+    </div>
+    <div class="col-md-9">
+      <div class="chart-container">
+        <h5>Category-Wise Spending Breakdown</h5>
+        <spending-chart data="vm.filteredData.categories" type="pie"></spending-chart>
+      </div>
+      <div class="chart-container">
+        <h5>Monthly Spend Trends (Last 12 Months)</h5>
+        <spending-chart data="vm.analyticsData.monthlyTrends" type="line"></spending-chart>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Category Details</h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.filteredData.categories">
+                <td>{{cat.category}}</td>
+                <td>₹{{cat.amount | number:0}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+  <i class="fas fa-exclamation-circle"></i> {{vm.error}}
+</div>

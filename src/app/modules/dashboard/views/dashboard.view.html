@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-12">
+    <h2 class="mb-4"><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+  <p class="mt-3">Loading dashboard...</p>
+</div>
+<div ng-if="!vm.loading && vm.kpis">
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget title="Monthly Spend" value="₹{{vm.kpis.monthlySpend | number:0}}" icon="fas fa-rupee-sign" color="#667eea"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget title="Total Credit Limit" value="₹{{vm.kpis.totalCreditLimit | number:0}}" icon="fas fa-credit-card" color="#f093fb"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget title="Available Credit" value="₹{{vm.kpis.availableCredit | number:0}}" icon="fas fa-wallet" color="#4facfe"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget title="Outstanding Amount" value="₹{{vm.kpis.outstandingAmount | number:0}}" icon="fas fa-exclamation-triangle" color="#fa709a"></kpi-widget>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> <strong>Credit Utilization:</strong> {{vm.kpis.utilizationPercentage}}% | <strong>Last Updated:</strong> {{vm.kpis.lastUpdated | date:'medium'}}
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+  <i class="fas fa-exclamation-circle"></i> {{vm.error}}
+</div>

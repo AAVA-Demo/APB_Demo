@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-12">
+    <h2 class="mb-4"><i class="fas fa-wallet"></i> My Credit Cards</h2>
+  </div>
+</div>
+<card-filter search-text="vm.searchText" status-filter="vm.statusFilter" on-filter="vm.applyFilter()"></card-filter>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+  <p class="mt-3">Loading cards...</p>
+</div>
+<div ng-if="!vm.loading && vm.filteredCards.length > 0">
+  <div class="row">
+    <div class="col-md-6 col-lg-4" ng-repeat="card in vm.filteredCards">
+      <div class="card card-item" ng-click="vm.selectCard(card.cardId)">
+        <div class="card-body">
+          <span class="badge badge-success card-badge" ng-if="card.status === 'Active'">{{card.status}}</span>
+          <span class="badge badge-danger card-badge" ng-if="card.status !== 'Active'">{{card.status}}</span>
+          <h5 class="card-title">{{card.cardType}}</h5>
+          <p class="card-text text-muted">{{card.bankName}}</p>
+          <h4 class="mb-3">{{card.cardNumber}}</h4>
+          <div class="row">
+            <div class="col-6">
+              <small class="text-muted">Credit Limit</small>
+              <p class="mb-0"><strong>₹{{card.creditLimit | number:0}}</strong></p>
+            </div>
+            <div class="col-6">
+              <small class="text-muted">Available</small>
+              <p class="mb-0"><strong>₹{{card.availableCredit | number:0}}</strong></p>
+            </div>
+          </div>
+          <div class="mt-2">
+            <small class="text-muted">Outstanding: </small>
+            <strong class="text-danger">₹{{card.outstandingAmount | number:0}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && vm.filteredCards.length === 0" class="alert alert-warning">
+  <i class="fas fa-info-circle"></i> No cards found matching your filters.
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+  <i class="fas fa-exclamation-circle"></i> {{vm.error}}
+</div>
