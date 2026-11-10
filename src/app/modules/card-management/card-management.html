@@ -1,0 +1,49 @@
+<div class="card-management-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading cards...
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Total Cards: {{ vm.portfolio.totalCards }}</h4>
+      </div>
+    </div>
+    <div class="row">
+      <card-list cards="vm.portfolio.cards" on-select="vm.selectCard(card)"></card-list>
+    </div>
+    <div ng-if="vm.selectedCard" class="row">
+      <div class="col-md-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading"><h4>Card Details: {{ vm.selectedCard.cardNumber }}</h4></div>
+          <div class="panel-body">
+            <p><strong>Bank:</strong> {{ vm.selectedCard.bankName }}</p>
+            <p><strong>Type:</strong> {{ vm.selectedCard.cardType }}</p>
+            <p><strong>Balance:</strong> {{ vm.formatCurrency(vm.selectedCard.balance) }}</p>
+            <p><strong>Credit Limit:</strong> {{ vm.formatCurrency(vm.selectedCard.creditLimit) }}</p>
+            <p><strong>Available Credit:</strong> {{ vm.formatCurrency(vm.selectedCard.availableCredit) }}</p>
+            <p><strong>Monthly Spend:</strong> {{ vm.formatCurrency(vm.selectedCard.monthlySpend) }}</p>
+            <p><strong>Utilization Rate:</strong> {{ vm.selectedCard.utilizationRate }}%</p>
+            <div ng-if="vm.selectedCard.spendTrends && vm.selectedCard.spendTrends.length > 0">
+              <h5>Spending Trends</h5>
+              <table class="table table-sm">
+                <thead>
+                  <tr><th>Month</th><th>Amount</th></tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="trend in vm.selectedCard.spendTrends">
+                    <td>{{ trend.month }}</td>
+                    <td>{{ vm.formatCurrency(trend.amount) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

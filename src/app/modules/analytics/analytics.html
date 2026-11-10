@@ -1,0 +1,38 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{ vm.error }}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="filter-section">
+      <h4>Date Range</h4>
+      <p>From: {{ vm.dateRange.startDate | date:'mediumDate' }} To: {{ vm.dateRange.endDate | date:'mediumDate' }}</p>
+      <button class="btn btn-primary" ng-click="vm.loadAnalytics()">Refresh</button>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="chart-container">
+          <h4>Category-Wise Spending</h4>
+          <spending-chart chart-data="vm.chartData" chart-type="'pie'"></spending-chart>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="category-summary">
+          <h4>Category Breakdown</h4>
+          <div class="category-item" ng-repeat="cat in vm.analytics.categories | filter:{totalSpend: '!0'}">
+            <span class="category-name">{{ cat.categoryName }}</span>
+            <span class="category-amount">{{ vm.formatCurrency(cat.totalSpend) }} ({{ cat.percentageOfTotal }}%)</span>
+          </div>
+          <hr>
+          <div class="category-item">
+            <span class="category-name"><strong>Total Spend</strong></span>
+            <span class="category-amount"><strong>{{ vm.formatCurrency(vm.analytics.totalSpend) }}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
