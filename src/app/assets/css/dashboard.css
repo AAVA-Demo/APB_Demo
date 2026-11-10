@@ -1,0 +1,8 @@
+.dashboard-kpi-container { padding: 20px; }
+.kpi-card { margin-bottom: 20px; transition: transform 0.2s; }
+.kpi-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.kpi-card h4 { margin: 0; color: #666; font-size: 14px; }
+.kpi-card h2 { margin: 10px 0 0 0; color: #333; font-weight: bold; }
+@media (max-width: 768px) {
+  .kpi-card { margin-bottom: 15px; }
+}

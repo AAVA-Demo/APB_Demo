@@ -1,0 +1,9 @@
+.multi-card-container { padding: 20px; }
+.card-panel { cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+.card-panel:hover { border-color: #337ab7; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.selected-card { border-color: #5cb85c !important; background-color: #f0f8f0; }
+.card-panel h4 { color: #337ab7; margin-top: 0; }
+.card-panel p { margin: 5px 0; }
+@media (max-width: 768px) {
+  .card-panel { margin-bottom: 15px; }
+}

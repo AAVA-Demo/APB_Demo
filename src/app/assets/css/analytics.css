@@ -1,0 +1,7 @@
+.spending-analytics-container { padding: 20px; }
+.panel { margin-bottom: 20px; }
+table.table-striped tbody tr:hover { background-color: #f5f5f5; }
+@media (max-width: 768px) {
+  .spending-analytics-container { padding: 10px; }
+  canvas { max-height: 300px; }
+}

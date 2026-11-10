@@ -1,0 +1,54 @@
+<div class="multi-card-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading your credit cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards">
+        <div class="panel panel-default card-panel" ng-class="{'selected-card': vm.selectedCard.cardId === card.cardId}" ng-click="vm.onCardSelect(card)">
+          <div class="panel-body">
+            <h4>{{card.cardType}}</h4>
+            <p><strong>{{card.cardNumber}}</strong></p>
+            <p>Issuer: {{card.issuer}}</p>
+            <hr>
+            <p>Credit Limit: ${{card.creditLimit | number:2}}</p>
+            <p>Available: ${{card.availableCredit | number:2}}</p>
+            <p>Outstanding: ${{card.outstandingAmount | number:2}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.selectedCard" style="margin-top: 30px;">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Card Details: {{vm.selectedCard.cardNumber}}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h4>Account Information</h4>
+                <p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+                <p><strong>Issuer:</strong> {{vm.selectedCard.issuer}}</p>
+                <p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</p>
+                <p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:2}}</p>
+                <p><strong>Outstanding Amount:</strong> ${{vm.selectedCard.outstandingAmount | number:2}}</p>
+              </div>
+              <div class="col-md-6">
+                <h4>Spending Analysis</h4>
+                <p><strong>Monthly Spend:</strong> ${{vm.selectedCard.metrics.monthlySpend | number:2}}</p>
+                <p><strong>Total Transactions:</strong> {{vm.selectedCard.metrics.totalTransactions}}</p>
+                <p><strong>Average Transaction:</strong> ${{vm.selectedCard.metrics.averageTransactionAmount}}</p>
+                <p><strong>Last Transaction:</strong> {{vm.selectedCard.metrics.lastTransactionDate | date:'short'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

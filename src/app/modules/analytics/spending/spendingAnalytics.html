@@ -1,0 +1,81 @@
+<div class="spending-analytics-container">
+  <h2>Spending Analytics & Insights</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Category-wise Spending Breakdown</h3>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-data="vm.categoryData" chart-type="pie" chart-labels="vm.categoryLabels"></chart-directive>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Monthly Spending Summary</h3>
+          </div>
+          <div class="panel-body">
+            <h4>Total Spend: ${{vm.monthlyData.totalSpend | number:2}}</h4>
+            <p>Month: {{vm.monthlyData.month}}</p>
+            <hr>
+            <h5>Top Categories:</h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.monthlyData.categoryBreakdown | orderBy:'-totalAmount' | limitTo:5" ng-click="vm.onCategorySelect(cat.category)" style="cursor: pointer;">
+                  <td>{{cat.category}}</td>
+                  <td>${{cat.totalAmount | number:2}}</td>
+                  <td>{{cat.percentage}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.selectedCategory" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{vm.selectedCategory}} - Transaction Details</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Merchant</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="txn in vm.categoryTransactions">
+                  <td>{{txn.transactionDate | date:'short'}}</td>
+                  <td>{{txn.merchantName}}</td>
+                  <td>${{txn.amount | number:2}}</td>
+                  <td>{{txn.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
