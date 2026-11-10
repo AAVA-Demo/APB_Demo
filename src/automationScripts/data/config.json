@@ -1,0 +1,31 @@
+{
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "apiBaseUrl": "https://creditcard-dashboard.example.com/api",
+  "timeout": 30000,
+  "retries": 2,
+  "headless": true,
+  "slowMo": 0,
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "testEnvironment": "qa",
+  "environments": {
+    "dev": {
+      "baseUrl": "https://dev-creditcard-dashboard.example.com",
+      "apiBaseUrl": "https://dev-creditcard-dashboard.example.com/api"
+    },
+    "qa": {
+      "baseUrl": "https://qa-creditcard-dashboard.example.com",
+      "apiBaseUrl": "https://qa-creditcard-dashboard.example.com/api"
+    },
+    "staging": {
+      "baseUrl": "https://staging-creditcard-dashboard.example.com",
+      "apiBaseUrl": "https://staging-creditcard-dashboard.example.com/api"
+    },
+    "production": {
+      "baseUrl": "https://creditcard-dashboard.example.com",
+      "apiBaseUrl": "https://creditcard-dashboard.example.com/api"
+    }
+  }
+}

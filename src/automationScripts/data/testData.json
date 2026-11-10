@@ -1,0 +1,72 @@
+{
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "apiBaseUrl": "https://creditcard-dashboard.example.com/api",
+  "users": {
+    "testUser": {
+      "username": "testuser@example.com",
+      "password": "Test@123"
+    },
+    "activeUser": {
+      "username": "activeuser@example.com",
+      "password": "Test@123"
+    },
+    "zeroBalance": {
+      "username": "zerobalance@example.com",
+      "password": "Test@123"
+    },
+    "nullUser": {
+      "username": "testnulluser@example.com",
+      "password": "Test@123"
+    },
+    "multiCard": {
+      "username": "multicard@example.com",
+      "password": "Test@123"
+    },
+    "fiveCards": {
+      "username": "fivecards@example.com",
+      "password": "Test@123"
+    },
+    "noCards": {
+      "username": "nocards@example.com",
+      "password": "Test@123"
+    },
+    "cardUser": {
+      "username": "carduser@example.com",
+      "password": "Test@123"
+    },
+    "newCard": {
+      "username": "newcard@example.com",
+      "password": "Test@123"
+    },
+    "multiCategory": {
+      "username": "multicategory@example.com",
+      "password": "Test@123"
+    },
+    "unmappedCat": {
+      "username": "unmappedcat@example.com",
+      "password": "Test@123"
+    },
+    "dateFilter": {
+      "username": "datefilter@example.com",
+      "password": "Test@123"
+    },
+    "yearlyData": {
+      "username": "yearlydata@example.com",
+      "password": "Test@123"
+    },
+    "twoMonths": {
+      "username": "twomonths@example.com",
+      "password": "Test@123"
+    },
+    "rangeFilter": {
+      "username": "rangefilter@example.com",
+      "password": "Test@123"
+    }
+  },
+  "expectedValues": {
+    "monthlySpend": "$2,500.00",
+    "totalCreditLimit": "$15,000.00",
+    "availableCredit": "$11,500.00",
+    "outstandingAmount": "$3,500.00"
+  }
+}
