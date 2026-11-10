@@ -1,0 +1,85 @@
+{
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "users": {
+    "multiCards": {
+      "username": "testuser_multicards",
+      "password": "Test@123"
+    },
+    "noCards": {
+      "username": "testuser_nocards",
+      "password": "Test@123"
+    },
+    "standard": {
+      "username": "testuser",
+      "password": "Test@123"
+    },
+    "multiCategory": {
+      "username": "testuser_multicategory",
+      "password": "Test@123"
+    },
+    "noTransactions": {
+      "username": "testuser_notransactions",
+      "password": "Test@123"
+    },
+    "fiveCards": {
+      "username": "testuser_5cards",
+      "password": "Test@123"
+    },
+    "tenCards": {
+      "username": "testuser_10cards",
+      "password": "Test@123"
+    },
+    "twelveMonths": {
+      "username": "testuser_12months",
+      "password": "Test@123"
+    },
+    "threeMonths": {
+      "username": "testuser_3months",
+      "password": "Test@123"
+    }
+  },
+  "expectedValues": {
+    "multiCards": {
+      "monthlySpend": "$1,750.00",
+      "totalCreditLimit": "$45,000.00",
+      "availableCredit": "$37,500.00",
+      "outstandingAmount": "$7,500.00"
+    },
+    "categories": [
+      "Food & Dining",
+      "Fuel",
+      "Shopping",
+      "Travel",
+      "Entertainment",
+      "Utilities",
+      "Healthcare",
+      "Education",
+      "Miscellaneous"
+    ],
+    "categoryAmounts": {
+      "Food & Dining": "$450.00",
+      "Fuel": "$200.00",
+      "Shopping": "$350.00",
+      "Travel": "$600.00",
+      "Entertainment": "$150.00",
+      "Utilities": "$120.00",
+      "Healthcare": "$300.00",
+      "Education": "$250.00",
+      "Miscellaneous": "$80.00"
+    },
+    "cardDetails": {
+      "creditLimit": "$10,000.00",
+      "availableCredit": "$7,500.00",
+      "outstandingBalance": "$2,500.00",
+      "statementBalance": "$2,500.00",
+      "minimumPayment": "$75.00",
+      "dueDate": "Feb 15, 2024"
+    }
+  },
+  "timeouts": {
+    "dashboardLoad": 2000,
+    "analyticsRender": 3000,
+    "cardDetailLoad": 1000,
+    "networkTimeout": 30000
+  }
+}
