@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('dashboardModule').service('dashboardService',['$q','$http','authService','mockDataService',function($q,$http,authService,mockDataService){var self=this;self.getCardData=function(){return authService.getAuthToken().then(function(token){return $q.resolve(mockDataService.getCards());});};}]);})();

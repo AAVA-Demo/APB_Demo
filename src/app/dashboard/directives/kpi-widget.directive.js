@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('dashboardModule').directive('kpiWidget',[function(){return{restrict:'E',scope:{title:'@',value:'@',icon:'@'},template:'<div class="kpi-widget"><h3>{{title}}</h3><div class="value">{{value}}</div></div>'};}]);})();

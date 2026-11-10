@@ -1,0 +1,38 @@
+<div ng-controller="cardDetailsController as vm">
+<h2>Card Details</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading card details...</p></div>
+<div ng-if="!vm.loading && vm.card" class="row">
+<div class="col-md-8 col-md-offset-2">
+<div class="kpi-widget">
+<h3>{{vm.card.cardName}}</h3>
+<p><strong>Card Number:</strong> {{vm.card.cardNumber}}</p>
+<p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+<hr>
+<div class="row">
+<div class="col-sm-6">
+<p><strong>Total Credit Limit:</strong></p>
+<p class="value">₹{{vm.card.totalLimit | number:0}}</p>
+</div>
+<div class="col-sm-6">
+<p><strong>Outstanding Balance:</strong></p>
+<p class="value">₹{{vm.card.outstandingBalance | number:0}}</p>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-6">
+<p><strong>Available Credit:</strong></p>
+<p class="value">₹{{vm.card.availableCredit | number:0}}</p>
+</div>
+<div class="col-sm-6">
+<p><strong>Monthly Spend:</strong></p>
+<p class="value">₹{{vm.card.monthlySpend | number:0}}</p>
+</div>
+</div>
+<hr>
+<p><strong>Credit Utilization:</strong> {{((vm.card.outstandingBalance/vm.card.totalLimit)*100) | number:1}}%</p>
+<p><strong>Last Updated:</strong> {{vm.card.lastUpdated | date:'medium'}}</p>
+<a href="#!/cards" class="btn btn-primary">Back to Cards</a>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,19 @@
+<div ng-controller="cardListController as vm">
+<h2>My Credit Cards</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading cards...</p></div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-md-12">
+<div class="kpi-widget">
+<h3>Portfolio Overview</h3>
+<p><strong>Total Cards:</strong> {{vm.portfolio.cardCount}}</p>
+<p><strong>Total Credit Limit:</strong> ₹{{vm.portfolio.totalCreditLimit | number:0}}</p>
+<p><strong>Total Outstanding:</strong> ₹{{vm.portfolio.totalOutstanding | number:0}}</p>
+<p><strong>Total Available:</strong> ₹{{vm.portfolio.totalAvailableCredit | number:0}}</p>
+<button class="btn btn-primary" ng-click="vm.compareCards()">Compare Cards</button>
+</div>
+</div>
+</div>
+<card-list cards="vm.cards" on-card-click="vm.viewCardDetails(card)"></card-list>
+</div>
+</div>

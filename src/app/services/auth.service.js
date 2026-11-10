@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').service('authService',['$q',function($q){var self=this;self.currentUser={userId:'user123',name:'John Doe',token:'mock-auth-token-xyz'};self.getAuthToken=function(){return $q.resolve(self.currentUser.token);};self.getCurrentUser=function(){return $q.resolve(self.currentUser);};}]);})();

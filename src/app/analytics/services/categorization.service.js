@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('analyticsModule').service('categorizationService',[function(){var self=this;self.categorizeTransactions=function(transactions){if(!transactions||!transactions.length){return[];}return transactions.map(function(txn){return angular.extend({},txn,{category:txn.category||'Miscellaneous'});});};}]);})();

@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('analyticsModule').service('analyticsService',['$q','$http','authService','mockDataService',function($q,$http,authService,mockDataService){var self=this;self.getTransactions=function(userId,dateRange){return authService.getAuthToken().then(function(token){return $q.resolve(mockDataService.getTransactions());});};}]);})();

@@ -1,0 +1,45 @@
+<div ng-controller="analyticsController as vm">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Category-Wise Spending</h3>
+<chart-canvas chart-data="vm.chartData" chart-labels="vm.chartLabels" chart-type="bar"></chart-canvas>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<chart-canvas chart-data="vm.trendChartData" chart-labels="vm.trendChartLabels" chart-type="line"></chart-canvas>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Amount</th>
+<th>Transactions</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.categorySpending">
+<td>{{cat.category}}</td>
+<td>₹{{cat.totalAmount | number:0}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentage}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('dashboardModule').factory('refreshFactory',['$interval',function($interval){return{startAutoRefresh:function(callback,intervalMs){return $interval(callback,intervalMs);},stopAutoRefresh:function(promise){if(promise){$interval.cancel(promise);}}};}]);})();

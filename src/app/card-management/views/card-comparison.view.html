@@ -1,0 +1,45 @@
+<div ng-controller="cardComparisonController as vm">
+<h2>Card Comparison</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading comparison...</p></div>
+<div ng-if="!vm.loading && vm.comparisonData" class="comparison-table">
+<table class="table table-bordered table-striped">
+<thead>
+<tr>
+<th>Metric</th>
+<th ng-repeat="card in vm.comparisonData.cards">{{card.cardName}}</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Card Number</strong></td>
+<td ng-repeat="card in vm.comparisonData.cards">{{card.cardNumber}}</td>
+</tr>
+<tr>
+<td><strong>Card Type</strong></td>
+<td ng-repeat="card in vm.comparisonData.cards">{{card.cardType}}</td>
+</tr>
+<tr>
+<td><strong>Total Limit</strong></td>
+<td ng-repeat="item in vm.comparisonData.comparison.limits">₹{{item.value | number:0}}</td>
+</tr>
+<tr>
+<td><strong>Outstanding Balance</strong></td>
+<td ng-repeat="item in vm.comparisonData.comparison.balances">₹{{item.value | number:0}}</td>
+</tr>
+<tr>
+<td><strong>Available Credit</strong></td>
+<td ng-repeat="item in vm.comparisonData.comparison.available">₹{{item.value | number:0}}</td>
+</tr>
+<tr>
+<td><strong>Credit Utilization</strong></td>
+<td ng-repeat="item in vm.comparisonData.comparison.utilization">{{item.value}}</td>
+</tr>
+<tr>
+<td><strong>Monthly Spend</strong></td>
+<td ng-repeat="card in vm.comparisonData.cards">₹{{card.monthlySpend | number:0}}</td>
+</tr>
+</tbody>
+</table>
+<a href="#!/cards" class="btn btn-primary">Back to Cards</a>
+</div>
+</div>
