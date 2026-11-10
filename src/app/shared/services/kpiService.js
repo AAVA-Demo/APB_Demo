@@ -1,0 +1,1 @@
+angular.module('creditCardApp').service('kpiService',['apiService','$q',function(apiService,$q){var self=this;self.getAggregatedMetrics=function(){return apiService.get('/kpi/aggregated')};self.getMonthlySpend=function(){return apiService.get('/kpi/monthly-spend')}}]);
