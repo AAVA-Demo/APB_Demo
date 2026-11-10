@@ -1,0 +1,51 @@
+<div auto-refresh refresh-fn="vm.refresh()" interval="30000">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Credit Card Dashboard</h2>
+      <p class="text-muted">Last updated: {{vm.lastRefresh | date:'short'}}</p>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p><i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="kpi-card">
+        <div class="kpi-value">{{vm.kpiData.totalCreditLimit | currency}}</div>
+        <div class="kpi-label">Total Credit Limit</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="kpi-card">
+        <div class="kpi-value">{{vm.kpiData.totalAvailableCredit | currency}}</div>
+        <div class="kpi-label">Available Credit</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="kpi-card">
+        <div class="kpi-value">{{vm.kpiData.totalOutstanding | currency}}</div>
+        <div class="kpi-label">Outstanding Amount</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="kpi-card">
+        <div class="kpi-value">{{vm.kpiData.monthlySpend | currency}}</div>
+        <div class="kpi-label">Monthly Spend</div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="kpi-card">
+        <h4>Quick Stats</h4>
+        <p><strong>Total Cards:</strong> {{vm.kpiData.cardCount}}</p>
+        <p><strong>Credit Utilization:</strong> {{vm.kpiData.totalCreditLimit > 0 ? ((vm.kpiData.totalOutstanding / vm.kpiData.totalCreditLimit * 100) | number:2) : 0}}%</p>
+        <a href="#/cards" class="btn btn-primary">View All Cards</a>
+        <a href="#/analytics" class="btn btn-info">View Analytics</a>
+      </div>
+    </div>
+  </div>
+</div>

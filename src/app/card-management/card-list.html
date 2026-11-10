@@ -1,0 +1,22 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>My Credit Cards</h2>
+      <p class="text-muted">Manage your credit card portfolio</p>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p><i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-12">
+      <card-selector cards="vm.cards" on-select="vm.selectCard(card)"></card-selector>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length === 0" class="alert alert-info">
+    No credit cards found. Please add a card to get started.
+  </div>
+</div>

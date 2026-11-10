@@ -1,0 +1,86 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics</h2>
+      <p class="text-muted">Understand your spending patterns</p>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p><i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Category-Wise Spending</h4>
+          <spending-chart chart-type="pie" chart-data="vm.categoryData" chart-title="Spending by Category"></spending-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Monthly Spending Trend</h4>
+          <spending-chart chart-type="line" chart-data="vm.trendData" chart-title="Monthly Trends"></spending-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <div ng-if="vm.selectedCategory" class="alert alert-info">
+            Showing transactions for: <strong>{{vm.selectedCategory}}</strong>
+            <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearFilter()">Clear Filter</button>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Spend</th>
+                <th>Transactions</th>
+                <th>Percentage</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.categoryData | orderBy:'-total'">
+                <td>{{cat.category}}</td>
+                <td>{{cat.total | currency}}</td>
+                <td>{{cat.transactionCount}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td><button class="btn btn-xs btn-primary" ng-click="vm.filterByCategory(cat.category)">View Details</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.selectedCategory" class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Filtered Transactions</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant</th>
+                <th>Description</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="txn in vm.filteredTransactions | orderBy:'-date'">
+                <td>{{txn.date | date:'shortDate'}}</td>
+                <td>{{txn.merchant}}</td>
+                <td>{{txn.description}}</td>
+                <td>{{txn.amount | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
