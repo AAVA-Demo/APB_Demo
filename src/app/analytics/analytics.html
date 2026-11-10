@@ -1,0 +1,47 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Spending Analytics</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <label>Start Date:</label>
+      <input type="date" class="form-control" ng-model="vm.dateRange.startDate">
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <label>End Date:</label>
+      <input type="date" class="form-control" ng-model="vm.dateRange.endDate">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <category-filter selected-categories="vm.selectedCategories"></category-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-primary" ng-click="vm.applyFilters()">Apply Filters</button>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-xs-12 text-center">
+      <p>Loading analytics...</p>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.error">
+    <div class="col-xs-12">
+      <div class="alert alert-danger">{{vm.error}}</div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.analyticsData">
+    <div class="col-md-6 col-xs-12">
+      <h3>Category-Wise Spending</h3>
+      <category-spend-chart data="vm.analyticsData.categoryBreakdown"></category-spend-chart>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <h3>Spending Trends</h3>
+      <spend-trend-line data="vm.analyticsData.trendData"></spend-trend-line>
+    </div>
+  </div>
+</div>

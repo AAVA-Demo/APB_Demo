@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <div class="row" ng-if="vm.loading">
+    <div class="col-xs-12 text-center">
+      <p>Loading dashboard...</p>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.error">
+    <div class="col-xs-12">
+      <div class="alert alert-danger">{{vm.error}}</div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.kpiData">
+    <div class="col-md-3 col-xs-12">
+      <kpi-widget title="'Monthly Spend'" value="vm.kpiData.monthlySpend" icon="'glyphicon-credit-card'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-xs-12">
+      <kpi-widget title="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" icon="'glyphicon-stats'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-xs-12">
+      <kpi-widget title="'Available Credit'" value="vm.kpiData.availableCredit" icon="'glyphicon-ok-circle'"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-xs-12">
+      <kpi-widget title="'Outstanding Amount'" value="vm.kpiData.outstandingAmount" icon="'glyphicon-exclamation-sign'"></kpi-widget>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.kpiData">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Credit Utilization: {{vm.kpiData.creditUtilization}}%</h4>
+        </div>
+        <div class="panel-body">
+          <div class="progress">
+            <div class="progress-bar" ng-class="{'progress-bar-success':vm.kpiData.creditUtilization<30,'progress-bar-warning':vm.kpiData.creditUtilization>=30&&vm.kpiData.creditUtilization<70,'progress-bar-danger':vm.kpiData.creditUtilization>=70}" role="progressbar" style="width:{{vm.kpiData.creditUtilization}}%">{{vm.kpiData.creditUtilization}}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-xs-12 text-center">
+      <button class="btn btn-primary" ng-click="vm.refreshKpis()">Refresh Data</button>
+    </div>
+  </div>
+</div>

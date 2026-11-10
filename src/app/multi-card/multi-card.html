@@ -1,0 +1,40 @@
+<div class="multi-card-container">
+  <div class="row" ng-if="vm.loading">
+    <div class="col-xs-12 text-center">
+      <p>Loading your credit cards...</p>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.error">
+    <div class="col-xs-12">
+      <div class="alert alert-danger">{{vm.error}}</div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.cards.length===0">
+    <div class="col-xs-12">
+      <div class="alert alert-info">No credit cards found. Please add a card to get started.</div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.cards.length>0">
+    <div class="col-md-4 col-xs-12">
+      <h3>My Credit Cards</h3>
+      <div class="list-group">
+        <card-list-item ng-repeat="card in vm.cards track by card.cardId" card="card" selected="vm.selectedCard" on-select="vm.selectCard(card)"></card-list-item>
+      </div>
+    </div>
+    <div class="col-md-8 col-xs-12" ng-if="vm.selectedCard">
+      <h3>Card Details: {{vm.selectedCard.cardName}}</h3>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+          <p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+          <p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</p>
+          <p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:2}}</p>
+          <p><strong>Outstanding Amount:</strong> ${{vm.selectedCard.outstandingAmount | number:2}}</p>
+          <p><strong>Utilization:</strong> {{vm.selectedCard.utilizationPercentage}}%</p>
+        </div>
+      </div>
+      <h4>Monthly Spend Trends</h4>
+      <spend-trend-chart card="vm.selectedCard"></spend-trend-chart>
+    </div>
+  </div>
+</div>
