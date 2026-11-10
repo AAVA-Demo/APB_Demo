@@ -1,0 +1,40 @@
+<div>
+  <h2>Credit Card Portfolio Dashboard</h2>
+  <div ng-if="vm.errorMessage" class="error-banner">
+    {{vm.errorMessage}}
+    <button class="btn btn-sm btn-danger pull-right" ng-click="vm.loadPortfolio()">Retry</button>
+  </div>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <i class="glyphicon glyphicon-refresh spinning"></i> Loading...
+  </div>
+  <div ng-if="!vm.loading">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Monthly Spend</h3>
+          <div class="value">₹{{vm.portfolioData.kpis.monthlySpend | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Total Credit Limit</h3>
+          <div class="value">₹{{vm.portfolioData.kpis.totalCreditLimit | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Available Credit</h3>
+          <div class="value">₹{{vm.portfolioData.kpis.totalAvailableCredit | number:0}}</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+          <h3>Outstanding Amount</h3>
+          <div class="value">₹{{vm.portfolioData.kpis.totalOutstanding | number:0}}</div>
+        </div>
+      </div>
+    </div>
+    <h3>Your Credit Cards</h3>
+    <card-list cards="vm.portfolioData.cards"></card-list>
+  </div>
+</div>

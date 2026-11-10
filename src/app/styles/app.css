@@ -1,0 +1,15 @@
+body { padding-top: 20px; background-color: #f5f5f5; }
+.kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.kpi-card h3 { margin-top: 0; color: #333; font-size: 16px; }
+.kpi-card .value { font-size: 28px; font-weight: bold; color: #007bff; }
+.card-tile { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid #007bff; }
+.card-tile h4 { margin-top: 0; color: #333; }
+.card-tile .card-info { margin: 10px 0; }
+.card-tile .card-info span { display: block; color: #666; margin: 5px 0; }
+.transaction-row { cursor: pointer; transition: background-color 0.2s; }
+.transaction-row:hover { background-color: #f0f0f0; }
+.chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.filter-panel { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.error-banner { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+.loading-spinner { text-align: center; padding: 40px; }
+table.table { background: white; }

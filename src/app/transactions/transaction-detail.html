@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <h3 class="modal-title">Transaction Details</h3>
+  <button type="button" class="close" ng-click="vm.close()">&times;</button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xs-6"><strong>Transaction ID:</strong></div>
+    <div class="col-xs-6">{{vm.transaction.transactionId}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Card:</strong></div>
+    <div class="col-xs-6">{{vm.transaction.cardName}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Merchant:</strong></div>
+    <div class="col-xs-6">{{vm.transaction.merchant}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Amount:</strong></div>
+    <div class="col-xs-6">₹{{vm.transaction.amount | number:2}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Date:</strong></div>
+    <div class="col-xs-6">{{vm.transaction.date | date:'dd MMM yyyy, hh:mm a'}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Category:</strong></div>
+    <div class="col-xs-6">{{vm.transaction.category}}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6"><strong>Status:</strong></div>
+    <div class="col-xs-6"><span class="label" ng-class="{'label-success': vm.transaction.status === 'Posted', 'label-warning': vm.transaction.status === 'Pending'}">{{vm.transaction.status}}</span></div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="vm.close()">Close</button>
+</div>
