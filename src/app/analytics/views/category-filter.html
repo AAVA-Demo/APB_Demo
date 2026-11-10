@@ -1,0 +1,7 @@
+<div class="category-filter">
+<label>Select Category:</label>
+<select ng-model="selectedCategory" ng-change="onFilterChange()" class="form-control">
+<option value="">All</option>
+<option ng-repeat="cat in categories" value="{{cat}}">{{cat}}</option>
+</select>
+</div>

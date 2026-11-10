@@ -1,0 +1,87 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Filter Options</div>
+<div class="panel-body">
+<div class="form-inline">
+<div class="form-group">
+<label>Category:</label>
+<select class="form-control" ng-model="vm.selectedCategory" ng-change="vm.applyFilter()">
+<option value="">All Categories</option>
+<option ng-repeat="cat in vm.analyticsData.categoryBreakdown" value="{{cat.category}}">{{cat.category}}</option>
+</select>
+</div>
+<div class="form-group" style="margin-left:15px;">
+<label>Card:</label>
+<select class="form-control" ng-model="vm.selectedCard" ng-change="vm.applyFilter()">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.analyticsData.cardWiseSpending" value="{{card.cardId}}">{{card.cardId}}</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Category-Wise Spending</div>
+<div class="panel-body" style="height:400px;">
+<spending-chart data="vm.filteredData.categoryBreakdown" chart-type="category"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Card-Wise Spending</div>
+<div class="panel-body" style="height:400px;">
+<spending-chart data="vm.filteredData.cardWiseSpending" chart-type="card"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Spending Trends Over Time</div>
+<div class="panel-body" style="height:400px;">
+<spending-chart data="vm.filteredData.timeSeriesData" chart-type="timeseries"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Category Breakdown Details</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Amount</th>
+<th>Transaction Count</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.filteredData.categoryBreakdown">
+<td>{{cat.category}}</td>
+<td>₹{{cat.totalAmount|number:0}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentageOfTotal}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

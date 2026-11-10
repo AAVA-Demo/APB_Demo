@@ -1,0 +1,15 @@
+<div class="panel panel-default card-widget">
+<div class="panel-heading">
+<strong>{{card.cardType}}</strong> {{card.cardNumber}}
+</div>
+<div class="panel-body">
+<p><strong>Credit Limit:</strong> ₹{{card.totalCreditLimit|number:0}}</p>
+<p><strong>Outstanding:</strong> ₹{{card.outstandingAmount|number:0}}</p>
+<p><strong>Available:</strong> ₹{{card.availableCredit|number:0}}</p>
+<p><strong>Monthly Spend:</strong> ₹{{card.monthlySpend|number:0}}</p>
+<p><strong>Utilization:</strong> {{card.utilizationPercent}}%</p>
+<div class="progress">
+<div class="progress-bar" role="progressbar" ng-style="{'width':card.utilizationPercent+'%'}" ng-class="{'progress-bar-success':card.utilizationPercent<50,'progress-bar-warning':card.utilizationPercent>=50&&card.utilizationPercent<80,'progress-bar-danger':card.utilizationPercent>=80}">{{card.utilizationPercent}}%</div>
+</div>
+</div>
+</div>

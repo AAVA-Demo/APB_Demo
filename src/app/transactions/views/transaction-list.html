@@ -1,0 +1,22 @@
+<div class="transaction-list">
+<table class="table table-striped">
+<thead>
+<tr>
+<th ng-click="onSort({field:'date'})" style="cursor:pointer;">Date</th>
+<th ng-click="onSort({field:'merchant'})" style="cursor:pointer;">Merchant</th>
+<th ng-click="onSort({field:'amount'})" style="cursor:pointer;">Amount</th>
+<th ng-click="onSort({field:'category'})" style="cursor:pointer;">Category</th>
+<th>Card</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in transactions|orderBy:sortField:sortReverse">
+<td>{{txn.date|date:'short'}}</td>
+<td>{{txn.merchant}}</td>
+<td>{{txn.amount|currency}}</td>
+<td>{{txn.category}}</td>
+<td>{{txn.cardId}}</td>
+</tr>
+</tbody>
+</table>
+</div>
