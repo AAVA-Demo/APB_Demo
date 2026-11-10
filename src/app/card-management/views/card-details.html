@@ -1,0 +1,92 @@
+<div class="card-details-view">
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-default" ng-click="vm.goBack()">
+<span class="glyphicon glyphicon-arrow-left"></span> Back to Cards
+</button>
+</div>
+</div>
+<div class="alert alert-danger" ng-if="vm.error">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading&&vm.card">
+<div class="card-details-header">
+<div class="card-number">{{vm.card.cardNumber}}</div>
+<div><strong>Card Holder:</strong> {{vm.card.cardHolderName}}</div>
+<div><strong>Card Type:</strong> {{vm.card.cardType}}</div>
+<div><strong>Expiry:</strong> {{vm.card.expiryDate}}</div>
+<div><strong>Status:</strong> <span class="label label-success">{{vm.card.status}}</span></div>
+<div class="card-info">
+<div>
+<h4>Credit Limit</h4>
+<p class="lead">₹{{vm.card.creditLimit|number:0}}</p>
+</div>
+<div>
+<h4>Current Balance</h4>
+<p class="lead">₹{{vm.card.currentBalance|number:0}}</p>
+</div>
+<div>
+<h4>Available Credit</h4>
+<p class="lead">₹{{vm.card.availableCredit|number:0}}</p>
+</div>
+<div>
+<h4>Utilization</h4>
+<p class="lead">{{vm.card.utilization}}%</p>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.metrics">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Card Metrics</h3>
+<div class="row">
+<div class="col-md-4">
+<div class="metric">
+<div class="metric-label">Monthly Spend</div>
+<div class="metric-value">₹{{vm.metrics.monthlySpend|number:0}}</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="metric">
+<div class="metric-label">Transaction Count</div>
+<div class="metric-value">{{vm.metrics.transactionCount}}</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="metric">
+<div class="metric-label">Last Transaction</div>
+<div class="metric-value">{{vm.metrics.lastTransactionDate|date:'short'}}</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="transaction-list">
+<h3>Transaction History</h3>
+<div class="transaction-item" ng-repeat="txn in vm.transactions">
+<div class="row">
+<div class="col-md-6">
+<div class="merchant">{{txn.merchantName}}</div>
+<div class="category">{{txn.category}} • {{txn.transactionDate|date:'short'}}</div>
+</div>
+<div class="col-md-6 text-right">
+<div class="amount" ng-class="txn.transactionType.toLowerCase()">
+<span ng-if="txn.transactionType==='Debit'">-</span>
+<span ng-if="txn.transactionType==='Credit'">+</span>
+₹{{txn.amount|number:0}}
+</div>
+</div>
+</div>
+</div>
+<div ng-if="vm.transactions.length===0">
+<p class="text-muted">No transactions found.</p>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-md-12 text-center">
+<p><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading card details...</p>
+</div>
+</div>
+</div>

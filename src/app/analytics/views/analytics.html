@@ -1,0 +1,79 @@
+<div class="analytics-view">
+<div class="row">
+<div class="col-md-12">
+<h2>Analytics & Spending Insights</h2>
+</div>
+</div>
+<div class="filter-controls">
+<div class="row">
+<div class="col-md-4">
+<label>Start Date</label>
+<input type="date" class="form-control" ng-model="vm.filter.dateRange.start" ng-change="vm.applyFilter()">
+</div>
+<div class="col-md-4">
+<label>End Date</label>
+<input type="date" class="form-control" ng-model="vm.filter.dateRange.end" ng-change="vm.applyFilter()">
+</div>
+<div class="col-md-4">
+<label>Category Filter</label>
+<div>
+<span ng-if="vm.filter.category" class="label label-primary">{{vm.filter.category}}
+<button type="button" class="close" ng-click="vm.clearCategoryFilter()" style="margin-left:5px">&times;</button>
+</span>
+<span ng-if="!vm.filter.category" class="text-muted">Click chart to filter</span>
+</div>
+</div>
+</div>
+</div>
+<div class="alert alert-danger" ng-if="vm.error">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading&&vm.analyticsData">
+<div class="row">
+<div class="col-md-12">
+<div class="alert alert-info">
+<strong>Total Spend:</strong> ₹{{vm.analyticsData.totalSpend|number:0}}
+<span class="pull-right"><strong>Period:</strong> {{vm.filter.dateRange.start|date:'shortDate'}} to {{vm.filter.dateRange.end|date:'shortDate'}}</span>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<spending-chart chart-type="pie" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels" chart-title="Category-Wise Spending"></spending-chart>
+</div>
+<div class="col-md-6">
+<spending-chart chart-type="line" chart-data="vm.trendChartData" chart-labels="vm.trendChartLabels" chart-title="Monthly Spend Trend"></spending-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Category Breakdown</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Spend</th>
+<th>Transactions</th>
+<th>% of Total</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.categorySpending|orderBy:'-totalSpend'">
+<td>{{cat.category}}</td>
+<td>₹{{cat.totalSpend|number:0}}</td>
+<td>{{cat.transactionCount}}</td>
+<td>{{cat.percentageOfTotal}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-md-12 text-center">
+<p><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading analytics...</p>
+</div>
+</div>
+</div>

@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').service('AuthService',AuthService);AuthService.$inject=['$window'];function AuthService($window){const self=this;self.getToken=function(){return $window.localStorage.getItem('authToken')||'mock-jwt-token-12345';};self.isAuthenticated=function(){return!!self.getToken();};self.getUserId=function(){return'user-123';};}})();

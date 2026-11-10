@@ -1,0 +1,24 @@
+<div class="card-item" ng-click="handleClick()">
+<div class="card-number">{{card.cardNumber}}</div>
+<div class="card-type">{{card.cardType}}</div>
+<div class="card-metrics">
+<div class="metric">
+<div class="metric-label">Balance</div>
+<div class="metric-value">₹{{card.currentBalance|number:0}}</div>
+</div>
+<div class="metric">
+<div class="metric-label">Limit</div>
+<div class="metric-value">₹{{card.creditLimit|number:0}}</div>
+</div>
+<div class="metric">
+<div class="metric-label">Available</div>
+<div class="metric-value">₹{{card.availableCredit|number:0}}</div>
+</div>
+</div>
+<div class="utilization-bar">
+<div class="utilization-fill" ng-class="card.utilizationClass" ng-style="{width:card.utilization+'%'}"></div>
+</div>
+<div class="text-center" style="margin-top:5px">
+<small>Utilization: {{card.utilization}}%</small>
+</div>
+</div>

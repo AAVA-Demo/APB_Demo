@@ -1,0 +1,25 @@
+<div class="card-list-view">
+<div class="row">
+<div class="col-md-12">
+<h2>My Credit Cards</h2>
+</div>
+</div>
+<div class="alert alert-danger" ng-if="vm.error">
+{{vm.error}}
+</div>
+<div class="row" ng-if="!vm.loading">
+<div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards">
+<card-item card="card" on-click="vm.viewCardDetails(cardId)"></card-item>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-md-12 text-center">
+<p><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading cards...</p>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading&&vm.cards.length===0">
+<div class="col-md-12">
+<div class="alert alert-info">No credit cards found.</div>
+</div>
+</div>
+</div>
