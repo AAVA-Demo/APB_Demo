@@ -1,0 +1,25 @@
+<div class="analytics-container">
+  <h2>Spending Analytics & Insights</h2>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn" ng-class="{'btn-primary':vm.currentView==='category','btn-default':vm.currentView!=='category'}" ng-click="vm.switchView('category')">Category Spending</button>
+    <button type="button" class="btn" ng-class="{'btn-primary':vm.currentView==='monthly','btn-default':vm.currentView!=='monthly'}" ng-click="vm.switchView('monthly')">Monthly Trends</button>
+    <button type="button" class="btn" ng-class="{'btn-primary':vm.currentView==='cardwise','btn-default':vm.currentView!=='cardwise'}" ng-click="vm.switchView('cardwise')">Card-Wise Spend</button>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div ng-show="vm.currentView==='category'">
+      <spending-chart chart-type="'pie'" chart-data="vm.categoryData" chart-title="'Category-Wise Spending'"></spending-chart>
+    </div>
+    <div ng-show="vm.currentView==='monthly'">
+      <spending-chart chart-type="'line'" chart-data="vm.monthlyData" chart-title="'Monthly Spend Trends'"></spending-chart>
+    </div>
+    <div ng-show="vm.currentView==='cardwise'">
+      <spending-chart chart-type="'bar'" chart-data="vm.cardWiseData" chart-title="'Card-Wise Spending'"></spending-chart>
+    </div>
+  </div>
+</div>

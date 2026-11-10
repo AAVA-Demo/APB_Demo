@@ -1,0 +1,6 @@
+(function(){
+'use strict';
+angular.module('creditCardApp').directive('transactionFilter',function(){
+return {restrict:'E',scope:{filters:'=',onApply:'&',onClear:'&'},template:'<div class="transaction-filter panel panel-default"><div class="panel-body"><form class="form-inline"><div class="form-group"><label>Search:</label><input type="text" class="form-control" ng-model="filters.searchText" placeholder="Merchant, description..."></div><div class="form-group"><label>Start Date:</label><input type="date" class="form-control" ng-model="filters.startDate"></div><div class="form-group"><label>End Date:</label><input type="date" class="form-control" ng-model="filters.endDate"></div><div class="form-group"><label>Min Amount:</label><input type="number" class="form-control" ng-model="filters.minAmount" placeholder="0"></div><div class="form-group"><label>Max Amount:</label><input type="number" class="form-control" ng-model="filters.maxAmount" placeholder="10000"></div><button type="button" class="btn btn-primary" ng-click="onApply()">Apply</button><button type="button" class="btn btn-default" ng-click="onClear()">Clear</button></form></div></div>'};
+});
+})();

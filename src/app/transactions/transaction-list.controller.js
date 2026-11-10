@@ -1,0 +1,49 @@
+(function(){
+'use strict';
+angular.module('app.transactions').controller('TransactionListController',['$scope','$state','TransactionService',function($scope,$state,TransactionService){
+const vm=this;
+vm.transactions=[];
+vm.pagination={pageNumber:1,pageSize:20,totalCount:0,hasMore:false};
+vm.filters={startDate:null,endDate:null,cardId:null,minAmount:null,maxAmount:null,searchText:''};
+vm.loading=true;
+vm.error=null;
+vm.init=function(){
+vm.loadTransactions();
+};
+vm.loadTransactions=function(){
+vm.loading=true;
+TransactionService.getTransactions(vm.pagination.pageNumber,vm.pagination.pageSize,vm.filters).then(function(data){
+vm.transactions=data.transactions;
+vm.pagination.totalCount=data.totalCount;
+vm.pagination.hasMore=data.hasMore;
+vm.loading=false;
+}).catch(function(error){
+vm.error='Failed to load transactions';
+vm.loading=false;
+});
+};
+vm.applyFilters=function(){
+vm.pagination.pageNumber=1;
+vm.loadTransactions();
+};
+vm.clearFilters=function(){
+vm.filters={startDate:null,endDate:null,cardId:null,minAmount:null,maxAmount:null,searchText:''};
+vm.applyFilters();
+};
+vm.loadMore=function(){
+if(vm.pagination.hasMore){
+vm.pagination.pageNumber++;
+TransactionService.getTransactions(vm.pagination.pageNumber,vm.pagination.pageSize,vm.filters).then(function(data){
+vm.transactions=vm.transactions.concat(data.transactions);
+vm.pagination.hasMore=data.hasMore;
+}).catch(function(error){
+console.error('Failed to load more transactions',error);
+});
+}
+};
+vm.viewDetail=function(transactionId){
+$state.go('transactionDetail',{id:transactionId});
+};
+vm.init();
+}]);
+})();

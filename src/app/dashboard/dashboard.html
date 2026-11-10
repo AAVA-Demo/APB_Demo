@@ -1,0 +1,54 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row kpi-section">
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="'Monthly Spend'" value="vm.kpis.totalMonthlySpend" format="'currency'"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="'Total Credit Limit'" value="vm.kpis.totalCreditLimit" format="'currency'"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="'Available Credit'" value="vm.kpis.totalAvailableCredit" format="'currency'"></kpi-card>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <kpi-card label="'Outstanding Amount'" value="vm.kpis.totalOutstanding" format="'currency'"></kpi-card>
+      </div>
+    </div>
+    <div class="row card-list-section">
+      <div class="col-md-12">
+        <h3>My Credit Cards ({{vm.kpis.cardCount}})</h3>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Card Name</th>
+                <th>Card Number</th>
+                <th>Credit Limit</th>
+                <th>Available Credit</th>
+                <th>Outstanding Balance</th>
+                <th>Expiry</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="card in vm.cards">
+                <td>{{card.cardType}}</td>
+                <td>{{card.cardNumber}}</td>
+                <td>{{card.creditLimit | currency}}</td>
+                <td>{{card.availableCredit | currency}}</td>
+                <td>{{card.outstandingAmount | currency}}</td>
+                <td>{{card.expiryDate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
