@@ -1,0 +1,31 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "apiBaseUrl": "http://localhost:3000/api",
+  "timeout": 30000,
+  "retries": 2,
+  "testUsers": {
+    "multiCategoryUser": "user-multi-category-001",
+    "noTransactionsUser": "user-no-transactions-001",
+    "multiCardsUser": "user-multi-cards-001",
+    "maxCardsUser": "user-max-cards-001",
+    "monthlySpendUser": "user-monthly-spend-001",
+    "creditUtilizationUser": "user-credit-utilization-001"
+  },
+  "testCards": {
+    "card123": "card-123",
+    "card456": "card-456",
+    "deactivatedCard": "card-deactivated-789",
+    "newCard": "card-new-001"
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ]
+}
