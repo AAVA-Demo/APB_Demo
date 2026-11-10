@@ -1,0 +1,67 @@
+<div class="portfolio-container">
+  <h2>Credit Card Portfolio</h2>
+  <div ng-if="vm.loading" class="alert alert-info">Loading portfolio...</div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="vm.portfolio" class="row">
+    <div class="col-md-4">
+      <h4>My Cards ({{vm.portfolio.totalCards}})</h4>
+      <div class="list-group">
+        <a href="javascript:void(0)" class="list-group-item card-item" ng-repeat="card in vm.portfolio.cards" ng-click="vm.selectCard(card)" ng-class="{'active': vm.selectedCard.cardId === card.cardId}">
+          <h5 class="list-group-item-heading">{{card.cardType}} - {{card.cardNumber}}</h5>
+          <p class="list-group-item-text">{{card.issuer}}</p>
+          <p class="list-group-item-text"><strong>Balance:</strong> ${{card.currentBalance | number:2}}</p>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div ng-if="vm.selectedCard">
+        <h4>Card Details</h4>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h5>{{vm.selectedCard.cardType}} - {{vm.selectedCard.cardNumber}}</h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-4">
+                <p><strong>Issuer:</strong> {{vm.selectedCard.issuer}}</p>
+              </div>
+              <div class="col-sm-4">
+                <p><strong>Credit Limit:</strong> ${{vm.selectedCard.creditLimit | number:2}}</p>
+              </div>
+              <div class="col-sm-4">
+                <p><strong>Available Credit:</strong> ${{vm.selectedCard.availableCredit | number:2}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <p><strong>Current Balance:</strong> ${{vm.selectedCard.currentBalance | number:2}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h4>Transaction History</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="transaction in vm.selectedCard.transactions | limitTo:vm.transactionLimit">
+              <td>{{transaction.date | date:'short'}}</td>
+              <td>{{transaction.description}}</td>
+              <td>{{transaction.category}}</td>
+              <td>${{transaction.amount | number:2}}</td>
+              <td><span class="label" ng-class="{'label-success': transaction.status === 'posted', 'label-warning': transaction.status === 'pending'}">{{transaction.status}}</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-primary" ng-if="vm.selectedCard.transactions.length > vm.transactionLimit" ng-click="vm.loadMore()">Load More</button>
+      </div>
+    </div>
+  </div>
+</div>

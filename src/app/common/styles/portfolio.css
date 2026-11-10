@@ -1,0 +1,5 @@
+.portfolio-container { padding: 20px; }
+.card-item { cursor: pointer; transition: background-color 0.3s ease; }
+.card-item:hover { background-color: #f5f5f5; }
+.card-item.active { background-color: #337ab7; color: white; }
+.list-group-item-text { margin: 5px 0; }
