@@ -1,0 +1,15 @@
+<div class="card-list-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading your credit cards...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards track by card.cardId">
+      <card-list-item card="card" selected="vm.selectedCardId === card.cardId" on-select="vm.selectCard(cardId)"></card-list-item>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.cards.length === 0">
+    <p>No credit cards found.</p>
+  </div>
+</div>

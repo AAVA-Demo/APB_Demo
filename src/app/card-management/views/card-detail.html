@@ -1,0 +1,47 @@
+<div class="card-detail-container">
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.card">
+    <div class="card-detail-header">
+      <h2>{{vm.card.cardNumber}}</h2>
+      <p><strong>{{vm.card.cardholderName}}</strong></p>
+      <p>{{vm.card.issuer}} - {{vm.card.cardType}}</p>
+      <p>Expires: {{vm.card.expiryDate}}</p>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <div class="kpi-label">Credit Limit</div>
+          <div class="kpi-value">{{vm.card.creditLimit | currency}}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <div class="kpi-label">Available Credit</div>
+          <div class="kpi-value">{{vm.card.availableCredit | currency}}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <div class="kpi-label">Outstanding Amount</div>
+          <div class="kpi-value">{{vm.card.outstandingAmount | currency}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="kpi-card">
+          <h4>Card Status</h4>
+          <span class="label" ng-class="{'label-success': vm.card.status === 'Active', 'label-danger': vm.card.status !== 'Active'}">{{vm.card.status}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <a href="#!/cards" class="btn btn-default">Back to Card List</a>
+      </div>
+    </div>
+  </div>
+</div>

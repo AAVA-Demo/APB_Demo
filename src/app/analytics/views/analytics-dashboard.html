@@ -1,0 +1,70 @@
+<div class="analytics-container">
+  <div class="analytics-header">
+    <h2>Spending Analytics</h2>
+    <p class="text-muted">Analyze your spending patterns and trends</p>
+  </div>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error && vm.aggregatedData">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Monthly Spend Trends (Last 12 Months)</h4>
+          <spending-trend-chart data="vm.aggregatedData"></spending-trend-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Category-wise Spending Breakdown</h4>
+          <category-breakdown-chart data="vm.aggregatedData"></category-breakdown-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Spending by Category</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.aggregatedData.categoryBreakdown track by cat.category">
+                <td>{{cat.category}}</td>
+                <td>{{cat.totalSpend | currency}}</td>
+                <td>{{cat.percentage}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.aggregatedData.cardWiseSpend.length > 0">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Card-wise Spending</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Card ID</th>
+                <th>Total Spend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="card in vm.aggregatedData.cardWiseSpend track by card.cardId">
+                <td>{{card.cardId}}</td>
+                <td>{{card.totalSpend | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

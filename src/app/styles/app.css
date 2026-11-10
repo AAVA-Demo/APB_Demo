@@ -1,0 +1,18 @@
+body { padding-top: 70px; background-color: #f5f5f5; }
+.navbar { margin-bottom: 20px; }
+.kpi-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.kpi-card .kpi-label { font-size: 14px; color: #666; margin-bottom: 8px; }
+.kpi-card .kpi-value { font-size: 28px; font-weight: bold; color: #333; }
+.kpi-card .kpi-icon { font-size: 40px; color: #5cb85c; margin-bottom: 10px; }
+.card-item { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; }
+.card-item:hover { border-color: #5cb85c; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.card-item.selected { border-color: #5cb85c; background-color: #f0f8f0; }
+.card-number { font-size: 18px; font-weight: bold; letter-spacing: 2px; }
+.card-issuer { color: #666; font-size: 14px; }
+.card-detail-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+.chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.analytics-header { margin-bottom: 30px; }
+.error-message { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin: 20px 0; }
+.loading-spinner { text-align: center; padding: 40px; }
+@media (max-width: 768px) { .kpi-card { margin-bottom: 15px; } .kpi-card .kpi-value { font-size: 24px; } }
