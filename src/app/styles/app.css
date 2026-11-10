@@ -1,0 +1,13 @@
+body { padding-top: 20px; background-color: #f5f5f5; }
+.kpi-widget { background: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+.kpi-widget h3 { margin-top: 0; color: #666; font-size: 14px; text-transform: uppercase; }
+.kpi-widget .value { font-size: 32px; font-weight: bold; color: #333; }
+.credit-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.credit-card h4 { margin-top: 0; }
+.credit-card .card-number { font-size: 18px; letter-spacing: 2px; margin: 10px 0; }
+.credit-card .card-details { display: flex; justify-content: space-between; margin-top: 15px; }
+.transaction-table { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.filter-panel { background: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.chart-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 400px; }
+.pagination { margin-top: 20px; }
+@media (max-width: 768px) { .kpi-widget { margin-bottom: 15px; } .credit-card { margin-bottom: 10px; } }
