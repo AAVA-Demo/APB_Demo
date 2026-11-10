@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12">
+    <a href="#/cards" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-arrow-left"></span> Back to Cards</a>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.selectedCard" class="row">
+  <div class="col-xs-12 col-md-6">
+    <div class="kpi-card">
+      <h3>Card Details</h3>
+      <div class="card-number">{{vm.selectedCard.cardNumber}}</div>
+      <p><strong>Cardholder:</strong> {{vm.selectedCard.cardHolderName}}</p>
+      <p><strong>Type:</strong> {{vm.selectedCard.cardType}}</p>
+      <p><strong>Expiry:</strong> {{vm.selectedCard.expiryDate}}</p>
+      <p><strong>Status:</strong> <span class="card-status" ng-class="{'status-active': vm.selectedCard.status === 'Active'}">{{vm.selectedCard.status}}</span></p>
+      <hr>
+      <p><strong>Credit Limit:</strong> ₹{{vm.selectedCard.creditLimit | number:2}}</p>
+      <p><strong>Available Credit:</strong> ₹{{vm.selectedCard.availableCredit | number:2}}</p>
+      <p><strong>Outstanding Balance:</strong> ₹{{vm.selectedCard.outstandingBalance | number:2}}</p>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <div class="kpi-card" ng-if="vm.selectedCardSpend">
+      <h3>Spend Analysis</h3>
+      <p><strong>Monthly Spend:</strong> ₹{{vm.selectedCardSpend.monthlySpend | number:2}}</p>
+      <p><strong>Yearly Spend:</strong> ₹{{vm.selectedCardSpend.yearlySpend | number:2}}</p>
+      <p><strong>Total Transactions:</strong> {{vm.selectedCardSpend.transactionCount}}</p>
+      <p><strong>Last Transaction:</strong> {{vm.selectedCardSpend.lastTransactionDate | date:'medium'}}</p>
+    </div>
+  </div>
+</div>

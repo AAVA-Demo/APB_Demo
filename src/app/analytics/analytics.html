@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Transaction Analytics</h2>
+    <p class="text-muted">Comprehensive spending insights and patterns</p>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-xs-12 text-center">
+    <div class="spinner"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Processing analytics...</div>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span> {{vm.error}}
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="filter-panel">
+      <h4>Date Range Filter</h4>
+      <div class="row">
+        <div class="col-xs-12 col-sm-4">
+          <label>Start Date</label>
+          <input type="date" class="form-control" ng-model="vm.dateRange.startDate">
+        </div>
+        <div class="col-xs-12 col-sm-4">
+          <label>End Date</label>
+          <input type="date" class="form-control" ng-model="vm.dateRange.endDate">
+        </div>
+        <div class="col-xs-12 col-sm-4">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary btn-block" ng-click="vm.applyFilters()">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error && vm.analytics" class="row">
+  <div class="col-xs-12 col-md-6">
+    <div class="chart-container">
+      <h4>Category-Wise Spending</h4>
+      <analytics-chart chart-data="vm.analytics.categoryBreakdown" chart-type="pie"></analytics-chart>
+      <table class="table table-condensed" style="margin-top: 20px;">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="text-right">Amount</th>
+            <th class="text-right">%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cat in vm.analytics.categoryBreakdown">
+            <td><span class="category-badge" ng-style="{backgroundColor: vm.categories.indexOf(cat.category) >= 0 ? '' : '#95a5a6'}">{{cat.category}}</span></td>
+            <td class="text-right">₹{{cat.totalSpend | number:2}}</td>
+            <td class="text-right">{{cat.percentage}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <div class="chart-container">
+      <h4>Monthly Spend Trends</h4>
+      <analytics-chart chart-data="vm.analytics.monthlyTrends" chart-type="line"></analytics-chart>
+      <div style="margin-top: 20px;">
+        <p><strong>Total Transactions:</strong> {{vm.analytics.totalTransactions}}</p>
+        <p><strong>Total Spend:</strong> ₹{{vm.analytics.totalSpend | number:2}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row" style="margin-top: 20px;">
+  <div class="col-xs-12">
+    <a href="#/analytics/history" class="btn btn-default">View Transaction History</a>
+  </div>
+</div>

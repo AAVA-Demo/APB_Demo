@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h2>My Credit Cards</h2>
+    <p class="text-muted">Consolidated view of all your credit cards</p>
+    <hr>
+  </div>
+</div>
+<div ng-if="vm.loading" class="row">
+  <div class="col-xs-12 text-center">
+    <div class="spinner"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading cards...</div>
+  </div>
+</div>
+<div ng-if="vm.error" class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span> {{vm.error}}
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-xs-12 col-md-4">
+    <div class="filter-panel">
+      <h4>Filter Cards</h4>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search..." ng-model="vm.filterText">
+      </div>
+      <div class="form-group">
+        <select class="form-control" ng-model="vm.filterType">
+          <option value="">All Card Types</option>
+          <option value="Visa">Visa</option>
+          <option value="MasterCard">MasterCard</option>
+          <option value="Amex">Amex</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-8">
+    <div ng-if="vm.getFilteredCards().length === 0">
+      <p class="text-muted">No cards found matching your criteria.</p>
+    </div>
+    <card-card ng-repeat="card in vm.getFilteredCards()" card="card" on-select="vm.selectCard(cardId)"></card-card>
+  </div>
+</div>
