@@ -1,0 +1,63 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading" class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Category-Wise Spending</h3>
+        </div>
+        <div class="panel-body">
+          <canvas chart-directive chart-data="vm.categoryChartData" chart-id="categoryChart"></canvas>
+          <table class="table table-condensed" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.categoryData">
+                <td>{{cat.category}}</td>
+                <td>₹{{cat.amount | number:2}}</td>
+                <td>{{cat.percentage | number:1}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Monthly Spend Trends</h3>
+        </div>
+        <div class="panel-body">
+          <canvas chart-directive chart-data="vm.trendChartData" chart-id="trendChart"></canvas>
+          <table class="table table-condensed" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Total Spend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="trend in vm.trendData">
+                <td>{{trend.month}}</td>
+                <td>₹{{trend.totalSpend | number:2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+  <h2>Financial KPI Overview</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="vm.kpiData && !vm.loading" class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Monthly Spend</h3>
+        </div>
+        <div class="panel-body">
+          <h2>₹{{vm.kpiData.monthlySpend | number:2}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">Total Credit Limit</h3>
+        </div>
+        <div class="panel-body">
+          <h2>₹{{vm.kpiData.totalCreditLimit | number:2}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Available Credit</h3>
+        </div>
+        <div class="panel-body">
+          <h2>₹{{vm.kpiData.availableCredit | number:2}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h3 class="panel-title">Outstanding Amount</h3>
+        </div>
+        <div class="panel-body">
+          <h2>₹{{vm.kpiData.outstandingAmount | number:2}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.kpiData && !vm.loading" class="row">
+    <div class="col-xs-12">
+      <p class="text-muted">Last updated: {{vm.kpiData.lastUpdated | date:'medium'}}</p>
+    </div>
+  </div>
+</div>

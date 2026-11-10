@@ -1,0 +1,40 @@
+<div class="card-details-container">
+  <button class="btn btn-default" ng-click="vm.goBack()">← Back to Cards</button>
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && vm.card" class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Card Information</h3>
+        </div>
+        <div class="panel-body">
+          <p><strong>Card Number:</strong> {{vm.card.cardNumber}}</p>
+          <p><strong>Cardholder:</strong> {{vm.card.cardholderName}}</p>
+          <p><strong>Issuer:</strong> {{vm.card.issuer}}</p>
+          <p><strong>Credit Limit:</strong> ₹{{vm.card.creditLimit | number:2}}</p>
+          <p><strong>Available Credit:</strong> ₹{{vm.card.availableCredit | number:2}}</p>
+          <p><strong>Outstanding:</strong> ₹{{vm.card.outstandingAmount | number:2}}</p>
+          <p><strong>Status:</strong> <span class="label label-success">{{vm.card.status}}</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Spending Analysis</h3>
+        </div>
+        <div class="panel-body">
+          <p><strong>Monthly Spend:</strong> ₹{{vm.spending.monthlySpend | number:2}}</p>
+          <p><strong>Transaction Count:</strong> {{vm.spending.transactionCount}}</p>
+          <p><strong>Last Transaction:</strong> {{vm.spending.lastTransactionDate | date:'medium'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
