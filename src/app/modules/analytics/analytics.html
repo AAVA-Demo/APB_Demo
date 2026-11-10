@@ -1,0 +1,60 @@
+<div class="analytics-container">
+  <div ng-if="analyticsCtrl.loading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div ng-if="analyticsCtrl.error" class="alert alert-danger" role="alert">
+    {{analyticsCtrl.error}}
+  </div>
+  <div ng-if="!analyticsCtrl.loading && !analyticsCtrl.error">
+    <h2 class="mb-4">Spending Analytics</h2>
+    <div ng-if="analyticsCtrl.selectedCategory" class="alert alert-info" role="alert">
+      Filtered by: <strong>{{analyticsCtrl.selectedCategory}}</strong>
+      <button class="btn btn-sm btn-outline-primary ml-3" ng-click="analyticsCtrl.clearFilter()" touch-friendly>Clear Filter</button>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Category-wise Spending</h5>
+            <div spending-chart chart-data="analyticsCtrl.categoryChartData" chart-type="pie" on-click="analyticsCtrl.onCategoryClick"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Monthly Spend Trends</h5>
+            <div spending-chart chart-data="analyticsCtrl.trendChartData" chart-type="line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Category Breakdown</h5>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Spend</th>
+                <th>Transactions</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in analyticsCtrl.categorySpend track by cat.category" ng-class="{'table-primary': cat.category === analyticsCtrl.selectedCategory}">
+                <td>{{cat.category}}</td>
+                <td>{{cat.totalSpend | currency}}</td>
+                <td>{{cat.transactionCount}}</td>
+                <td>{{cat.percentage | number:1}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

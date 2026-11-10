@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/styles/responsive.css">
+  <link rel="stylesheet" href="src/app/styles/breakpoints.css">
+</head>
+<body ng-controller="ResponsiveLayoutController as respCtrl">
+  <div class="container-fluid" responsive-container>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+      <a class="navbar-brand" href="#!/">Credit Card Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#!/dashboard" touch-friendly>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#!/analytics" touch-friendly>Analytics</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/modules/responsive/responsive.module.js"></script>
+  <script src="src/app/modules/responsive/responsive-layout.controller.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.module.js"></script>
+  <script src="src/app/modules/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/modules/analytics/analytics.module.js"></script>
+  <script src="src/app/modules/analytics/analytics.controller.js"></script>
+  <script src="src/app/services/device-detection.service.js"></script>
+  <script src="src/app/services/responsive-utils.service.js"></script>
+  <script src="src/app/services/auth.service.js"></script>
+  <script src="src/app/services/credit-card.service.js"></script>
+  <script src="src/app/services/financial-aggregation.service.js"></script>
+  <script src="src/app/services/transaction.service.js"></script>
+  <script src="src/app/services/categorization.service.js"></script>
+  <script src="src/app/services/analytics-engine.service.js"></script>
+  <script src="src/app/services/chart.service.js"></script>
+  <script src="src/app/factories/credit-card.factory.js"></script>
+  <script src="src/app/factories/transaction.factory.js"></script>
+  <script src="src/app/directives/responsive-container.directive.js"></script>
+  <script src="src/app/directives/touch-friendly.directive.js"></script>
+  <script src="src/app/directives/kpi-card.directive.js"></script>
+  <script src="src/app/directives/spending-chart.directive.js"></script>
+</body>
+</html>
