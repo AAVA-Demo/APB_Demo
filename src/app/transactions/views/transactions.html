@@ -1,0 +1,66 @@
+<div class="transactions-view">
+  <div class="page-header">
+    <h1>Transaction History</h1>
+  </div>
+  <div class="filter-panel panel panel-default">
+    <div class="panel-heading">Filter Transactions</div>
+    <div class="panel-body">
+      <form class="form-inline">
+        <div class="form-group">
+          <label>Search:</label>
+          <input type="text" class="form-control" ng-model="vm.filters.searchTerm" placeholder="Merchant, category...">
+        </div>
+        <div class="form-group">
+          <label>Start Date:</label>
+          <input type="date" class="form-control" ng-model="vm.filters.startDate">
+        </div>
+        <div class="form-group">
+          <label>End Date:</label>
+          <input type="date" class="form-control" ng-model="vm.filters.endDate">
+        </div>
+        <div class="form-group">
+          <label>Min Amount:</label>
+          <input type="number" class="form-control" ng-model="vm.filters.minAmount" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Max Amount:</label>
+          <input type="number" class="form-control" ng-model="vm.filters.maxAmount" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Sort By:</label>
+          <select class="form-control" ng-model="vm.filters.sortBy">
+            <option value="date">Date</option>
+            <option value="amount">Amount</option>
+            <option value="merchant">Merchant</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Order:</label>
+          <select class="form-control" ng-model="vm.filters.sortOrder">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="vm.applyFilters()">Apply</button>
+        <button type="button" class="btn btn-default" ng-click="vm.resetFilters()">Reset</button>
+      </form>
+    </div>
+  </div>
+  <div ng-if="vm.loading && vm.transactions.length === 0" class="text-center">
+    <p>Loading transactions...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.transactions.length === 0 && !vm.error" class="alert alert-info">
+    No transactions found.
+  </div>
+  <div ng-if="vm.transactions.length > 0">
+    <p class="transaction-count">Showing {{vm.transactions.length}} of {{vm.pagination.totalRecords}} transactions</p>
+    <transaction-list transactions="vm.transactions" on-load-more="vm.loadMore()"></transaction-list>
+    <div ng-if="vm.loading" class="text-center">
+      <p>Loading more transactions...</p>
+    </div>
+    <div ng-if="!vm.pagination.hasMore" class="text-center">
+      <p class="text-muted">No more transactions to load.</p>
+    </div>
+  </div>
+</div>

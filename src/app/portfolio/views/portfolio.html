@@ -1,0 +1,60 @@
+<div class="portfolio-dashboard">
+  <div class="page-header">
+    <h1>Credit Card Portfolio</h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading portfolio data...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row kpi-row">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <dashboard-kpi label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="credit-card" format="currency"></dashboard-kpi>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <dashboard-kpi label="Available Credit" value="vm.kpis.totalAvailableCredit" icon="ok-circle" format="currency"></dashboard-kpi>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <dashboard-kpi label="Outstanding Amount" value="vm.kpis.totalOutstanding" icon="exclamation-sign" format="currency"></dashboard-kpi>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <dashboard-kpi label="Monthly Spend" value="vm.kpis.monthlySpend" icon="shopping-cart" format="currency"></dashboard-kpi>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Your Credit Cards ({{vm.kpis.activeCardCount}} Active)</h3>
+        <div class="card-list">
+          <div class="card-item" ng-repeat="card in vm.cards">
+            <div class="card-header">
+              <span class="card-type">{{card.cardType}}</span>
+              <span class="card-status" ng-class="{'status-active': card.status === 'active', 'status-blocked': card.status === 'blocked'}">{{card.status}}</span>
+            </div>
+            <div class="card-body">
+              <h4>{{card.cardName}}</h4>
+              <p class="card-number">{{card.cardNumber}}</p>
+              <div class="card-details">
+                <div class="detail-item">
+                  <span class="detail-label">Credit Limit:</span>
+                  <span class="detail-value">${{card.creditLimit | number:2}}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Available:</span>
+                  <span class="detail-value">${{card.availableCredit | number:2}}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Outstanding:</span>
+                  <span class="detail-value">${{card.outstandingAmount | number:2}}</span>
+                </div>
+                <div class="detail-item" ng-if="card.dueDate">
+                  <span class="detail-label">Due Date:</span>
+                  <span class="detail-value">{{card.dueDate | date:'MMM dd, yyyy'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

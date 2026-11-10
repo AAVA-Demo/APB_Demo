@@ -1,0 +1,91 @@
+<div class="analytics-view">
+  <div class="page-header">
+    <h1>Spending Analytics & Insights</h1>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics data...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Category-Wise Spending</h3>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-type="pie" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels"></chart-directive>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Transactions</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="cat in vm.categorySpends">
+                  <td>{{cat.category}}</td>
+                  <td>${{cat.totalAmount | number:2}}</td>
+                  <td>{{cat.transactionCount}}</td>
+                  <td>{{cat.percentage}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Monthly Spend Trends</h3>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-type="line" chart-data="vm.monthlyChartData" chart-labels="vm.monthlyChartLabels"></chart-directive>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Total Spend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="month in vm.monthlyTrends">
+                  <td>{{month.month}}</td>
+                  <td>${{month.totalSpend | number:2}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Card-Wise Spend Analysis</h3>
+          </div>
+          <div class="panel-body">
+            <chart-directive chart-type="bar" chart-data="vm.cardChartData" chart-labels="vm.cardChartLabels"></chart-directive>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Card</th>
+                  <th>Total Spend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="card in vm.cardSpends">
+                  <td>{{card.cardName}}</td>
+                  <td>${{card.totalSpend | number:2}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

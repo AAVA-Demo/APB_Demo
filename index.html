@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/assets/css/portfolio.css">
+  <link rel="stylesheet" href="src/app/assets/css/transactions.css">
+  <link rel="stylesheet" href="src/app/assets/css/analytics.css">
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#/portfolio">Portfolio</a></li>
+        <li><a href="#/transactions">Transactions</a></li>
+        <li><a href="#/analytics">Analytics</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/services/api.service.js"></script>
+  <script src="src/app/portfolio/portfolio.module.js"></script>
+  <script src="src/app/portfolio/portfolio.service.js"></script>
+  <script src="src/app/portfolio/kpi-calculator.factory.js"></script>
+  <script src="src/app/portfolio/dashboard-kpi.directive.js"></script>
+  <script src="src/app/portfolio/portfolio.controller.js"></script>
+  <script src="src/app/transactions/transactions.module.js"></script>
+  <script src="src/app/transactions/transaction.service.js"></script>
+  <script src="src/app/transactions/filter.service.js"></script>
+  <script src="src/app/transactions/transaction.filter.js"></script>
+  <script src="src/app/transactions/transaction-list.directive.js"></script>
+  <script src="src/app/transactions/transaction.controller.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/categorization.factory.js"></script>
+  <script src="src/app/analytics/aggregation.service.js"></script>
+  <script src="src/app/analytics/analytics.service.js"></script>
+  <script src="src/app/analytics/chart.directive.js"></script>
+  <script src="src/app/analytics/analytics.controller.js"></script>
+</body>
+</html>
