@@ -1,0 +1,62 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics</h2>
+      <a href="#!/dashboard" class="btn btn-default">Back to Dashboard</a>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading" style="margin-top:20px;">
+    <div class="col-md-12 text-center">
+      <p>Loading analytics...</p>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading" style="margin-top:20px;">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Category-wise Spending</div>
+        <div class="panel-body">
+          <chart-canvas chart-type="pie" chart-data="{labels: vm.categoryData.map(function(c){return c.category;}), datasets: [{data: vm.categoryData.map(function(c){return c.totalAmount;}), backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40','#FF6384','#C9CBCF','#4BC0C0']}]}" chart-options="{responsive: true}"></chart-canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Category Breakdown</div>
+        <div class="panel-body">
+          <table class="table table-sm">
+            <thead>
+              <tr><th>Category</th><th>Amount</th><th>%</th></tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.categoryData track by cat.category">
+                <td>{{cat.category}}</td>
+                <td>₹{{cat.totalAmount | number:0}}</td>
+                <td>{{cat.percentage}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Monthly Spend Trends</div>
+        <div class="panel-body">
+          <chart-canvas chart-type="line" chart-data="{labels: vm.monthlyTrends.map(function(m){return m.month;}), datasets: [{label: 'Total Spend', data: vm.monthlyTrends.map(function(m){return m.totalSpend;}), borderColor: '#36A2EB', fill: false}]}" chart-options="{responsive: true, scales: {yAxes: [{ticks: {beginAtZero: true}}]}}"></chart-canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Card-wise Spend Analysis</div>
+        <div class="panel-body">
+          <chart-canvas chart-type="bar" chart-data="{labels: vm.cardWiseData.map(function(c){return c.cardName;}), datasets: [{label: 'Total Spend', data: vm.cardWiseData.map(function(c){return c.totalSpend;}), backgroundColor: '#4BC0C0'}]}" chart-options="{responsive: true, scales: {yAxes: [{ticks: {beginAtZero: true}}]}}"></chart-canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

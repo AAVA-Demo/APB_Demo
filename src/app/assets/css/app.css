@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+.dashboard-container, .transaction-container, .analytics-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.kpi-cards { margin-top: 20px; }
+.panel-body h3 { margin: 0; font-size: 28px; font-weight: bold; }
+.pagination-controls { margin-top: 20px; }
+.pagination-info { margin: 0 15px; font-weight: bold; }
+table { margin-top: 10px; }
+@media (max-width: 768px) { .panel-body h3 { font-size: 20px; } }
