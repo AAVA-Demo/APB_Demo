@@ -1,0 +1,50 @@
+<div ng-controller="TransactionController as vm">
+<h2>Transaction History</h2>
+<div class="filter-bar">
+<form class="form-inline">
+<div class="form-group">
+<label>Card:</label>
+<select ng-model="vm.filters.cardId" class="form-control">
+<option value="">All Cards</option>
+<option value="card001">Visa Platinum</option>
+<option value="card002">MasterCard Gold</option>
+<option value="card003">Amex Blue</option>
+</select>
+</div>
+<div class="form-group">
+<label>From:</label>
+<input type="date" ng-model="vm.filters.startDate" class="form-control">
+</div>
+<div class="form-group">
+<label>To:</label>
+<input type="date" ng-model="vm.filters.endDate" class="form-control">
+</div>
+<div class="form-group">
+<label>Search:</label>
+<input type="text" ng-model="vm.filters.searchTerm" placeholder="Merchant or description" class="form-control" ng-model-options="{debounce:300}">
+</div>
+<button type="button" ng-click="vm.applyFilters()" class="btn btn-primary">Apply</button>
+<button type="button" ng-click="vm.clearFilters()" class="btn btn-default">Clear</button>
+</form>
+</div>
+<div ng-if="vm.loading" class="text-center"><p>Loading transactions...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && vm.transactions.length>0">
+<transaction-list transactions="vm.transactions" on-view-details="vm.viewDetails(transaction)"></transaction-list>
+<nav>
+<ul class="pagination">
+<li ng-class="{disabled:vm.pagination.currentPage===1}">
+<a ng-click="vm.goToPage(vm.pagination.currentPage-1)">&laquo;</a>
+</li>
+<li ng-repeat="page in vm.getPageNumbers()" ng-class="{active:page===vm.pagination.currentPage}">
+<a ng-click="vm.goToPage(page)">{{page}}</a>
+</li>
+<li ng-class="{disabled:vm.pagination.currentPage===vm.pagination.totalPages}">
+<a ng-click="vm.goToPage(vm.pagination.currentPage+1)">&raquo;</a>
+</li>
+</ul>
+</nav>
+</div>
+<div ng-if="!vm.loading && vm.transactions.length===0" class="alert alert-info">No transactions found.</div>
+<transaction-detail-modal transaction="vm.selectedTransaction" on-close="vm.closeDetails()"></transaction-detail-modal>
+</div>

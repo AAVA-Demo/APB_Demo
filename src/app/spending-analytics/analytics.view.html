@@ -1,0 +1,29 @@
+<div ng-controller="AnalyticsController as vm">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="vm.analyticsData && !vm.loading">
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h3>Monthly Spend Trends</h3>
+<trend-chart data="vm.analyticsData.monthlyTrends"></trend-chart>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Card-wise Spending</h3>
+<card-wise-chart data="vm.analyticsData.cardWiseSpending"></card-wise-chart>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h3>Category-wise Spending</h3>
+<category-chart data="vm.analyticsData.categoryWiseSpending"></category-chart>
+</div>
+</div>
+</div>
+</div>
+</div>
