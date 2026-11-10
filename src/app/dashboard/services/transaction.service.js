@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.dashboard').factory('DashboardTransactionService',['$http','$q',function($http,$q){const service={getMonthlySpend:function(userId){return $http.get('/api/transactions/monthly-summary',{params:{userId:userId}}).then(function(response){return response.data.monthlySpend;}).catch(function(error){return 8500;});}};return service;}]);})();
