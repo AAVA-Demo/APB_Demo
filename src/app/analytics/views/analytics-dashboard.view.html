@@ -1,0 +1,23 @@
+<div class="analytics-container">
+<div class="analytics-header">
+<h1>Spending Analytics</h1>
+<div class="view-selector">
+<button ng-click="vm.switchView('category')" ng-class="{active:vm.activeView==='category'}">Category</button>
+<button ng-click="vm.switchView('trend')" ng-class="{active:vm.activeView==='trend'}">Trend</button>
+<button ng-click="vm.switchView('card')" ng-class="{active:vm.activeView==='card'}">Card Breakdown</button>
+</div>
+</div>
+<div class="loading" ng-if="vm.loading">Loading analytics...</div>
+<div class="error" ng-if="vm.error">{{vm.error}}</div>
+<div class="analytics-content" ng-if="!vm.loading&&!vm.error">
+<div ng-if="vm.activeView==='category'">
+<category-chart data="vm.categoryData"></category-chart>
+</div>
+<div ng-if="vm.activeView==='trend'">
+<trend-chart data="vm.trendData"></trend-chart>
+</div>
+<div ng-if="vm.activeView==='card'">
+<card-breakdown data="vm.cardData"></card-breakdown>
+</div>
+</div>
+</div>

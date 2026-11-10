@@ -1,0 +1,14 @@
+<div class="transaction-container">
+<div class="transaction-header">
+<h1>Transactions</h1>
+</div>
+<transaction-filter card-list="vm.cardList"></transaction-filter>
+<div class="loading" ng-if="vm.loading">Loading transactions...</div>
+<div class="error" ng-if="vm.error">{{vm.error}}</div>
+<transaction-list transactions="vm.transactions" ng-if="!vm.loading&&!vm.error"></transaction-list>
+<div class="pagination" ng-if="!vm.loading&&!vm.error">
+<button ng-click="vm.prevPage()" ng-disabled="vm.currentPage===1">Previous</button>
+<span>Page {{vm.currentPage}} of {{(vm.totalTransactions/vm.pageSize)|number:0}}</span>
+<button ng-click="vm.nextPage()" ng-disabled="vm.currentPage*vm.pageSize>=vm.totalTransactions">Next</button>
+</div>
+</div>
