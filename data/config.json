@@ -1,0 +1,35 @@
+{
+  "baseURL": "https://creditcard-dashboard.example.com",
+  "users": {
+    "testuser": {
+      "username": "testuser@example.com",
+      "password": "Test@123"
+    },
+    "nocards": {
+      "username": "nocards@example.com",
+      "password": "Test@123"
+    },
+    "onecard": {
+      "username": "onecard@example.com",
+      "password": "Test@123"
+    },
+    "notransactions": {
+      "username": "notransactions@example.com",
+      "password": "Test@123"
+    },
+    "newuser": {
+      "username": "newuser@example.com",
+      "password": "Test@123"
+    }
+  },
+  "timeouts": {
+    "default": 10000,
+    "navigation": 30000,
+    "action": 5000
+  },
+  "viewports": {
+    "desktop": { "width": 1920, "height": 1080 },
+    "tablet": { "width": 768, "height": 1024 },
+    "mobile": { "width": 375, "height": 667 }
+  }
+}
