@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Management</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;padding-top:60px}
+.navbar{margin-bottom:20px}
+.card-panel{background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:20px;margin-bottom:20px}
+.kpi-box{text-align:center;padding:15px;border:1px solid #ddd;border-radius:5px;margin-bottom:15px}
+.kpi-box h3{margin:0;font-size:28px;color:#333}
+.kpi-box p{margin:5px 0 0;color:#777;font-size:14px}
+.credit-card-item{border:1px solid #e0e0e0;border-radius:8px;padding:15px;margin-bottom:15px;background:#fafafa}
+.credit-card-item h4{margin:0 0 10px;color:#2c3e50}
+.transaction-table{width:100%;margin-top:20px}
+.transaction-table th{background:#34495e;color:#fff;padding:10px;text-align:left}
+.transaction-table td{padding:10px;border-bottom:1px solid #ddd}
+.chart-container{position:relative;height:300px;margin:20px 0}
+.filter-section{margin-bottom:20px;padding:15px;background:#f9f9f9;border-radius:5px}
+.btn-filter{margin-top:10px}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#/">Credit Card Manager</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/transactions">Transactions</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container-fluid">
+<div ui-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-animate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/auth.service.js"></script>
+<script src="src/app/services/creditCardData.service.js"></script>
+<script src="src/app/services/kpiCalculation.service.js"></script>
+<script src="src/app/services/transactionData.service.js"></script>
+<script src="src/app/services/creditCard.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/services/transactionCategorization.service.js"></script>
+<script src="src/app/services/analyticsEngine.service.js"></script>
+<script src="src/app/dashboard/dashboard.module.js"></script>
+<script src="src/app/dashboard/dashboard.controller.js"></script>
+<script src="src/app/dashboard/dashboardRefresh.factory.js"></script>
+<script src="src/app/transactions/transactions.module.js"></script>
+<script src="src/app/transactions/transactions.controller.js"></script>
+<script src="src/app/transactions/transactionList.directive.js"></script>
+<script src="src/app/transactions/transaction.filter.js"></script>
+<script src="src/app/analytics/analytics.module.js"></script>
+<script src="src/app/analytics/analytics.controller.js"></script>
+<script src="src/app/analytics/spendingChart.directive.js"></script>
+<script src="src/app/analytics/chartConfig.factory.js"></script>
+</body>
+</html>
