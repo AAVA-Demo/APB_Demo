@@ -1,0 +1,41 @@
+<div>
+  <div ng-if="vm.loading" class="loading">
+    <h3>Loading your cards...</h3>
+  </div>
+  <div ng-if="!vm.loading && vm.portfolio">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-md-12">
+        <div class="kpi-widget">
+          <h4>Portfolio Summary</h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="kpi-label">Total Cards</div>
+              <div class="kpi-value">{{vm.portfolio.cards.length}}</div>
+            </div>
+            <div class="col-md-4">
+              <div class="kpi-label">Total Credit Limit</div>
+              <div class="kpi-value">${{vm.portfolio.totalCreditLimit | number:2}}</div>
+            </div>
+            <div class="col-md-4">
+              <div class="kpi-label">Total Available</div>
+              <div class="kpi-value">${{vm.portfolio.totalAvailableCredit | number:2}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom: 15px;">
+      <div class="col-md-12">
+        <label>Sort by:</label>
+        <button class="btn btn-sm btn-default" ng-click="vm.setSortBy('monthlySpend')">Monthly Spend</button>
+        <button class="btn btn-sm btn-default" ng-click="vm.setSortBy('outstandingBalance')">Balance</button>
+        <button class="btn btn-sm btn-default" ng-click="vm.setSortBy('creditLimit')">Limit</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <card-list-item ng-repeat="card in vm.portfolio.cards | cardComparison:vm.sortBy:vm.sortReverse track by card.cardId" card="card" on-select="vm.selectCard(card)"></card-list-item>
+      </div>
+    </div>
+  </div>
+</div>

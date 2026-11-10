@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+  <style>
+    body { padding-top: 20px; background: #f5f5f5; }
+    .kpi-widget { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+    .kpi-label { font-size: 14px; color: #7f8c8d; text-transform: uppercase; }
+    .card-item { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+    .card-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .card-number { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    .card-details { display: flex; justify-content: space-between; margin-top: 10px; }
+    .card-detail-item { text-align: center; }
+    .card-detail-label { font-size: 12px; color: #7f8c8d; }
+    .card-detail-value { font-size: 16px; font-weight: bold; color: #2c3e50; }
+    .chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .category-bar { height: 30px; background: #3498db; margin: 10px 0; border-radius: 4px; position: relative; }
+    .category-label { position: absolute; left: 10px; line-height: 30px; color: white; font-weight: bold; }
+    .category-amount { position: absolute; right: 10px; line-height: 30px; color: white; }
+    .nav-tabs { margin-bottom: 20px; }
+    .loading { text-align: center; padding: 40px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Credit Card Dashboard</h1>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#!/dashboard">Dashboard</a></li>
+      <li><a href="#!/cards">My Cards</a></li>
+      <li><a href="#!/analytics">Analytics</a></li>
+    </ul>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/auth.service.js"></script>
+  <script src="src/app/services/kpi.service.js"></script>
+  <script src="src/app/services/refresh.service.js"></script>
+  <script src="src/app/services/card-management.service.js"></script>
+  <script src="src/app/services/analytics-data.service.js"></script>
+  <script src="src/app/services/category.service.js"></script>
+  <script src="src/app/dashboard/dashboard.controller.js"></script>
+  <script src="src/app/dashboard/kpi-widget.directive.js"></script>
+  <script src="src/app/dashboard/kpi-calculator.factory.js"></script>
+  <script src="src/app/card-management/card-portfolio.controller.js"></script>
+  <script src="src/app/card-management/card-list-item.directive.js"></script>
+  <script src="src/app/card-management/card-comparison.filter.js"></script>
+  <script src="src/app/analytics/analytics-dashboard.controller.js"></script>
+  <script src="src/app/analytics/spending-chart.directive.js"></script>
+  <script src="src/app/analytics/transaction-categorizer.factory.js"></script>
+</body>
+</html>

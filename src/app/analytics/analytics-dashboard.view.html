@@ -1,0 +1,42 @@
+<div>
+  <div ng-if="vm.loading" class="loading">
+    <h3>Loading analytics...</h3>
+  </div>
+  <div ng-if="!vm.loading && vm.analytics">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-md-12">
+        <label>Time Period:</label>
+        <button class="btn btn-sm btn-primary" ng-class="{active: vm.selectedMonths === 3}" ng-click="vm.changeMonths(3)">3 Months</button>
+        <button class="btn btn-sm btn-primary" ng-class="{active: vm.selectedMonths === 6}" ng-click="vm.changeMonths(6)">6 Months</button>
+        <button class="btn btn-sm btn-primary" ng-class="{active: vm.selectedMonths === 12}" ng-click="vm.changeMonths(12)">12 Months</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Category-wise Spending</h4>
+          <spending-chart type="'category'" data="vm.analytics.categorySpending"></spending-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <h4>Monthly Spend Trends</h4>
+          <spending-chart type="'monthly'" data="vm.analytics.monthlyTrends"></spending-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="chart-container">
+          <h4>Category Breakdown</h4>
+          <div ng-repeat="cat in vm.analytics.categorySpending | orderBy:'-totalAmount'">
+            <div class="category-bar" ng-style="{width: cat.percentage + '%', background: $index % 2 === 0 ? '#3498db' : '#2ecc71'}">
+              <span class="category-label">{{cat.categoryName}}</span>
+              <span class="category-amount">${{cat.totalAmount | number:2}} ({{cat.percentage}}%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
