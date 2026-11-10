@@ -1,0 +1,35 @@
+<div class="row">
+<div class="col-xs-12">
+<h2>Transaction Details</h2>
+</div>
+</div>
+<div class="row" ng-if="vm.loading">
+<div class="col-xs-12 text-center">
+<p>Loading transaction details...</p>
+</div>
+</div>
+<div class="row" ng-if="vm.error">
+<div class="col-xs-12">
+<div class="alert alert-danger">{{vm.error}}</div>
+</div>
+</div>
+<div class="row" ng-if="!vm.loading&&vm.transaction">
+<div class="col-xs-12 col-md-8">
+<div class="panel panel-default">
+<div class="panel-body">
+<dl class="dl-horizontal">
+<dt>Transaction ID:</dt><dd>{{vm.transaction.id}}</dd>
+<dt>Date:</dt><dd>{{vm.transaction.transactionDate | date:'MM/dd/yyyy HH:mm'}}</dd>
+<dt>Merchant:</dt><dd>{{vm.transaction.merchantName}}</dd>
+<dt>Amount:</dt><dd>{{vm.transaction.amount | currency}}</dd>
+<dt>Card:</dt><dd>{{vm.transaction.cardName}}</dd>
+<dt>Category:</dt><dd>{{vm.transaction.category}}</dd>
+<dt>Type:</dt><dd>{{vm.transaction.transactionType}}</dd>
+<dt>Status:</dt><dd>{{vm.transaction.status}}</dd>
+<dt>Description:</dt><dd>{{vm.transaction.description}}</dd>
+</dl>
+</div>
+</div>
+<a href="#/transactions" class="btn btn-primary">Back to Transactions</a>
+</div>
+</div>

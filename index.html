@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Analysis Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+.kpi-card{background:#fff;border:1px solid #ddd;border-radius:4px;padding:20px;margin-bottom:20px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.kpi-card h3{margin:0 0 10px;font-size:32px;font-weight:700;color:#333}
+.kpi-card p{margin:0;font-size:14px;color:#777}
+.card-item{background:#fff;border:1px solid #ddd;border-radius:4px;padding:15px;margin-bottom:15px}
+.card-item h4{margin:0 0 10px;font-size:18px;font-weight:600}
+.card-item .card-detail{display:flex;justify-content:space-between;margin-bottom:8px}
+.transaction-table{width:100%;margin-top:20px}
+.filter-panel{background:#f9f9f9;padding:15px;border-radius:4px;margin-bottom:20px}
+.chart-container{position:relative;height:300px;margin-bottom:30px}
+.pagination-controls{text-align:center;margin-top:20px}
+[ng-cloak]{display:none}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#/">Credit Card Dashboard</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a href="#/dashboard">Dashboard</a></li>
+<li><a href="#/transactions">Transactions</a></li>
+<li><a href="#/analytics">Analytics</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid" ng-view ng-cloak></div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/app.config.js"></script>
+<script src="src/app/services/creditcard.service.js"></script>
+<script src="src/app/services/transaction.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/shared/factories/datarefresh.factory.js"></script>
+<script src="src/app/shared/factories/pagination.factory.js"></script>
+<script src="src/app/shared/factories/categoryfilter.factory.js"></script>
+<script src="src/app/modules/dashboard/dashboard.module.js"></script>
+<script src="src/app/modules/dashboard/controllers/dashboard.controller.js"></script>
+<script src="src/app/modules/dashboard/controllers/cardlist.controller.js"></script>
+<script src="src/app/modules/dashboard/directives/kpicard.directive.js"></script>
+<script src="src/app/modules/transactions/transactions.module.js"></script>
+<script src="src/app/modules/transactions/controllers/transactionlist.controller.js"></script>
+<script src="src/app/modules/transactions/controllers/transactiondetail.controller.js"></script>
+<script src="src/app/modules/transactions/directives/transactionfilter.directive.js"></script>
+<script src="src/app/modules/analytics/analytics.module.js"></script>
+<script src="src/app/modules/analytics/controllers/analytics.controller.js"></script>
+<script src="src/app/modules/analytics/controllers/trendanalysis.controller.js"></script>
+<script src="src/app/modules/analytics/directives/spendingchart.directive.js"></script>
+</body>
+</html>

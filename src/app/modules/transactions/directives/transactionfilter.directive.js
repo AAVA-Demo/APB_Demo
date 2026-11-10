@@ -1,0 +1,22 @@
+(function(){
+'use strict';
+angular.module('app.transactions').directive('transactionFilter',['TransactionService','$filter',function(TransactionService,$filter){
+return{
+restrict:'E',
+scope:{filterCriteria:'=',onApply:'&'},
+templateUrl:'src/app/modules/transactions/views/transactionfilter.template.html',
+link:function(scope,element,attrs){
+scope.applyFilter=function(){
+scope.onApply();
+};
+scope.clearFilters=function(){
+scope.filterCriteria.cardId='';
+scope.filterCriteria.startDate='';
+scope.filterCriteria.endDate='';
+scope.filterCriteria.transactionType='';
+scope.onApply();
+};
+}
+};
+}]);
+})();

@@ -1,0 +1,40 @@
+<div class="filter-panel">
+<form name="filterForm">
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="form-group">
+<label>Card</label>
+<input type="text" class="form-control" ng-model="filterCriteria.cardId" placeholder="Card ID">
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="form-group">
+<label>Start Date</label>
+<input type="date" class="form-control" ng-model="filterCriteria.startDate">
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="form-group">
+<label>End Date</label>
+<input type="date" class="form-control" ng-model="filterCriteria.endDate">
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="form-group">
+<label>Transaction Type</label>
+<select class="form-control" ng-model="filterCriteria.transactionType">
+<option value="">All Types</option>
+<option value="debit">Debit</option>
+<option value="credit">Credit</option>
+</select>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<button type="button" class="btn btn-primary" ng-click="applyFilter()">Apply Filters</button>
+<button type="button" class="btn btn-default" ng-click="clearFilters()">Clear</button>
+</div>
+</div>
+</form>
+</div>
