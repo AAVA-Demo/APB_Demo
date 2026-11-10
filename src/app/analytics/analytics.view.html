@@ -1,0 +1,55 @@
+<div ng-controller="AnalyticsController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics
+        <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()" ng-disabled="vm.isLoading">
+          <span class="glyphicon glyphicon-refresh"></span> Refresh
+        </button>
+      </h2>
+      <hr>
+    </div>
+  </div>
+  
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  
+  <div ng-if="vm.isLoading" class="text-center" style="padding: 50px;">
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 3em;"></span>
+    <p>Loading analytics...</p>
+  </div>
+  
+  <div ng-if="!vm.isLoading">
+    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+      <li ng-class="{active: vm.activeTab === 'trends'}"><a href="" ng-click="vm.setTab('trends')">Monthly Trends</a></li>
+      <li ng-class="{active: vm.activeTab === 'categories'}"><a href="" ng-click="vm.setTab('categories')">Category Breakdown</a></li>
+    </ul>
+    
+    <div ng-if="vm.selectedCategory" class="alert alert-info">
+      Filtered by: <strong>{{vm.selectedCategory}}</strong>
+      <button class="btn btn-xs btn-default pull-right" ng-click="vm.clearFilter()">Clear Filter</button>
+    </div>
+    
+    <div ng-show="vm.activeTab === 'trends'">
+      <div class="chart-container">
+        <h4>Monthly Spending Trends (Last 12 Months)</h4>
+        <chart-directive chart-type="'line'" chart-data="vm.monthlyTrends" chart-label="'Monthly Spend'"></chart-directive>
+      </div>
+    </div>
+    
+    <div ng-show="vm.activeTab === 'categories'">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="chart-container">
+            <h4>Category Distribution</h4>
+            <chart-directive chart-type="'pie'" chart-data="vm.categoryTotals" chart-label="'Categories'"></chart-directive>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="chart-container">
+            <h4>Category Details</h4>
+            <category-filter categories="vm.categoryTotals" on-select="vm.filterByCategory(category)"></category-filter>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

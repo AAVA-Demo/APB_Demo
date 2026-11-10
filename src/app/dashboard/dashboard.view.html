@@ -1,0 +1,71 @@
+<div ng-controller="DashboardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Credit Card Dashboard
+        <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()" ng-disabled="vm.isLoading">
+          <span class="glyphicon glyphicon-refresh" ng-class="{'glyphicon-refresh-animate': vm.isLoading}"></span> Refresh
+        </button>
+      </h2>
+      <hr>
+    </div>
+  </div>
+  
+  <div ng-if="vm.error" class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+    {{vm.error}}
+  </div>
+  
+  <div ng-if="vm.isLoading" class="text-center" style="padding: 50px;">
+    <div class="spinner-border" role="status">
+      <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 3em;"></span>
+    </div>
+    <p>Loading dashboard...</p>
+  </div>
+  
+  <div ng-if="!vm.isLoading && vm.kpis">
+    <div class="row">
+      <div class="col-lg-3 col-sm-6 col-xs-12">
+        <kpi-card title="'Monthly Spend'" value="vm.kpis.monthlySpend" format="'currency'" icon="'glyphicon-shopping-cart'"></kpi-card>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-xs-12">
+        <kpi-card title="'Total Credit Limit'" value="vm.kpis.totalCreditLimit" format="'currency'" icon="'glyphicon-credit-card'"></kpi-card>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-xs-12">
+        <kpi-card title="'Available Credit'" value="vm.kpis.availableCredit" format="'currency'" icon="'glyphicon-ok-circle'"></kpi-card>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-xs-12">
+        <kpi-card title="'Outstanding Amount'" value="vm.kpis.outstandingAmount" format="'currency'" icon="'glyphicon-exclamation-sign'"></kpi-card>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <refresh-indicator last-updated="vm.lastRefresh"></refresh-indicator>
+      </div>
+    </div>
+    
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <h4>Quick Stats</h4>
+          <ul class="list-unstyled">
+            <li><strong>Total Cards:</strong> {{vm.kpis.cardCount}}</li>
+            <li><strong>Overall Utilization:</strong> {{((vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) * 100).toFixed(2)}}%</li>
+            <li><strong>Average per Card:</strong> ${{(vm.kpis.monthlySpend / vm.kpis.cardCount).toFixed(2)}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <h4>Financial Health</h4>
+          <div class="progress" style="margin-top: 20px;">
+            <div class="progress-bar" ng-class="{'progress-bar-success': (vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) < 0.3, 'progress-bar-warning': (vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) >= 0.3 && (vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) < 0.7, 'progress-bar-danger': (vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) >= 0.7}" role="progressbar" style="width: {{((vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) * 100)}}%">
+              {{((vm.kpis.outstandingAmount / vm.kpis.totalCreditLimit) * 100).toFixed(1)}}%
+            </div>
+          </div>
+          <p class="text-muted" style="margin-top: 10px;">Credit Utilization</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div ng-controller="MultiCardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>My Credit Cards
+        <button class="btn btn-sm btn-default pull-right" ng-click="vm.refresh()" ng-disabled="vm.isLoading">
+          <span class="glyphicon glyphicon-refresh"></span> Refresh
+        </button>
+      </h2>
+      <hr>
+    </div>
+  </div>
+  
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  
+  <div ng-if="vm.isLoading" class="text-center" style="padding: 50px;">
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="font-size: 3em;"></span>
+    <p>Loading cards...</p>
+  </div>
+  
+  <div ng-if="!vm.isLoading">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search cards..." ng-model="vm.searchQuery">
+      </div>
+      <div class="col-md-6">
+        <div class="btn-group pull-right">
+          <button class="btn btn-default" ng-click="vm.sortCards('cardType')" ng-class="{'active': vm.sortBy === 'cardType'}">Sort by Type</button>
+          <button class="btn btn-default" ng-click="vm.sortCards('utilizationRate')" ng-class="{'active': vm.sortBy === 'utilizationRate'}">Sort by Usage</button>
+          <button class="btn btn-default" ng-click="vm.sortCards('monthlySpend')" ng-class="{'active': vm.sortBy === 'monthlySpend'}">Sort by Spend</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-8">
+        <card-list cards="vm.cards" search="vm.searchQuery" sort-by="vm.sortBy" on-select="vm.selectCard(card)"></card-list>
+      </div>
+      <div class="col-md-4">
+        <card-comparison comparison="vm.comparison" selected-card="vm.selectedCard"></card-comparison>
+      </div>
+    </div>
+  </div>
+</div>
