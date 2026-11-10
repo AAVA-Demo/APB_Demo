@@ -1,0 +1,52 @@
+<div class="card-detail-container">
+  <div class="page-header">
+    <button class="btn btn-default" ng-click="vm.goBack()">&larr; Back to Cards</button>
+    <h1 ng-if="vm.card">{{vm.card.cardType}} ****{{vm.card.lastFourDigits}}</h1>
+  </div>
+  <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.card">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Card Information</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <tr><td><strong>Card Type:</strong></td><td>{{vm.card.cardType}}</td></tr>
+              <tr><td><strong>Issuer:</strong></td><td>{{vm.card.issuer}}</td></tr>
+              <tr><td><strong>Last Four Digits:</strong></td><td>{{vm.card.lastFourDigits}}</td></tr>
+              <tr><td><strong>Credit Limit:</strong></td><td>{{vm.card.creditLimit | currency}}</td></tr>
+              <tr><td><strong>Current Balance:</strong></td><td>{{vm.card.currentBalance | currency}}</td></tr>
+              <tr><td><strong>Outstanding Amount:</strong></td><td>{{vm.card.outstandingAmount | currency}}</td></tr>
+              <tr><td><strong>Utilization:</strong></td><td>{{vm.card.utilizationPercent | number:1}}%</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Spending Analysis</h3>
+          </div>
+          <div class="panel-body" ng-if="vm.spendAnalysis">
+            <p><strong>Monthly Spend:</strong> {{vm.spendAnalysis.monthlySpend | currency}}</p>
+            <p><strong>Transaction Count:</strong> {{vm.spendAnalysis.transactionCount}}</p>
+            <p><strong>Avg Transaction:</strong> {{vm.spendAnalysis.avgTransactionAmount | currency}}</p>
+            <h4>Spend by Category</h4>
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="category in vm.getCategoryKeys()">
+                <strong>{{category}}:</strong> {{vm.spendAnalysis.spendByCategory[category] | currency}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <div class="spinner">Loading card details...</div>
+    </div>
+  </div>
+</div>

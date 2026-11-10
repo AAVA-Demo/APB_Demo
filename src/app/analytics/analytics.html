@@ -1,0 +1,71 @@
+<div class="analytics-container">
+  <div class="page-header">
+    <h1>Analytics & Spending Insights</h1>
+  </div>
+  <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  <div ng-if="!vm.loading">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Filter by Category:</label>
+          <select class="form-control" ng-model="vm.selectedCategory">
+            <option value="">All Categories</option>
+            <option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Category-Wise Spending</h3>
+          </div>
+          <div class="panel-body">
+            <spending-chart chart-data="vm.filteredBreakdown" chart-type="pie"></spending-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Monthly Spend Trends</h3>
+          </div>
+          <div class="panel-body">
+            <spending-chart chart-data="vm.monthlyTrends" chart-type="line"></spending-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Spending Breakdown</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="category in vm.getCategoryKeys()">
+                  <td>{{category}}</td>
+                  <td>{{vm.categoryBreakdown[category] | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <div class="spinner">Loading analytics...</div>
+    </div>
+  </div>
+</div>

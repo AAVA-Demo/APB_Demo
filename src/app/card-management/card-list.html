@@ -1,0 +1,51 @@
+<div class="card-list-container">
+  <div class="page-header">
+    <h1>My Credit Cards</h1>
+  </div>
+  <div class="alert alert-danger" ng-if="vm.error">{{vm.error}}</div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Filter by Card Type:</label>
+        <select class="form-control" ng-model="vm.filterType">
+          <option value="">All Cards</option>
+          <option value="Visa">Visa</option>
+          <option value="MasterCard">MasterCard</option>
+          <option value="Amex">American Express</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading">
+    <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards | cardTypeFilter:vm.filterType track by card.cardId">
+      <div class="panel panel-default card-panel" ng-click="vm.viewCardDetail(card.cardId)">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{card.cardType}} ****{{card.lastFourDigits}}</h3>
+        </div>
+        <div class="panel-body">
+          <p><strong>Issuer:</strong> {{card.issuer}}</p>
+          <p><strong>Credit Limit:</strong> {{card.creditLimit | currency}}</p>
+          <p><strong>Current Balance:</strong> {{card.currentBalance | currency}}</p>
+          <p><strong>Outstanding:</strong> {{card.outstandingAmount | currency}}</p>
+          <div class="progress">
+            <div class="progress-bar progress-bar-{{vm.getUtilizationClass(card.utilizationPercent)}}" 
+                 role="progressbar" 
+                 ng-style="{width: card.utilizationPercent + '%'}">
+              {{card.utilizationPercent | number:1}}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.loading">
+    <div class="col-md-12 text-center">
+      <div class="spinner">Loading cards...</div>
+    </div>
+  </div>
+  <div class="row" ng-if="!vm.loading && vm.cards.length === 0">
+    <div class="col-md-12">
+      <div class="alert alert-info">No credit cards found.</div>
+    </div>
+  </div>
+</div>
