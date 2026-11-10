@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').constant('API_CONFIG',{BASE_URL:'https://api.creditcard.demo',ENDPOINTS:{DASHBOARD_KPIS:'/api/dashboard/kpis',CARDS:'/api/cards',CARD_DETAILS:'/api/cards/:id',ANALYTICS_SPENDING:'/api/analytics/spending',TRANSACTIONS:'/api/transactions'},TIMEOUT:10000,RETRY_COUNT:3});})();

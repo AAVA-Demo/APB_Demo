@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('analyticsModule').factory('AnalyticsModel',[function(){function AnalyticsModel(data){this.userId=data.userId||'';this.period=data.period||'';this.categorySpend=data.categorySpend||{};this.monthlyTrend=data.monthlyTrend||[];this.cardWiseSpend=data.cardWiseSpend||[];}return AnalyticsModel;}]);})();
