@@ -1,0 +1,54 @@
+<div>
+<h2>Transaction History</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading transactions...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="filter-panel">
+<h4>Filters</h4>
+<div class="row">
+<div class="col-md-3">
+<label>Search</label>
+<input type="text" class="form-control" ng-model="vm.filterCriteria.searchTerm" ng-change="vm.applyFilters()" placeholder="Merchant or category">
+</div>
+<div class="col-md-2">
+<label>Start Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateRange.startDate" ng-change="vm.applyFilters()">
+</div>
+<div class="col-md-2">
+<label>End Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateRange.endDate" ng-change="vm.applyFilters()">
+</div>
+<div class="col-md-2">
+<label>Min Amount</label>
+<input type="number" class="form-control" ng-model="vm.filterCriteria.amountRange.min" ng-change="vm.applyFilters()" placeholder="Min">
+</div>
+<div class="col-md-2">
+<label>Max Amount</label>
+<input type="number" class="form-control" ng-model="vm.filterCriteria.amountRange.max" ng-change="vm.applyFilters()" placeholder="Max">
+</div>
+<div class="col-md-1">
+<label>&nbsp;</label>
+<button class="btn btn-default btn-block" ng-click="vm.resetFilters()">Reset</button>
+</div>
+</div>
+<div class="row" style="margin-top:10px">
+<div class="col-md-6">
+<label>Category</label>
+<select class="form-control" ng-model="vm.selectedCategory" ng-change="vm.filterCriteria.categories=vm.selectedCategory?[vm.selectedCategory]:[];vm.applyFilters()">
+<option value="">All Categories</option>
+<option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+</select>
+</div>
+<div class="col-md-6">
+<label>Card</label>
+<select class="form-control" ng-model="vm.selectedCard" ng-change="vm.filterCriteria.cardIds=vm.selectedCard?[vm.selectedCard]:[];vm.applyFilters()">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.id}}">{{card.name}}</option>
+</select>
+</div>
+</div>
+</div>
+<p><strong>Showing {{vm.filteredTransactions.length}} transactions</strong></p>
+<transaction-list transactions="vm.filteredTransactions"></transaction-list>
+</div>
+</div>

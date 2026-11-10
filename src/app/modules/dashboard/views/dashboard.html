@@ -1,0 +1,54 @@
+<div>
+<h2>Credit Card Dashboard</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading dashboard...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-3 col-sm-6">
+<kpi-card title="Total Credit Limit" value="₹{{vm.kpis.totalCreditLimit|number:0}}" icon="glyphicon-credit-card"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card title="Available Credit" value="₹{{vm.kpis.totalAvailableCredit|number:0}}" icon="glyphicon-ok-circle"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card title="Total Outstanding" value="₹{{vm.kpis.totalOutstanding|number:0}}" icon="glyphicon-exclamation-sign"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card title="Monthly Spend" value="₹{{vm.kpis.totalMonthlySpend|number:0}}" icon="glyphicon-shopping-cart"></kpi-card>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="kpi-card">
+<h3>Credit Utilization</h3>
+<div class="progress">
+<div class="progress-bar" role="progressbar" ng-style="{width:vm.kpis.creditUtilizationPercentage+'%'}" aria-valuenow="{{vm.kpis.creditUtilizationPercentage}}" aria-valuemin="0" aria-valuemax="100">{{vm.kpis.creditUtilizationPercentage}}%</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="kpi-card">
+<h3>Your Credit Cards</h3>
+<table class="table table-striped">
+<thead>
+<tr><th>Card Name</th><th>Type</th><th>Credit Limit</th><th>Available</th><th>Outstanding</th><th>Monthly Spend</th></tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.kpis.cards">
+<td>{{card.cardName}}</td>
+<td>{{card.cardType}}</td>
+<td>₹{{card.creditLimit|number:0}}</td>
+<td>₹{{card.availableCredit|number:0}}</td>
+<td>₹{{card.outstandingAmount|number:0}}</td>
+<td>₹{{card.monthlySpend|number:0}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<button class="btn btn-primary" ng-click="vm.refresh()">Refresh Dashboard</button>
+</div>
+</div>

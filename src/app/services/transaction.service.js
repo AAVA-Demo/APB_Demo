@@ -1,0 +1,10 @@
+(function(){
+'use strict';
+angular.module('creditCard.transactions').service('TransactionService',['$http','$q','TransactionModelFactory',function($http,$q,TransactionModelFactory){
+const API_BASE='/api/transactions';
+this.getTransactions=function(){
+const mockData=[{transactionId:'T001',date:'2024-01-15',amount:1200,merchant:'Restaurant ABC',category:'Food & Dining',cardId:'CC001',cardName:'Visa Platinum',status:'posted'},{transactionId:'T002',date:'2024-01-14',amount:3500,merchant:'Fuel Station XYZ',category:'Fuel',cardId:'CC001',cardName:'Visa Platinum',status:'posted'},{transactionId:'T003',date:'2024-01-13',amount:8500,merchant:'Shopping Mall',category:'Shopping',cardId:'CC002',cardName:'MasterCard Gold',status:'posted'},{transactionId:'T004',date:'2024-01-12',amount:15000,merchant:'Flight Booking',category:'Travel',cardId:'CC003',cardName:'Amex Blue',status:'posted'},{transactionId:'T005',date:'2024-01-11',amount:500,merchant:'Movie Theater',category:'Entertainment',cardId:'CC001',cardName:'Visa Platinum',status:'posted'},{transactionId:'T006',date:'2024-01-10',amount:2200,merchant:'Electric Bill',category:'Utilities',cardId:'CC002',cardName:'MasterCard Gold',status:'posted'},{transactionId:'T007',date:'2024-01-09',amount:4500,merchant:'Hospital',category:'Healthcare',cardId:'CC003',cardName:'Amex Blue',status:'posted'},{transactionId:'T008',date:'2024-01-08',amount:12000,merchant:'University Fee',category:'Education',cardId:'CC001',cardName:'Visa Platinum',status:'posted'},{transactionId:'T009',date:'2024-01-07',amount:750,merchant:'General Store',category:'Miscellaneous',cardId:'CC002',cardName:'MasterCard Gold',status:'posted'},{transactionId:'T010',date:'2024-01-06',amount:2800,merchant:'Restaurant DEF',category:'Food & Dining',cardId:'CC003',cardName:'Amex Blue',status:'posted'}];
+return $q.resolve(mockData.map(function(txn){return TransactionModelFactory.create(txn);}));
+};
+}]);
+})();

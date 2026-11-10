@@ -1,0 +1,37 @@
+<div>
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="filter-panel">
+<div class="row">
+<div class="col-md-4">
+<label>Filter by Card</label>
+<select class="form-control" ng-model="vm.selectedCard" ng-change="vm.filterByCard()">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.id}}">{{card.name}}</option>
+</select>
+</div>
+<div class="col-md-4">
+<div class="kpi-card">
+<h4>Total Spend</h4>
+<div class="value">₹{{vm.analyticsData.totalSpend|number:0}}</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<spending-chart chart-data="vm.analyticsData.categorySpending" chart-type="category" chart-title="Category-wise Spending"></spending-chart>
+</div>
+<div class="col-md-6">
+<spending-chart chart-data="vm.analyticsData.cardWiseSpending" chart-type="card" chart-title="Card-wise Spending"></spending-chart>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<spending-chart chart-data="vm.analyticsData.monthlyTrends" chart-type="monthly" chart-title="Monthly Spending Trends"></spending-chart>
+</div>
+</div>
+</div>
+</div>
