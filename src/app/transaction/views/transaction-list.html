@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Transaction History</h2>
+  </div>
+</div>
+<div class="filter-panel">
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <label>Start Date</label>
+      <input type="date" class="form-control" ng-model="vm.filters.startDate">
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <label>End Date</label>
+      <input type="date" class="form-control" ng-model="vm.filters.endDate">
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <label>Merchant</label>
+      <input type="text" class="form-control" ng-model="vm.filters.merchantName" placeholder="Search merchant">
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <label>Category</label>
+      <select class="form-control" ng-model="vm.filters.category">
+        <option value="">All Categories</option>
+        <option value="Food & Dining">Food & Dining</option>
+        <option value="Fuel">Fuel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Travel">Travel</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Healthcare">Healthcare</option>
+        <option value="Education">Education</option>
+        <option value="Miscellaneous">Miscellaneous</option>
+      </select>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-md-12">
+      <button class="btn btn-primary" ng-click="vm.applyFilter()">Apply Filter</button>
+      <button class="btn btn-default" ng-click="vm.clearFilters()">Clear</button>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+  <p>Loading transactions...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <div class="card">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Merchant</th>
+          <th>Category</th>
+          <th>Card</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="txn in vm.transactions" class="transaction-row" ng-click="vm.viewDetail(txn.transactionId)">
+          <td>{{txn.transactionDate | date:'MM/dd/yyyy'}}</td>
+          <td>{{txn.merchantName}}</td>
+          <td>{{txn.category}}</td>
+          <td>{{txn.cardNumber}}</td>
+          <td>{{txn.currency}} {{txn.amount | number:2}}</td>
+          <td><span class="label label-success">{{txn.status}}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <p>Showing {{vm.transactions.length}} of {{vm.totalCount}} transactions</p>
+      <button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.pageNumber === 1">Previous</button>
+      <button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="!vm.hasMore">Next</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/app/styles/app.css">
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#!/">Credit Card Dashboard</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#!/portfolio">Portfolio</a></li>
+          <li><a href="#!/transactions">Transactions</a></li>
+          <li><a href="#!/analytics">Analytics</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/portfolio/portfolio.module.js"></script>
+  <script src="src/app/portfolio/controllers/portfolio-dashboard.controller.js"></script>
+  <script src="src/app/portfolio/services/portfolio.service.js"></script>
+  <script src="src/app/portfolio/factories/credit-calculation.factory.js"></script>
+  <script src="src/app/services/credit-card-data.service.js"></script>
+  <script src="src/app/transaction/transaction.module.js"></script>
+  <script src="src/app/transaction/controllers/transaction-list.controller.js"></script>
+  <script src="src/app/transaction/controllers/transaction-detail.controller.js"></script>
+  <script src="src/app/transaction/services/transaction.service.js"></script>
+  <script src="src/app/transaction/factories/search-filter.factory.js"></script>
+  <script src="src/app/services/credit-card.service.js"></script>
+  <script src="src/app/analytics/analytics.module.js"></script>
+  <script src="src/app/analytics/controllers/analytics-dashboard.controller.js"></script>
+  <script src="src/app/analytics/services/analytics.service.js"></script>
+  <script src="src/app/analytics/services/transaction-data.service.js"></script>
+  <script src="src/app/analytics/factories/data-aggregation.factory.js"></script>
+  <script src="src/app/analytics/factories/category.factory.js"></script>
+  <script src="src/app/analytics/directives/chart-renderer.directive.js"></script>
+</body>
+</html>

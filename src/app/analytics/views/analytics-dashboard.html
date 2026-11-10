@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics</h2>
+  </div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+  <p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3>Monthly Spend Trends</h3>
+        <div class="chart-container">
+          <chart-renderer config="vm.monthlyTrendsConfig"></chart-renderer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <h3>Card-Wise Spending</h3>
+        <div class="chart-container">
+          <chart-renderer config="vm.cardWiseConfig"></chart-renderer>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <h3>Category-Wise Spending</h3>
+        <div class="chart-container">
+          <chart-renderer config="vm.categoryWiseConfig"></chart-renderer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3>Spending Breakdown by Category</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.analyticsData.categoryWiseSpending">
+              <td>{{cat.category}}</td>
+              <td>${{cat.amount | number:2}}</td>
+              <td>{{cat.percentage}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
