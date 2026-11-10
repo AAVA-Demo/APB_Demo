@@ -1,0 +1,61 @@
+<div class="analytics-container">
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <h4>Category-Wise Spending</h4>
+        <spending-chart data="vm.analytics.categories" type="category" on-segment-click="vm.onCategoryClick(category)"></spending-chart>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <h4>Monthly Spend Trends</h4>
+        <spending-chart data="vm.analytics.monthlyTrends" type="monthly"></spending-chart>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-xs-12">
+        <h4>Category Breakdown</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total Spend</th>
+              <th>Transaction Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.analytics.categories">
+              <td>{{cat.categoryName}}</td>
+              <td>{{cat.totalSpend | currencyFormat}}</td>
+              <td>{{cat.transactionCount}}</td>
+              <td>{{cat.percentageOfTotal}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;" ng-if="vm.selectedCategory">
+      <div class="col-xs-12">
+        <h4>Transactions for {{vm.selectedCategory.categoryName}}</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Merchant</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="txn in vm.filteredTransactions">
+              <td>{{txn.date | date:'short'}}</td>
+              <td>{{txn.merchantName}}</td>
+              <td>{{txn.amount | currencyFormat}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

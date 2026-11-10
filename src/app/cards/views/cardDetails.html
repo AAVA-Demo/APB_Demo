@@ -1,0 +1,35 @@
+<div class="card-details-container">
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading card details...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="card-detail-content">
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <h4>Card Information</h4>
+        <p><strong>Card Type:</strong> {{vm.card.cardType}}</p>
+        <p><strong>Card Number:</strong> {{vm.card.cardNumber | cardMask}}</p>
+        <p><strong>Card Holder:</strong> {{vm.card.cardHolderName}}</p>
+        <p><strong>Expiry Date:</strong> {{vm.card.expiryDate}}</p>
+        <p><strong>Issuer:</strong> {{vm.card.issuerName}}</p>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <h4>Financial Summary</h4>
+        <p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currencyFormat}}</p>
+        <p><strong>Current Balance:</strong> {{vm.card.currentBalance | currencyFormat}}</p>
+        <p><strong>Available Credit:</strong> {{vm.card.availableCredit | currencyFormat}}</p>
+        <p><strong>Utilization Rate:</strong> {{vm.spendAnalysis.utilizationRate}}%</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-xs-12">
+        <h4>Spend Analysis</h4>
+        <p><strong>Monthly Spend:</strong> {{vm.spendAnalysis.monthlySpend | currencyFormat}}</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-xs-12">
+        <button class="btn btn-default" ui-sref="cards">Back to Card List</button>
+      </div>
+    </div>
+  </div>
+</div>

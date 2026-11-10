@@ -1,0 +1,22 @@
+<div class="card-tile" ng-click="selectCard(card)">
+  <div class="card-header">
+    <span class="card-type">{{card.cardType}}</span>
+    <span class="card-issuer">{{card.issuerName}}</span>
+  </div>
+  <div class="card-number">{{card.cardNumber | cardMask}}</div>
+  <div class="card-holder">{{card.cardHolderName}}</div>
+  <div class="card-details">
+    <div class="detail-item">
+      <span class="label">Credit Limit:</span>
+      <span class="value">{{card.creditLimit | currencyFormat}}</span>
+    </div>
+    <div class="detail-item">
+      <span class="label">Available:</span>
+      <span class="value">{{card.availableCredit | currencyFormat}}</span>
+    </div>
+    <div class="detail-item">
+      <span class="label">Balance:</span>
+      <span class="value">{{card.currentBalance | currencyFormat}}</span>
+    </div>
+  </div>
+</div>

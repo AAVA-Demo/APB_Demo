@@ -1,0 +1,15 @@
+.card-list-container { padding: 20px; }
+.card-tile { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+.card-tile:hover { transform: translateY(-5px); }
+.card-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+.card-type { font-weight: bold; font-size: 16px; }
+.card-issuer { font-size: 14px; }
+.card-number { font-size: 20px; letter-spacing: 2px; margin-bottom: 15px; }
+.card-holder { font-size: 14px; margin-bottom: 20px; }
+.card-details { border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; }
+.detail-item { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.detail-item .label { font-size: 12px; opacity: 0.9; }
+.detail-item .value { font-size: 14px; font-weight: bold; }
+.card-details-container { padding: 20px; }
+.card-detail-content { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+.card-registration-container { padding: 20px; max-width: 600px; margin: 0 auto; }

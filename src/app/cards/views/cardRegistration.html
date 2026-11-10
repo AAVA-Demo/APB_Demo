@@ -1,0 +1,32 @@
+<div class="card-registration-container">
+  <h2>Register New Card</h2>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <form name="cardForm" ng-submit="vm.submitCard()" novalidate>
+    <div class="form-group">
+      <label>Card Number</label>
+      <input type="text" class="form-control" ng-model="vm.newCard.cardNumber" required>
+    </div>
+    <div class="form-group">
+      <label>Card Holder Name</label>
+      <input type="text" class="form-control" ng-model="vm.newCard.cardHolderName" required>
+    </div>
+    <div class="form-group">
+      <label>Expiry Date (MM/YY)</label>
+      <input type="text" class="form-control" ng-model="vm.newCard.expiryDate" required>
+    </div>
+    <div class="form-group">
+      <label>Card Type</label>
+      <select class="form-control" ng-model="vm.newCard.cardType" required>
+        <option value="Visa">Visa</option>
+        <option value="MasterCard">MasterCard</option>
+        <option value="Amex">Amex</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Credit Limit</label>
+      <input type="number" class="form-control" ng-model="vm.newCard.creditLimit" required>
+    </div>
+    <button type="submit" class="btn btn-primary" ng-disabled="cardForm.$invalid || vm.submitting">Register Card</button>
+    <button type="button" class="btn btn-default" ui-sref="cards" ng-disabled="vm.submitting">Cancel</button>
+  </form>
+</div>
