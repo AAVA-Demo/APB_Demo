@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('dashboardModule').service('DashboardService',['AuthService','AggregationService','$q',function(AuthService,AggregationService,$q){var self=this;self.loadKPIs=function(){return AuthService.validateSession().then(function(authToken){return AggregationService.getConsolidatedMetrics(authToken);});};}]);})();

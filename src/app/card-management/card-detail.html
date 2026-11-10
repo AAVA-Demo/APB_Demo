@@ -1,0 +1,8 @@
+<div class="card-detail-container">
+<button class="btn btn-default" ng-click="vm.goBack()">← Back to Cards</button>
+<div ng-if="vm.loading" class="loading">Loading card details...</div>
+<div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error&&vm.card">
+<card-detail card="vm.card"></card-detail>
+</div>
+</div>

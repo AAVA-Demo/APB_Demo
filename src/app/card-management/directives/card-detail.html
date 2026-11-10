@@ -1,0 +1,25 @@
+<div class="card-detail-panel">
+<h2>Card Details</h2>
+<div class="row">
+<div class="col-md-6">
+<h4>{{card.cardType}}</h4>
+<p><strong>Card Number:</strong> {{card.cardNumber}}</p>
+<p><strong>Card Holder:</strong> {{card.cardHolderName}}</p>
+<p><strong>Last Transaction:</strong> {{card.lastTransactionDate|date:'medium'}}</p>
+</div>
+<div class="col-md-6">
+<div class="well">
+<p><strong>Credit Limit:</strong> ₹{{card.creditLimit|number:2}}</p>
+<p><strong>Current Balance:</strong> ₹{{card.currentBalance|number:2}}</p>
+<p><strong>Available Credit:</strong> ₹{{card.availableCredit|number:2}}</p>
+<p><strong>Monthly Spend:</strong> ₹{{card.monthlySpend|number:2}}</p>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h4>Recent Transactions</h4>
+<p class="text-muted">Transaction history will be displayed here.</p>
+</div>
+</div>
+</div>

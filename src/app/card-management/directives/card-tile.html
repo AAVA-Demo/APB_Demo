@@ -1,0 +1,14 @@
+<div class="card-tile" ng-click="handleClick()">
+<h4>{{card.cardType}}</h4>
+<div class="card-number">{{card.cardNumber}}</div>
+<div class="card-info">
+<div>
+<small>Credit Limit</small><br>
+<strong>₹{{card.creditLimit|number:2}}</strong>
+</div>
+<div>
+<small>Balance</small><br>
+<strong>₹{{card.currentBalance|number:2}}</strong>
+</div>
+</div>
+</div>

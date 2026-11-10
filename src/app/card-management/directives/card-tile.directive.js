@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('cardManagementModule').directive('cardTile',[function(){return{restrict:'E',scope:{card:'=',onSelect:'&'},templateUrl:'src/app/card-management/directives/card-tile.html',link:function(scope){scope.handleClick=function(){scope.onSelect();};}};}]);})();

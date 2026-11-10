@@ -1,0 +1,26 @@
+<div class="analytics-container">
+<h2>Spending Analytics</h2>
+<div ng-if="vm.loading" class="loading">Loading analytics...</div>
+<div ng-if="vm.error" class="error-message">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Category-wise Spending</h4>
+<chart-directive chart-data="vm.categoryData" chart-type="'pie'" on-segment-click="vm.filterByCategory(category)"></chart-directive>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Monthly Spend Trends</h4>
+<chart-directive chart-data="vm.trendData" chart-type="'line'"></chart-directive>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<transaction-list transactions="vm.filteredTransactions" selected-category="vm.selectedCategory"></transaction-list>
+</div>
+</div>
+</div>
+</div>
