@@ -1,0 +1,63 @@
+<div class="portfolio-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Credit Card Portfolio</h2>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading portfolio...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-xs-12">
+        <p><strong>Total Monthly Spend:</strong> {{vm.portfolio.totalSpend | currency}}</p>
+        <p class="text-muted">Last updated: {{vm.portfolio.lastUpdated | date:'medium'}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.portfolio.cards">
+        <card-detail card="card" on-select="vm.selectCard(card)"></card-detail>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.selectedCard" class="modal-overlay" ng-click="vm.closeDetail()">
+    <div class="modal-content" ng-click="$event.stopPropagation()">
+      <button class="close-btn" ng-click="vm.closeDetail()">&times;</button>
+      <h3>{{vm.selectedCard.cardType}} {{vm.selectedCard.cardNumber}}</h3>
+      <div class="detail-section">
+        <h4>Card Details</h4>
+        <p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit | currency}}</p>
+        <p><strong>Current Balance:</strong> {{vm.selectedCard.currentBalance | currency}}</p>
+        <p><strong>Available Credit:</strong> {{(vm.selectedCard.creditLimit - vm.selectedCard.currentBalance) | currency}}</p>
+        <p><strong>Monthly Spend:</strong> {{vm.selectedCard.monthlySpend | currency}}</p>
+      </div>
+      <div class="detail-section">
+        <h4>Recent Transactions</h4>
+        <div ng-if="vm.selectedCard.transactions.length === 0">
+          <p>No transactions available</p>
+        </div>
+        <table class="table table-striped" ng-if="vm.selectedCard.transactions.length > 0">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Merchant</th>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="txn in vm.selectedCard.transactions | limitTo:10">
+              <td>{{txn.date | date:'short'}}</td>
+              <td>{{txn.merchant}}</td>
+              <td>{{txn.category}}</td>
+              <td>{{txn.amount | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

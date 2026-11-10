@@ -1,0 +1,73 @@
+<div class="analytics-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Spending Analytics</h2>
+      <button class="btn btn-primary pull-right" ng-click="vm.refresh()" ng-disabled="vm.loading">Refresh</button>
+    </div>
+  </div>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="nav nav-tabs">
+          <li ng-class="{active: vm.activeView === 'category'}"><a ng-click="vm.setView('category')">Category View</a></li>
+          <li ng-class="{active: vm.activeView === 'trend'}"><a ng-click="vm.setView('trend')">Trend View</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-xs-12">
+        <div ng-if="vm.activeView === 'category'">
+          <h3>Category-Wise Spending</h3>
+          <spending-chart data="vm.categoryChartData" type="bar"></spending-chart>
+          <table class="table table-striped" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Transactions</th>
+                <th>% of Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.analytics.categorySpending | orderBy:'-totalAmount'">
+                <td>{{cat.category}}</td>
+                <td>{{cat.totalAmount | currency}}</td>
+                <td>{{cat.transactionCount}}</td>
+                <td>{{cat.percentageOfTotal | number:1}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div ng-if="vm.activeView === 'trend'">
+          <h3>Monthly Spend Trends</h3>
+          <spending-chart data="vm.trendChartData" type="line"></spending-chart>
+          <table class="table table-striped" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Total Spend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="month in vm.analytics.monthlyTrends | orderBy:'month'">
+                <td>{{month.month}}</td>
+                <td>{{month.totalSpend | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="text-muted">Total Transactions: {{vm.analytics.totalTransactions}} | Last updated: {{vm.analytics.lastUpdated | date:'medium'}}</p>
+      </div>
+    </div>
+  </div>
+</div>
