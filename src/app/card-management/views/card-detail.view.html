@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="#!/cards" class="btn btn-default"><i class="glyphicon glyphicon-arrow-left"></i> Back to Cards</a>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading">
+  <div class="spinner"><i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Loading card details...</div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+<div ng-if="!vm.loading && !vm.error && vm.card" class="row" style="margin-top: 20px;">
+  <div class="col-md-6">
+    <div class="kpi-card">
+      <h3>{{ vm.card.cardType }} •••• {{ vm.card.lastFourDigits }}</h3>
+      <p><strong>Issuer:</strong> {{ vm.card.issuer }}</p>
+      <p><strong>Expires:</strong> {{ vm.card.expiryDate | date:'MM/yyyy' }}</p>
+      <hr>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="kpi-label">Credit Limit</div>
+          <div class="kpi-value" style="font-size: 24px;">{{ vm.card.creditLimit | currency }}</div>
+        </div>
+        <div class="col-xs-6">
+          <div class="kpi-label">Available Credit</div>
+          <div class="kpi-value" style="font-size: 24px;">{{ vm.card.availableCredit | currency }}</div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="kpi-label">Outstanding Balance</div>
+          <div class="kpi-value" style="font-size: 24px;">{{ vm.card.outstandingBalance | currency }}</div>
+        </div>
+        <div class="col-xs-6">
+          <div class="kpi-label">Monthly Spend</div>
+          <div class="kpi-value" style="font-size: 24px;">{{ vm.card.monthlySpend | currency }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="kpi-card">
+      <h4>Card Metadata</h4>
+      <p><strong>Rewards Program:</strong> {{ vm.card.metadata.rewardsProgram }}</p>
+    </div>
+  </div>
+</div>
