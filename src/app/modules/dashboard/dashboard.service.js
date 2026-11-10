@@ -1,0 +1,2 @@
+(function(){'use strict';angular.module('creditCard.dashboard').service('DashboardService',['$http','$q','MockDataService',function($http,$q,MockDataService){var cache=null;var cacheTime=null;var CACHE_TTL=30000;this.getDashboardData=function(bypassCache){if(!bypassCache&&cache&&cacheTime&&(Date.now()-cacheTime<CACHE_TTL)){return $q.resolve(cache);}
+return MockDataService.getDashboardData().then(function(data){cache=data;cacheTime=Date.now();return data;});};this.clearCache=function(){cache=null;cacheTime=null;};}]);})();
