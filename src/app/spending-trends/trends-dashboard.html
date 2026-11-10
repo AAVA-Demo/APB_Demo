@@ -1,0 +1,62 @@
+<div class="trends-container">
+<h2>Spending Trends and Card-wise Analysis</h2>
+<div class="filter-panel">
+<h4>Filters</h4>
+<div class="row">
+<div class="col-md-4">
+<label>Start Date:</label>
+<input type="date" class="form-control" ng-model="vm.filters.startDate">
+</div>
+<div class="col-md-4">
+<label>End Date:</label>
+<input type="date" class="form-control" ng-model="vm.filters.endDate">
+</div>
+<div class="col-md-4">
+<label>Card ID:</label>
+<input type="text" class="form-control" ng-model="vm.filters.cardId" placeholder="e.g., CC001">
+</div>
+</div>
+<button class="btn btn-primary" ng-click="vm.applyFilters()" style="margin-top:10px">Apply Filters</button>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading trends...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-6">
+<h3>Monthly Spending Trends</h3>
+<div class="chart-container">
+<trend-chart chart-data="vm.trendData.monthlyTrends" chart-type="line"></trend-chart>
+</div>
+</div>
+<div class="col-md-6">
+<h3>Card-wise Spending Breakdown</h3>
+<div class="chart-container">
+<trend-chart chart-data="vm.trendData.cardWiseSpend" chart-type="bar"></trend-chart>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Card-wise Summary</h3>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Card Name</th>
+<th>Total Spend</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.trendData.cardWiseSpend">
+<td>{{card.cardName}}</td>
+<td>₹{{card.totalSpend|number:2}}</td>
+<td>{{card.percentage}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>

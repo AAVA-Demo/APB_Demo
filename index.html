@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Card Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.min.css">
+<style>
+.kpi-card{background:#fff;border:1px solid #ddd;border-radius:4px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.kpi-card h3{margin-top:0;color:#337ab7}
+.kpi-card .kpi-value{font-size:32px;font-weight:700;color:#333}
+.kpi-card .kpi-label{font-size:14px;color:#777;text-transform:uppercase}
+.chart-container{position:relative;height:400px;margin-bottom:30px}
+.filter-panel{background:#f5f5f5;padding:15px;margin-bottom:20px;border-radius:4px}
+.transaction-list{margin-top:20px}
+.card-summary{background:#fff;border-left:4px solid #5cb85c;padding:15px;margin-bottom:15px}
+@media(max-width:768px){.kpi-card{margin-bottom:15px}.chart-container{height:300px}}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="navbar-brand" href="#!/dashboard">Credit Card Dashboard</a>
+</div>
+<ul class="nav navbar-nav">
+<li><a href="#!/dashboard">Dashboard</a></li>
+<li><a href="#!/trends">Spending Trends</a></li>
+<li><a href="#!/category-analytics">Category Analytics</a></li>
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+<div ng-view></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.min.js"></script>
+<script src="src/app/app.module.js"></script>
+<script src="src/app/services/auth.service.js"></script>
+<script src="src/app/services/credit-card-data.factory.js"></script>
+<script src="src/app/services/kpi-calculation.service.js"></script>
+<script src="src/app/services/dashboard-aggregation.service.js"></script>
+<script src="src/app/services/transaction-data.factory.js"></script>
+<script src="src/app/services/trend-calculation.service.js"></script>
+<script src="src/app/services/analytics.service.js"></script>
+<script src="src/app/services/transaction-repository.factory.js"></script>
+<script src="src/app/services/categorization.service.js"></script>
+<script src="src/app/services/category-analytics.service.js"></script>
+<script src="src/app/dashboard/dashboard.controller.js"></script>
+<script src="src/app/spending-trends/trends.controller.js"></script>
+<script src="src/app/spending-trends/trend-chart.directive.js"></script>
+<script src="src/app/category-analytics/category-analytics.controller.js"></script>
+<script src="src/app/category-analytics/category-chart.directive.js"></script>
+</body>
+</html>

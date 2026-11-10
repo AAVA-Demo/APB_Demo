@@ -1,0 +1,68 @@
+<div class="category-analytics-container">
+<h2>Category-wise Spending Analytics</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading&&!vm.error">
+<div class="row">
+<div class="col-md-6">
+<h3>Category Breakdown</h3>
+<div class="chart-container">
+<category-chart chart-data="vm.categoryData.categories"></category-chart>
+</div>
+</div>
+<div class="col-md-6">
+<h3>Category Summary</h3>
+<p><strong>Total Spend:</strong> ₹{{vm.categoryData.totalSpend|number:2}}</p>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+<th>Transactions</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.categoryData.categories" ng-click="vm.filterByCategory(cat.name)" style="cursor:pointer">
+<td>{{cat.name}}</td>
+<td>₹{{cat.amount|number:2}}</td>
+<td>{{cat.percentage}}%</td>
+<td>{{cat.transactionCount}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Transaction List</h3>
+<div class="filter-panel">
+<div class="row">
+<div class="col-md-6">
+<label>Filter by Category:</label>
+<select class="form-control" ng-model="vm.selectedCategory" ng-change="vm.filterByCategory(vm.selectedCategory)">
+<option value="">All Categories</option>
+<option ng-repeat="cat in vm.categoryData.categories" value="{{cat.name}}">{{cat.name}}</option>
+</select>
+</div>
+<div class="col-md-6">
+<label>Search:</label>
+<input type="text" class="form-control" ng-model="vm.searchText" ng-change="vm.searchTransactions()" placeholder="Search merchant or description">
+</div>
+</div>
+</div>
+<table ng-table="vm.tableParams" class="table table-bordered table-striped">
+<tr ng-repeat="transaction in $data">
+<td data-title="'Date'">{{transaction.date|date:'dd/MM/yyyy'}}</td>
+<td data-title="'Merchant'">{{transaction.merchant}}</td>
+<td data-title="'Category'">{{transaction.category}}</td>
+<td data-title="'Amount'">₹{{transaction.amount|number:2}}</td>
+<td data-title="'Description'">{{transaction.description}}</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
