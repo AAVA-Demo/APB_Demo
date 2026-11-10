@@ -1,0 +1,35 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading analytics...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Spending Analytics</h2>
+  <div class="filter-panel">
+    <h4>Time Period</h4>
+    <div class="row">
+      <div class="col-md-3">
+        <label>Start Date</label>
+        <input type="date" class="form-control" ng-model="vm.timePeriod.startDate">
+      </div>
+      <div class="col-md-3">
+        <label>End Date</label>
+        <input type="date" class="form-control" ng-model="vm.timePeriod.endDate">
+      </div>
+      <div class="col-md-3">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" ng-click="vm.applyTimePeriod()">Apply</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <category-chart chart-data="vm.categoryData" ng-if="vm.categoryData"></category-chart>
+    </div>
+    <div class="col-md-6">
+      <card-comparison-chart chart-data="vm.cardComparisonData" ng-if="vm.cardComparisonData"></card-comparison-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <trend-chart chart-data="vm.trendData" ng-if="vm.trendData"></trend-chart>
+    </div>
+  </div>
+</div>

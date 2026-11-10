@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="creditCardApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Management</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    body { padding-top: 20px; background-color: #f5f5f5; }
+    .kpi-card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card-overview { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #007bff; }
+    .transaction-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; transition: box-shadow 0.2s; }
+    .transaction-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .chart-container { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; min-height: 300px; }
+    .filter-panel { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#/">Credit Card Manager</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="#/dashboard">Dashboard</a></li>
+          <li><a href="#/transactions">Transactions</a></li>
+          <li><a href="#/analytics">Analytics</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div ng-view></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-resource.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+  <script src="src/app/app.module.js"></script>
+  <script src="src/app/app.config.js"></script>
+  <script src="src/app/services/api.config.js"></script>
+  <script src="src/app/modules/dashboard/dashboardModule.js"></script>
+  <script src="src/app/modules/dashboard/controllers/dashboardController.js"></script>
+  <script src="src/app/modules/dashboard/services/cardService.js"></script>
+  <script src="src/app/modules/dashboard/services/kpiService.js"></script>
+  <script src="src/app/modules/dashboard/factories/refreshFactory.js"></script>
+  <script src="src/app/modules/dashboard/directives/kpiWidget.js"></script>
+  <script src="src/app/modules/dashboard/directives/cardOverview.js"></script>
+  <script src="src/app/modules/transactions/transactionModule.js"></script>
+  <script src="src/app/modules/transactions/controllers/transactionListController.js"></script>
+  <script src="src/app/modules/transactions/controllers/transactionDetailController.js"></script>
+  <script src="src/app/modules/transactions/services/transactionService.js"></script>
+  <script src="src/app/modules/transactions/services/searchFilterService.js"></script>
+  <script src="src/app/modules/transactions/factories/paginationFactory.js"></script>
+  <script src="src/app/modules/transactions/directives/transactionCard.js"></script>
+  <script src="src/app/modules/analytics/analyticsModule.js"></script>
+  <script src="src/app/modules/analytics/controllers/analyticsController.js"></script>
+  <script src="src/app/modules/analytics/services/spendingAnalyticsService.js"></script>
+  <script src="src/app/modules/analytics/services/chartService.js"></script>
+  <script src="src/app/modules/analytics/directives/categoryChart.js"></script>
+  <script src="src/app/modules/analytics/directives/trendChart.js"></script>
+  <script src="src/app/modules/analytics/directives/cardComparisonChart.js"></script>
+</body>
+</html>

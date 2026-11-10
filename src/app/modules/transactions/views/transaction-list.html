@@ -1,0 +1,46 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading transactions...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Transactions</h2>
+  <div class="filter-panel">
+    <h4>Filter Transactions</h4>
+    <div class="row">
+      <div class="col-md-3">
+        <label>Start Date</label>
+        <input type="date" class="form-control" ng-model="vm.filters.startDate">
+      </div>
+      <div class="col-md-3">
+        <label>End Date</label>
+        <input type="date" class="form-control" ng-model="vm.filters.endDate">
+      </div>
+      <div class="col-md-3">
+        <label>Merchant</label>
+        <input type="text" class="form-control" ng-model="vm.filters.merchantName" placeholder="Search merchant">
+      </div>
+      <div class="col-md-3">
+        <label>&nbsp;</label>
+        <div>
+          <button class="btn btn-primary" ng-click="vm.applyFilters()">Apply</button>
+          <button class="btn btn-default" ng-click="vm.clearFilters()">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="vm.transactions.length === 0" class="alert alert-info">No transactions found.</div>
+  <div ng-if="vm.transactions.length > 0">
+    <transaction-card ng-repeat="txn in vm.transactions" transaction="txn" on-click="vm.viewDetail(id)"></transaction-card>
+    <nav>
+      <ul class="pagination">
+        <li ng-class="{disabled: vm.pagination.currentPage === 1}">
+          <a ng-click="vm.goToPage(vm.pagination.currentPage - 1)">&laquo;</a>
+        </li>
+        <li ng-repeat="page in [] | range:1:vm.pagination.totalPages" ng-class="{active: page === vm.pagination.currentPage}">
+          <a ng-click="vm.goToPage(page)">{{page}}</a>
+        </li>
+        <li ng-class="{disabled: vm.pagination.currentPage === vm.pagination.totalPages}">
+          <a ng-click="vm.goToPage(vm.pagination.currentPage + 1)">&raquo;</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

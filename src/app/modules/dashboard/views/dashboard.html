@@ -1,0 +1,33 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading dashboard...</h3></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+  <h2>Dashboard Overview</h2>
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="glyphicon-credit-card" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Total Outstanding" value="vm.kpis.totalOutstanding" icon="glyphicon-usd" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Available Credit" value="vm.kpis.totalAvailableCredit" icon="glyphicon-ok-circle" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Utilization" value="vm.kpis.overallUtilization" icon="glyphicon-stats" format="percentage"></kpi-widget>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Monthly Spend" value="vm.kpis.totalMonthlySpend" icon="glyphicon-shopping-cart" format="currency"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <kpi-widget label="Total Cards" value="vm.kpis.cardCount" icon="glyphicon-list"></kpi-widget>
+    </div>
+  </div>
+  <h3>Your Credit Cards</h3>
+  <div class="row">
+    <div class="col-md-6" ng-repeat="card in vm.cards">
+      <card-overview card="card"></card-overview>
+    </div>
+  </div>
+</div>
