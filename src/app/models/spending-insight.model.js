@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('SpendingInsightModel',[function(){function SpendingInsightModel(){this.categoryBreakdown=[];this.monthlyTrends=[];this.totalSpend=0;this.period='';}return SpendingInsightModel;}]);})();

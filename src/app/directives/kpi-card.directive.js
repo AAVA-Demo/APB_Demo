@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').directive('kpiCard',[function(){return{restrict:'E',scope:{title:'=',value:'=',icon:'='},template:'<div class="kpi-card"><div><span class="glyphicon {{icon}}"></span> <span class="kpi-label">{{title}}</span></div><div class="kpi-value">{{value}}</div></div>'};}]);})();

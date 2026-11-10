@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('KPIModel',[function(){function KPIModel(){this.monthlySpend=0;this.totalCreditLimit=0;this.availableCredit=0;this.outstandingAmount=0;this.lastUpdated=null;}return KPIModel;}]);})();

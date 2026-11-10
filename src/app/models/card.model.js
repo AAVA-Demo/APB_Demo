@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').factory('CardModel',[function(){function CardModel(){this.cardId='';this.cardName='';this.cardNumber='';this.creditLimit=0;this.currentBalance=0;this.outstandingAmount=0;this.availableCredit=0;this.utilizationPercent=0;this.transactions=[];}return CardModel;}]);})();
