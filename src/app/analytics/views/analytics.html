@@ -1,0 +1,23 @@
+<div ng-controller="AnalyticsController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Spending Analytics</h2>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="error-banner">
+    {{vm.error}}
+    <button class="btn btn-sm btn-warning pull-right" ng-click="vm.loadTransactions()">Retry</button>
+  </div>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="!vm.loading" class="row">
+    <div class="col-md-3">
+      <category-filter categories="vm.categories" selected-categories="vm.selectedCategories" on-change="vm.filterChanged(categories)"></category-filter>
+    </div>
+    <div class="col-md-9">
+      <spending-chart data="vm.analyticsSummary" on-drill-down="vm.drillDown(category)"></spending-chart>
+    </div>
+  </div>
+</div>

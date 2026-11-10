@@ -1,0 +1,29 @@
+<div ng-controller="CardManagementController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>My Credit Cards</h2>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="error-banner">
+    {{vm.error}}
+    <button class="btn btn-sm btn-warning pull-right" ng-click="vm.loadCards()">Retry</button>
+  </div>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading credit cards...</p>
+  </div>
+  <div ng-if="!vm.loading" class="row">
+    <div class="col-md-4">
+      <div class="filter-section">
+        <input type="text" class="form-control" placeholder="Search cards..." ng-model="vm.searchText" ng-change="vm.filterCards()">
+      </div>
+      <card-list cards="vm.filteredCards" on-select="vm.selectCard(card)" selected-card="vm.selectedCard"></card-list>
+    </div>
+    <div class="col-md-8">
+      <div ng-if="!vm.selectedCard" class="chart-container" style="text-align: center; padding: 50px;">
+        <p class="text-muted">Select a card to view details and spending analysis</p>
+      </div>
+      <card-details card="vm.selectedCard" analysis="vm.selectedCardAnalysis"></card-details>
+    </div>
+  </div>
+</div>

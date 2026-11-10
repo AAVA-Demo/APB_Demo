@@ -1,0 +1,30 @@
+<div ng-controller="DashboardController as vm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Dashboard <button class="btn btn-sm btn-default pull-right" ng-click="vm.manualRefresh()" ng-disabled="vm.loading"><span class="glyphicon glyphicon-refresh"></span> Refresh</button></h2>
+      <p class="text-muted" ng-if="vm.lastUpdated">Last updated: {{vm.lastUpdated | date:'short'}}</p>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="error-banner">
+    {{vm.error}}
+    <button class="btn btn-sm btn-warning pull-right" ng-click="vm.manualRefresh()">Retry</button>
+  </div>
+  <div ng-if="vm.loading && !vm.kpiData" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.kpiData" class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Monthly Spend" value="vm.kpiData.monthlySpend" unit="$" trend="up" trend-value="12"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Total Credit Limit" value="vm.kpiData.totalCreditLimit" unit="$"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Available Credit" value="vm.kpiData.availableCredit" unit="$" trend="down" trend-value="5"></kpi-card>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-card label="Outstanding Amount" value="vm.kpiData.outstandingAmount" unit="$" trend="up" trend-value="8"></kpi-card>
+    </div>
+  </div>
+</div>
