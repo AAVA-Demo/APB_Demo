@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+logs/
+.env
+.DS_Store
+package-lock.json
