@@ -1,0 +1,58 @@
+<div ng-cloak>
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading Spending Analytics...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.categorySpending.length>0">
+    <h2>Spending Analytics - Category-wise Breakdown</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <category-chart category-spending="vm.categorySpending" on-select="vm.onCategorySelected(categoryName)"></category-chart>
+      </div>
+      <div class="col-md-6">
+        <h4>Category Summary</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Percentage</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.categorySpending">
+              <td>{{cat.categoryName}}</td>
+              <td>{{cat.totalAmount|currency:'₹':0}}</td>
+              <td>{{cat.percentage|number:1}}%</td>
+              <td>{{cat.transactionCount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div ng-if="vm.selectedCategory" class="row" style="margin-top:20px;">
+      <div class="col-md-12">
+        <h4>Transactions for {{vm.selectedCategory}} <button class="btn btn-sm btn-default" ng-click="vm.clearSelection()">Clear</button></h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Merchant</th>
+              <th>Amount</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="txn in vm.filteredTransactions">
+              <td>{{txn.transactionDate|date:'dd-MMM-yyyy'}}</td>
+              <td>{{txn.merchantName}}</td>
+              <td>{{txn.amount|currency:'₹':0}}</td>
+              <td>{{txn.description}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div ng-cloak>
+  <div ng-if="vm.loading" class="text-center">
+    <h3>Loading Trend Analysis...</h3>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && vm.trendData.monthlySpends.length>0">
+    <h2>Monthly Spend Trends & Card-wise Analysis</h2>
+    <div class="row">
+      <div class="col-md-8">
+        <trend-chart chart-data="vm.trendData.chartData"></trend-chart>
+      </div>
+      <div class="col-md-4">
+        <card-selector cards="vm.trendData.cardDetails" selected-cards="vm.trendData.selectedCards" on-change="vm.onCardSelectionChange()"></card-selector>
+        <div ng-if="vm.momComparison" style="margin-top:20px;">
+          <h4>Month-over-Month Comparison</h4>
+          <p><strong>Current Month:</strong> {{vm.momComparison.currentMonth}} - {{vm.momComparison.currentSpend|currency:'₹':0}}</p>
+          <p><strong>Previous Month:</strong> {{vm.momComparison.previousMonth}} - {{vm.momComparison.previousSpend|currency:'₹':0}}</p>
+          <p><strong>Change:</strong> <span ng-class="{'text-success':vm.momComparison.trend=='down','text-danger':vm.momComparison.trend=='up'}">{{vm.momComparison.percentageChange|number:2}}%</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col-md-12">
+        <h4>Monthly Spending Details</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Total Spend</th>
+              <th>Transaction Count</th>
+              <th>Card-wise Breakdown</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="ms in vm.trendData.monthlySpends">
+              <td>{{ms.month}}</td>
+              <td>{{ms.totalSpend|currency:'₹':0}}</td>
+              <td>{{ms.transactionCount}}</td>
+              <td>
+                <span ng-repeat="(cardId,amount) in ms.cardWiseSpend">{{cardId}}: {{amount|currency:'₹':0}} </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

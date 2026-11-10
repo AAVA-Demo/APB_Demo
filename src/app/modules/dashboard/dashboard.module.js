@@ -1,0 +1,4 @@
+(function(){
+'use strict';
+angular.module('dashboardModule',['ngRoute','ngAnimate']);
+})();
