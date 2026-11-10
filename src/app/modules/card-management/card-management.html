@@ -1,0 +1,26 @@
+<div class="card-management-container">
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <p>Loading your cards...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Card Portfolio ({{vm.cardPortfolio.totalCards}} cards)</div>
+        <div class="list-group">
+          <a href="javascript:void(0)" ng-repeat="card in vm.cardPortfolio.cards" ng-click="vm.selectCard(card)" class="list-group-item" ng-class="{active: vm.selectedCard.cardId === card.cardId}">
+            <h4 class="list-group-item-heading">{{card.issuer}} {{card.cardType}}</h4>
+            <p class="list-group-item-text">{{card.cardNumber}}</p>
+            <p class="list-group-item-text"><strong>Balance:</strong> ${{card.currentBalance | number:2}}</p>
+            <p class="list-group-item-text"><strong>Available:</strong> ${{card.availableCredit | number:2}}</p>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div ng-if="!vm.selectedCard" class="alert alert-info">Select a card to view details</div>
+      <div ng-if="vm.selectedCard" card-detail card="vm.selectedCard"></div>
+    </div>
+  </div>
+</div>

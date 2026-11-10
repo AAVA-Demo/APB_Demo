@@ -1,0 +1,5 @@
+.dashboard-container { padding: 20px; }
+.kpi-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+.kpi-card h4 { margin-top: 0; color: #555; font-size: 14px; }
+.kpi-value { font-size: 28px; font-weight: bold; color: #007bff; margin: 10px 0 0 0; }
+@media (max-width: 768px) { .kpi-card { margin-bottom: 10px; } .kpi-value { font-size: 24px; } }
