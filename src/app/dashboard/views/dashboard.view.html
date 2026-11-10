@@ -1,0 +1,1 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading dashboard...</h3></div><div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div><div ng-if="!vm.loading&&!vm.error" class="row"><div class="col-xs-12 col-sm-6 col-md-3" ng-repeat="kpi in vm.kpis track by kpi.kpiId"><kpi-widget kpi="kpi"></kpi-widget></div></div>
