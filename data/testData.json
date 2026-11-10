@@ -1,0 +1,55 @@
+{
+  "users": {
+    "validUser": {
+      "username": "testuser",
+      "password": "Test@123"
+    },
+    "userWithNoCards": {
+      "username": "testuser_nocards",
+      "password": "Test@123"
+    },
+    "userWithLimitedHistory": {
+      "username": "testuser_2months",
+      "password": "Test@123"
+    },
+    "userWithNoTransactions": {
+      "username": "testuser_notransactions",
+      "password": "Test@123"
+    }
+  },
+  "baseUrl": "https://app.example.com",
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "expectedCards": {
+    "visa": {
+      "cardNumber": "**** **** **** 1234",
+      "cardType": "Visa",
+      "creditLimit": "₹50,000.00",
+      "availableCredit": "₹35,000.00",
+      "outstanding": "₹15,000.00"
+    },
+    "mastercard": {
+      "cardNumber": "**** **** **** 5678",
+      "cardType": "MasterCard",
+      "creditLimit": "₹30,000.00",
+      "availableCredit": "₹20,000.00",
+      "outstanding": "₹10,000.00"
+    },
+    "amex": {
+      "cardNumber": "**** **** **** 9012",
+      "cardType": "Amex",
+      "creditLimit": "₹75,000.00",
+      "availableCredit": "₹60,000.00",
+      "outstanding": "₹15,000.00"
+    }
+  }
+}
