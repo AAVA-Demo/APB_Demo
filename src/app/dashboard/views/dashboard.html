@@ -1,0 +1,26 @@
+<div>
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading dashboard...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }} <button class="btn btn-sm btn-primary" ng-click="vm.refreshKPIs()">Retry</button></div>
+  <dashboard-grid ng-if="vm.kpis && !vm.loading">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" format="currency"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Available Credit" value="vm.kpis.totalAvailableCredit" format="currency"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Outstanding Amount" value="vm.kpis.totalOutstandingAmount" format="currency"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Monthly Spend" value="vm.kpis.monthlySpendTotal" format="currency"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Credit Utilization" value="vm.kpis.creditUtilizationPercent" format="percent"></kpi-widget>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <kpi-widget label="Total Cards" value="vm.kpis.cardCount" format="number"></kpi-widget>
+    </div>
+  </dashboard-grid>
+  <p ng-if="vm.lastUpdated" class="text-muted text-right"><small>Last updated: {{ vm.lastUpdated | date:'short' }}</small></p>
+</div>

@@ -1,0 +1,37 @@
+<div>
+  <h2>Card Details</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading card details...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="!vm.loading && vm.card">
+    <div class="card-tile">
+      <h3>{{ vm.card.cardName }}</h3>
+      <p><strong>Card Number:</strong> {{ vm.card.cardNumber }}</p>
+      <p><strong>Card Type:</strong> {{ vm.card.cardType }}</p>
+      <p><strong>Credit Limit:</strong> {{ vm.card.creditLimit | currency }}</p>
+      <p><strong>Available Credit:</strong> {{ vm.card.availableCredit | currency }}</p>
+      <p><strong>Outstanding Amount:</strong> {{ vm.card.outstandingAmount | currency }}</p>
+      <p><strong>Last Updated:</strong> {{ vm.card.lastUpdated | date:'medium' }}</p>
+    </div>
+    <div ng-if="vm.analytics" class="chart-container">
+      <h4>Card-Wise Spending Analysis</h4>
+      <p><strong>Monthly Spend:</strong> {{ vm.analytics.monthlySpend | currency }}</p>
+      <p><strong>Utilization:</strong> {{ vm.analytics.utilizationPercent }}%</p>
+      <p><strong>Transaction Count:</strong> {{ vm.analytics.transactionCount }}</p>
+    </div>
+    <div ng-if="vm.transactions.length > 0" class="chart-container">
+      <h4>Recent Transactions</h4>
+      <table class="table table-striped">
+        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="txn in vm.transactions">
+            <td>{{ txn.transactionDate | date:'short' }}</td>
+            <td>{{ txn.description }}</td>
+            <td>{{ txn.category }}</td>
+            <td>{{ txn.amount | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <a href="#/cards" class="btn btn-default">Back to Card List</a>
+</div>

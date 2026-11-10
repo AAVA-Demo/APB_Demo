@@ -1,0 +1,19 @@
+<div>
+  <h2>Compare Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading cards...</p></div>
+  <div ng-if="!vm.loading">
+    <p>Select up to 3 cards to compare:</p>
+    <div class="row">
+      <div class="col-md-4" ng-repeat="card in vm.cards">
+        <div class="card-tile" ng-class="{'border-success': vm.isSelected(card)}" ng-click="vm.toggleCardSelection(card)" style="cursor: pointer;">
+          <div class="card-name">{{ card.cardName }}</div>
+          <div class="card-metric"><strong>Credit Limit:</strong> {{ card.creditLimit | currency }}</div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h3>Selected Cards for Comparison</h3>
+    <card-comparison cards="vm.selectedCards" ng-if="vm.selectedCards.length > 0"></card-comparison>
+    <p ng-if="vm.selectedCards.length === 0" class="text-muted">No cards selected.</p>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div>
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="!vm.loading && vm.analyticsData">
+    <div class="chart-container">
+      <h4>Category-Wise Spending</h4>
+      <analytics-chart data="vm.analyticsData.categorySpendSummary" type="pie" on-drill-down="vm.onCategoryDrillDown(category)"></analytics-chart>
+    </div>
+    <category-breakdown categories="vm.analyticsData.categorySpendSummary"></category-breakdown>
+    <div class="chart-container">
+      <h4>Monthly Spend Trend</h4>
+      <trend-chart data="vm.analyticsData.monthlyTrend"></trend-chart>
+    </div>
+    <div ng-if="vm.selectedCategory" class="alert alert-info">
+      <strong>Filtered by:</strong> {{ vm.selectedCategory }}
+      <button class="btn btn-sm btn-default" ng-click="vm.clearCategoryFilter()">Clear Filter</button>
+    </div>
+  </div>
+</div>

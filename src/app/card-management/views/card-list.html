@@ -1,0 +1,14 @@
+<div>
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="text-center"><p>Loading cards...</p></div>
+  <div ng-if="vm.error" class="alert alert-danger">{{ vm.error }}</div>
+  <div ng-if="!vm.loading && vm.cards.length === 0" class="alert alert-info">No credit cards found.</div>
+  <div ng-if="!vm.loading && vm.cards.length > 0">
+    <card-summary ng-repeat="card in vm.getPaginatedCards()" card="card" on-click="vm.navigateToDetail(card.cardId)"></card-summary>
+    <div class="text-center" ng-if="vm.cards.length > vm.pageSize">
+      <button class="btn btn-default" ng-click="vm.prevPage()" ng-disabled="vm.currentPage === 1">Previous</button>
+      <span style="margin: 0 15px;">Page {{ vm.currentPage }} of {{ Math.ceil(vm.cards.length / vm.pageSize) }}</span>
+      <button class="btn btn-default" ng-click="vm.nextPage()" ng-disabled="vm.currentPage * vm.pageSize >= vm.cards.length">Next</button>
+    </div>
+  </div>
+</div>
