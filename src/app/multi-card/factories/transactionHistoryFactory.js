@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('multiCardModule').factory('transactionHistoryFactory',['cardManagementApiService','$q',function(cardManagementApiService,$q){var factory={};factory.fetchTransactionHistory=function(cardIds){return cardManagementApiService.fetchTransactionHistory(cardIds);};return factory;}]);})();
