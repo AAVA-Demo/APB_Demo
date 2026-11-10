@@ -1,0 +1,24 @@
+<div class="multi-card-container">
+<div class="page-header">
+<h1>My Credit Cards</h1>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<i class="glyphicon glyphicon-refresh spinning"></i> Loading cards...
+</div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<card-filter filter-criteria="vm.filterCriteria" on-apply="vm.applyFilter()" on-clear="vm.clearFilter()"></card-filter>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-12">
+<button class="btn btn-primary" ng-click="vm.compareCards()" ng-disabled="vm.selectedCards.length < 2">Compare Selected Cards ({{vm.selectedCards.length}})</button>
+</div>
+</div>
+<card-comparison comparison-data="vm.comparisonData" on-close="vm.clearComparison()"></card-comparison>
+<div class="row" style="margin-top:20px;">
+<div class="col-md-6 col-lg-4" ng-repeat="card in vm.filteredCards">
+<card-list-item card="card" on-select="vm.toggleCardSelection(card)" is-selected="vm.isCardSelected(card)"></card-list-item>
+</div>
+</div>
+<div ng-if="vm.filteredCards.length === 0" class="alert alert-info">No cards match the selected filters.</div>
+</div>
+</div>
