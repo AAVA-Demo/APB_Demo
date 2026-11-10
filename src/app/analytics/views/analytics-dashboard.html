@@ -1,0 +1,45 @@
+<div>
+  <h2>Spending Analytics</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-6">
+        <spending-chart data="vm.categoryData" on-segment-click="vm.onCategoryClick(categoryId)"></spending-chart>
+      </div>
+      <div class="col-md-6">
+        <category-breakdown data="vm.categoryData"></category-breakdown>
+      </div>
+    </div>
+    <div ng-if="vm.drillDownData" style="margin-top: 30px;">
+      <div class="chart-container">
+        <h4>{{vm.selectedCategory.categoryName}} - Transaction Details
+          <button class="btn btn-sm btn-default pull-right" ng-click="vm.closeDrillDown()">Close</button>
+        </h4>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="transaction in vm.drillDownData">
+                <td>{{transaction.date | date:'short'}}</td>
+                <td>{{transaction.description}}</td>
+                <td>{{transaction.amount | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

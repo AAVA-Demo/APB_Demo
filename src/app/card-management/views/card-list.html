@@ -1,0 +1,13 @@
+<div>
+  <h2>My Credit Cards</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <card-list cards="vm.cards" on-select="vm.selectCard(cardId)"></card-list>
+  </div>
+</div>

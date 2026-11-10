@@ -1,0 +1,29 @@
+<div>
+  <a href="#!/cards" class="btn btn-default">&larr; Back to Cards</a>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.card">
+    <h2>{{vm.card.cardNumber}}</h2>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-6">
+        <div class="kpi-widget">
+          <h4>Card Details</h4>
+          <p><strong>Type:</strong> {{vm.card.cardType}}</p>
+          <p><strong>Bank:</strong> {{vm.card.bankName}}</p>
+          <p><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency}}</p>
+          <p><strong>Available Credit:</strong> {{vm.card.availableCredit | currency}}</p>
+          <p><strong>Outstanding Balance:</strong> {{vm.card.outstandingBalance | currency}}</p>
+          <p><strong>Utilization:</strong> {{vm.card.utilizationPercent}}%</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <card-analytics card="vm.card" spend-data="vm.spendData"></card-analytics>
+      </div>
+    </div>
+  </div>
+</div>

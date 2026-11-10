@@ -1,0 +1,16 @@
+<div>
+  <h2>Credit Card Dashboard</h2>
+  <dashboard-refresh on-refresh="vm.refresh()"></dashboard-refresh>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <span class="glyphicon glyphicon-refresh glyphicon-spin" style="font-size: 48px;"></span>
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error" class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="widget in vm.kpiWidgets">
+      <kpi-widget widget="widget"></kpi-widget>
+    </div>
+  </div>
+</div>
