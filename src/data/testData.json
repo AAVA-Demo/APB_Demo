@@ -1,0 +1,94 @@
+{
+  "users": {
+    "testuser": {
+      "username": "testuser@example.com",
+      "password": "Pass@123"
+    },
+    "newuser": {
+      "username": "newuser@example.com",
+      "password": "Pass@123"
+    },
+    "multicard": {
+      "username": "multicard@example.com",
+      "password": "Pass@123"
+    },
+    "nocard": {
+      "username": "nocard@example.com",
+      "password": "Pass@123"
+    },
+    "singlecard": {
+      "username": "singlecard@example.com",
+      "password": "Pass@123"
+    },
+    "threecard": {
+      "username": "threecard@example.com",
+      "password": "Pass@123"
+    },
+    "edgecase": {
+      "username": "edgecase@example.com",
+      "password": "Pass@123"
+    }
+  },
+  "expectedMonths": [
+    "January 2024",
+    "February 2024",
+    "March 2024",
+    "April 2024",
+    "May 2024",
+    "June 2024",
+    "July 2024",
+    "August 2024",
+    "September 2024",
+    "October 2024",
+    "November 2024",
+    "December 2024"
+  ],
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ],
+  "cards": {
+    "cardA": {
+      "name": "Card A",
+      "creditLimit": 10000,
+      "balance": 2000,
+      "utilization": 20
+    },
+    "cardB": {
+      "name": "Card B",
+      "creditLimit": 15000,
+      "balance": 4500,
+      "utilization": 30
+    },
+    "cardC": {
+      "name": "Card C",
+      "creditLimit": 12000,
+      "balance": 9600,
+      "utilization": 80
+    },
+    "cardD": {
+      "name": "Card D",
+      "creditLimit": 8000,
+      "balance": 1600,
+      "utilization": 20
+    },
+    "cardE": {
+      "name": "Card E",
+      "creditLimit": 5000,
+      "balance": 500,
+      "utilization": 10
+    }
+  },
+  "performanceThresholds": {
+    "dashboardLoadTime": 2000,
+    "cardDataLoadTime": 1000,
+    "chartRenderTime": 3000
+  }
+}

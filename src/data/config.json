@@ -1,0 +1,19 @@
+{
+  "baseURL": "https://app.creditcard.com",
+  "timeout": 30000,
+  "retryAttempts": 3,
+  "waitForNetworkIdle": true,
+  "screenshotOnFailure": true,
+  "videoOnFailure": true,
+  "environments": {
+    "dev": "https://dev.app.creditcard.com",
+    "staging": "https://staging.app.creditcard.com",
+    "production": "https://app.creditcard.com"
+  },
+  "viewports": {
+    "mobile": { "width": 375, "height": 812 },
+    "tablet": { "width": 1024, "height": 1366 },
+    "desktop": { "width": 1920, "height": 1080 },
+    "smallScreen": { "width": 320, "height": 480 }
+  }
+}
