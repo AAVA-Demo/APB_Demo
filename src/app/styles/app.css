@@ -1,0 +1,103 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+}
+.kpi-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+.kpi-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.kpi-card h4 {
+  color: #666;
+  font-size: 14px;
+  margin-top: 0;
+  text-transform: uppercase;
+}
+.kpi-card .value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+.kpi-card .icon {
+  font-size: 40px;
+  color: #5cb85c;
+  float: right;
+}
+.credit-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.credit-card:hover {
+  transform: translateY(-5px);
+}
+.credit-card.visa {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+.credit-card.mastercard {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+}
+.credit-card.amex {
+  background: linear-gradient(135deg, #006fcf 0%, #0180d8 100%);
+}
+.credit-card .card-number {
+  font-size: 20px;
+  letter-spacing: 2px;
+  margin: 15px 0;
+}
+.credit-card .card-holder {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.credit-card .card-expiry {
+  font-size: 12px;
+}
+.card-detail-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.transaction-row {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+.transaction-row:last-child {
+  border-bottom: none;
+}
+.category-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.loading-spinner {
+  text-align: center;
+  padding: 50px;
+}
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+}

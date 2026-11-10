@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>My Credit Cards</h2>
+    <p class="text-muted">Manage and monitor all your credit cards in one place</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading your cards...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-md-4 col-sm-6" ng-repeat="card in vm.cards">
+    <div class="credit-card" ng-class="vm.getCardTypeClass(card.cardType)" ng-click="vm.selectCard(card)">
+      <div class="card-type">
+        <h4><i class="fa fa-credit-card"></i> {{card.cardType}}</h4>
+      </div>
+      <div class="card-number">{{card.cardNumber}}</div>
+      <div class="card-holder">{{card.cardHolderName}}</div>
+      <div class="card-expiry">Expires: {{card.expiryDate}}</div>
+      <hr style="border-color: rgba(255,255,255,0.3);">
+      <div class="row">
+        <div class="col-xs-6">
+          <small>Credit Limit</small><br>
+          <strong>${{card.creditLimit | number:2}}</strong>
+        </div>
+        <div class="col-xs-6">
+          <small>Available</small><br>
+          <strong>${{card.availableCredit | number:2}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error && vm.cards.length === 0" class="alert alert-info">
+  <i class="fa fa-info-circle"></i> No credit cards found. Please add a credit card to get started.
+</div>

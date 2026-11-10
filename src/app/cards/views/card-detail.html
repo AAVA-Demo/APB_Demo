@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="#!/cards" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back to Cards</a>
+    <h2 style="margin-top: 20px;">Card Details</h2>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="credit-card" ng-class="vm.getCardTypeClass(vm.card.cardType)">
+        <div class="card-type">
+          <h4><i class="fa fa-credit-card"></i> {{vm.card.cardType}}</h4>
+        </div>
+        <div class="card-number">{{vm.card.cardNumber}}</div>
+        <div class="card-holder">{{vm.card.cardHolderName}}</div>
+        <div class="card-expiry">Expires: {{vm.card.expiryDate}}</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-detail-section">
+        <h4>Financial Summary</h4>
+        <table class="table">
+          <tr>
+            <td>Credit Limit:</td>
+            <td class="text-right"><strong>${{vm.card.creditLimit | number:2}}</strong></td>
+          </tr>
+          <tr>
+            <td>Available Credit:</td>
+            <td class="text-right"><strong>${{vm.card.availableCredit | number:2}}</strong></td>
+          </tr>
+          <tr>
+            <td>Outstanding Balance:</td>
+            <td class="text-right"><strong class="text-danger">${{vm.card.outstandingBalance | number:2}}</strong></td>
+          </tr>
+          <tr>
+            <td>Utilization:</td>
+            <td class="text-right"><strong>{{((vm.card.outstandingBalance / vm.card.creditLimit) * 100).toFixed(1)}}%</strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.spendAnalysis">
+    <div class="col-md-12">
+      <div class="card-detail-section">
+        <h4>Spending Analysis</h4>
+        <div class="row">
+          <div class="col-md-3 col-sm-6" ng-repeat="category in vm.spendAnalysis.categoryBreakdown">
+            <div style="padding: 10px; border: 1px solid #eee; border-radius: 4px; margin-bottom: 10px;">
+              <small class="text-muted">{{category.category}}</small><br>
+              <strong>${{category.total | number:2}}</strong>
+              <span class="text-muted">({{category.percentage}}%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-detail-section">
+        <h4>Recent Transactions</h4>
+        <div ng-if="vm.transactions.length === 0" class="alert alert-info">
+          No transactions found for this card.
+        </div>
+        <div ng-if="vm.transactions.length > 0">
+          <div class="transaction-row" ng-repeat="txn in vm.transactions | limitTo:10">
+            <div class="row">
+              <div class="col-md-6">
+                <strong>{{txn.merchant}}</strong><br>
+                <small class="text-muted">{{txn.description}}</small>
+              </div>
+              <div class="col-md-3">
+                <span ng-class="vm.getCategoryClass(txn.category)">{{txn.category}}</span>
+              </div>
+              <div class="col-md-2 text-right">
+                <strong>${{txn.amount | number:2}}</strong><br>
+                <small class="text-muted">{{txn.date | date:'short'}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

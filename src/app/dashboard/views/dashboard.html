@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Credit Card Dashboard</h2>
+    <p class="text-muted">Monitor your credit card portfolio at a glance</p>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Monthly Spend" value="vm.dashboardKPI.monthlySpend" icon="fa-credit-card" format="currency"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Total Credit Limit" value="vm.dashboardKPI.totalCreditLimit" icon="fa-money" format="currency"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Available Credit" value="vm.dashboardKPI.availableCredit" icon="fa-check-circle" format="currency"></kpi-card>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <kpi-card label="Outstanding Amount" value="vm.dashboardKPI.outstandingAmount" icon="fa-exclamation-circle" format="currency"></kpi-card>
+  </div>
+</div>
+<div ng-if="!vm.loading && !vm.error" class="row">
+  <div class="col-md-12">
+    <div class="kpi-card">
+      <h4>Credit Utilization</h4>
+      <div class="progress" style="height: 30px; margin-top: 15px;">
+        <div class="progress-bar" ng-class="{'progress-bar-success': vm.dashboardKPI.creditUtilization < 30, 'progress-bar-warning': vm.dashboardKPI.creditUtilization >= 30 && vm.dashboardKPI.creditUtilization < 70, 'progress-bar-danger': vm.dashboardKPI.creditUtilization >= 70}" role="progressbar" ng-style="{width: vm.dashboardKPI.creditUtilization + '%'}">
+          {{vm.dashboardKPI.creditUtilization.toFixed(1)}}%
+        </div>
+      </div>
+      <p class="text-muted" style="margin-top: 10px;">Managing {{vm.dashboardKPI.cardCount}} credit card(s) | Last updated: {{vm.dashboardKPI.lastUpdated | date:'short'}}</p>
+    </div>
+  </div>
+</div>

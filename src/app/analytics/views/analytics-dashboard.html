@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Spending Analytics</h2>
+    <p class="text-muted">Understand your spending patterns and make informed decisions</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label>Select Card:</label>
+      <select class="form-control" ng-model="vm.selectedCardId" ng-change="vm.onFilterChange()">
+        <option value="all">All Cards</option>
+        <option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.cardType}} {{card.cardNumber}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label>Time Period:</label>
+      <select class="form-control" ng-model="vm.selectedPeriod" ng-change="vm.onFilterChange()">
+        <option value="current">Current Month</option>
+        <option value="last3months">Last 3 Months</option>
+        <option value="last6months">Last 6 Months</option>
+        <option value="last12months">Last 12 Months</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div ng-if="vm.loading" class="loading-spinner">
+  <i class="fa fa-spinner fa-spin fa-3x"></i>
+  <p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i> {{vm.error}}
+</div>
+<div ng-if="!vm.loading && !vm.error && vm.analyticsSummary">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="kpi-card">
+        <h4>Total Spend</h4>
+        <div class="value">${{vm.analyticsSummary.totalSpend | number:2}}</div>
+        <p class="text-muted">{{vm.analyticsSummary.transactionCount}} transactions</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="kpi-card">
+        <h4>Average Transaction</h4>
+        <div class="value">${{(vm.analyticsSummary.totalSpend / vm.analyticsSummary.transactionCount) | number:2}}</div>
+        <p class="text-muted">Per transaction</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Category-wise Spending</h4>
+        <category-chart data="vm.analyticsSummary"></category-chart>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container">
+        <h4>Monthly Spend Trends</h4>
+        <trend-chart data="vm.analyticsSummary"></trend-chart>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-detail-section">
+        <h4>Category Breakdown</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="text-right">Amount</th>
+              <th class="text-right">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="category in vm.analyticsSummary.categoryBreakdown | orderBy:'-total'">
+              <td>{{category.category}}</td>
+              <td class="text-right">${{category.total | number:2}}</td>
+              <td class="text-right">{{category.percentage}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
