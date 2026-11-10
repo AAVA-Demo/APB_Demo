@@ -1,0 +1,4 @@
+(function(){'use strict';angular.module('app.dashboard').controller('DashboardController',['KPIService','AuthService','$scope','$interval',function(KPIService,AuthService,$scope,$interval){var vm=this;vm.kpiData=null;vm.loading=true;vm.error=null;function init(){AuthService.validateUser().then(function(userContext){vm.userContext=userContext;loadKPIData(userContext.userId);startAutoRefresh(userContext.userId);},function(error){vm.error='Authentication failed';vm.loading=false;});}
+function loadKPIData(userId){vm.loading=true;KPIService.getKPIData(userId).then(function(data){vm.kpiData=data;vm.loading=false;},function(error){vm.error='Failed to load KPI data';vm.loading=false;});}
+function startAutoRefresh(userId){var refreshInterval=$interval(function(){KPIService.refreshKPIData(userId).then(function(data){vm.kpiData=data;});},30000);$scope.$on('$destroy',function(){$interval.cancel(refreshInterval);});}
+init();}]);})();

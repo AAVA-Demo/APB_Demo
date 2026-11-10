@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.dashboard').directive('dashboardLayout',[function(){return{restrict:'E',transclude:true,template:'<div class="row" ng-transclude></div>'};}]);})();

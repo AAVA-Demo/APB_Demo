@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('app.cardManagement').directive('cardListView',[function(){return{restrict:'E',scope:{cards:'=',onSelect:'&'},templateUrl:'src/app/card-management/card-list-view.template.html'};}]);})();

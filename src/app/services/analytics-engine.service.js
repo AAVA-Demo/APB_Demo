@@ -1,0 +1,3 @@
+(function(){'use strict';angular.module('creditCardApp').service('AnalyticsEngineService',['$q',function($q){var self=this;self.calculateInsights=function(categorySpending,monthlyTrends){var deferred=$q.defer();var insights={categorySpending:categorySpending,monthlyTrends:monthlyTrends,topCategory:null,averageMonthlySpend:0};if(categorySpending&&categorySpending.length>0){var sorted=categorySpending.slice().sort(function(a,b){return b.totalAmount-a.totalAmount;});insights.topCategory=sorted[0];}
+if(monthlyTrends&&monthlyTrends.length>0){var total=monthlyTrends.reduce(function(sum,month){return sum+month.totalSpend;},0);insights.averageMonthlySpend=total/monthlyTrends.length;}
+deferred.resolve(insights);return deferred.promise;};}]);})();

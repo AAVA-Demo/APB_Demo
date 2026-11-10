@@ -1,0 +1,1 @@
+(function(){'use strict';angular.module('creditCardApp').service('CreditCardDataService',['$http','$q',function($http,$q){var self=this;self.getCardData=function(userId){var deferred=$q.defer();$http.get('/api/cards/user/'+userId).then(function(response){deferred.resolve(response.data);},function(error){deferred.reject(error);});return deferred.promise;};}]);})();

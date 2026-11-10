@@ -1,0 +1,2 @@
+(function(){'use strict';angular.module('creditCardApp').service('CreditCardService',['$http','$q',function($http,$q){var self=this;var cardCache={};self.getCardDetails=function(cardId){var deferred=$q.defer();if(cardCache[cardId]){deferred.resolve(cardCache[cardId]);return deferred.promise;}
+$http.get('/api/cards/'+cardId).then(function(response){cardCache[cardId]=response.data;deferred.resolve(response.data);},function(error){deferred.reject(error);});return deferred.promise;};}]);})();
