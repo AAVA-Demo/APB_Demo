@@ -1,0 +1,6 @@
+.analytics-container{padding:20px;}
+.page-header{display:flex;justify-content:space-between;align-items:center;}
+.btn-group{margin-top:10px;}
+canvas{max-width:100%;height:auto!important;}
+.table{margin-top:10px;}
+.panel-body{min-height:300px;}

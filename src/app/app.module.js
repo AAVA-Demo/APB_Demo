@@ -1,0 +1,20 @@
+(function(){
+'use strict';
+angular.module('creditCardApp',['ngRoute','app.dashboard','app.analytics','app.cardManagement'])
+.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
+$routeProvider
+.when('/dashboard',{templateUrl:'src/app/modules/dashboard/dashboard.html',controller:'DashboardController',controllerAs:'vm'})
+.when('/analytics',{templateUrl:'src/app/modules/analytics/analytics.html',controller:'AnalyticsController',controllerAs:'vm'})
+.when('/cards',{templateUrl:'src/app/modules/card-management/card-list.html',controller:'CardListController',controllerAs:'vm'})
+.when('/cards/:cardId',{templateUrl:'src/app/modules/card-management/card-detail.html',controller:'CardDetailController',controllerAs:'vm'})
+.otherwise({redirectTo:'/dashboard'});
+$locationProvider.hashPrefix('!');
+}])
+.run(['AuthService','$rootScope','$location',function(AuthService,$rootScope,$location){
+$rootScope.$on('$routeChangeStart',function(event,next,current){
+if(!AuthService.isAuthenticated()&&$location.path()!=='/login'){
+AuthService.authenticate();
+}
+});
+}]);
+})();

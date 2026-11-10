@@ -1,0 +1,7 @@
+.card-list-container,.card-detail-container{padding:20px;}
+.card-list-item{margin-bottom:20px;cursor:pointer;}
+.panel{transition:transform 0.2s;}
+.panel:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.15);}
+.dl-horizontal dt{width:150px;}
+.dl-horizontal dd{margin-left:170px;}
+.badge{background-color:#337ab7;font-size:1em;}

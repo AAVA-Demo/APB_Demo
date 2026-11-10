@@ -1,0 +1,67 @@
+<div class="card-detail-container">
+<div class="page-header">
+<button class="btn btn-default" ng-click="vm.goBack()">
+<i class="glyphicon glyphicon-arrow-left"></i> Back to Cards
+</button>
+<h2>Card Details</h2>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<div class="spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading card details...</div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading&&vm.card" class="row">
+<div class="col-md-6">
+<div class="panel panel-primary">
+<div class="panel-heading">Card Information</div>
+<div class="panel-body">
+<dl class="dl-horizontal">
+<dt>Card Type:</dt>
+<dd>{{vm.card.cardType}}</dd>
+<dt>Card Number:</dt>
+<dd>**** **** **** {{vm.card.cardNumber}}</dd>
+<dt>Issue Date:</dt>
+<dd>{{vm.card.issueDate|date:'MMM yyyy'}}</dd>
+<dt>Expiry Date:</dt>
+<dd>{{vm.card.expiryDate|date:'MMM yyyy'}}</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-info">
+<div class="panel-heading">Financial Summary</div>
+<div class="panel-body">
+<dl class="dl-horizontal">
+<dt>Credit Limit:</dt>
+<dd>₹{{vm.card.creditLimit|number:2}}</dd>
+<dt>Current Balance:</dt>
+<dd>₹{{vm.card.currentBalance|number:2}}</dd>
+<dt>Available Balance:</dt>
+<dd>₹{{vm.card.availableBalance|number:2}}</dd>
+<dt>Outstanding:</dt>
+<dd>₹{{vm.card.outstandingAmount|number:2}}</dd>
+<dt>Monthly Spend:</dt>
+<dd>₹{{vm.card.monthlySpend|number:2}}</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div ng-if="!vm.loading&&vm.card" class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Credit Utilization</div>
+<div class="panel-body">
+<div class="progress">
+<div class="progress-bar progress-bar-{{vm.getUtilizationClass()}}" role="progressbar" ng-style="{width:vm.getCreditUtilization()+'%'}">
+{{vm.getCreditUtilization()}}%
+</div>
+</div>
+<p class="text-muted">Using {{vm.getCreditUtilization()}}% of available credit</p>
+</div>
+</div>
+</div>
+</div>
+</div>

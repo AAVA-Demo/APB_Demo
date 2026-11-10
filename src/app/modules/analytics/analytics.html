@@ -1,0 +1,91 @@
+<div class="analytics-container">
+<div class="page-header">
+<h2>Spending Analytics & Insights</h2>
+<div class="btn-group" role="group">
+<button class="btn btn-default" ng-class="{active:vm.selectedTimeRange===3}" ng-click="vm.changeTimeRange(3)">3 Months</button>
+<button class="btn btn-default" ng-class="{active:vm.selectedTimeRange===6}" ng-click="vm.changeTimeRange(6)">6 Months</button>
+<button class="btn btn-default" ng-class="{active:vm.selectedTimeRange===12}" ng-click="vm.changeTimeRange(12)">12 Months</button>
+</div>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<div class="spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading analytics...</div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading&&vm.spendingData">
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Monthly Spend Trends</div>
+<div class="panel-body">
+<spending-chart chart-data="vm.chartData" chart-type="line"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Category-wise Spending</div>
+<div class="panel-body">
+<spending-chart chart-data="vm.categoryChartData" chart-type="doughnut"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">Category Breakdown</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th class="text-right">Amount</th>
+<th class="text-right">%</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="(category,amount) in vm.spendingData.categoryBreakdown">
+<td>{{category}}</td>
+<td class="text-right">₹{{amount|number:2}}</td>
+<td class="text-right">{{(amount/vm.getCategoryTotal()*100)|number:1}}%</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<th>Total</th>
+<th class="text-right">₹{{vm.getCategoryTotal()|number:2}}</th>
+<th class="text-right">100%</th>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="row" ng-if="vm.spendingData.cardWiseSpend.length>0">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">Card-wise Spending</div>
+<div class="panel-body">
+<table class="table table-hover">
+<thead>
+<tr>
+<th>Card ID</th>
+<th class="text-right">Total Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.spendingData.cardWiseSpend">
+<td>{{card.cardId}}</td>
+<td class="text-right">₹{{card.total|number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

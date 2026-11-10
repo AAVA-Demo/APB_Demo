@@ -1,0 +1,19 @@
+<div class="card-list-container">
+<div class="page-header">
+<h2>My Credit Cards <span class="badge">{{vm.totalCards}}</span></h2>
+</div>
+<div ng-if="vm.loading" class="text-center">
+<div class="spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading cards...</div>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading&&vm.cards.length>0" class="row">
+<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="card in vm.cards">
+<card-list-item card="card" on-click="vm.viewCardDetail(card.cardId)"></card-list-item>
+</div>
+</div>
+<div ng-if="!vm.loading&&vm.cards.length===0" class="alert alert-info">
+No credit cards found. Please add a card to get started.
+</div>
+</div>
