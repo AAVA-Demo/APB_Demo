@@ -1,0 +1,72 @@
+{
+  "baseUrl": "https://creditcard-dashboard.example.com",
+  "timeout": 30000,
+  "testUsers": {
+    "testuser3cards": {
+      "username": "testuser3cards",
+      "password": "Pass@123",
+      "description": "User with 3 credit cards"
+    },
+    "testuser_nocards": {
+      "username": "testuser_nocards",
+      "password": "Pass@123",
+      "description": "User with no credit cards"
+    },
+    "testuser_multicards": {
+      "username": "testuser_multicards",
+      "password": "Pass@123",
+      "description": "User with multiple cards and transactions"
+    },
+    "testuser_notxns": {
+      "username": "testuser_notxns",
+      "password": "Pass@123",
+      "description": "User with cards but no transactions"
+    },
+    "testuser_txnhistory": {
+      "username": "testuser_txnhistory",
+      "password": "Pass@123",
+      "description": "User with extensive transaction history"
+    },
+    "testuser_allcategories": {
+      "username": "testuser_allcategories",
+      "password": "Pass@123",
+      "description": "User with transactions in all 9 categories"
+    },
+    "testuser_singlecategory": {
+      "username": "testuser_singlecategory",
+      "password": "Pass@123",
+      "description": "User with transactions in only one category"
+    },
+    "testuser_creditcard": {
+      "username": "testuser_creditcard",
+      "password": "Pass@123",
+      "description": "User for credit calculation tests"
+    },
+    "testuser_6months": {
+      "username": "testuser_6months",
+      "password": "Pass@123",
+      "description": "User with 6 months of transaction history"
+    },
+    "testuser": {
+      "username": "testuser",
+      "password": "Pass@123",
+      "description": "Generic test user"
+    }
+  },
+  "apiEndpoints": {
+    "creditCards": "/api/creditcards",
+    "transactions": "/api/transactions",
+    "analytics": "/api/analytics/spending"
+  },
+  "categories": [
+    "Food & Dining",
+    "Fuel",
+    "Shopping",
+    "Travel",
+    "Entertainment",
+    "Utilities",
+    "Healthcare",
+    "Education",
+    "Miscellaneous"
+  ]
+}
