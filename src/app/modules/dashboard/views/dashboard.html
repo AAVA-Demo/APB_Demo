@@ -1,0 +1,38 @@
+<div ng-if="vm.loading" class="text-center"><h3>Loading...</h3></div>
+<div ng-if="!vm.loading&&vm.dashboardData">
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-primary pull-right" ng-click="vm.refreshDashboard()">Refresh</button>
+<h2>Dashboard KPIs</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3 col-sm-6">
+<kpi-card label="Monthly Spend" value="vm.dashboardData.kpis.totalMonthlySpend"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card label="Total Credit Limit" value="vm.dashboardData.kpis.totalCreditLimit"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card label="Available Credit" value="vm.dashboardData.kpis.totalAvailableCredit"></kpi-card>
+</div>
+<div class="col-md-3 col-sm-6">
+<kpi-card label="Outstanding Amount" value="vm.dashboardData.kpis.totalOutstanding"></kpi-card>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h2>Credit Cards</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-md-4 col-sm-6" ng-repeat="card in vm.dashboardData.creditCards">
+<credit-card-summary card="card"></credit-card-summary>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<p class="text-muted">Last updated: {{vm.dashboardData.lastUpdated|date:'medium'}}</p>
+</div>
+</div>
+</div>
