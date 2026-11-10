@@ -1,0 +1,40 @@
+<div class="dashboard-container">
+<h2>Credit Card Dashboard</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading dashboard...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && vm.kpiData" class="row">
+<div class="col-xs-12 col-sm-6 col-md-3">
+<dashboard-widget title="'Monthly Spend'" value="vm.kpiData.monthlySpend" type="'currency'"></dashboard-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<dashboard-widget title="'Total Credit Limit'" value="vm.kpiData.totalCreditLimit" type="'currency'"></dashboard-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<dashboard-widget title="'Available Credit'" value="vm.kpiData.availableCredit" type="'currency'"></dashboard-widget>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-3">
+<dashboard-widget title="'Outstanding Amount'" value="vm.kpiData.outstandingAmount" type="'currency'"></dashboard-widget>
+</div>
+</div>
+<div ng-if="!vm.loading && vm.kpiData" class="row" style="margin-top:20px;">
+<div class="col-xs-12">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Credit Utilization</h4>
+</div>
+<div class="panel-body">
+<div class="progress">
+<div class="progress-bar" role="progressbar" ng-style="{'width': vm.kpiData.creditUtilization + '%'}" aria-valuenow="{{vm.kpiData.creditUtilization}}" aria-valuemin="0" aria-valuemax="100">
+{{vm.kpiData.creditUtilization}}%
+</div>
+</div>
+<p class="text-muted">Last Updated: {{vm.kpiData.lastUpdated | date:'short'}}</p>
+</div>
+</div>
+</div>
+</div>
+</div>

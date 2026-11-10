@@ -1,0 +1,7 @@
+.analytics-container { padding: 20px; }
+.chart { max-height: 400px; }
+table { margin-top: 20px; }
+@media (max-width: 768px) {
+.analytics-container { padding: 10px; }
+.chart { max-height: 300px; }
+}

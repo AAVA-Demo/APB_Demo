@@ -1,0 +1,8 @@
+.card-list-container { padding: 20px; }
+.card-detail-container { padding: 20px; }
+.card-item { cursor: pointer; transition: transform 0.2s; }
+.card-item:hover { transform: scale(1.02); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.progress { height: 25px; margin-top: 10px; }
+@media (max-width: 768px) {
+.card-list-container, .card-detail-container { padding: 10px; }
+}

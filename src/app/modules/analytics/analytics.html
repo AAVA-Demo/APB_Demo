@@ -1,0 +1,64 @@
+<div class="analytics-container">
+<h2>Transaction Analytics</h2>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading analytics...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && vm.analyticsData">
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Category-Wise Spending</h4>
+</div>
+<div class="panel-body">
+<spending-chart chart-type="'pie'" chart-data="vm.categoryChartData" chart-labels="vm.categoryChartLabels"></spending-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Monthly Spend Trends</h4>
+</div>
+<div class="panel-body">
+<spending-chart chart-type="'line'" chart-data="vm.trendChartData" chart-labels="vm.trendChartLabels" chart-series="vm.trendChartSeries"></spending-chart>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Spending Summary</h4>
+</div>
+<div class="panel-body">
+<p><strong>Top Category:</strong> {{vm.analyticsData.topCategory}}</p>
+<p><strong>Last Updated:</strong> {{vm.analyticsData.lastUpdated | date:'short'}}</p>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+<th>Transactions</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analyticsData.currentMonthSpending">
+<td>{{cat.category}}</td>
+<td>{{cat.amount | currency}}</td>
+<td>{{cat.percentage}}%</td>
+<td>{{cat.transactionCount}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

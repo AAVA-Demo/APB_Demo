@@ -1,0 +1,72 @@
+<div class="card-detail-container">
+<button class="btn btn-default" ng-click="vm.goBack()">Back to Cards</button>
+<div ng-if="vm.loading" class="text-center">
+<p>Loading card details...</p>
+</div>
+<div ng-if="vm.error" class="alert alert-danger">
+{{vm.error}}
+</div>
+<div ng-if="!vm.loading && vm.cardDetails">
+<h2>Card Details</h2>
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>{{vm.cardDetails.card.cardType}} - {{vm.cardDetails.card.cardNumber}}</h4>
+</div>
+<div class="panel-body">
+<div class="row">
+<div class="col-sm-6">
+<p><strong>Card Holder:</strong> {{vm.cardDetails.card.cardHolderName}}</p>
+<p><strong>Credit Limit:</strong> {{vm.cardDetails.card.creditLimit | currency}}</p>
+<p><strong>Available Credit:</strong> {{vm.cardDetails.card.availableCredit | currency}}</p>
+<p><strong>Outstanding Balance:</strong> {{vm.cardDetails.card.outstandingBalance | currency}}</p>
+</div>
+<div class="col-sm-6">
+<p><strong>Expiry Date:</strong> {{vm.cardDetails.card.expiryDate}}</p>
+<p><strong>Status:</strong> {{vm.cardDetails.card.status}}</p>
+<p><strong>Utilization:</strong> {{vm.cardDetails.card.utilizationPercentage}}%</p>
+<div class="progress">
+<div class="progress-bar" ng-class="{'progress-bar-danger': vm.cardDetails.card.utilizationPercentage > 80, 'progress-bar-warning': vm.cardDetails.card.utilizationPercentage > 50 && vm.cardDetails.card.utilizationPercentage <= 80}" role="progressbar" ng-style="{'width': vm.cardDetails.card.utilizationPercentage + '%'}">
+{{vm.cardDetails.card.utilizationPercentage}}%
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<h4>Spending Analysis</h4>
+</div>
+<div class="panel-body">
+<p><strong>Current Month Spend:</strong> {{vm.cardDetails.spending.currentMonthSpend | currency}}</p>
+<p><strong>Last Month Spend:</strong> {{vm.cardDetails.spending.lastMonthSpend | currency}}</p>
+<p><strong>Average Monthly Spend:</strong> {{vm.cardDetails.spending.averageMonthlySpend | currency}}</p>
+<p><strong>Spending Trend:</strong> {{vm.cardDetails.spending.spendingTrend}}</p>
+<p><strong>Top Categories:</strong> {{vm.cardDetails.spending.topCategories.join(', ')}}</p>
+</div>
+</div>
+<div class="panel panel-default" ng-if="vm.cardDetails.recentTransactions && vm.cardDetails.recentTransactions.length > 0">
+<div class="panel-heading">
+<h4>Recent Transactions</h4>
+</div>
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Date</th>
+<th>Category</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.cardDetails.recentTransactions">
+<td>{{txn.date | date:'short'}}</td>
+<td>{{txn.category}}</td>
+<td>{{txn.amount | currency}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
