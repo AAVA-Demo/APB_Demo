@@ -1,0 +1,68 @@
+<div>
+<h2>Spending Analytics & Insights</h2>
+<div class="alert alert-danger alert-banner" ng-if="vm.error">{{vm.error}}</div>
+<div ng-if="vm.selectedCategory" class="alert alert-info">
+<strong>Drill-down:</strong> {{vm.selectedCategory}} <button class="btn btn-xs btn-default" ng-click="vm.resetDrillDown()">Reset</button>
+</div>
+<div ng-if="vm.loading" class="text-center"><h3>Loading analytics...</h3></div>
+<div ng-if="!vm.loading">
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h4>Monthly Spend Trend (Last 12 Months)</h4>
+<chart-directive chart-data="vm.monthlyChartData" chart-type="line"></chart-directive>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Category-Wise Spending Breakdown</h4>
+<chart-directive chart-data="vm.categoryChartData" chart-type="pie" on-drill-down="vm.drillDownCategory(category)"></chart-directive>
+</div>
+</div>
+<div class="col-md-6">
+<div class="chart-container">
+<h4>Category Breakdown Details</h4>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Category</th>
+<th>Amount</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="cat in vm.analytics.categoryBreakdown track by cat.category">
+<td>{{cat.category}}</td>
+<td>${{cat.amount|number:2}}</td>
+<td>{{cat.percentage}}%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="chart-container">
+<h4>Card-Wise Spending</h4>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Card</th>
+<th>Total Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="card in vm.analytics.cardWiseSpend track by card.cardId">
+<td>{{card.cardName}}</td>
+<td>${{card.amount|number:2}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,74 @@
+<div>
+<h2>Transaction History</h2>
+<div class="alert alert-danger alert-banner" ng-if="vm.error">{{vm.error}}</div>
+<div class="filter-panel">
+<h4>Search & Filter</h4>
+<div class="row">
+<div class="col-md-3 col-sm-6">
+<label>Card</label>
+<select class="form-control" ng-model="vm.filterCriteria.cardId" ng-change="vm.applyFilter()">
+<option value="">All Cards</option>
+<option ng-repeat="card in vm.cards" value="{{card.cardId}}">{{card.cardType}} ****{{card.cardNumber.slice(-4)}}</option>
+</select>
+</div>
+<div class="col-md-3 col-sm-6">
+<label>Search</label>
+<input type="text" class="form-control" ng-model="vm.filterCriteria.searchTerm" ng-change="vm.onSearchChange()" placeholder="Merchant, description...">
+</div>
+<div class="col-md-2 col-sm-4">
+<label>From Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateFrom" ng-change="vm.applyFilter()">
+</div>
+<div class="col-md-2 col-sm-4">
+<label>To Date</label>
+<input type="date" class="form-control" ng-model="vm.filterCriteria.dateTo" ng-change="vm.applyFilter()">
+</div>
+<div class="col-md-2 col-sm-4">
+<label>&nbsp;</label>
+<button class="btn btn-default btn-block" ng-click="vm.clearFilter()">Clear</button>
+</div>
+</div>
+</div>
+<div class="transaction-table">
+<div ng-if="vm.loading" class="text-center"><p>Loading transactions...</p></div>
+<div ng-if="!vm.loading">
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+<th>Date</th>
+<th>Merchant</th>
+<th>Category</th>
+<th>Card</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="txn in vm.transactions track by txn.id">
+<td>{{txn.date|date:'MM/dd/yyyy'}}</td>
+<td>{{txn.merchant}}</td>
+<td>{{txn.category}}</td>
+<td>****{{txn.cardId.slice(-4)}}</td>
+<td>${{txn.amount|number:2}}</td>
+<td><span class="label" ng-class="{'label-success':txn.status==='Completed','label-warning':txn.status==='Pending'}">{{txn.status}}</span></td>
+</tr>
+<tr ng-if="vm.transactions.length===0">
+<td colspan="6" class="text-center">No transactions found</td>
+</tr>
+</tbody>
+</table>
+<div class="row">
+<div class="col-md-6">
+<p>Showing {{vm.transactions.length}} of {{vm.pagination.totalRecords}} transactions</p>
+</div>
+<div class="col-md-6">
+<ul class="pagination pull-right">
+<li ng-class="{disabled:vm.pagination.currentPage===1}"><a ng-click="vm.changePage(vm.pagination.currentPage-1)">&laquo;</a></li>
+<li ng-repeat="page in [] | range:vm.pagination.totalPages" ng-class="{active:page===vm.pagination.currentPage}"><a ng-click="vm.changePage(page)">{{page}}</a></li>
+<li ng-class="{disabled:vm.pagination.currentPage===vm.pagination.totalPages}"><a ng-click="vm.changePage(vm.pagination.currentPage+1)">&raquo;</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
