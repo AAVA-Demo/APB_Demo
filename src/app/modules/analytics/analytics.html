@@ -1,0 +1,58 @@
+<div class="analytics-container">
+  <h2>Analytics & Spending Insights</h2>
+  <div class="alert alert-info" ng-show="vm.loading">
+    <span class="glyphicon glyphicon-refresh spinning"></span> Loading analytics data...
+  </div>
+  <div ng-show="!vm.loading">
+    <div class="row">
+      <div class="col-md-12">
+        <label>Select Time Period:</label>
+        <select class="form-control" ng-model="vm.selectedPeriod" ng-change="vm.applyFilter()">
+          <option value="3">Last 3 Months</option>
+          <option value="6">Last 6 Months</option>
+          <option value="12">Last 12 Months</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.analyticsData.monthlyTrends && vm.analyticsData.monthlyTrends.length > 0">
+      <div class="col-md-12">
+        <h3>Monthly Spend Trends</h3>
+        <chart-directive chart-type="line" chart-data="vm.monthlyTrendChartData" chart-options="{}"></chart-directive>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.analyticsData.categorySpends && vm.analyticsData.categorySpends.length > 0">
+      <div class="col-md-6">
+        <h3>Category-Wise Spending</h3>
+        <chart-directive chart-type="pie" chart-data="vm.categoryChartData" chart-options="{}"></chart-directive>
+      </div>
+      <div class="col-md-6">
+        <h3>Category Breakdown</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total Spend</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="cat in vm.analyticsData.categorySpends">
+              <td>{{cat.category}}</td>
+              <td>{{cat.totalSpend | currency}}</td>
+              <td>{{cat.percentage}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.analyticsData.cardWiseSpends && vm.analyticsData.cardWiseSpends.length > 0">
+      <div class="col-md-12">
+        <h3>Card-Wise Spend Analysis</h3>
+        <chart-directive chart-type="bar" chart-data="vm.cardWiseChartData" chart-options="{}"></chart-directive>
+      </div>
+    </div>
+    <div class="alert alert-warning" ng-if="!vm.analyticsData.monthlyTrends || vm.analyticsData.monthlyTrends.length === 0">
+      No data available for the selected period.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <h2>Credit Card Dashboard</h2>
+  <div class="alert alert-info" ng-show="vm.loading">
+    <span class="glyphicon glyphicon-refresh spinning"></span> Loading KPI data...
+  </div>
+  <div ng-show="!vm.loading">
+    <p class="text-muted">Last updated: {{vm.lastUpdated | date:'medium'}}</p>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <kpi-card title="Monthly Spend" value="vm.kpiData.monthlySpend" icon="credit-card"></kpi-card>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <kpi-card title="Total Credit Limit" value="vm.kpiData.totalCreditLimit" icon="piggy-bank"></kpi-card>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <kpi-card title="Available Credit" value="vm.kpiData.availableCredit" icon="ok-circle"></kpi-card>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <kpi-card title="Outstanding Amount" value="vm.kpiData.totalOutstanding" icon="exclamation-sign"></kpi-card>
+      </div>
+    </div>
+  </div>
+</div>

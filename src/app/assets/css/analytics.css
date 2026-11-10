@@ -1,0 +1,5 @@
+.analytics-container { padding: 20px; }
+.analytics-container h3 { margin-top: 30px; margin-bottom: 20px; color: #337ab7; }
+.analytics-container select { width: 200px; margin-bottom: 20px; }
+.analytics-container canvas { max-height: 400px; }
+.table-striped > tbody > tr:nth-of-type(odd) { background-color: #f9f9f9; }

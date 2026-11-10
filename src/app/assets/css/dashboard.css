@@ -1,0 +1,7 @@
+.dashboard-container { padding: 20px; }
+.kpi-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; }
+.kpi-icon { font-size: 48px; color: #337ab7; margin-right: 20px; }
+.kpi-content h4 { margin: 0 0 10px 0; font-size: 16px; color: #666; }
+.kpi-value { font-size: 28px; font-weight: bold; color: #333; margin: 0; }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

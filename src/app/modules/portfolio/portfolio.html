@@ -1,0 +1,56 @@
+<div class="portfolio-container">
+  <h2>Credit Card Portfolio</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Portfolio Summary</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <h4>Total Cards</h4>
+              <p class="summary-value">{{vm.portfolioSummary.totalCards}}</p>
+            </div>
+            <div class="col-md-3">
+              <h4>Total Credit Limit</h4>
+              <p class="summary-value">{{vm.portfolioSummary.totalCreditLimit | currency}}</p>
+            </div>
+            <div class="col-md-3">
+              <h4>Total Outstanding</h4>
+              <p class="summary-value">{{vm.portfolioSummary.totalOutstanding | currency}}</p>
+            </div>
+            <div class="col-md-3">
+              <h4>Total Available Credit</h4>
+              <p class="summary-value">{{vm.portfolioSummary.totalAvailableCredit | currency}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4" ng-repeat="card in vm.cards">
+      <portfolio-card card="card" on-select="vm.viewCardDetails(cardId)"></portfolio-card>
+    </div>
+  </div>
+  <div class="modal" ng-show="vm.selectedCard" ng-click="vm.closeCardDetails()">
+    <div class="modal-dialog" ng-click="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="vm.closeCardDetails()">&times;</button>
+          <h4 class="modal-title">Card Details</h4>
+        </div>
+        <div class="modal-body">
+          <p><strong>Card Type:</strong> {{vm.selectedCard.cardType}}</p>
+          <p><strong>Card Number:</strong> {{vm.selectedCard.cardNumber}}</p>
+          <p><strong>Issuer:</strong> {{vm.selectedCard.issuer}}</p>
+          <p><strong>Credit Limit:</strong> {{vm.selectedCard.creditLimit | currency}}</p>
+          <p><strong>Outstanding Balance:</strong> {{vm.selectedCard.outstandingBalance | currency}}</p>
+          <p><strong>Available Credit:</strong> {{vm.selectedCard.availableCredit | currency}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="vm.closeCardDetails()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
