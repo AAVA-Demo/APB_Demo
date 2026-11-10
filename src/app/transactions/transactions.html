@@ -1,0 +1,43 @@
+<div class="transactions-container">
+  <h2>Transaction Management</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading transactions...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger error-alert">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-xs-12">
+        <input type="text" class="search-box" placeholder="Search transactions by merchant, category, or amount..." ng-model="vm.searchTerm">
+      </div>
+    </div>
+    <div class="transaction-table">
+      <table class="table table-striped table-hover table-responsive">
+        <thead>
+          <tr>
+            <th ng-click="vm.sortBy('date')" style="cursor:pointer;">Date <span ng-if="vm.sortColumn === 'date'">{{vm.sortReverse ? '▼' : '▲'}}</span></th>
+            <th ng-click="vm.sortBy('merchant')" style="cursor:pointer;">Merchant <span ng-if="vm.sortColumn === 'merchant'">{{vm.sortReverse ? '▼' : '▲'}}</span></th>
+            <th ng-click="vm.sortBy('category')" style="cursor:pointer;">Category <span ng-if="vm.sortColumn === 'category'">{{vm.sortReverse ? '▼' : '▲'}}</span></th>
+            <th ng-click="vm.sortBy('amount')" style="cursor:pointer;">Amount <span ng-if="vm.sortColumn === 'amount'">{{vm.sortReverse ? '▼' : '▲'}}</span></th>
+            <th>Card</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="transaction-row" ng-repeat="txn in vm.filteredTransactions | orderBy:vm.sortColumn:vm.sortReverse" ng-click="vm.viewDetail(txn)">
+            <td>{{vm.formatDate(txn.date)}}</td>
+            <td>{{txn.merchant}}</td>
+            <td>{{txn.category}}</td>
+            <td>{{vm.formatCurrency(txn.amount)}}</td>
+            <td>{{txn.cardName}}</td>
+            <td><span class="label label-success">{{txn.status}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-if="vm.filteredTransactions.length === 0" class="text-center" style="padding:20px;">
+        <p>No transactions found.</p>
+      </div>
+    </div>
+  </div>
+</div>

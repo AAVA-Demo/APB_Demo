@@ -1,0 +1,51 @@
+<div class="transaction-detail-container">
+  <h2>Transaction Details</h2>
+  <button class="btn btn-default" ng-click="vm.backToList()">← Back to Transactions</button>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading transaction details...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger error-alert">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error && vm.selectedTransaction" class="card-item" style="margin-top:20px;">
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <h4>Transaction Information</h4>
+        <table class="table">
+          <tr>
+            <td><strong>Transaction ID:</strong></td>
+            <td>{{vm.selectedTransaction.transactionId}}</td>
+          </tr>
+          <tr>
+            <td><strong>Merchant:</strong></td>
+            <td>{{vm.selectedTransaction.merchant}}</td>
+          </tr>
+          <tr>
+            <td><strong>Amount:</strong></td>
+            <td>{{vm.formatCurrency(vm.selectedTransaction.amount)}}</td>
+          </tr>
+          <tr>
+            <td><strong>Date:</strong></td>
+            <td>{{vm.formatDate(vm.selectedTransaction.date)}}</td>
+          </tr>
+          <tr>
+            <td><strong>Category:</strong></td>
+            <td>{{vm.selectedTransaction.category}}</td>
+          </tr>
+          <tr>
+            <td><strong>Card Used:</strong></td>
+            <td>{{vm.selectedTransaction.cardName}}</td>
+          </tr>
+          <tr>
+            <td><strong>Status:</strong></td>
+            <td><span class="label label-success">{{vm.selectedTransaction.status}}</span></td>
+          </tr>
+          <tr>
+            <td><strong>Description:</strong></td>
+            <td>{{vm.selectedTransaction.description}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

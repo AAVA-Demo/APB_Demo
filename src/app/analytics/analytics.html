@@ -1,0 +1,44 @@
+<div class="analytics-container">
+  <h2>Spending Analytics and Insights</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger error-alert">
+    <strong>Error:</strong> {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="btn-group" role="group" style="margin-bottom:20px;">
+      <button type="button" class="btn btn-default" ng-class="{active: vm.selectedView === 'category'}" ng-click="vm.selectView('category')">Category-wise</button>
+      <button type="button" class="btn btn-default" ng-class="{active: vm.selectedView === 'monthly'}" ng-click="vm.selectView('monthly')">Monthly Trends</button>
+      <button type="button" class="btn btn-default" ng-class="{active: vm.selectedView === 'card'}" ng-click="vm.selectView('card')">Card-wise</button>
+    </div>
+    <div ng-if="vm.selectedView === 'category'" class="chart-container">
+      <h3>Category-wise Spending</h3>
+      <spending-chart chart-data="vm.categoryData" chart-type="pie"></spending-chart>
+      <table class="table table-striped" style="margin-top:20px;">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in vm.categoryData">
+            <td>{{item.category}}</td>
+            <td>{{vm.formatCurrency(item.totalAmount)}}</td>
+            <td>{{item.percentage}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div ng-if="vm.selectedView === 'monthly'" class="chart-container">
+      <h3>Monthly Spend Trends</h3>
+      <spending-chart chart-data="vm.monthlyData" chart-type="line"></spending-chart>
+    </div>
+    <div ng-if="vm.selectedView === 'card'" class="chart-container">
+      <h3>Card-wise Spending</h3>
+      <spending-chart chart-data="vm.cardData" chart-type="bar"></spending-chart>
+    </div>
+  </div>
+</div>
