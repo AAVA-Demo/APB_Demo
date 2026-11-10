@@ -1,0 +1,52 @@
+<div ng-cloak>
+  <h2>Card Details</h2>
+  <a href="#/cards" class="btn btn-default">Back to Cards</a>
+  <div ng-if="vm.loading" class="text-center" style="margin-top: 20px;">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Loading card details...</p>
+  </div>
+  <div ng-if="vm.error && !vm.loading" class="alert alert-danger" style="margin-top: 20px;">
+    {{vm.error}}
+    <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && vm.card" style="margin-top: 20px;">
+    <div class="card-summary">
+      <h3>{{vm.card.cardIssuer}} - {{vm.card.cardType}}</h3>
+      <div class="row">
+        <div class="col-md-3"><strong>Credit Limit:</strong> {{vm.card.creditLimit | currency}}</div>
+        <div class="col-md-3"><strong>Available Credit:</strong> {{vm.card.availableCredit | currency}}</div>
+        <div class="col-md-3"><strong>Outstanding Balance:</strong> {{vm.card.outstandingBalance | currency}}</div>
+        <div class="col-md-3"><strong>Utilization:</strong> {{vm.utilization}}%</div>
+      </div>
+      <div class="progress" style="margin-top: 15px;">
+        <div class="progress-bar" role="progressbar" ng-style="{width: vm.utilization + '%'}" aria-valuenow="{{vm.utilization}}" aria-valuemin="0" aria-valuemax="100">
+          {{vm.utilization}}%
+        </div>
+      </div>
+    </div>
+    <h3 style="margin-top: 30px;">Transaction History</h3>
+    <div ng-if="vm.transactions.length === 0" class="alert alert-info">
+      No transactions found for this card.
+    </div>
+    <table ng-if="vm.transactions.length > 0" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Merchant</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="txn in vm.transactions">
+          <td>{{txn.transactionDate | date:'short'}}</td>
+          <td>{{txn.merchant}}</td>
+          <td>{{txn.category}}</td>
+          <td>{{txn.amount | currency}}</td>
+          <td>{{txn.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

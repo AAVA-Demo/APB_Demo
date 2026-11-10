@@ -1,0 +1,41 @@
+<div ng-cloak>
+  <h2>My Credit Cards</h2>
+  <a href="#/cards/register/new" class="btn btn-success btn-register">Register New Card</a>
+  <div ng-if="vm.loading" class="text-center">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Loading cards...</p>
+  </div>
+  <div ng-if="vm.error && !vm.loading" class="alert alert-danger">
+    {{vm.error}}
+    <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button>
+  </div>
+  <div ng-if="!vm.loading && vm.cards.length === 0" class="alert alert-info">
+    No credit cards registered. Click "Register New Card" to add your first card.
+  </div>
+  <div ng-if="!vm.loading && vm.cards.length > 0" class="row">
+    <div class="col-md-6" ng-repeat="card in vm.cards">
+      <card-summary card="card"></card-summary>
+    </div>
+  </div>
+  <div ng-if="!vm.loading && vm.comparisonData.length > 0" style="margin-top: 30px;">
+    <h3>Card Comparison</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Card Issuer</th>
+          <th>Utilization</th>
+          <th>Outstanding Balance</th>
+          <th>Available Credit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="comp in vm.comparisonData">
+          <td>{{comp.cardIssuer}}</td>
+          <td>{{comp.utilization}}%</td>
+          <td>{{comp.outstandingBalance | currency}}</td>
+          <td>{{comp.availableCredit | currency}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

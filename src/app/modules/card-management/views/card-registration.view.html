@@ -1,0 +1,29 @@
+<div ng-cloak>
+  <h2>Register New Credit Card</h2>
+  <a href="#/cards" class="btn btn-default">Back to Cards</a>
+  <div ng-if="vm.error" class="alert alert-danger" style="margin-top: 20px;">
+    {{vm.error}}
+  </div>
+  <form name="cardForm" ng-submit="vm.submitCard()" novalidate style="margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px;">
+    <div class="form-group">
+      <label for="cardNumber">Card Number *</label>
+      <input type="text" class="form-control" id="cardNumber" ng-model="vm.card.cardNumber" required placeholder="Enter card number">
+    </div>
+    <div class="form-group">
+      <label for="cardIssuer">Card Issuer *</label>
+      <input type="text" class="form-control" id="cardIssuer" ng-model="vm.card.cardIssuer" required placeholder="e.g., Chase, Bank of America">
+    </div>
+    <div class="form-group">
+      <label for="cardType">Card Type *</label>
+      <select class="form-control" id="cardType" ng-model="vm.card.cardType" required>
+        <option ng-repeat="type in vm.cardTypes" value="{{type}}">{{type}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="creditLimit">Credit Limit *</label>
+      <input type="number" class="form-control" id="creditLimit" ng-model="vm.card.creditLimit" required placeholder="Enter credit limit">
+    </div>
+    <button type="submit" class="btn btn-primary" ng-disabled="vm.submitting || cardForm.$invalid">{{vm.submitting ? 'Registering...' : 'Register Card'}}</button>
+    <button type="button" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.submitting">Cancel</button>
+  </form>
+</div>

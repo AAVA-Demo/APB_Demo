@@ -1,0 +1,38 @@
+<div ng-cloak>
+  <h2>Credit Card Dashboard</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error && !vm.loading" class="alert alert-danger">
+    {{vm.error}}
+    <button class="btn btn-sm btn-primary" ng-click="vm.retry()">Retry</button>
+  </div>
+  <div ng-if="vm.kpis && !vm.loading" class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget title="Monthly Spend" value="vm.kpis.monthlySpend" icon="fa-credit-card"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget title="Total Credit Limit" value="vm.kpis.totalCreditLimit" icon="fa-money"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget title="Available Credit" value="vm.kpis.availableCredit" icon="fa-check-circle"></kpi-widget>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <kpi-widget title="Outstanding Amount" value="vm.kpis.outstandingAmount" icon="fa-exclamation-triangle"></kpi-widget>
+    </div>
+  </div>
+  <div ng-if="vm.kpis && !vm.loading" class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="kpi-widget">
+        <h4>Credit Utilization</h4>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" ng-style="{width: vm.kpis.creditUtilization + '%'}" aria-valuenow="{{vm.kpis.creditUtilization}}" aria-valuemin="0" aria-valuemax="100">
+            {{vm.kpis.creditUtilization}}%
+          </div>
+        </div>
+        <p><small>Last updated: {{vm.kpis.lastUpdated | date:'short'}}</small></p>
+      </div>
+    </div>
+  </div>
+</div>
