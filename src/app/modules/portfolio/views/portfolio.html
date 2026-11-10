@@ -1,0 +1,17 @@
+<div class="portfolio-container">
+  <h2 class="mb-4">Credit Card Portfolio</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="btn-group mb-3" role="group">
+      <button type="button" class="btn btn-outline-primary" ng-click="vm.applyFilter('all')" ng-class="{active: vm.filterType === 'all'}">All Cards</button>
+      <button type="button" class="btn btn-outline-primary" ng-click="vm.applyFilter('active')" ng-class="{active: vm.filterType === 'active'}">Active</button>
+      <button type="button" class="btn btn-outline-primary" ng-click="vm.applyFilter('highUtilization')" ng-class="{active: vm.filterType === 'highUtilization'}">High Utilization</button>
+    </div>
+    <card-list cards="vm.filteredCards" on-select="vm.selectCard(card)"></card-list>
+  </div>
+</div>

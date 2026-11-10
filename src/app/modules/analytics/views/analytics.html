@@ -1,0 +1,55 @@
+<div class="analytics-container">
+  <h2 class="mb-4">Spending Analytics</h2>
+  <div ng-if="vm.loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="card mb-4 p-3">
+      <h5>Date Range</h5>
+      <date-range-filter start-month="vm.dateRange.startMonth" end-month="vm.dateRange.endMonth" on-change="vm.onDateRangeChange(startMonth, endMonth)"></date-range-filter>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h5>Category-Wise Spending</h5>
+          <spending-chart chart-data="vm.categoryChartData" chart-type="pie" on-drill-down="vm.onCategoryDrillDown(category)"></spending-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h5>Monthly Spend Trends <span ng-if="vm.selectedCategory">({{vm.selectedCategory}})</span></h5>
+          <button ng-if="vm.selectedCategory" class="btn btn-sm btn-secondary mb-2" ng-click="vm.clearCategoryFilter()">Clear Filter</button>
+          <spending-chart chart-data="vm.trendChartData" chart-type="line" on-drill-down="vm.onCategoryDrillDown(category)"></spending-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card p-3">
+          <h5>Category Breakdown</h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Percentage</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cat in vm.spendingData.categorySpending">
+                <td>{{cat.category}}</td>
+                <td>{{cat.totalAmount | currency}}</td>
+                <td>{{cat.percentage}}%</td>
+                <td>{{cat.transactionCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
