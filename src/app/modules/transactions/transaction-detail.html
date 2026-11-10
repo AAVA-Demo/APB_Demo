@@ -1,0 +1,22 @@
+<div ng-if="vm.loading" class="loading-spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading transaction details...</div>
+<div ng-if="vm.error" class="error-banner">{{vm.error}}</div>
+<div ng-if="!vm.loading&&vm.transaction" class="card-tile">
+<h2>Transaction Details</h2>
+<div class="row">
+<div class="col-md-6">
+<p><strong>Transaction ID:</strong> {{vm.transaction.transactionId}}</p>
+<p><strong>Merchant:</strong> {{vm.transaction.merchantName}}</p>
+<p><strong>Date:</strong> {{vm.transaction.transactionDate|date:'fullDate'}}</p>
+<p><strong>Amount:</strong> {{vm.transaction.amount|currency}}</p>
+</div>
+<div class="col-md-6">
+<p><strong>Category:</strong> <span class="label label-info">{{vm.transaction.category}}</span></p>
+<p><strong>Status:</strong> <span class="label" ng-class="{'label-success':vm.transaction.status==='posted','label-warning':vm.transaction.status==='pending','label-danger':vm.transaction.status==='declined'}">{{vm.transaction.status}}</span></p>
+<p><strong>Card:</strong> ****{{vm.transaction.cardId}}</p>
+<p><strong>Description:</strong> {{vm.transaction.description}}</p>
+</div>
+</div>
+<div style="margin-top:20px;">
+<a href="#!/transactions" class="btn btn-default">Back to Transactions</a>
+</div>
+</div>

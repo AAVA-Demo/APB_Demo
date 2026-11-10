@@ -1,0 +1,39 @@
+<div ng-if="vm.loading" class="loading-spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading...</div>
+<div ng-if="vm.error" class="error-banner">{{vm.error}} <button class="btn btn-sm btn-danger" ng-click="vm.refresh()">Retry</button></div>
+<div ng-if="!vm.loading&&vm.portfolio">
+<div class="row">
+<div class="col-md-12">
+<button class="btn btn-primary btn-refresh" ng-click="vm.refresh()" ng-disabled="vm.loading">Refresh Data</button>
+<span ng-if="vm.lastUpdated" style="margin-left:10px;color:#666;">Last updated: {{vm.lastUpdated|date:'short'}}</span>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3">
+<kpi-widget label="Monthly Spend" value="vm.kpis.totalMonthlySpend" format="currency"></kpi-widget>
+</div>
+<div class="col-md-3">
+<kpi-widget label="Total Credit Limit" value="vm.kpis.totalCreditLimit" format="currency"></kpi-widget>
+</div>
+<div class="col-md-3">
+<kpi-widget label="Available Credit" value="vm.kpis.totalAvailableCredit" format="currency"></kpi-widget>
+</div>
+<div class="col-md-3">
+<kpi-widget label="Outstanding Amount" value="vm.kpis.totalOutstanding" format="currency"></kpi-widget>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3">
+<kpi-widget label="Credit Utilization" value="vm.kpis.creditUtilization" format="percent"></kpi-widget>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<h3>Your Credit Cards</h3>
+</div>
+</div>
+<div class="row">
+<div class="col-md-4" ng-repeat="card in vm.portfolio.cards">
+<card-summary card="card"></card-summary>
+</div>
+</div>
+</div>

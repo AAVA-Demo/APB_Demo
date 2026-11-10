@@ -1,0 +1,19 @@
+<div ng-if="vm.loading" class="loading-spinner"><i class="glyphicon glyphicon-refresh spinning"></i> Loading transactions...</div>
+<div ng-if="vm.error" class="error-banner">{{vm.error}}</div>
+<div ng-if="!vm.loading">
+<h2>Transaction History</h2>
+<transaction-filter on-filter-change="vm.applyFilters(filters)"></transaction-filter>
+<div ng-if="vm.transactions.length===0" style="text-align:center;padding:50px;color:#999;">No transactions found.</div>
+<div ng-repeat="txn in vm.transactions" class="transaction-row" ng-click="vm.viewDetail(txn.transactionId)">
+<div class="row">
+<div class="col-md-4"><strong>{{txn.merchantName}}</strong></div>
+<div class="col-md-2">{{txn.transactionDate|date:'short'}}</div>
+<div class="col-md-2">{{txn.amount|currency}}</div>
+<div class="col-md-2"><span class="label label-info">{{txn.category}}</span></div>
+<div class="col-md-2"><span class="label" ng-class="{'label-success':txn.status==='posted','label-warning':txn.status==='pending','label-danger':txn.status==='declined'}">{{txn.status}}</span></div>
+</div>
+</div>
+<div ng-if="vm.totalItems>vm.pageSize" style="margin-top:20px;">
+<uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" items-per-page="vm.pageSize" ng-change="vm.pageChanged()" max-size="5" boundary-links="true"></uib-pagination>
+</div>
+</div>
