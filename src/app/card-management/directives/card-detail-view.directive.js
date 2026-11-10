@@ -1,0 +1,6 @@
+(function(){
+'use strict';
+angular.module('cardManagementModule').directive('cardDetailView',[function(){
+return{restrict:'E',scope:{card:'='},template:'<div class="panel panel-info"><div class="panel-heading"><h3 class="panel-title">{{card.cardHolderName}} - {{card.issuer}}</h3></div><div class="panel-body"><div class="row"><div class="col-md-6"><h4>Card Information</h4><p><strong>Card Number:</strong> {{card.cardNumber}}</p><p><strong>Card Type:</strong> {{card.cardType}}</p><p><strong>Expiry Date:</strong> {{card.expiryDate}}</p><p><strong>Credit Limit:</strong> ${{card.creditLimit | number:2}}</p><p><strong>Current Balance:</strong> ${{card.currentBalance | number:2}}</p><p><strong>Available Balance:</strong> ${{card.availableBalance | number:2}}</p></div><div class="col-md-6"><h4>Spending Summary</h4><p><strong>Monthly Spend:</strong> ${{card.cardWiseSpend.monthlySpend | number:2}}</p><p><strong>Total Transactions:</strong> {{card.cardWiseSpend.totalTransactions}}</p><p><strong>Last Transaction:</strong> {{card.cardWiseSpend.lastTransactionDate | date:"medium"}}</p><div class="progress" style="margin-top:20px;"><div class="progress-bar" role="progressbar" style="width:{{(card.currentBalance/card.creditLimit)*100}}%">{{((card.currentBalance/card.creditLimit)*100).toFixed(1)}}% Utilized</div></div></div></div></div></div>'};
+}]);
+})();

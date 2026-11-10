@@ -1,0 +1,41 @@
+<div class="analytics-container">
+<div class="page-header">
+<h1>Spending Analytics</h1>
+</div>
+<div ng-if="vm.loading" class="text-center"><p>Loading analytics...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<div class="row" style="margin-bottom:20px;">
+<div class="col-md-4">
+<label>Start Date:</label>
+<input type="date" class="form-control" ng-model="vm.dateRange.start">
+</div>
+<div class="col-md-4">
+<label>End Date:</label>
+<input type="date" class="form-control" ng-model="vm.dateRange.end">
+</div>
+<div class="col-md-4">
+<label>&nbsp;</label>
+<button class="btn btn-primary form-control" ng-click="vm.applyDateFilter()">Apply Filter</button>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Monthly Spend Trend</h4></div>
+<div class="panel-body">
+<spend-trend-chart data="vm.insights.monthlyTrend"></spend-trend-chart>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+<div class="panel-heading"><h4>Category-Wise Spending</h4></div>
+<div class="panel-body">
+<category-pie-chart data="vm.insights.categorySpend"></category-pie-chart>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

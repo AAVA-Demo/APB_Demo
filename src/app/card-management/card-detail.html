@@ -1,0 +1,10 @@
+<div class="card-detail-container">
+<div class="page-header">
+<h1>Card Details <a href="#/cards" class="btn btn-default pull-right">Back to Cards</a></h1>
+</div>
+<div ng-if="vm.loading" class="text-center"><p>Loading card details...</p></div>
+<div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+<div ng-if="!vm.loading && !vm.error">
+<card-detail-view card="vm.card"></card-detail-view>
+</div>
+</div>
