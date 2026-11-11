@@ -1,0 +1,61 @@
+<div class="dashboard">
+  <h2>Dashboard</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading dashboard...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="row">
+      <div class="col-md-3">
+        <kpi-widget title="Monthly Spend" value="{{vm.kpis.monthlySpend | currency}}" icon="credit-card"></kpi-widget>
+      </div>
+      <div class="col-md-3">
+        <kpi-widget title="Total Credit Limit" value="{{vm.kpis.totalCreditLimit | currency}}" icon="wallet"></kpi-widget>
+      </div>
+      <div class="col-md-3">
+        <kpi-widget title="Available Credit" value="{{vm.kpis.availableCredit | currency}}" icon="check" css-class="{{vm.getAvailableCreditClass()}}"></kpi-widget>
+      </div>
+      <div class="col-md-3">
+        <kpi-widget title="Outstanding Amount" value="{{vm.kpis.outstandingAmount | currency}}" icon="alert"></kpi-widget>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Card Summary</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Card</th>
+                  <th>Current Balance</th>
+                  <th>Credit Limit</th>
+                  <th>Utilization</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="card in vm.cardSummaries">
+                  <td>{{card.cardName}}</td>
+                  <td>{{card.currentBalance | currency}}</td>
+                  <td>{{card.creditLimit | currency}}</td>
+                  <td>
+                    <span ng-class="{'text-danger': card.utilizationPercentage >= 80, 'text-warning': card.utilizationPercentage >= 60 && card.utilizationPercentage < 80}">
+                      {{card.utilizationPercentage | number:1}}%
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="vm.lastUpdated" class="text-muted text-right">
+      <small>Last updated: {{vm.lastUpdated | date:'medium'}}</small>
+    </div>
+  </div>
+</div>

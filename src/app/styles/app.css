@@ -1,0 +1,106 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+}
+.navbar {
+  margin-bottom: 20px;
+}
+.kpi-widget {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.kpi-widget h4 {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.kpi-widget .value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+.kpi-widget.warning .value {
+  color: #ff9800;
+}
+.kpi-widget.danger .value {
+  color: #f44336;
+}
+.card-tile {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.card-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.card-tile.inactive {
+  opacity: 0.6;
+}
+.card-tile .card-number {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.card-tile .card-issuer {
+  color: #666;
+  font-size: 14px;
+}
+.card-tile .card-balance {
+  margin-top: 15px;
+  font-size: 24px;
+  color: #4caf50;
+}
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+.chart-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.filter-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.transaction-list {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.transaction-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+.transaction-item:last-child {
+  border-bottom: none;
+}
+.error-message {
+  background: #f44336;
+  color: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}

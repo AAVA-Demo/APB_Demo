@@ -1,0 +1,72 @@
+<div class="analytics-dashboard">
+  <h2>Transaction Analytics</h2>
+  <div ng-if="vm.loading" class="loading-spinner">
+    <p>Loading analytics...</p>
+  </div>
+  <div ng-if="vm.error" class="error-message">
+    {{vm.error}}
+  </div>
+  <div ng-if="!vm.loading && !vm.error">
+    <div class="filter-section">
+      <div class="row">
+        <div class="col-md-3">
+          <label>Start Date</label>
+          <input type="date" class="form-control" ng-model="vm.startDate">
+        </div>
+        <div class="col-md-3">
+          <label>End Date</label>
+          <input type="date" class="form-control" ng-model="vm.endDate">
+        </div>
+        <div class="col-md-3">
+          <label>Category</label>
+          <select class="form-control" ng-model="vm.selectedCategory">
+            <option value="">All Categories</option>
+            <option ng-repeat="cat in vm.categories" value="{{cat}}">{{cat}}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label>&nbsp;</label><br>
+          <button class="btn btn-primary" ng-click="vm.applyFilters()">Apply</button>
+          <button class="btn btn-default" ng-click="vm.clearFilters()">Clear</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <spend-chart chart-data="vm.categoryData" chart-type="pie" chart-title="Category-Wise Spending"></spend-chart>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <spend-chart chart-data="vm.monthlyTrends" chart-type="line" chart-title="Monthly Spend Trends"></spend-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="transaction-list">
+          <h3>Recent Transactions</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant</th>
+                <th>Category</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="txn in vm.getFilteredTransactions() | limitTo:20">
+                <td>{{txn.transactionDate | date:'short'}}</td>
+                <td>{{txn.merchantName}}</td>
+                <td>{{txn.category}}</td>
+                <td>{{txn.amount | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
