@@ -1,0 +1,54 @@
+{
+  "components": [
+    {
+      "name": "Credit Card Dashboard UI",
+      "responsibility": "Render responsive dashboard UI with KPIs, card list, charts, and transaction views; orchestrate API calls based on user interactions.",
+      "implements": ["FS-001", "FS-002", "FS-003", "FS-004", "FS-005", "FS-006", "FS-007"]
+    },
+    {
+      "name": "Dashboard API Gateway",
+      "responsibility": "Expose BFF endpoints to the UI, validate authentication, orchestrate calls to domain services, and shape responses for dashboard use cases.",
+      "implements": ["FS-001", "FS-002", "FS-003", "FS-004", "FS-005", "FS-006"]
+    },
+    {
+      "name": "Card Management Service",
+      "responsibility": "Manage and serve credit card profiles and card-level KPIs such as credit limit, available credit, and outstanding balances.",
+      "implements": ["FS-001", "FS-002", "FS-004"]
+    },
+    {
+      "name": "Transaction Service",
+      "responsibility": "Provide normalized transaction data per user, card, and time range, including classifications into spending categories.",
+      "implements": ["FS-003", "FS-005", "FS-006"]
+    },
+    {
+      "name": "Analytics & Aggregation Service",
+      "responsibility": "Perform aggregations over card and transaction data to compute KPIs, monthly trends, card-wise and category-wise spend analytics.",
+      "implements": ["FS-001", "FS-003", "FS-004", "FS-005"]
+    },
+    {
+      "name": "User & Card Association Store",
+      "responsibility": "Persist associations between users and their credit cards and provide lookup capabilities for authorization-aware queries.",
+      "implements": ["FS-002", "FS-006"]
+    },
+    {
+      "name": "Reporting & Query Store",
+      "responsibility": "Store consolidated card, transaction, and aggregated data in a form optimized for the dashboard's read and analytics queries.",
+      "implements": ["FS-001", "FS-002", "FS-003", "FS-004", "FS-005", "FS-006"]
+    },
+    {
+      "name": "Data Ingestion / Loader",
+      "responsibility": "Load and refresh synthetic or exported card and transaction data into the Reporting & Query Store via batch or ETL processes.",
+      "implements": ["FS-006"]
+    }
+  ],
+  "cross_cutting_concerns": [
+    "Authentication & authorization via enterprise identity provider; token validation at API Gateway and user-to-card scoping in services.",
+    "Centralized logging and monitoring of API usage, dashboard interactions, performance metrics, and errors.",
+    "Consistent error handling and input validation with standardized error response formats and correlation IDs.",
+    "Security and data privacy controls including masking of card numbers, encryption at rest, and TLS in transit.",
+    "Performance optimization through caching, pre-computed aggregations, and pagination for large datasets.",
+    "Responsive UX considerations in the UI layer to support multiple devices and varying network conditions.",
+    "Centralized configuration and feature flags for categories, thresholds, and optional analytics views."
+  ],
+  "narrative": "The Credit Card Analysis Dashboard is a responsive analytical module that consolidates information from multiple credit cards into a single user experience. A web-based single-page application (Credit Card Dashboard UI) communicates exclusively with a tailored Dashboard API Gateway using secure REST/JSON calls. The API Gateway validates authentication tokens, identifies the user, and orchestrates calls to domain services responsible for card profiles, transactions, and analytics. Card Management Service exposes card-level metadata and KPIs such as credit limits, available credit, and outstanding balances. Transaction Service provides normalized and categorized transaction data per card and per time range. Analytics & Aggregation Service consumes card and transaction data from a read-optimized Reporting & Query Store to compute dashboard KPIs, monthly spend trends, card-wise spend distributions, and category-wise spending summaries. A User & Card Association Store enforces which cards and transactions belong to a given authenticated user. Data is populated into the Reporting & Query Store via a Data Ingestion / Loader process that imports synthetic or exported statements, avoiding direct integration with live banking systems. Cross-cutting concerns such as authentication, authorization, logging, monitoring, error handling, security, and responsiveness are consistently applied across the architecture, ensuring a secure, observable, and performant user experience while remaining strictly read-only in accordance with scope constraints."
+}
