@@ -1,27 +1,36 @@
-# High-Level Design: PRD1-Analytics and Spending Insights
+# High-Level Design Document
 
-## 1. Epic Overview
+## Epic: PRD1-Analytics and Spending Insights
 
 **Project Key:** QE  
 **Epic Summary:** PRD1-Analytics and Spending Insights  
-**Label:** PRD1  
+**Labels:** PRD1
+
+---
+
+## 1. Epic Overview
 
 ### 1.1 Description
-
-This epic covers the development of interactive analytics and visualization capabilities that enable users to understand their spending patterns across different categories and time periods. Users will be able to analyze their spending through category-wise breakdowns (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, and Miscellaneous), view monthly spend trends, and perform card-wise spend analysis. The analytics module will provide actionable insights through intuitive charts, graphs, and visual representations that help users identify spending habits and opportunities for financial optimization.
+Develop comprehensive analytics capabilities that provide users with deep insights into their spending patterns through interactive visualizations. This includes monthly spend trend analysis, card-wise spend breakdown, and category-wise spending analysis across predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, and Miscellaneous). Users will be able to identify spending patterns, compare performance across cards, and understand where their money is going.
 
 ### 1.2 User Value
-
-Users can identify where their money is going, discover spending trends over time, and make data-driven decisions to optimize their credit card usage. The category-wise breakdown helps users understand their lifestyle expenses and adjust budgets accordingly. Card-wise analysis enables users to maximize rewards and benefits by using the right card for specific purchase categories. This transparency leads to better financial planning and control.
+Users can identify spending patterns, optimize card usage based on category benefits, and make informed decisions about budget allocation by understanding their spending behavior across time periods and categories.
 
 ### 1.3 Scope (High Level)
-
+- Monthly Spend Trends visualization
+- Card-wise Spend Analysis
+- Category-wise Spending analytics
 - Interactive visualizations and charts
-- Category-wise spending analysis (9 predefined categories)
-- Monthly spend trends visualization
-- Card-wise spend analysis and comparison
-- Transaction history display
-- Filtering and drill-down capabilities for detailed analysis
+- Transaction data aggregation by category
+- Spending pattern identification across nine predefined categories
+
+### 1.4 Out of Scope
+- Real Bank Integration
+- Predictive analytics or forecasting
+- Custom category creation
+- Budget setting and alerts
+- Export or reporting functionality
+- Payment-related features
 
 ---
 
@@ -29,149 +38,136 @@ Users can identify where their money is going, discover spending trends over tim
 
 ### 2.1 Functional Requirements
 
-| Requirement ID | Description | Priority |
-|----------------|-------------|----------|
-| FR-1 | System shall provide interactive visualizations and charts for spending data | High |
-| FR-2 | System shall support category-wise spending analysis across 9 predefined categories (Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, Miscellaneous) | High |
-| FR-3 | System shall display monthly spend trends visualization | High |
-| FR-4 | System shall provide card-wise spend analysis and comparison | High |
-| FR-5 | System shall display transaction history | Medium |
-| FR-6 | System shall support filtering and drill-down capabilities for detailed analysis | High |
-| FR-7 | System shall enable users to analyze spending patterns across different time periods | Medium |
-| FR-8 | System shall provide actionable insights through intuitive charts and graphs | High |
+| Req ID | Requirement | Source | Status |
+|--------|-------------|--------|--------|
+| FR-001 | System shall provide monthly spend trend visualization | Epic Description | Derived |
+| FR-002 | System shall provide card-wise spend analysis | Epic Description | Derived |
+| FR-003 | System shall provide category-wise spending analytics | Epic Description | Derived |
+| FR-004 | System shall support nine predefined spending categories: Food & Dining, Fuel, Shopping, Travel, Entertainment, Utilities, Healthcare, Education, and Miscellaneous | Epic Description | Derived |
+| FR-005 | System shall aggregate transaction data by category | Epic Description | Derived |
+| FR-006 | System shall enable spending pattern identification | Epic Description | Derived |
+| FR-007 | System shall provide interactive visualizations and charts | Epic Description | Derived |
+| FR-008 | System shall enable comparison of spending performance across cards | Epic Description | Derived |
 
-### 2.2 Non-Functional Requirements (NFRs)
+### 2.2 Non-Functional Requirements
 
-| NFR ID | Category | Requirement | Target Metric | Priority |
-|--------|----------|-------------|---------------|----------|
-| NFR-1 | Performance | Visualizations must render efficiently even with large transaction datasets | Minimum 12 months of data | High |
-| NFR-2 | Performance | Interactive charts should respond to user interactions | Within 500ms | High |
-| NFR-3 | Performance | Analytics engine must support filtering and aggregation operations without performance degradation | No degradation under normal load | High |
-| NFR-4 | Usability | Charts and graphs must be responsive and adapt to different screen sizes | Maintain readability on all devices | High |
-| NFR-5 | Scalability | System should handle growing transaction volumes efficiently | Support for future data growth | Medium |
+| NFR ID | Requirement | Category | Target | Status |
+|--------|-------------|----------|--------|--------|
+| NFR-001 | Interactive visualization performance with smooth rendering | Performance | To be defined | Not Verified |
+| NFR-002 | Support for historical data analysis across multiple months | Scalability | To be defined | Not Verified |
+| NFR-003 | Accurate data aggregation and categorization logic | Accuracy | 100% accuracy | Not Verified |
 
-### 2.3 Out of Scope
+**Note:** Specific performance targets (e.g., rendering time < 2 seconds) and historical data retention periods need to be defined during detailed design phase.
 
-- Real bank integration
-- Card payment processing
-- Fund transfers
-- Loan management
-- Payment gateway integration
-- Predictive analytics or AI-based spending recommendations
+### 2.3 Dependencies and Integrations
+
+| Dependency ID | Component/System | Type | Description | Status |
+|---------------|------------------|------|-------------|--------|
+| DEP-001 | Transaction data store | Data Source | Source of transaction data for analytics | Assumed Available |
+| DEP-002 | Category classification engine or rules | Service/Logic | Categorizes transactions into predefined categories | To be Designed |
+| DEP-003 | Dashboard KPI data | Data Source | Provides context and drill-down capabilities | Assumed Available |
 
 ---
 
 ## 3. Architecture Overview
 
-### 3.1 System Context
+### 3.1 High-Level Architecture
 
-The Analytics and Spending Insights module is a visualization and analytics layer that sits on top of the transaction data repository. It aggregates, processes, and presents spending data through interactive visualizations to provide users with actionable insights.
-
-### 3.2 High-Level Architecture Diagram
+The Analytics and Spending Insights feature follows a layered architecture pattern with clear separation between presentation, business logic, and data layers.
 
 ```mermaid
 graph TB
     subgraph "Presentation Layer"
         UI[Analytics Dashboard UI]
-        Charts[Interactive Charts & Graphs]
-        Filters[Filter Controls]
+        VIZ[Visualization Components]
     end
     
     subgraph "Application Layer"
-        AnalyticsService[Analytics Service]
-        AggregationEngine[Data Aggregation Engine]
-        CategoryService[Category Classification Service]
-        FilterService[Date Range & Filter Service]
+        API[Analytics API Gateway]
+        ANALYTICS[Analytics Service]
+        AGGREGATION[Data Aggregation Service]
+    end
+    
+    subgraph "Business Logic Layer"
+        CATEGORIZER[Category Classification Engine]
+        CALCULATOR[Spend Calculator]
+        PATTERN[Pattern Analyzer]
     end
     
     subgraph "Data Layer"
-        TransactionRepo[Transaction Data Repository]
-        AnalyticsCache[Analytics Cache]
+        TXN_STORE[(Transaction Data Store)]
+        KPI_STORE[(Dashboard KPI Data)]
+        CACHE[(Analytics Cache)]
     end
     
-    subgraph "External Libraries"
-        ChartLib[Charting & Visualization Library]
-    end
-    
-    UI --> Charts
-    UI --> Filters
-    Charts --> ChartLib
-    Filters --> FilterService
-    
-    UI --> AnalyticsService
-    AnalyticsService --> AggregationEngine
-    AnalyticsService --> CategoryService
-    AnalyticsService --> FilterService
-    
-    AggregationEngine --> AnalyticsCache
-    AggregationEngine --> TransactionRepo
-    CategoryService --> TransactionRepo
-    FilterService --> TransactionRepo
-    
-    AnalyticsCache -.->|Cache Hit| AggregationEngine
+    UI --> VIZ
+    VIZ --> API
+    API --> ANALYTICS
+    ANALYTICS --> AGGREGATION
+    ANALYTICS --> PATTERN
+    AGGREGATION --> CATEGORIZER
+    AGGREGATION --> CALCULATOR
+    CATEGORIZER --> TXN_STORE
+    CALCULATOR --> TXN_STORE
+    PATTERN --> CACHE
+    AGGREGATION --> CACHE
+    ANALYTICS --> KPI_STORE
 ```
 
-### 3.3 Architecture Principles
-
-- **Separation of Concerns:** Clear separation between presentation, business logic, and data layers
-- **Performance Optimization:** Caching strategy for frequently accessed aggregated data
-- **Responsive Design:** Mobile-first approach for visualizations
-- **Modularity:** Independent services for different analytics functions
+### 3.2 Architecture Principles
+- **Separation of Concerns:** Clear boundaries between UI, business logic, and data layers
+- **Scalability:** Caching layer to support historical data analysis
+- **Performance:** Aggregation service to pre-compute spending metrics
+- **Maintainability:** Modular design with independent services
 
 ---
 
 ## 4. Component Design
 
 ### 4.1 Analytics Dashboard UI
-
-**Responsibility:** Provide the main user interface for viewing and interacting with spending analytics
+**Responsibility:** Render interactive visualizations and handle user interactions
 
 **Key Features:**
-- Display multiple visualization types (pie charts, bar charts, line graphs, tables)
-- Provide filter controls for date range, categories, and cards
-- Support drill-down interactions
-- Responsive layout adaptation
+- Monthly spend trend charts
+- Card-wise comparison views
+- Category breakdown visualizations
+- Interactive filtering and drill-down
 
 **Technology Assumptions:**
 - Modern JavaScript framework (React/Angular/Vue)
-- Responsive CSS framework
+- Charting library (D3.js/Chart.js/Recharts)
 
 ### 4.2 Analytics Service
-
-**Responsibility:** Orchestrate analytics operations and coordinate between UI and data layers
+**Responsibility:** Orchestrate analytics data retrieval and processing
 
 **Key Operations:**
-- `getCategoryWiseSpending(dateRange, filters)` - Returns spending breakdown by category
-- `getMonthlyTrends(startDate, endDate, filters)` - Returns monthly spending trends
-- `getCardWiseAnalysis(dateRange, filters)` - Returns card-wise spending comparison
-- `getTransactionHistory(filters, pagination)` - Returns filtered transaction list
-- `getDrillDownData(category, dateRange)` - Returns detailed breakdown for specific category
+- `getMonthlySpendTrends(userId, startDate, endDate)`
+- `getCardWiseAnalysis(userId, period)`
+- `getCategoryWiseSpending(userId, period)`
+- `getSpendingPatterns(userId, analysisType)`
 
-**Performance Considerations:**
-- Implement result caching for common queries
-- Support pagination for large datasets
-- Async processing for heavy aggregations
+**Inputs:** User ID, date range, filter criteria  
+**Outputs:** Aggregated analytics data in JSON format
 
-### 4.3 Data Aggregation Engine
+### 4.3 Data Aggregation Service
+**Responsibility:** Aggregate transaction data by various dimensions
 
-**Responsibility:** Perform data aggregation, grouping, and statistical calculations
+**Key Operations:**
+- Aggregate by time period (monthly)
+- Aggregate by card
+- Aggregate by category
+- Calculate totals, averages, and trends
 
-**Key Functions:**
-- Aggregate transactions by category, card, and time period
-- Calculate totals, averages, and percentages
-- Generate time-series data for trend analysis
-- Support dynamic filtering and re-aggregation
+**Processing Logic:**
+- Query transaction data store
+- Apply category classification
+- Perform aggregation calculations
+- Cache results for performance
 
-**Performance Strategy:**
-- Pre-compute common aggregations
-- Utilize database-level aggregation where possible
-- Implement incremental aggregation for new transactions
+### 4.4 Category Classification Engine
+**Responsibility:** Classify transactions into predefined categories
 
-### 4.4 Category Classification Service
-
-**Responsibility:** Map transactions to predefined spending categories
-
-**Categories:**
+**Predefined Categories:**
 1. Food & Dining
 2. Fuel
 3. Shopping
@@ -182,570 +178,453 @@ graph TB
 8. Education
 9. Miscellaneous
 
-**Classification Logic:**
-- Rule-based classification using merchant codes or transaction descriptions
-- Fallback to Miscellaneous for unclassified transactions
+**Classification Approach:**
+- Rule-based classification (merchant codes, merchant names, transaction descriptions)
+- Default to "Miscellaneous" for unclassified transactions
 
-### 4.5 Date Range & Filter Service
+**Note:** Specific classification rules need to be defined during implementation.
 
-**Responsibility:** Handle date range selection and filter application
+### 4.5 Pattern Analyzer
+**Responsibility:** Identify spending patterns and trends
 
-**Supported Filters:**
-- Date range (custom, last 30 days, last 3 months, last 6 months, last 12 months)
-- Category filter (single or multiple)
-- Card filter (single or multiple)
-- Amount range filter
+**Pattern Types:**
+- Month-over-month trends
+- Category concentration
+- Card usage patterns
+- Spending velocity
 
-### 4.6 Charting & Visualization Library
-
-**Responsibility:** Render interactive charts and graphs
-
-**Chart Types Required:**
-- Pie/Donut charts for category distribution
-- Bar charts for card-wise comparison
-- Line charts for monthly trends
-- Data tables for transaction history
-
-**Library Assumptions:**
-- Use established charting library (e.g., Chart.js, D3.js, Recharts, ApexCharts)
-- Support responsive rendering
-- Provide interaction callbacks
+**Note:** Predictive analytics is out of scope; only historical pattern identification is included.
 
 ---
 
 ## 5. Data Flow
 
-### 5.1 Category-Wise Spending Analysis Flow
+### 5.1 Monthly Spend Trends Flow
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant UI as Analytics Dashboard UI
-    participant AS as Analytics Service
-    participant AE as Aggregation Engine
-    participant Cache as Analytics Cache
-    participant TR as Transaction Repository
-    participant Chart as Chart Library
-    
-    User->>UI: Select date range and filters
-    UI->>AS: getCategoryWiseSpending(dateRange, filters)
-    AS->>Cache: Check cache for aggregated data
-    
-    alt Cache Hit
-        Cache-->>AS: Return cached data
-    else Cache Miss
-        AS->>AE: Request aggregation
-        AE->>TR: Query transactions with filters
-        TR-->>AE: Return transaction data
-        AE->>AE: Aggregate by category
-        AE-->>AS: Return aggregated data
-        AS->>Cache: Store in cache
-    end
-    
-    AS-->>UI: Return category spending data
-    UI->>Chart: Render pie/donut chart
-    Chart-->>User: Display visualization
-    
-    User->>Chart: Click on category slice
-    Chart->>UI: Trigger drill-down event
-    UI->>AS: getDrillDownData(category, dateRange)
-    AS->>TR: Query category transactions
-    TR-->>AS: Return detailed transactions
-    AS-->>UI: Return drill-down data
-    UI-->>User: Display detailed view
-```
-
-### 5.2 Monthly Trends Visualization Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant UI as Analytics Dashboard UI
-    participant AS as Analytics Service
-    participant AE as Aggregation Engine
-    participant TR as Transaction Repository
-    participant Chart as Chart Library
+    participant UI
+    participant API
+    participant Analytics
+    participant Aggregation
+    participant TxnStore
+    participant Cache
     
     User->>UI: Request monthly trends
-    UI->>AS: getMonthlyTrends(startDate, endDate, filters)
-    AS->>AE: Request time-series aggregation
-    AE->>TR: Query transactions grouped by month
-    TR-->>AE: Return monthly transaction data
-    AE->>AE: Calculate monthly totals
-    AE-->>AS: Return time-series data
-    AS-->>UI: Return monthly trend data
-    UI->>Chart: Render line chart
-    Chart-->>User: Display trend visualization
+    UI->>API: GET /analytics/monthly-trends?userId=X&period=6M
+    API->>Analytics: getMonthlySpendTrends()
+    Analytics->>Cache: Check cached data
+    alt Cache Hit
+        Cache-->>Analytics: Return cached trends
+    else Cache Miss
+        Analytics->>Aggregation: aggregateByMonth()
+        Aggregation->>TxnStore: Query transactions
+        TxnStore-->>Aggregation: Transaction data
+        Aggregation->>Aggregation: Calculate monthly totals
+        Aggregation-->>Analytics: Aggregated data
+        Analytics->>Cache: Store in cache
+    end
+    Analytics-->>API: Monthly trend data
+    API-->>UI: JSON response
+    UI->>UI: Render trend chart
+    UI-->>User: Display visualization
 ```
 
-### 5.3 Card-Wise Analysis Flow
+### 5.2 Category-wise Spending Flow
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant UI as Analytics Dashboard UI
-    participant AS as Analytics Service
-    participant AE as Aggregation Engine
-    participant TR as Transaction Repository
-    participant Chart as Chart Library
+    participant UI
+    participant API
+    participant Analytics
+    participant Aggregation
+    participant Categorizer
+    participant TxnStore
     
-    User->>UI: Request card-wise analysis
-    UI->>AS: getCardWiseAnalysis(dateRange, filters)
-    AS->>AE: Request card aggregation
-    AE->>TR: Query transactions grouped by card
-    TR-->>AE: Return card transaction data
-    AE->>AE: Aggregate spending by card
-    AE->>AE: Calculate percentages and comparisons
-    AE-->>AS: Return card analysis data
-    AS-->>UI: Return card spending data
-    UI->>Chart: Render bar chart
-    Chart-->>User: Display card comparison
+    User->>UI: Request category breakdown
+    UI->>API: GET /analytics/category-spending?userId=X&month=2024-01
+    API->>Analytics: getCategoryWiseSpending()
+    Analytics->>Aggregation: aggregateByCategory()
+    Aggregation->>TxnStore: Query transactions
+    TxnStore-->>Aggregation: Transaction data
+    Aggregation->>Categorizer: classifyTransactions()
+    Categorizer->>Categorizer: Apply classification rules
+    Categorizer-->>Aggregation: Categorized transactions
+    Aggregation->>Aggregation: Sum by category
+    Aggregation-->>Analytics: Category totals
+    Analytics-->>API: Category spending data
+    API-->>UI: JSON response
+    UI->>UI: Render category chart
+    UI-->>User: Display visualization
 ```
 
 ---
 
 ## 6. APIs and Integrations
 
-### 6.1 Internal APIs
+### 6.1 Analytics API Endpoints
 
-#### 6.1.1 Analytics Service API
+#### 6.1.1 Get Monthly Spend Trends
+```
+GET /api/v1/analytics/monthly-trends
 
-**Base Path:** `/api/analytics`
+Query Parameters:
+- userId: string (required)
+- startDate: string (ISO 8601, optional, default: 6 months ago)
+- endDate: string (ISO 8601, optional, default: current date)
+- cardId: string (optional, filter by specific card)
 
-| Endpoint | Method | Description | Request Parameters | Response |
-|----------|--------|-------------|-------------------|----------|
-| `/category-spending` | GET | Get category-wise spending breakdown | `startDate`, `endDate`, `cardIds[]`, `categoryIds[]` | Category spending data with amounts and percentages |
-| `/monthly-trends` | GET | Get monthly spending trends | `startDate`, `endDate`, `cardIds[]`, `categoryIds[]` | Time-series data with monthly totals |
-| `/card-analysis` | GET | Get card-wise spending analysis | `startDate`, `endDate`, `categoryIds[]` | Card spending data with comparisons |
-| `/transactions` | GET | Get filtered transaction history | `startDate`, `endDate`, `cardIds[]`, `categoryIds[]`, `page`, `pageSize` | Paginated transaction list |
-| `/drill-down/{category}` | GET | Get detailed breakdown for category | `categoryId`, `startDate`, `endDate`, `cardIds[]` | Detailed transaction list for category |
-
-**Response Format Example:**
-
-```json
+Response:
 {
-  "success": true,
-  "data": {
-    "categories": [
-      {
-        "categoryId": "food_dining",
-        "categoryName": "Food & Dining",
-        "totalAmount": 15420.50,
-        "percentage": 28.5,
-        "transactionCount": 87
-      }
-    ],
-    "totalSpending": 54120.75,
-    "dateRange": {
-      "startDate": "2024-01-01",
-      "endDate": "2024-12-31"
-    }
+  "userId": "string",
+  "period": {
+    "startDate": "2024-01-01",
+    "endDate": "2024-06-30"
   },
-  "metadata": {
-    "generatedAt": "2024-12-20T10:30:00Z",
-    "cached": false
-  }
+  "trends": [
+    {
+      "month": "2024-01",
+      "totalSpend": 15000.00,
+      "transactionCount": 45
+    }
+  ]
 }
 ```
 
-### 6.2 External Dependencies
+#### 6.1.2 Get Card-wise Analysis
+```
+GET /api/v1/analytics/card-analysis
 
-| Dependency | Purpose | Integration Type | Assumptions |
-|------------|---------|------------------|-------------|
-| Transaction Data Repository | Source of transaction data | Database/API | Provides structured transaction data with required fields |
-| Data Analytics and Aggregation Service | Perform complex aggregations | Internal Service | Supports SQL-like aggregation operations |
-| Charting and Visualization Library | Render charts | JavaScript Library | Supports required chart types and interactions |
-| Category Classification Engine/Service | Classify transactions into categories | Internal Service/Rule Engine | Pre-configured with classification rules |
-| Date Range and Filtering Service | Handle date and filter operations | Internal Service | Provides standardized filtering capabilities |
+Query Parameters:
+- userId: string (required)
+- period: string (e.g., "1M", "3M", "6M", "1Y")
+
+Response:
+{
+  "userId": "string",
+  "period": "6M",
+  "cards": [
+    {
+      "cardId": "string",
+      "cardName": "string",
+      "totalSpend": 45000.00,
+      "transactionCount": 120,
+      "percentageOfTotal": 60.5
+    }
+  ]
+}
+```
+
+#### 6.1.3 Get Category-wise Spending
+```
+GET /api/v1/analytics/category-spending
+
+Query Parameters:
+- userId: string (required)
+- month: string (YYYY-MM format, optional, default: current month)
+- cardId: string (optional)
+
+Response:
+{
+  "userId": "string",
+  "month": "2024-06",
+  "categories": [
+    {
+      "categoryName": "Food & Dining",
+      "totalSpend": 8500.00,
+      "transactionCount": 25,
+      "percentageOfTotal": 28.3
+    },
+    {
+      "categoryName": "Fuel",
+      "totalSpend": 3200.00,
+      "transactionCount": 8,
+      "percentageOfTotal": 10.7
+    }
+  ],
+  "totalSpend": 30000.00
+}
+```
+
+### 6.2 Integration Requirements
+
+#### 6.2.1 Transaction Data Store Integration
+**Interface Type:** Database query or REST API  
+**Data Required:**
+- Transaction ID
+- User ID
+- Card ID
+- Transaction date
+- Amount
+- Merchant name
+- Merchant category code (if available)
+- Transaction description
+
+**Assumption:** Transaction data store is available and accessible with appropriate query performance.
+
+#### 6.2.2 Dashboard KPI Data Integration
+**Interface Type:** REST API or shared data access  
+**Purpose:** Provide context for drill-down from dashboard KPIs to detailed analytics
+
+**Assumption:** Dashboard KPI data structure and access patterns are defined.
 
 ---
 
 ## 7. Security Considerations
 
-### 7.1 Authentication & Authorization
+### 7.1 Authentication and Authorization
+- **Requirement:** All analytics API endpoints must be authenticated
+- **Authorization:** Users can only access their own analytics data
+- **Implementation Approach:** JWT-based authentication with user-scoped access control
 
-**Requirement:** Users must be authenticated to access analytics data
-
-**Implementation Assumptions:**
-- Session-based or token-based authentication
-- Users can only view analytics for their own transactions
-- Role-based access control if multiple user types exist
-
-**Design Gaps:**
-- Specific authentication mechanism not defined in epic
-- Authorization rules need to be clarified
+**Gap:** Specific authentication mechanism not defined in epic; needs clarification.
 
 ### 7.2 Data Privacy
+- **Sensitive Data:** Transaction details, spending amounts, card information
+- **Protection Measures:**
+  - Encrypt data in transit (HTTPS/TLS)
+  - Encrypt sensitive data at rest
+  - Implement data access logging
+  - Apply data retention policies
 
-**Considerations:**
-- Transaction data contains sensitive financial information
-- Analytics data should be user-specific and isolated
-- No cross-user data leakage in aggregations
-
-**Recommendations:**
-- Implement user-level data filtering at the service layer
-- Audit logging for analytics data access
-- Encrypt sensitive data in transit (HTTPS)
+**Assumption:** Standard data protection practices will be applied.
 
 ### 7.3 Input Validation
-
-**Requirements:**
-- Validate date ranges to prevent invalid queries
-- Sanitize filter parameters to prevent injection attacks
-- Limit query complexity to prevent DoS
+- Validate all user inputs (date ranges, user IDs, filter parameters)
+- Prevent SQL injection and other injection attacks
+- Implement rate limiting to prevent abuse
 
 ---
 
 ## 8. Scalability Considerations
 
-### 8.1 Data Volume Scalability
+### 8.1 Data Volume
+**Challenge:** Historical data analysis across multiple months for many users
 
-**Challenge:** Handle growing transaction volumes over time
+**Design Approaches:**
+- **Caching:** Cache aggregated results to reduce database load
+- **Pre-aggregation:** Compute and store monthly aggregates during transaction processing
+- **Pagination:** Implement pagination for large result sets
+- **Indexing:** Ensure proper database indexes on userId, date, and cardId
 
-**Strategies:**
-- Implement data archival for old transactions
-- Use database indexing on frequently queried fields (date, category, card)
-- Consider data partitioning by date ranges
+**Assumption:** Transaction volume and user base size not specified; scalability targets need definition.
 
-**NFR Alignment:** NFR-5 requires support for future data growth
+### 8.2 Performance Optimization
+- **Target:** Smooth rendering of interactive visualizations (NFR-001)
+- **Approaches:**
+  - Lazy loading of visualization data
+  - Client-side caching
+  - Asynchronous data loading
+  - Progressive rendering for large datasets
 
-### 8.2 Concurrent User Scalability
+**Gap:** Specific performance targets (e.g., response time < 2 seconds) not defined.
 
-**Challenge:** Support multiple users accessing analytics simultaneously
-
-**Strategies:**
-- Implement caching layer for common queries
-- Use read replicas for transaction database
-- Load balancing for analytics service instances
-
-**Assumptions:**
-- Expected concurrent user load not specified in epic
-- Scalability targets need to be defined
-
-### 8.3 Performance Optimization
-
-**Strategies:**
-- Pre-compute daily/monthly aggregations
-- Implement lazy loading for detailed drill-downs
-- Use pagination for transaction history
-- Client-side caching of visualization data
-
-**NFR Alignment:**
-- NFR-1: Support minimum 12 months of data
-- NFR-2: 500ms response time for interactions
-- NFR-3: No performance degradation under filtering
+### 8.3 Horizontal Scaling
+- Analytics service should be stateless to enable horizontal scaling
+- Cache layer should support distributed caching (e.g., Redis cluster)
+- Database read replicas for analytics queries
 
 ---
 
 ## 9. Availability and Reliability
 
-### 9.1 Availability Requirements
+### 9.1 Availability Targets
+**Gap:** No specific SLA or availability targets defined in epic.
 
-**Assumptions:**
-- Analytics is a non-critical feature (compared to payment processing)
-- Target availability not specified in epic
+**Recommendation:** Define availability requirements (e.g., 99.9% uptime) during detailed design.
 
-**Recommendations:**
-- Define target availability SLA (e.g., 99.5%)
-- Implement graceful degradation if analytics service is unavailable
-- Provide cached data as fallback
+### 9.2 Error Handling
+- Graceful degradation if analytics data is temporarily unavailable
+- User-friendly error messages
+- Retry logic for transient failures
+- Fallback to cached data when possible
 
-### 9.2 Reliability Considerations
+### 9.3 Monitoring and Alerting
+**Recommended Metrics:**
+- API response times
+- Cache hit rates
+- Data aggregation processing times
+- Error rates
+- User engagement with analytics features
 
-**Error Handling:**
-- Handle database connection failures gracefully
-- Provide meaningful error messages to users
-- Implement retry logic for transient failures
-
-**Data Consistency:**
-- Analytics data should reflect latest transactions within acceptable delay
-- Define acceptable data freshness (e.g., near real-time vs. hourly updates)
+**Gap:** Monitoring requirements not specified in epic.
 
 ---
 
 ## 10. Assumptions
 
-| ID | Assumption | Impact | Validation Needed |
-|----|------------|--------|-------------------|
-| A-1 | Transaction data repository already exists with required transaction fields | High | Verify schema and data availability |
-| A-2 | Transactions are pre-classified into categories or classification rules exist | High | Confirm classification mechanism |
-| A-3 | Users have at least 12 months of transaction history for meaningful analytics | Medium | Verify data retention policy |
-| A-4 | Modern web browsers with JavaScript support | Medium | Define minimum browser requirements |
-| A-5 | Authentication and authorization mechanisms exist in the platform | High | Confirm integration approach |
-| A-6 | Charting library supports all required chart types and interactions | Medium | Evaluate and select specific library |
-| A-7 | Database supports efficient aggregation queries | High | Verify database capabilities |
-| A-8 | Users access analytics primarily through web interface | Medium | Clarify mobile app requirements |
-| A-9 | Real-time analytics not required; near real-time acceptable | Medium | Confirm data freshness requirements |
-| A-10 | Single currency for all transactions | Low | Clarify multi-currency support |
+| ID | Assumption | Impact if Invalid | Mitigation |
+|----|------------|-------------------|------------|
+| A-001 | Transaction data store is available and queryable | High - Core functionality blocked | Verify data store availability and access patterns early |
+| A-002 | Transaction data includes merchant information for categorization | Medium - Affects categorization accuracy | Define fallback categorization logic |
+| A-003 | Dashboard KPI data integration is feasible | Low - Drill-down feature affected | Clarify integration requirements with dashboard team |
+| A-004 | Users have at least one card with transaction history | Medium - Empty state handling needed | Design empty state UI and onboarding flow |
+| A-005 | Historical data is retained for at least 12 months | Medium - Limits historical analysis | Confirm data retention policies |
+| A-006 | Standard authentication/authorization mechanism exists | High - Security requirement | Clarify authentication approach early |
+| A-007 | Category classification rules can be defined with reasonable accuracy | High - Core feature quality | Validate classification approach with sample data |
+| A-008 | UI framework and charting library are already selected | Low - Technology choice | Confirm technology stack during sprint planning |
 
 ---
 
 ## 11. Dependencies
 
-### 11.1 Technical Dependencies
+### 11.1 Internal Dependencies
 
-| Dependency | Type | Status | Risk |
-|------------|------|--------|------|
-| Transaction Data Repository | Data Source | Assumed Available | High |
-| Data Analytics and Aggregation Service | Service | Assumed Available | High |
-| Charting and Visualization Library | Library | To Be Selected | Medium |
-| Category Classification Engine or Service | Service | Assumed Available | High |
-| Date Range and Filtering Service | Service | Assumed Available | Medium |
+| Dependency | Description | Owner | Status | Risk |
+|------------|-------------|-------|--------|------|
+| Transaction Data Store | Source of transaction data | Data Team | Assumed Available | Medium |
+| Dashboard KPI System | Provides drill-down context | Dashboard Team | Assumed Available | Low |
+| Authentication Service | User authentication and authorization | Security Team | Assumed Available | High |
 
-### 11.2 Functional Dependencies
+### 11.2 External Dependencies
 
-- Transaction data must be available before analytics can be generated
-- Category classification must be completed before category-wise analysis
-- User authentication must be in place before analytics access
+| Dependency | Description | Provider | Status | Risk |
+|------------|-------------|----------|--------|------|
+| Charting Library | Visualization components | Open Source / Vendor | To be Selected | Low |
+| Caching Infrastructure | Redis or similar | Infrastructure Team | Assumed Available | Medium |
 
 ### 11.3 Dependency Risks
-
-**Risk:** Transaction data repository schema may not contain all required fields
-- **Mitigation:** Validate schema early and request enhancements if needed
-
-**Risk:** Category classification service may not exist
-- **Mitigation:** Implement basic rule-based classification within analytics module
-
-**Risk:** Aggregation service performance may not meet NFR-2 (500ms response)
-- **Mitigation:** Implement caching and pre-computation strategies
+- **Transaction Data Store:** If schema or access patterns are incompatible, significant rework may be required
+- **Category Classification:** Accuracy depends on quality of merchant data and classification rules
+- **Performance:** Cache infrastructure must support required throughput
 
 ---
 
 ## 12. Risks and Mitigation
 
 | Risk ID | Risk Description | Probability | Impact | Mitigation Strategy |
-|---------|-----------------|-------------|--------|---------------------|
-| R-1 | Performance degradation with large datasets (>12 months) | Medium | High | Implement aggressive caching, data pagination, and pre-computed aggregations |
-| R-2 | Charting library may not support all required interactions | Low | Medium | Evaluate multiple libraries early; have fallback options |
-| R-3 | Transaction data may be incomplete or inconsistent | Medium | High | Implement data validation and handle missing data gracefully |
-| R-4 | 500ms response time target may not be achievable for complex queries | Medium | High | Implement query optimization, caching, and async loading |
-| R-5 | Category classification accuracy may be low | Medium | Medium | Allow manual category correction; improve rules iteratively |
-| R-6 | Responsive design may compromise chart readability on small screens | Low | Medium | Design mobile-first; test on multiple devices |
-| R-7 | Database aggregation queries may lock tables and impact performance | Low | High | Use read replicas; optimize query patterns |
-| R-8 | User expectations may exceed defined scope (e.g., predictive analytics) | Medium | Low | Clear communication of scope; document future enhancements |
+|---------|------------------|-------------|--------|---------------------|
+| R-001 | Transaction data quality issues (missing/incorrect merchant info) | Medium | High | Implement robust categorization fallback logic; validate data quality early |
+| R-002 | Performance degradation with large historical datasets | Medium | High | Implement caching and pre-aggregation; conduct performance testing |
+| R-003 | Category classification accuracy below user expectations | Medium | Medium | Validate classification rules with sample data; plan for iterative improvement |
+| R-004 | Visualization rendering performance issues on low-end devices | Low | Medium | Optimize client-side rendering; implement progressive loading |
+| R-005 | Integration challenges with transaction data store | Low | High | Conduct early technical spike; validate data access patterns |
+| R-006 | Scope creep (requests for custom categories, budgets, etc.) | High | Medium | Clearly communicate out-of-scope items; maintain product backlog |
+| R-007 | Undefined authentication/authorization mechanism | Medium | High | Clarify security requirements in sprint 0 |
+| R-008 | Insufficient historical data for meaningful analysis | Low | Medium | Design empty state UI; set user expectations |
 
 ---
 
-## 13. Design Gaps and Open Questions
+## 13. Validation Report
 
-### 13.1 Design Gaps
+### 13.1 Requirements Traceability
 
-| Gap ID | Description | Impact | Recommendation |
-|--------|-------------|--------|----------------|
-| DG-1 | Authentication and authorization mechanism not specified | High | Define authentication approach and user access controls |
-| DG-2 | Specific charting library not identified | Medium | Evaluate and select library based on requirements |
-| DG-3 | Data freshness requirements not defined | Medium | Define acceptable delay between transaction and analytics visibility |
-| DG-4 | Concurrent user load and scalability targets not specified | Medium | Define expected user load and performance benchmarks |
-| DG-5 | Error handling and fallback behavior not detailed | Medium | Define error scenarios and user experience |
-| DG-6 | Mobile app requirements not clarified | Low | Confirm if mobile native app support is needed |
-| DG-7 | Multi-currency support not addressed | Low | Clarify if multi-currency transactions are in scope |
-| DG-8 | Export functionality not mentioned | Low | Determine if users need to export analytics data |
-| DG-9 | Notification/alerting for spending patterns not defined | Low | Consider future enhancement for spending alerts |
-| DG-10 | Accessibility requirements not specified | Medium | Define WCAG compliance requirements |
+| Requirement ID | Requirement | Design Component | Status |
+|----------------|-------------|------------------|--------|
+| FR-001 | Monthly spend trend visualization | Analytics Service, UI Components | Covered |
+| FR-002 | Card-wise spend analysis | Analytics Service, Card Analysis API | Covered |
+| FR-003 | Category-wise spending analytics | Analytics Service, Category API | Covered |
+| FR-004 | Nine predefined spending categories | Category Classification Engine | Covered |
+| FR-005 | Transaction data aggregation by category | Data Aggregation Service | Covered |
+| FR-006 | Spending pattern identification | Pattern Analyzer | Covered |
+| FR-007 | Interactive visualizations and charts | Analytics Dashboard UI | Covered |
+| FR-008 | Comparison across cards | Card Analysis API, UI Components | Covered |
 
-### 13.2 Open Questions
+**Coverage Status:** 8/8 functional requirements covered (100%)
 
-1. **Q1:** What is the expected concurrent user load for the analytics module?
-   - **Impact:** Affects caching strategy and infrastructure sizing
+### 13.2 NFR Validation
 
-2. **Q2:** Should analytics data be available in real-time or is a delay acceptable?
-   - **Impact:** Affects architecture complexity and caching strategy
+| NFR ID | Requirement | Design Approach | Validation Status | Gap |
+|--------|-------------|-----------------|-------------------|-----|
+| NFR-001 | Interactive visualization performance with smooth rendering | Caching, lazy loading, client-side optimization | Not Verified | Specific performance targets not defined |
+| NFR-002 | Support for historical data analysis across multiple months | Caching layer, pre-aggregation, database indexing | Not Verified | Retention period not specified |
+| NFR-003 | Accurate data aggregation and categorization logic | Category Classification Engine with rule-based approach | Not Verified | Classification rules not defined; accuracy target not quantified |
 
-3. **Q3:** Are there specific accessibility (WCAG) requirements for visualizations?
-   - **Impact:** Affects chart library selection and design
+**NFR Coverage:** Design approaches identified for all 3 NFRs, but validation criteria need definition.
 
-4. **Q4:** Should users be able to export analytics data (PDF, CSV)?
-   - **Impact:** Requires additional export functionality
+### 13.3 Design Gaps
 
-5. **Q5:** What is the data retention policy for transactions?
-   - **Impact:** Affects available historical data for analytics
+| Gap ID | Gap Description | Severity | Recommendation |
+|--------|-----------------|----------|----------------|
+| GAP-001 | Performance targets not quantified (e.g., response time, rendering time) | High | Define specific performance SLAs (e.g., API response < 2s, UI render < 1s) |
+| GAP-002 | Historical data retention period not specified | Medium | Define retention policy (recommend 12-24 months) |
+| GAP-003 | Category classification rules not defined | High | Document classification rules with merchant codes and keywords |
+| GAP-004 | Authentication and authorization mechanism not specified | High | Clarify authentication approach and implement user-scoped access control |
+| GAP-005 | Empty state handling not addressed | Low | Design UI for users with no transaction history |
+| GAP-006 | Error handling and fallback behavior not detailed | Medium | Define error scenarios and user-facing messages |
+| GAP-007 | Monitoring and alerting requirements not specified | Medium | Define key metrics and alerting thresholds |
+| GAP-008 | Data refresh frequency not defined | Medium | Specify how often analytics data should be updated (real-time, hourly, daily) |
+| GAP-009 | Pagination strategy for large datasets not defined | Low | Define pagination approach for API responses |
+| GAP-010 | Technology stack (UI framework, charting library) not specified | Low | Select and document technology choices |
 
-6. **Q6:** Should the system support custom date ranges or only predefined ranges?
-   - **Impact:** Affects UI design and validation logic
+### 13.4 Out-of-Scope Validation
 
-7. **Q7:** Are there any compliance requirements (PCI-DSS, GDPR) for analytics data?
-   - **Impact:** Affects security and data handling design
+The following items are explicitly out of scope and should not be included in this epic:
+- ✓ Real Bank Integration
+- ✓ Predictive analytics or forecasting
+- ✓ Custom category creation
+- ✓ Budget setting and alerts
+- ✓ Export or reporting functionality
+- ✓ Payment-related features
 
-8. **Q8:** Should analytics support comparison between different time periods?
-   - **Impact:** Requires additional aggregation logic
+**Validation:** Design does not include any out-of-scope items.
 
-9. **Q9:** What level of drill-down detail is required (transaction level or summary level)?
-   - **Impact:** Affects data retrieval and UI design
+### 13.5 Dependency Validation
 
-10. **Q10:** Should the system support saved filters or favorite views?
-    - **Impact:** Requires user preference storage
+| Dependency | Status | Validation |
+|------------|--------|------------|
+| Transaction data store | Assumed Available | Requires validation of schema and access patterns |
+| Category classification engine or rules | To be Designed | Requires definition of classification rules |
+| Dashboard KPI data | Assumed Available | Requires validation of integration approach |
 
----
+**Recommendation:** Conduct technical spikes to validate all dependencies before implementation.
 
-# Validation Report
+### 13.6 Recommendations
 
-## 1. Requirements Traceability Matrix
+1. **High Priority:**
+   - Define specific performance targets for NFR-001 (e.g., API response time < 2 seconds, UI rendering < 1 second)
+   - Document category classification rules with merchant codes, keywords, and fallback logic
+   - Clarify authentication and authorization mechanism
+   - Validate transaction data store schema and access patterns
 
-| Requirement ID | Requirement Description | Design Component | Coverage Status | Notes |
-|----------------|------------------------|------------------|-----------------|-------|
-| FR-1 | Interactive visualizations and charts | Analytics Dashboard UI + Charting Library | Covered | Multiple chart types designed |
-| FR-2 | Category-wise spending analysis (9 categories) | Category Classification Service + Analytics Service | Covered | All 9 categories defined |
-| FR-3 | Monthly spend trends visualization | Analytics Service + Aggregation Engine | Covered | Time-series aggregation designed |
-| FR-4 | Card-wise spend analysis and comparison | Analytics Service + Aggregation Engine | Covered | Card aggregation logic defined |
-| FR-5 | Transaction history display | Analytics Service API | Covered | Transaction endpoint with pagination |
-| FR-6 | Filtering and drill-down capabilities | Filter Service + Analytics Service | Covered | Filter parameters and drill-down flow designed |
-| FR-7 | Analyze spending patterns across time periods | Analytics Service + Aggregation Engine | Covered | Date range filtering supported |
-| FR-8 | Actionable insights through intuitive charts | Analytics Dashboard UI + Charting Library | Covered | Multiple visualization types designed |
+2. **Medium Priority:**
+   - Define historical data retention policy (recommend 12-24 months)
+   - Specify data refresh frequency for analytics
+   - Define monitoring metrics and alerting thresholds
+   - Document error handling scenarios and user-facing messages
 
-**Functional Requirements Coverage: 8/8 (100%)**
+3. **Low Priority:**
+   - Select UI framework and charting library
+   - Design empty state UI for users with no transaction history
+   - Define pagination strategy for large datasets
 
-## 2. Non-Functional Requirements Validation
-
-| NFR ID | NFR Description | Target | Design Strategy | Validation Status | Gap/Risk |
-|--------|----------------|--------|-----------------|-------------------|----------|
-| NFR-1 | Render with large datasets (min 12 months) | 12 months data | Caching, pagination, pre-computation | Addressed | Requires performance testing |
-| NFR-2 | Interactive chart response time | <500ms | Caching, client-side rendering, optimized queries | Addressed | May require optimization based on testing |
-| NFR-3 | No performance degradation with filtering | No degradation | Indexed queries, efficient aggregation | Addressed | Database indexing required |
-| NFR-4 | Responsive charts on all screen sizes | Maintain readability | Responsive charting library, mobile-first design | Addressed | Requires cross-device testing |
-| NFR-5 | Support future data growth | Scalable | Data partitioning, archival strategy | Partially Addressed | Specific scalability targets not defined |
-
-**NFR Coverage: 5/5 (100% addressed, with validation requirements)**
-
-## 3. Dependency Validation
-
-| Dependency | Required By | Availability Status | Risk Level | Mitigation |
-|------------|-------------|---------------------|------------|------------|
-| Transaction Data Repository | All components | Assumed Available | High | Validate schema and data availability early |
-| Data Analytics and Aggregation Service | Analytics Service | Assumed Available | High | Verify performance capabilities |
-| Charting and Visualization Library | Analytics Dashboard UI | To Be Selected | Medium | Evaluate options early in implementation |
-| Category Classification Engine/Service | Category Classification Service | Assumed Available | High | Implement fallback classification if unavailable |
-| Date Range and Filtering Service | Filter Service | Assumed Available | Medium | Can be implemented within analytics module if needed |
-
-**Dependency Risk:** High - Multiple critical dependencies assumed but not verified
-
-## 4. Out-of-Scope Items (Confirmed)
-
-- ✓ Real bank integration - Confirmed out of scope
-- ✓ Card payment processing - Confirmed out of scope
-- ✓ Fund transfers - Confirmed out of scope
-- ✓ Loan management - Confirmed out of scope
-- ✓ Payment gateway integration - Confirmed out of scope
-- ✓ Predictive analytics or AI-based spending recommendations - Confirmed out of scope
-
-## 5. Design Completeness Assessment
-
-| Design Area | Completeness | Confidence Level | Comments |
-|-------------|--------------|------------------|----------|
-| Functional Design | 90% | High | All functional requirements addressed |
-| Architecture Design | 80% | Medium | High-level architecture defined; detailed component design needs validation |
-| Data Flow Design | 85% | High | Key flows documented; edge cases need clarification |
-| API Design | 75% | Medium | Endpoints defined; detailed contracts need refinement |
-| Security Design | 60% | Low | High-level considerations only; detailed security design needed |
-| Performance Design | 75% | Medium | Strategies defined; requires validation through testing |
-| Scalability Design | 70% | Medium | Approaches identified; specific targets needed |
-| UI/UX Design | 50% | Low | Functional requirements clear; detailed UI design not in scope of HLD |
-
-**Overall Design Completeness: 73%**
-
-## 6. Critical Gaps Requiring Resolution
-
-### High Priority Gaps
-
-1. **Authentication/Authorization Mechanism** (DG-1)
-   - **Impact:** Cannot implement secure access without this
-   - **Action:** Define authentication approach before implementation
-
-2. **Transaction Data Schema Validation** (Dependency Risk)
-   - **Impact:** May require schema changes or data transformation
-   - **Action:** Validate transaction data structure immediately
-
-3. **Performance Testing Strategy** (NFR-2, NFR-3)
-   - **Impact:** Cannot validate 500ms response time without testing
-   - **Action:** Define performance test scenarios and benchmarks
-
-### Medium Priority Gaps
-
-4. **Charting Library Selection** (DG-2)
-   - **Impact:** Affects development timeline and capabilities
-   - **Action:** Evaluate and select library in design phase
-
-5. **Data Freshness Requirements** (DG-3)
-   - **Impact:** Affects caching strategy and user expectations
-   - **Action:** Define acceptable data latency
-
-6. **Scalability Targets** (DG-4)
-   - **Impact:** Affects infrastructure sizing and architecture decisions
-   - **Action:** Define expected user load and growth projections
-
-## 7. Recommendations
-
-### 7.1 Immediate Actions
-
-1. **Validate Dependencies:** Confirm availability and capabilities of all dependent services
-2. **Define Security Requirements:** Specify authentication, authorization, and data protection mechanisms
-3. **Select Charting Library:** Evaluate options and select library that meets all requirements
-4. **Performance Baseline:** Establish performance testing approach and success criteria
-
-### 7.2 Design Enhancements
-
-1. **Implement Comprehensive Caching Strategy:** Multi-level caching (client, application, database) to meet NFR-2
-2. **Add Export Functionality:** Consider adding CSV/PDF export for user convenience
-3. **Implement Progressive Loading:** Load summary data first, then detailed data on demand
-4. **Add Comparison Features:** Allow users to compare spending across different time periods
-
-### 7.3 Future Considerations
-
-1. **Predictive Analytics:** While out of scope now, design should allow for future integration
-2. **Spending Alerts:** Consider notification system for unusual spending patterns
-3. **Budget Tracking:** Integration with budget management features
-4. **Custom Categories:** Allow users to create custom spending categories
-
-## 8. Validation Summary
-
-### Coverage Status
-- **Functional Requirements:** ✅ 100% Covered (8/8)
-- **Non-Functional Requirements:** ✅ 100% Addressed (5/5, pending validation)
-- **Dependencies:** ⚠️ All identified, availability to be confirmed
-- **Out-of-Scope:** ✅ Clearly documented (6 items)
-
-### Design Confidence
-- **High Confidence Areas:** Functional design, data flows, component responsibilities
-- **Medium Confidence Areas:** Architecture scalability, API contracts, performance strategies
-- **Low Confidence Areas:** Security implementation, UI/UX details, dependency availability
-
-### Readiness Assessment
-
-**Overall Readiness for Implementation: 75%**
-
-**Blockers:**
-- Authentication/authorization mechanism undefined
-- Transaction data schema not validated
-- Dependent services availability not confirmed
-
-**Recommendations:**
-- Resolve high-priority gaps before starting implementation
-- Conduct architecture review with stakeholders
-- Validate all assumptions through technical spikes
-- Define detailed acceptance criteria for NFRs
+4. **Risk Mitigation:**
+   - Conduct early technical spike to validate transaction data quality
+   - Perform load testing with realistic data volumes
+   - Validate category classification accuracy with sample data
+   - Implement feature flags for gradual rollout
 
 ---
 
-## Document Control
+## 14. Conclusion
+
+This High-Level Design provides a comprehensive architecture for the Analytics and Spending Insights feature. The design covers all functional requirements and addresses the specified non-functional requirements with appropriate architectural patterns including caching, aggregation, and modular service design.
+
+**Key Strengths:**
+- Clear separation of concerns with layered architecture
+- Scalable design with caching and pre-aggregation strategies
+- Comprehensive API design for all analytics features
+- Traceability from requirements to design components
+
+**Critical Next Steps:**
+1. Define and document category classification rules
+2. Specify quantitative performance targets
+3. Validate transaction data store integration
+4. Clarify authentication and authorization approach
+5. Conduct technical spikes for high-risk dependencies
+
+**Design Confidence:** Medium-High
+- All functional requirements are addressed
+- Architecture is sound and scalable
+- Multiple gaps require clarification before implementation
+- Dependencies need validation
+
+This HLD should be reviewed with stakeholders, and the identified gaps should be addressed during detailed design and sprint planning phases.
+
+---
 
 **Document Version:** 1.0  
-**Created Date:** 2024-12-20  
-**Epic Reference:** QE - PRD1-Analytics and Spending Insights  
-**Status:** Draft for Review  
-
-**Revision History:**
-
-| Version | Date | Author | Changes |
-|---------|------|--------|----------|
-| 1.0 | 2024-12-20 | HLD Generation Agent | Initial HLD document created |
-
-**Approval:**
-
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| Product Owner | | | |
-| Technical Architect | | | |
-| Engineering Lead | | | |
-
----
-
-**End of Document**
+**Last Updated:** 2024  
+**Status:** Draft for Review
